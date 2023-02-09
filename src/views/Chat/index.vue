@@ -30,7 +30,7 @@ function initChat() {
 
 function handleClear() {
   list.value = []
-  setTimeout(initChat, 200)
+  setTimeout(initChat, 100)
 }
 
 function handleEnter(event: KeyboardEvent) {
