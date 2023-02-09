@@ -74,7 +74,9 @@ function addMessage(message: string, user = false, error = false) {
 <template>
   <div class="flex flex-col h-full overflow-hidden border rounded-md shadow-md">
     <header class="flex items-center justify-between p-4">
-      <div>会话</div>
+      <h1 class="text-xl font-bold">
+        Chat
+      </h1>
       <div>
         <button
           class="w-[40px] h-[40px] rounded-full hover:bg-neutral-100 transition flex justify-center items-center"
@@ -103,7 +105,9 @@ function addMessage(message: string, user = false, error = false) {
           @keyup="handleEnter"
         />
         <NButton type="primary" :loading="loading" @click="handleSubmit">
-          <SvgIcon icon="ri:send-plane-fill" />
+          <template #icon>
+            <SvgIcon icon="ri:send-plane-fill" />
+          </template>
         </NButton>
       </div>
     </footer>
