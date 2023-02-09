@@ -5,6 +5,7 @@ interface Props {
   user?: boolean
   date?: string
   message?: string
+  error?: boolean
 }
 
 defineProps<Props>()
@@ -19,12 +20,12 @@ defineProps<Props>()
       <img v-if="user" src="@/assets/avatar.jpg" class="object-cover w-full h-full " alt="avatar">
       <SvgIcon v-else local-icon="logo" class="text-[26px]" />
     </div>
-    <div class="flex flex-col text-sm" :class="[{ 'items-end': user }]">
+    <div class="flex flex-col flex-1 text-sm" :class="[{ 'items-end': user }]">
       <span class="text-xs text-[#b4bbc4]">
         {{ date }}
       </span>
       <div class="p-2 mt-2 rounded-md" :class="[user ? 'bg-[#d2f9d1]' : 'bg-[#f4f6f8]']">
-        {{ message }}
+        <span class="leading-relaxed" :class="error ?? 'text-red-500'" v-html="message" />
       </div>
     </div>
   </div>

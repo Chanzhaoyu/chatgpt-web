@@ -7,10 +7,8 @@ import Chat from '@/views/Chat/index.vue'
 <template>
   <NConfigProvider :locale="zhCN" :date-locale="dateZhCN" class="h-full" preflight-style-disabled>
     <NaiveProvider>
-      <div class="flex h-full">
-        <div class="w-[700px] h-[600px] m-auto">
-          <Chat />
-        </div>
+      <div class="h-full p-4">
+        <Chat />
       </div>
     </NaiveProvider>
   </NConfigProvider>
