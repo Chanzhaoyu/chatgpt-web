@@ -1,3 +1,4 @@
+import NaiveProvider from './NaiveProvider.vue'
 import SvgIcon from './SvgIcon.vue'
 
-export { SvgIcon }
+export { NaiveProvider, SvgIcon }

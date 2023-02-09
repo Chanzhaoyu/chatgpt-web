@@ -1,12 +1,14 @@
 import axios from 'axios'
 
 async function fetchChatAPI(message: string) {
+  const url = `${import.meta.env.VITE_GLOB_API_URL}/chat`
+
   if (!message || message.trim() === '')
     return Promise.reject(new Error('Message is empty'))
 
   try {
     const { status, data } = await axios.post(
-      'http://192.168.110.170:3002/chat',
+      url,
       { message },
     )
 

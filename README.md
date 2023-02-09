@@ -1,2 +1,2 @@
-# chatgpt-bot
+# ChatGPT Bot Web
 

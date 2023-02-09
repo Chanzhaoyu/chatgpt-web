@@ -1,9 +1,8 @@
 import 'virtual:svg-icons-register'
-import './styles/css/tailwind.css'
-import './styles/less/global.less'
+import './styles/tailwind.css'
+import './styles/global.css'
 
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
 import App from './App.vue'
 
 function injectMeta() {
@@ -15,7 +14,6 @@ function injectMeta() {
 function bootstrap() {
   const app = createApp(App)
   injectMeta()
-  app.use(createPinia())
   app.mount('#app')
 }
 
