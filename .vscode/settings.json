@@ -1,0 +1,22 @@
+{
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "cSpell.words": [
+    "antfu",
+    "axios",
+    "chatgpt",
+    "esno",
+    "GPTAPI",
+    "iconify",
+    "nodata",
+    "OPENAI",
+    "pinia",
+    "rushstack",
+    "tailwindcss",
+    "unplugin",
+    "VITE",
+    "vueuse"
+  ]
+}
