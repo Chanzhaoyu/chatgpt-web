@@ -1,4 +1,4 @@
-# ChatGPT Bot Web
+# ChatGPT Web Bot
 
 This is a ChatGPT web application demo with express and vue3
 
