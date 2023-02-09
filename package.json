@@ -21,6 +21,7 @@
     "@antfu/eslint-config": "^0.35.2",
     "@iconify/json": "^2.2.19",
     "@iconify/vue": "^4.1.0",
+    "@types/babel__core": "^7.20.0",
     "@types/node": "^18.11.12",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vitejs/plugin-vue-jsx": "^3.0.0",

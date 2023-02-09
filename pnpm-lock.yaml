@@ -4,6 +4,7 @@ specifiers:
   '@antfu/eslint-config': ^0.35.2
   '@iconify/json': ^2.2.19
   '@iconify/vue': ^4.1.0
+  '@types/babel__core': ^7.20.0
   '@types/node': ^18.11.12
   '@vitejs/plugin-vue': ^4.0.0
   '@vitejs/plugin-vue-jsx': ^3.0.0
@@ -37,6 +38,7 @@ devDependencies:
   '@antfu/eslint-config': 0.35.2_l36yidrw337hwf2rtnamh77lgq
   '@iconify/json': 2.2.19
   '@iconify/vue': 4.1.0_vue@3.2.47
+  '@types/babel__core': 7.20.0
   '@types/node': 18.13.0
   '@vitejs/plugin-vue': 4.0.0_vite@4.1.1+vue@3.2.47
   '@vitejs/plugin-vue-jsx': 3.0.0_vite@4.1.1+vue@3.2.47
@@ -825,6 +827,35 @@ packages:
   /@trysound/sax/0.2.0:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
+    dev: true
+
+  /@types/babel__core/7.20.0:
+    resolution: {integrity: sha512-+n8dL/9GWblDO0iU6eZAwEIJVr5DWigtle+Q6HLOrh/pdbXOhOtqzq8VPPE2zvNJzSKY4vH/z3iT3tn0A3ypiQ==}
+    dependencies:
+      '@babel/parser': 7.20.15
+      '@babel/types': 7.20.7
+      '@types/babel__generator': 7.6.4
+      '@types/babel__template': 7.4.1
+      '@types/babel__traverse': 7.18.3
+    dev: true
+
+  /@types/babel__generator/7.6.4:
+    resolution: {integrity: sha512-tFkciB9j2K755yrTALxD44McOrk+gfpIpvC3sxHjRawj6PfnQxrse4Clq5y/Rq+G3mrBurMax/lG8Qn2t9mSsg==}
+    dependencies:
+      '@babel/types': 7.20.7
+    dev: true
+
+  /@types/babel__template/7.4.1:
+    resolution: {integrity: sha512-azBFKemX6kMg5Io+/rdGT0dkGreboUVR0Cdm3fz9QJWpaQGJRQXl7C+6hOTCZcMll7KFyEQpgbYI2lHdsS4U7g==}
+    dependencies:
+      '@babel/parser': 7.20.15
+      '@babel/types': 7.20.7
+    dev: true
+
+  /@types/babel__traverse/7.18.3:
+    resolution: {integrity: sha512-1kbcJ40lLB7MHsj39U4Sh1uTd2E7rLEa79kmDpI6cy+XiXsteB3POdQomoq4FxszMrO3ZYchkhYJw7A2862b3w==}
+    dependencies:
+      '@babel/types': 7.20.7
     dev: true
 
   /@types/json-schema/7.0.11:
