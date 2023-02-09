@@ -9,6 +9,11 @@
 ## 使用
 > Make sure `node >= 18`
 
+如果你没有安装过 `pnpm`
+```shell
+npm install pnpm -g
+```
+
 安装依赖
 ```shell
 pnpm install

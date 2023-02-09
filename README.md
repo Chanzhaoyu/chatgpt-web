@@ -8,6 +8,11 @@ ChartGPT demo page built with express and vue3
 ## Usage
 > Make sure `node >= 18`
 
+If pnpm is not installed
+```shell
+npm install pnpm -g
+```
+
 install node deps
 ```shell
 pnpm install
