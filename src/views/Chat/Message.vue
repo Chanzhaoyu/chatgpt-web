@@ -25,7 +25,9 @@ defineProps<Props>()
         {{ date }}
       </span>
       <div class="p-2 mt-2 rounded-md" :class="[user ? 'bg-[#d2f9d1]' : 'bg-[#f4f6f8]']">
-        <span class="leading-relaxed" :class="[{ 'text-red-500': error }]" v-html="message" />
+        <span class="leading-relaxed whitespace-pre" :class="[{ 'text-red-500': error }]">
+          {{ message }}
+        </span>
       </div>
     </div>
   </div>
