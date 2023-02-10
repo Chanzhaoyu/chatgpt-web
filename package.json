@@ -17,7 +17,8 @@
 		"preview": "vite preview",
 		"build-only": "vite build",
 		"type-check": "vue-tsc --noEmit",
-		"lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+		"lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+		"release": "bumpp package.json --commit --push --tag"
 	},
 	"dependencies": {
 		"naive-ui": "^2.34.3",
@@ -32,6 +33,7 @@
 		"@vitejs/plugin-vue": "^4.0.0",
 		"autoprefixer": "^10.4.13",
 		"axios": "^1.3.2",
+		"bumpp": "^8.2.1",
 		"chatgpt": "^4.2.0",
 		"dotenv": "^16.0.3",
 		"eslint": "^8.22.0",
