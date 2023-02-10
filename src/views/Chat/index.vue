@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import { NButton, NInput, NPopover, useMessage } from 'naive-ui'
 import { Message } from './components'
 import { fetchChatAPI } from './request'
@@ -56,16 +56,12 @@ async function handleSubmit() {
   }
   finally {
     loading.value = false
-    scrollRef.value && (scrollRef.value.scrollTop = scrollRef.value.scrollHeight)
   }
 }
 
 function addMessage(message: string, reversal = false) {
-  list.value.push({
-    dateTime: new Date().toLocaleString(),
-    message,
-    reversal,
-  })
+  list.value.push({ dateTime: new Date().toLocaleString(), message, reversal })
+  nextTick(() => scrollRef.value && (scrollRef.value.scrollTop = scrollRef.value.scrollHeight))
 }
 </script>
 
@@ -93,10 +89,7 @@ function addMessage(message: string, reversal = false) {
       <div ref="scrollRef" class="h-full p-4 overflow-hidden overflow-y-auto">
         <div>
           <Message
-            v-for="(item, index) of list"
-            :key="index"
-            :date-time="item.dateTime"
-            :message="item.message"
+            v-for="(item, index) of list" :key="index" :date-time="item.dateTime" :message="item.message"
             :reversal="item.reversal"
           />
         </div>
@@ -104,12 +97,7 @@ function addMessage(message: string, reversal = false) {
     </main>
     <footer class="p-4">
       <div class="flex items-center justify-between space-x-2">
-        <NInput
-          v-model:value="value"
-          :disabled="loading"
-          placeholder="Type a message..."
-          @keyup="handleEnter"
-        />
+        <NInput v-model:value="value" :disabled="loading" placeholder="Type a message..." @keyup="handleEnter" />
         <NButton type="primary" :loading="loading" @click="handleSubmit">
           <template #icon>
             <Icon icon="ri:send-plane-fill" />
