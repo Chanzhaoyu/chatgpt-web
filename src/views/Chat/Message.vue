@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { SvgIcon } from '@/components'
+import { Icon } from '@/components'
 
 interface Props {
   user?: boolean
@@ -18,7 +18,7 @@ defineProps<Props>()
       :class="[user ? 'ml-3' : 'mr-3']"
     >
       <img v-if="user" src="@/assets/avatar.jpg" class="object-cover w-full h-full " alt="avatar">
-      <SvgIcon v-else local-icon="logo" class="text-[26px]" />
+      <Icon v-else local-icon="logo" class="text-[26px]" />
     </div>
     <div class="flex flex-col flex-1 text-sm" :class="[{ 'items-end': user }]">
       <span class="text-xs text-[#b4bbc4]">
