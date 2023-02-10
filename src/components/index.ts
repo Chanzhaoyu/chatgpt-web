@@ -1,4 +1,5 @@
 import NaiveProvider from './NaiveProvider.vue'
-import SvgIcon from './SvgIcon.vue'
+import Icon from './Icon.vue'
+import GithubSite from './GithubSite.vue'
 
-export { NaiveProvider, SvgIcon }
+export { NaiveProvider, Icon, GithubSite }

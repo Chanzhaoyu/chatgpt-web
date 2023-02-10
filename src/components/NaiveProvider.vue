@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineComponent, h } from 'vue'
-import { NMessageProvider, useMessage } from 'naive-ui'
+import { NConfigProvider, NMessageProvider, useMessage } from 'naive-ui'
 
 function registerNaiveTools() {
   window.$message = useMessage()
@@ -18,8 +18,10 @@ const NaiveProviderContent = defineComponent({
 </script>
 
 <template>
-  <NMessageProvider>
-    <slot />
-    <NaiveProviderContent />
-  </NMessageProvider>
+  <NConfigProvider class="h-full">
+    <NMessageProvider>
+      <slot />
+      <NaiveProviderContent />
+    </NMessageProvider>
+  </NConfigProvider>
 </template>

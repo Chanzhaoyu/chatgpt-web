@@ -1,15 +1,14 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
-import { NButton, NInput, useMessage } from 'naive-ui'
-import Message from './Message.vue'
+import { NButton, NInput, NPopover, useMessage } from 'naive-ui'
+import { Message } from './components'
 import { fetchChatAPI } from './request'
-import { SvgIcon } from '@/components'
+import { Icon } from '@/components'
 
 interface ListProps {
-  date: string
+  dateTime: string
   message: string
-  user?: boolean
-  error?: boolean
+  reversal?: boolean
 }
 
 const scrollRef = ref<HTMLDivElement>()
@@ -53,7 +52,7 @@ async function handleSubmit() {
     addMessage(text, false)
   }
   catch (error: any) {
-    addMessage(error.message ?? 'Request failed, please try again later.', false, true)
+    addMessage(error.message ?? 'Request failed, please try again later.', false)
   }
   finally {
     loading.value = false
@@ -61,12 +60,11 @@ async function handleSubmit() {
   }
 }
 
-function addMessage(message: string, user = false, error = false) {
+function addMessage(message: string, reversal = false) {
   list.value.push({
-    date: new Date().toLocaleString(),
+    dateTime: new Date().toLocaleString(),
     message,
-    user,
-    error,
+    reversal,
   })
 }
 </script>
@@ -75,23 +73,31 @@ function addMessage(message: string, user = false, error = false) {
   <div class="flex flex-col h-full overflow-hidden border rounded-md shadow-md">
     <header class="flex items-center justify-between p-4">
       <h1 class="text-xl font-bold">
-        Chat
+        ChatGPT Web
       </h1>
       <div>
-        <button
-          class="w-[40px] h-[40px] rounded-full hover:bg-neutral-100 transition flex justify-center items-center"
-          @click="handleClear"
-        >
-          <SvgIcon icon="ri:delete-bin-6-line" />
-        </button>
+        <NPopover>
+          <template #trigger>
+            <button
+              class="w-[40px] h-[40px] rounded-full hover:bg-neutral-100 transition flex justify-center items-center"
+              @click="handleClear"
+            >
+              <Icon icon="ri:delete-bin-6-line" />
+            </button>
+          </template>
+          <span>Clear</span>
+        </NPopover>
       </div>
     </header>
     <main class="flex-1 overflow-hidden border-y">
       <div ref="scrollRef" class="h-full p-4 overflow-hidden overflow-y-auto">
         <div>
           <Message
-            v-for="(item, index) of list" :key="index" :date="item.date" :message="item.message"
-            :user="item.user"
+            v-for="(item, index) of list"
+            :key="index"
+            :date-time="item.dateTime"
+            :message="item.message"
+            :reversal="item.reversal"
           />
         </div>
       </div>
@@ -100,13 +106,13 @@ function addMessage(message: string, user = false, error = false) {
       <div class="flex items-center justify-between space-x-2">
         <NInput
           v-model:value="value"
-          placeholder="Type a message"
           :disabled="loading"
+          placeholder="Type a message..."
           @keyup="handleEnter"
         />
         <NButton type="primary" :loading="loading" @click="handleSubmit">
           <template #icon>
-            <SvgIcon icon="ri:send-plane-fill" />
+            <Icon icon="ri:send-plane-fill" />
           </template>
         </NButton>
       </div>
