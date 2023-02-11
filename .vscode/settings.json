@@ -1,8 +1,21 @@
 {
-  "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "html",
+    "json",
+    "jsonc",
+    "json5",
+    "yaml",
+    "yml",
+    "markdown"
+  ],
   "cSpell.words": [
     "antfu",
     "axios",
