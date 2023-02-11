@@ -2,7 +2,7 @@
 import { nextTick, onMounted, ref } from 'vue'
 import { NButton, NInput, NPopover, useMessage } from 'naive-ui'
 import { Message } from './components'
-import { fetchChatAPI } from './request'
+import { clearChatContext, fetchChatAPI } from './request'
 import { Icon } from '@/components'
 
 interface ListProps {
@@ -27,9 +27,16 @@ function initChat() {
   addMessage('Hi, I am ChatGPT, a chatbot based on GPT-3.', false)
 }
 
-function handleClear() {
-  list.value = []
-  setTimeout(initChat, 100)
+async function handleClear() {
+  try {
+    const { message } = await clearChatContext()
+    ms.success(message)
+    list.value = []
+    setTimeout(initChat, 100)
+  }
+  catch (error) {
+    ms.error('Clear failed, please try again later.')
+  }
 }
 
 function handleEnter(event: KeyboardEvent) {
@@ -81,7 +88,7 @@ function addMessage(message: string, reversal = false) {
               <Icon icon="ri:delete-bin-6-line" />
             </button>
           </template>
-          <span>Clear</span>
+          <span>Clear Context</span>
         </NPopover>
       </div>
     </header>
