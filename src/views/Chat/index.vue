@@ -104,7 +104,7 @@ function addMessage(message: string, reversal = false) {
     </main>
     <footer class="p-4">
       <div class="flex items-center justify-between space-x-2">
-        <NInput v-model:value="value" :disabled="loading" placeholder="Type a message..." @keyup="handleEnter" />
+        <NInput v-model:value="value" :disabled="loading" placeholder="Type a message..." @keypress="handleEnter" />
         <NButton type="primary" :loading="loading" @click="handleSubmit">
           <template #icon>
             <Icon icon="ri:send-plane-fill" />
