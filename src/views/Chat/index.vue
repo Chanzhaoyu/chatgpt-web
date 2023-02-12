@@ -15,7 +15,7 @@ const scrollRef = ref<HTMLDivElement>()
 
 const ms = useMessage()
 
-const value = ref('')
+const prompt = ref('')
 
 const loading = ref(false)
 
@@ -45,17 +45,19 @@ function handleEnter(event: KeyboardEvent) {
 }
 
 async function handleSubmit() {
-  if (!value.value) {
+  const message = prompt.value.trim()
+
+  if (!message || !message.length) {
     ms.warning('Please enter a message')
     return
   }
 
-  addMessage(value.value, true)
+  addMessage(message, true)
+  prompt.value = ''
 
   try {
     loading.value = true
-    const { text } = await fetchChatAPI(value.value)
-    value.value = ''
+    const { text } = await fetchChatAPI(message)
     addMessage(text, false)
   }
   catch (error: any) {
@@ -104,7 +106,7 @@ function addMessage(message: string, reversal = false) {
     </main>
     <footer class="p-4">
       <div class="flex items-center justify-between space-x-2">
-        <NInput v-model:value="value" :disabled="loading" placeholder="Type a message..." @keypress="handleEnter" />
+        <NInput v-model:value="prompt" placeholder="Type a message..." @keypress="handleEnter" />
         <NButton type="primary" :loading="loading" @click="handleSubmit">
           <template #icon>
             <Icon icon="ri:send-plane-fill" />
