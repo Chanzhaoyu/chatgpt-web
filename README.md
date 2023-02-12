@@ -1,36 +1,37 @@
 # ChatGPT Web Bot
 
-English | [中文](./README.zh-CN.md)
+中文 | [English](./README.en.md)
 
-ChartGPT demo page built with express and vue3
+使用 express 和 vue3 搭建的 ChartGPT 演示网页
 
 ![cover](./docs/cover.png)
-## Usage
-> Make sure `node >= 18`
 
-If pnpm is not installed
+## 使用
+> 确保 `node >= 18`
+
+如果你没有安装过 `pnpm`
 ```shell
 npm install pnpm -g
 ```
 
-install node deps
+安装依赖
 ```shell
 pnpm install
 ```
 
-Sign up for an [OpenAI API key](https://platform.openai.com/overview) and store it in your environment.
+获取 [OpenAI API key](https://platform.openai.com/overview) 到本地环境变量
 
 ```
 # .env
 OPENAI_API_KEY="Your Key"
 ```
 
-Run service
+运行服务
 ```shell
 pnpm run service
 ```
 
-Run web
+运行网页
 ```shell
 pnpm run dev
 ```
