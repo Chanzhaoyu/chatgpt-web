@@ -19,7 +19,7 @@ defineProps<Props>()
     >
       <Avatar :image="reversal" />
     </div>
-    <div class="flex flex-col flex-1 text-sm" :class="[{ 'items-end': reversal }]">
+    <div class="flex flex-col flex-1 text-sm" :class="[reversal ? 'items-end' : 'items-start']">
       <span class="text-xs text-[#b4bbc4]">
         {{ dateTime }}
       </span>
