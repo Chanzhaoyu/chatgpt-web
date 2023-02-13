@@ -31,11 +31,12 @@ function initChat() {
 
 async function handleClear() {
   try {
-    const { message } = await clearConversations()
-    ms.success(message ?? 'Success')
+    await clearConversations()
   }
   catch (error) {
     ms.error('Clear failed, please try again later.')
+  }
+  finally {
     list.value = []
     setTimeout(initChat, 100)
   }
