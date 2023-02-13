@@ -12,11 +12,10 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check vite build",
+    "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
-    "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "release": "bumpp package.json --commit --push --tag",
     "prepare": "husky install"
