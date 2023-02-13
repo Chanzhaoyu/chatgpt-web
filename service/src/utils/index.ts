@@ -1,13 +1,13 @@
 interface SendResponseOptions {
-  type: 'success' | 'fail'
+  type: 'Success' | 'Fail'
   message?: string
   data?: any
 }
 
 export function sendResponse(options: SendResponseOptions) {
-  if (options.type === 'success') {
+  if (options.type === 'Success') {
     return Promise.resolve({
-      message: options.message ?? 'Success',
+      message: options.message ?? null,
       data: options.data ?? null,
       status: options.type,
     })

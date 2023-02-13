@@ -2,14 +2,15 @@
 import { nextTick, onMounted, ref } from 'vue'
 import { NButton, NInput, useMessage } from 'naive-ui'
 import { Message } from './components'
-import { clearChatContext, fetchChatAPI } from './request'
 import { Layout } from './layout'
+import { clearConversations, fetchChatAPI } from '@/api'
 import { HoverButton, SvgIcon } from '@/components/common'
 
 interface ListProps {
   dateTime: string
   message: string
   reversal?: boolean
+  error?: boolean
 }
 
 const scrollRef = ref<HTMLDivElement>()
@@ -30,13 +31,13 @@ function initChat() {
 
 async function handleClear() {
   try {
-    const { message } = await clearChatContext()
-    ms.success(message)
-    list.value = []
-    setTimeout(initChat, 100)
+    const { message } = await clearConversations()
+    ms.success(message ?? 'Success')
   }
   catch (error) {
     ms.error('Clear failed, please try again later.')
+    list.value = []
+    setTimeout(initChat, 100)
   }
 }
 
@@ -46,6 +47,9 @@ function handleEnter(event: KeyboardEvent) {
 }
 
 async function handleSubmit() {
+  if (loading.value)
+    return
+
   const message = prompt.value.trim()
 
   if (!message || !message.length) {
@@ -58,19 +62,19 @@ async function handleSubmit() {
 
   try {
     loading.value = true
-    const { text } = await fetchChatAPI(message)
-    addMessage(text, false)
+    const { data } = await fetchChatAPI(message)
+    addMessage(data?.text ?? '', false)
   }
   catch (error: any) {
-    addMessage(error.message ?? 'Request failed, please try again later.', false)
+    addMessage(`Error: ${error.message ?? 'Request failed, please try again later.'}`, false, true)
   }
   finally {
     loading.value = false
   }
 }
 
-function addMessage(message: string, reversal = false) {
-  list.value.push({ dateTime: new Date().toLocaleString(), message, reversal })
+function addMessage(message: string, reversal = false, error = false) {
+  list.value.push({ dateTime: new Date().toLocaleString(), message, reversal, error })
   nextTick(() => scrollRef.value && (scrollRef.value.scrollTop = scrollRef.value.scrollHeight))
 }
 </script>
@@ -82,8 +86,12 @@ function addMessage(message: string, reversal = false) {
         <div ref="scrollRef" class="h-full p-4 overflow-hidden overflow-y-auto">
           <div>
             <Message
-              v-for="(item, index) of list" :key="index" :date-time="item.dateTime" :message="item.message"
+              v-for="(item, index) of list"
+              :key="index"
+              :date-time="item.dateTime"
+              :message="item.message"
               :reversal="item.reversal"
+              :error="item.error"
             />
           </div>
         </div>

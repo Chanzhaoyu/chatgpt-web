@@ -24,7 +24,7 @@ const api = new ChatGPTAPI({ apiKey })
 
 async function chatReply(message: string) {
   if (!message)
-    return sendResponse({ type: 'fail', message: 'Message is empty' })
+    return sendResponse({ type: 'Fail', message: 'Message is empty' })
 
   try {
     // Get the last context from the chat context
@@ -43,16 +43,17 @@ async function chatReply(message: string) {
     if (conversationId && id)
       chatContext.add({ conversationId, parentMessageId: id })
 
-    return sendResponse({ type: 'success', data: response })
+    return sendResponse({ type: 'Success', data: response })
   }
   catch (error: any) {
-    return sendResponse({ type: 'fail', message: error.message })
+    global.console.log(error)
+    return sendResponse({ type: 'Fail', message: error.message })
   }
 }
 
 async function chatReplayOne(message: string, options?: ChatContext) {
   if (!message)
-    return sendResponse({ type: 'fail', message: 'Message is empty' })
+    return sendResponse({ type: 'Fail', message: 'Message is empty' })
 
   try {
     let messageOptions: SendMessageOptions = {}
@@ -63,18 +64,18 @@ async function chatReplayOne(message: string, options?: ChatContext) {
 
       const response = await api.sendMessage(message, { ...messageOptions })
 
-      return sendResponse({ type: 'success', data: response })
+      return sendResponse({ type: 'Success', data: response })
     }
   }
   catch (error: any) {
-    return sendResponse({ type: 'fail', message: error.message })
+    return sendResponse({ type: 'Fail', message: error.message })
   }
 }
 
 async function clearChatContext() {
   // Clear the chat context
   chatContext.clear()
-  return sendResponse({ type: 'success', message: 'Chat context cleared' })
+  return sendResponse({ type: 'Success', message: 'Chat context cleared' })
 }
 
 export { chatReply, chatReplayOne, clearChatContext }

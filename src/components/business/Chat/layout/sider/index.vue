@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { ref, watch } from 'vue'
-import { NButton, NLayoutSider } from 'naive-ui'
+import { NButton, NLayoutSider, useMessage } from 'naive-ui'
 import List from './List.vue'
 import Footer from './Footer.vue'
 
@@ -18,6 +18,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emit>()
 
+const ms = useMessage()
+
 const collapsed = ref(props.collapsed)
 
 watch(
@@ -27,6 +29,10 @@ watch(
   },
   { immediate: true },
 )
+
+function handleAdd() {
+  ms.info('Coming soon...')
+}
 
 function handleCollapsed() {
   collapsed.value = !collapsed.value
@@ -47,8 +53,8 @@ function handleCollapsed() {
     <div class="flex flex-col h-full">
       <main class="flex-1 min-h-0 overflow-hidden">
         <div class="p-4">
-          <NButton dashed block>
-            Add chat
+          <NButton dashed block @click="handleAdd">
+            New chat
           </NButton>
         </div>
         <List />

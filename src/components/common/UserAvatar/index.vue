@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-
+import { GithubSite } from '@/components/custom'
 </script>
 
 <template>
@@ -8,11 +8,11 @@
       <img class="object-cover" src="@/assets/avatar.jpg" alt="avatar">
     </div>
     <div class="ml-2">
-      <h2 class="text-sm font-bold">
-        Redon
+      <h2 class="font-bold text-md">
+        ChenZhaoYu
       </h2>
       <p class="text-xs text-gray-500">
-        #0827
+        <GithubSite />
       </p>
     </div>
   </div>
