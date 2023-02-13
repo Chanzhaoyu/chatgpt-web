@@ -1,10 +1,10 @@
-# ChatGPT Web Bot
-
-重要提示：目前 `OpenAI` 开放的模型最高只有 `GPT-3`，和现在网页所使用的 `GPT-3.5` 或 `GPT-4` 是有很大差距的，需要等官方开放最新的模型接口。
+# ChatGPT Web
 
 使用 express 和 vue3 搭建的 ChartGPT 演示网页
 
 ![cover](./docs/cover-2.png)
+
+> 提示：目前 `OpenAI` 开放的模型最高只有 `GPT-3`，和现在网页所使用的 `GPT-3.5` 或 `GPT-4` 有很大差距，需要等官方开放最新的模型接口。
 
 ## 待实现路线
 [x] 多会话储存和上下文逻辑
@@ -78,12 +78,24 @@ pnpm dev
 ```
 
 ## 打包
+
 ### 后端服务
 > 如果你不需要本项目的 `node` 接口，可以省略如下操作
 
 复制 `service` 文件夹到你有 `node` 服务环境的服务器上。（搜索关键字：`express部署`）
 
-操作上述 `安装` 和 `运行` 服务。
+```shell
+# 安装
+pnpm install
+
+# 打包
+pnpm build
+
+# 运行
+pnpm prod
+```
+
+PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 
 ### 网页
 根目录下运行以下命令，然后将 `dist` 文件夹复制到你的托管服务器上
