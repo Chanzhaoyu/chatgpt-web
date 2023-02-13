@@ -1,5 +1,15 @@
+<script lang="ts" setup>
+interface Props {
+  reversal?: boolean
+}
+
+defineProps<Props>()
+</script>
+
 <template>
-  <span class="leading-relaxed whitespace-pre-wrap">
-    <slot />
-  </span>
+  <div class="p-2 mt-2 rounded-md" :class="[reversal ? 'bg-[#d2f9d1]' : 'bg-[#f4f6f8]']">
+    <span class="leading-relaxed whitespace-pre-wrap">
+      <slot />
+    </span>
+  </div>
 </template>

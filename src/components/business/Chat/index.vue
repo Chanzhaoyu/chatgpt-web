@@ -92,7 +92,7 @@ function addMessage(message: string, reversal = false) {
         <div class="flex items-center justify-between space-x-2">
           <HoverButton tooltip="Clear conversations" @click="handleClear">
             <span class="text-xl text-[#4f555e]">
-              <SvgIcon icon="ri:refresh-line" />
+              <SvgIcon icon="ri:delete-bin-line" />
             </span>
           </HoverButton>
           <NInput v-model:value="prompt" placeholder="Type a message..." @keypress="handleEnter" />
