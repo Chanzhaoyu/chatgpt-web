@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { NConfigProvider } from 'naive-ui'
 import { NaiveProvider } from '@/components/common'
-import Chat from '@/views/Chat/index.vue'
 </script>
 
 <template>
-  <NaiveProvider>
-    <div class="h-full p-4 overflow-hidden">
-      <Chat />
-    </div>
-  </NaiveProvider>
+  <NConfigProvider class="h-full">
+    <NaiveProvider>
+      <RouterView />
+    </NaiveProvider>
+  </NConfigProvider>
 </template>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { defineComponent, h } from 'vue'
 import {
-  NConfigProvider,
   NDialogProvider,
   NLoadingBarProvider,
   NMessageProvider,
@@ -31,16 +30,14 @@ const NaiveProviderContent = defineComponent({
 </script>
 
 <template>
-  <NConfigProvider class="h-full">
-    <NLoadingBarProvider>
-      <NDialogProvider>
-        <NNotificationProvider>
-          <NMessageProvider>
-            <slot />
-            <NaiveProviderContent />
-          </NMessageProvider>
-        </NNotificationProvider>
-      </NDialogProvider>
-    </NLoadingBarProvider>
-  </NConfigProvider>
+  <NLoadingBarProvider>
+    <NDialogProvider>
+      <NNotificationProvider>
+        <NMessageProvider>
+          <slot />
+          <NaiveProviderContent />
+        </NMessageProvider>
+      </NNotificationProvider>
+    </NDialogProvider>
+  </NLoadingBarProvider>
 </template>

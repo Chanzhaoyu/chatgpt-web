@@ -11,19 +11,20 @@
     "vue"
   ],
   "scripts": {
-    "bootstrap": "pnpm install && pnpm run common:prepare",
     "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
     "lint:fix": "eslint . --fix",
+    "bootstrap": "pnpm install && pnpm run common:prepare",
     "common:cleanup": "rimraf node_modules && rimraf pnpm-lock.yaml",
     "common:prepare": "husky install"
   },
   "dependencies": {
     "naive-ui": "^2.34.3",
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.35.2",

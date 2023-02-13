@@ -1,6 +1,8 @@
+import './styles/global.css'
+
 import { createApp } from 'vue'
 import App from './App.vue'
-import './styles/global.css'
+import { setupRouter } from '@/router'
 
 /** Tailwind's Preflight Style Override */
 function naiveStyleOverride() {
@@ -10,9 +12,10 @@ function naiveStyleOverride() {
 }
 
 /** Setup */
-function bootstrap() {
+async function bootstrap() {
   const app = createApp(App)
   naiveStyleOverride()
+  await setupRouter(app)
   app.mount('#app')
 }
 
