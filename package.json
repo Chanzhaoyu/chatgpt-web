@@ -11,14 +11,15 @@
     "vue"
   ],
   "scripts": {
+    "bootstrap": "pnpm install && pnpm run common:prepare",
     "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
     "lint:fix": "eslint . --fix",
-    "release": "bumpp package.json --commit --push --tag",
-    "prepare": "husky install"
+    "common:cleanup": "rimraf node_modules && rimraf pnpm-lock.yaml",
+    "common:prepare": "husky install"
   },
   "dependencies": {
     "naive-ui": "^2.34.3",
@@ -33,7 +34,6 @@
     "@vitejs/plugin-vue": "^4.0.0",
     "autoprefixer": "^10.4.13",
     "axios": "^1.3.2",
-    "bumpp": "^8.2.1",
     "eslint": "^8.34.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.1",
