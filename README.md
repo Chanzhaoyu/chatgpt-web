@@ -1,5 +1,7 @@
 # ChatGPT Web Bot
 
+重要提示：目前 `OpenAI` 开放的模型最高只有 `GPT-3`，和现在网页所使用的 `GPT-3.5` 或 `GPT-4` 是有很大差距的，需要等官方开放最新的模型接口。
+
 使用 express 和 vue3 搭建的 ChartGPT 演示网页
 
 ![cover](./docs/cover-2.png)
