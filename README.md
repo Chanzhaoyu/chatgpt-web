@@ -1,7 +1,5 @@
 # ChatGPT Web Bot
 
-中文 | [English](./README.en.md)
-
 使用 express 和 vue3 搭建的 ChartGPT 演示网页
 
 ![cover](./docs/cover-2.png)
