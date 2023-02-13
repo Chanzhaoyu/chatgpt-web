@@ -1,22 +1,22 @@
 {
-	"compilerOptions": {
-		"baseUrl": ".",
-		"module": "ESNext",
-		"target": "ESNext",
-		"lib": ["DOM", "ESNext"],
-		"strict": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"jsx": "preserve",
-		"moduleResolution": "node",
-		"resolveJsonModule": true,
-		"noUnusedLocals": true,
-		"strictNullChecks": true,
-		"forceConsistentCasingInFileNames": true,
-		"paths": {
-			"@/*": ["./src/*"]
-		},
-		"types": ["vite/client", "node", "naive-ui/volar"]
-	},
-	"exclude": ["node_modules", "dist"]
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "ESNext",
+    "target": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "noUnusedLocals": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["vite/client", "node", "naive-ui/volar"]
+  },
+  "exclude": ["node_modules", "dist"]
 }

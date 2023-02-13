@@ -6,6 +6,7 @@ interface Props {
   message?: string
   dateTime?: string
   reversal?: boolean
+  error?: boolean
 }
 
 defineProps<Props>()
@@ -23,9 +24,9 @@ defineProps<Props>()
       <span class="text-xs text-[#b4bbc4]">
         {{ dateTime }}
       </span>
-      <div class="p-2 mt-2 rounded-md" :class="[reversal ? 'bg-[#d2f9d1]' : 'bg-[#f4f6f8]']">
-        <Text>{{ message }}</Text>
-      </div>
+      <Text :reversal="reversal" :error="error">
+        {{ message }}
+      </Text>
     </div>
   </div>
 </template>
