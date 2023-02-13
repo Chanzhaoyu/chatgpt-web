@@ -31,7 +31,7 @@ node -v
 npm install pnpm -g
 ```
 
-### OpenAI API KEy
+### OpenAI API Key
 获取 [OpenAI API key](https://platform.openai.com/overview) 并填写到本地环境变量
 ```
 # service/.env 文件
@@ -77,7 +77,7 @@ pnpm dev
 ### 后端服务
 > 如果你不需要本项目的 `node` 接口，可以省略如下操作
 
-复制 `service` 文件夹到你有 `node` 服务环境的服务器上。（搜索关键字：`express部署）`
+复制 `service` 文件夹到你有 `node` 服务环境的服务器上。（搜索关键字：`express部署`）
 
 操作上述 `安装` 和 `运行` 服务。
 
