@@ -21,7 +21,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "chatgpt": "^4.2.0",
+    "chatgpt": "^4.3.2",
     "express": "^4.18.2"
   },
   "devDependencies": {

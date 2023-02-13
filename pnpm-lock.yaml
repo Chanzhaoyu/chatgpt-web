@@ -2,8 +2,8 @@ lockfileVersion: 5.4
 
 specifiers:
   '@antfu/eslint-config': ^0.35.2
-  '@commitlint/cli': ^17.4.2
-  '@commitlint/config-conventional': ^17.4.2
+  '@commitlint/cli': ^17.4.3
+  '@commitlint/config-conventional': ^17.4.3
   '@iconify/vue': ^4.1.0
   '@types/node': ^18.13.0
   '@vitejs/plugin-vue': ^4.0.0
@@ -30,8 +30,8 @@ dependencies:
 
 devDependencies:
   '@antfu/eslint-config': 0.35.2_7kw3g6rralp5ps6mg3uyzz6azm
-  '@commitlint/cli': 17.4.2
-  '@commitlint/config-conventional': 17.4.2
+  '@commitlint/cli': 17.4.3
+  '@commitlint/config-conventional': 17.4.3
   '@iconify/vue': 4.1.0_vue@3.2.47
   '@types/node': 18.13.0
   '@vitejs/plugin-vue': 4.0.0_vite@4.1.1+vue@3.2.47
@@ -185,13 +185,13 @@ packages:
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
 
-  /@commitlint/cli/17.4.2:
-    resolution: {integrity: sha512-0rPGJ2O1owhpxMIXL9YJ2CgPkdrFLKZElIZHXDN8L8+qWK1DGH7Q7IelBT1pchXTYTuDlqkOTdh//aTvT3bSUA==}
+  /@commitlint/cli/17.4.3:
+    resolution: {integrity: sha512-IPTS7AZuBHgD0gl24El8HwuDM9zJN9JLa5KmZUQoFD1BQeGGdzAYJOnAr85CeJWpTDok0BGHDL0+4odnH0iTyA==}
     engines: {node: '>=v14'}
     hasBin: true
     dependencies:
       '@commitlint/format': 17.4.0
-      '@commitlint/lint': 17.4.2
+      '@commitlint/lint': 17.4.3
       '@commitlint/load': 17.4.2
       '@commitlint/read': 17.4.2
       '@commitlint/types': 17.4.0
@@ -205,8 +205,8 @@ packages:
       - '@swc/wasm'
     dev: true
 
-  /@commitlint/config-conventional/17.4.2:
-    resolution: {integrity: sha512-JVo1moSj5eDMoql159q8zKCU8lkOhQ+b23Vl3LVVrS6PXDLQIELnJ34ChQmFVbBdSSRNAbbXnRDhosFU+wnuHw==}
+  /@commitlint/config-conventional/17.4.3:
+    resolution: {integrity: sha512-8EsY2iDw74hCk3hIQSg7/E0R8/KtPjnFPZVwmmHxcjhZjkSykmxysefICPDnbI3xgxfov0zwL1WKDHM8zglJdw==}
     engines: {node: '>=v14'}
     dependencies:
       conventional-changelog-conventionalcommits: 5.0.0
@@ -253,13 +253,13 @@ packages:
       semver: 7.3.8
     dev: true
 
-  /@commitlint/lint/17.4.2:
-    resolution: {integrity: sha512-HcymabrdBhsDMNzIv146+ZPNBPBK5gMNsVH+el2lCagnYgCi/4ixrHooeVyS64Fgce2K26+MC7OQ4vVH8wQWVw==}
+  /@commitlint/lint/17.4.3:
+    resolution: {integrity: sha512-GnPsqEYmXIB/MaBhRMzkiDJWyjuLrKad4xoxKO4N6Kc19iqjR4DPc/bl2dxeW9kUmtrAtefOzIEzJAevpA5y2w==}
     engines: {node: '>=v14'}
     dependencies:
       '@commitlint/is-ignored': 17.4.2
       '@commitlint/parse': 17.4.2
-      '@commitlint/rules': 17.4.2
+      '@commitlint/rules': 17.4.3
       '@commitlint/types': 17.4.0
     dev: true
 
@@ -323,8 +323,8 @@ packages:
       resolve-global: 1.0.0
     dev: true
 
-  /@commitlint/rules/17.4.2:
-    resolution: {integrity: sha512-OGrPsMb9Fx3/bZ64/EzJehY9YDSGWzp81Pj+zJiY+r/NSgJI3nUYdlS37jykNIugzazdEXfMtQ10kmA+Kx2pZQ==}
+  /@commitlint/rules/17.4.3:
+    resolution: {integrity: sha512-xHReDfE3Z+O9p1sXeEhPRSk4FifBsC4EbXzvQ4aa0ykQe+n/iZDd4CrFC/Oiv2K9BU4ZnFHak30IbMLa4ks1Rw==}
     engines: {node: '>=v14'}
     dependencies:
       '@commitlint/ensure': 17.4.0

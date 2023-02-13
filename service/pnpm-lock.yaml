@@ -4,7 +4,7 @@ specifiers:
   '@antfu/eslint-config': ^0.35.2
   '@types/express': ^4.17.17
   '@types/node': ^18.13.0
-  chatgpt: ^4.2.0
+  chatgpt: ^4.3.2
   dotenv: ^16.0.3
   eslint: ^8.34.0
   esno: ^0.16.3
@@ -14,7 +14,7 @@ specifiers:
   typescript: ^4.9.5
 
 dependencies:
-  chatgpt: 4.2.0
+  chatgpt: 4.3.2
   express: 4.18.2
 
 devDependencies:
@@ -876,8 +876,8 @@ packages:
     resolution: {integrity: sha512-mKKUkUbhPpQlCOfIuZkvSEgktjPFIsZKRRbC6KWVEMvlzblj3i3asQv5ODsrwt0N3pHAEvjP8KTQPHkp0+6jOg==}
     dev: true
 
-  /chatgpt/4.2.0:
-    resolution: {integrity: sha512-HYQ65GCa8PGtmmUB+XSAa17/IKTy/EEj8QU9HGU8UAsGBtKZushiozC0JpNcTyG+ivpuwzdduXJyL6ELnqkY4A==}
+  /chatgpt/4.3.2:
+    resolution: {integrity: sha512-5+Kh0mdP/pDJTL3kA6C6Dp43EO8T8sILPJbbQwOu3J4dK+n/tYpSXsmG6VZkmitAVOffeTonXTGDJwslc66orw==}
     engines: {node: '>=18'}
     dependencies:
       eventsource-parser: 0.0.5

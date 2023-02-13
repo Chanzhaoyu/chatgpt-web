@@ -28,8 +28,8 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.35.2",
-    "@commitlint/cli": "^17.4.2",
-    "@commitlint/config-conventional": "^17.4.2",
+    "@commitlint/cli": "^17.4.3",
+    "@commitlint/config-conventional": "^17.4.3",
     "@iconify/vue": "^4.1.0",
     "@types/node": "^18.13.0",
     "@vitejs/plugin-vue": "^4.0.0",
