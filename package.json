@@ -48,8 +48,8 @@
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx,vue}": [
-      "pnpm run lint:fix",
-      "pnpm run type-check"
+      "pnpm lint:fix",
+      "pnpm type-check"
     ]
   }
 }
