@@ -78,17 +78,7 @@ function addMessage(message: string, reversal = false) {
 <template>
   <Layout>
     <div class="flex flex-col h-full">
-      <header class="flex items-center justify-between p-4">
-        <h1 class="text-xl font-bold">
-          ChatGPT Web
-        </h1>
-        <div class="flex items-center space-x-4">
-          <HoverButton tooltip="Clear" @click="handleClear">
-            <SvgIcon icon="ri:delete-bin-6-line" />
-          </HoverButton>
-        </div>
-      </header>
-      <main class="flex-1 overflow-hidden border-y">
+      <main class="flex-1 overflow-hidden">
         <div ref="scrollRef" class="h-full p-4 overflow-hidden overflow-y-auto">
           <div>
             <Message
@@ -100,6 +90,9 @@ function addMessage(message: string, reversal = false) {
       </main>
       <footer class="p-4">
         <div class="flex items-center justify-between space-x-2">
+          <HoverButton tooltip="Clear" @click="handleClear">
+            <SvgIcon icon="ri:refresh-line" />
+          </HoverButton>
           <NInput v-model:value="prompt" placeholder="Type a message..." @keypress="handleEnter" />
           <NButton type="primary" :loading="loading" @click="handleSubmit">
             <template #icon>
