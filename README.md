@@ -95,9 +95,9 @@ Q: 如果只使用前端页面，在哪里改请求接口？
 
 A: 根目录下 `.env` 文件中的 `VITE_GLOB_API_URL` 字段。
 
-Q: 文件保存时全部爆红色?
+Q: 文件保存时全部爆红?
 
-A: `vscode` 请安装项目推荐插件，或在手动安装 `Eslint` 插件。
+A: `vscode` 请安装项目推荐插件，或手动安装 `Eslint` 插件。
 
 ## License
 MIT © [ChenZhaoYu](./license)
