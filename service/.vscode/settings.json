@@ -6,33 +6,17 @@
   },
   "eslint.validate": [
     "javascript",
-    "javascriptreact",
     "typescript",
-    "typescriptreact",
-    "vue",
-    "html",
     "json",
     "jsonc",
     "json5",
-    "yaml",
-    "yml",
-    "markdown"
+    "yaml"
   ],
   "cSpell.words": [
     "antfu",
-    "axios",
-    "bumpp",
     "chatgpt",
     "esno",
     "GPTAPI",
-    "iconify",
-    "nodata",
-    "OPENAI",
-    "pinia",
-    "rushstack",
-    "tailwindcss",
-    "unplugin",
-    "VITE",
-    "vueuse"
+    "OPENAI"
   ]
 }
