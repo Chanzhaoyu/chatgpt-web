@@ -44,7 +44,7 @@ jobs:
         run: nci
 
       - name: Typecheck
-        run: nr typecheck
+        run: nr type-check
 
   test:
     runs-on: ${{ matrix.os }}
