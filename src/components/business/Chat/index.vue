@@ -90,8 +90,10 @@ function addMessage(message: string, reversal = false) {
       </main>
       <footer class="p-4">
         <div class="flex items-center justify-between space-x-2">
-          <HoverButton tooltip="Clear" @click="handleClear">
-            <SvgIcon icon="ri:refresh-line" />
+          <HoverButton tooltip="Clear conversations" @click="handleClear">
+            <span class="text-xl text-[#4f555e]">
+              <SvgIcon icon="ri:refresh-line" />
+            </span>
           </HoverButton>
           <NInput v-model:value="prompt" placeholder="Type a message..." @keypress="handleEnter" />
           <NButton type="primary" :loading="loading" @click="handleSubmit">
