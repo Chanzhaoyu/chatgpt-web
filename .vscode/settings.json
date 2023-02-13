@@ -23,6 +23,7 @@
     "axios",
     "bumpp",
     "chatgpt",
+    "commitlint",
     "esno",
     "GPTAPI",
     "iconify",
