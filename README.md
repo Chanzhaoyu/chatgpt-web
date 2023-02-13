@@ -4,7 +4,7 @@
 
 使用 express 和 vue3 搭建的 ChartGPT 演示网页
 
-![cover](./docs/cover.png)
+![cover](./docs/cover-2.png)
 
 ## Route Map
 [x] 多会话
