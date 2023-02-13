@@ -1,7 +1,9 @@
 import * as dotenv from 'dotenv'
+import type { SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI } from 'chatgpt'
+import { sendResponse } from './utils'
 
-interface ChatContext {
+export interface ChatContext {
   conversationId?: string
   parentMessageId?: string
 }
@@ -22,33 +24,57 @@ const api = new ChatGPTAPI({ apiKey })
 
 async function chatReply(message: string) {
   if (!message)
-    return
+    return sendResponse({ type: 'fail', message: 'Message is empty' })
 
-  // Get the last context from the chat context
-  // If there is a last context, add it to the options
-  let options = {}
-  const lastContext = Array.from(chatContext).pop()
-  if (lastContext) {
-    const { conversationId, parentMessageId } = lastContext
-    options = { conversationId, parentMessageId }
+  try {
+    // Get the last context from the chat context
+    let options: SendMessageOptions = {}
+
+    const lastContext = Array.from(chatContext).pop()
+
+    if (lastContext)
+      options = { ...lastContext }
+
+    const response = await api.sendMessage(message, { ...options })
+
+    const { conversationId, id } = response
+
+    // Add the new context to the chat context
+    if (conversationId && id)
+      chatContext.add({ conversationId, parentMessageId: id })
+
+    return sendResponse({ type: 'success', data: response })
   }
+  catch (error: any) {
+    return sendResponse({ type: 'fail', message: error.message })
+  }
+}
 
-  // Send the message to the API
-  const response = await api.sendMessage(message, { ...options })
+async function chatReplayOne(message: string, options?: ChatContext) {
+  if (!message)
+    return sendResponse({ type: 'fail', message: 'Message is empty' })
 
-  const { conversationId, id } = response
+  try {
+    let messageOptions: SendMessageOptions = {}
 
-  // Add the new context to the chat context
-  if (conversationId && id)
-    chatContext.add({ conversationId, parentMessageId: id })
+    if (options) {
+      const { conversationId, parentMessageId } = options
+      messageOptions = { conversationId, parentMessageId }
 
-  return response
+      const response = await api.sendMessage(message, { ...messageOptions })
+
+      return sendResponse({ type: 'success', data: response })
+    }
+  }
+  catch (error: any) {
+    return sendResponse({ type: 'fail', message: error.message })
+  }
 }
 
 async function clearChatContext() {
   // Clear the chat context
   chatContext.clear()
-  return Promise.resolve({ message: 'Chat context cleared' })
+  return sendResponse({ type: 'success', message: 'Chat context cleared' })
 }
 
-export { chatReply, clearChatContext }
+export { chatReply, chatReplayOne, clearChatContext }
