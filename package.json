@@ -47,9 +47,8 @@
     "vue-tsc": "^1.0.24"
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx,vue}": [
-      "pnpm lint:fix",
-      "pnpm type-check"
+    "*.{ts,tsx,vue}": [
+      "pnpm lint:fix"
     ]
   }
 }
