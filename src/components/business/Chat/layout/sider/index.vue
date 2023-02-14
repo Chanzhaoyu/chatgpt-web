@@ -1,17 +1,31 @@
 <script setup lang='ts'>
 import { ref } from 'vue'
-import { NButton, NLayoutSider, useMessage } from 'naive-ui'
+import { NButton, NLayoutSider } from 'naive-ui'
+import type { HistoryChatProps } from '../../types'
 import List from './List.vue'
 import Footer from './Footer.vue'
 import { useAppStore } from '@/store'
 
 const appStore = useAppStore()
-const ms = useMessage()
 
 const collapsed = ref(appStore.siderCollapsed ?? false)
 
+const history = ref<HistoryChatProps[]>([])
+
 function handleAdd() {
-  ms.info('Coming soon...')
+  history.value.push({
+    title: 'New chat',
+    edit: false,
+    data: [],
+  })
+}
+
+function handleEdit(index: number) {
+  history.value[index].edit = true
+}
+
+function handleDelete(index: number) {
+  history.value.splice(index, 1)
 }
 
 function handleCollapsed() {
@@ -37,7 +51,7 @@ function handleCollapsed() {
             New chat
           </NButton>
         </div>
-        <List />
+        <List :data="history" @edit="handleEdit" @delete="handleDelete" />
       </main>
       <Footer />
     </div>

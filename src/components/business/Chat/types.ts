@@ -10,3 +10,9 @@ export interface ChatProps {
   error?: boolean
   options?: ChatOptions
 }
+
+export interface HistoryChatProps {
+  title: string
+  edit: boolean
+  data: ChatProps[]
+}
