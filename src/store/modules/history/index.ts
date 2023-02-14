@@ -5,14 +5,17 @@ import { getLocalHistory, setLocalHistory } from './helper'
 export const useHistoryStore = defineStore('history-store', {
   state: (): HistoryState => getLocalHistory(),
   getters: {
-    getCurrentChat(state): Chat.Chat[] {
+    getCurrentHistory(state): Chat.HistoryChat {
       if (state.historyChat.length) {
         if (state.active === null || state.active >= state.historyChat.length || state.active < 0)
           state.active = 0
-        return state.historyChat[state.active].data ?? []
+        return state.historyChat[state.active] ?? { title: '', isEdit: false, data: [] }
       }
       state.active = null
-      return []
+      return { title: '', isEdit: false, data: [] }
+    },
+    getCurrentChat(): Chat.Chat[] {
+      return this.getCurrentHistory.data ?? []
     },
   },
   actions: {
@@ -23,7 +26,7 @@ export const useHistoryStore = defineStore('history-store', {
       }
       else {
         const active = uuid !== null ? uuid : this.active
-        if (this.historyChat[active].title === '')
+        if (this.historyChat[active].title === 'New Chat')
           this.historyChat[active].title = data.message
         this.historyChat[active].data.push(data)
       }

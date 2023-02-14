@@ -31,10 +31,11 @@ function handleEnter(index: number, isEdit: boolean, event: KeyboardEvent) {
     <div class="flex flex-col gap-2 text-sm">
       <div v-for="(item, index) of dataSources" :key="index">
         <a
-          class="relative flex items-center gap-3 px-3 py-3 break-all rounded-md cursor-pointer bg-neutral-50 pr-14 hover:bg-neutral-100 group"
+          class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer pr-14 hover:bg-neutral-100 group"
+          :class="historyStore.active === index && ['border-[#4b9e5f]', 'bg-neutral-100', 'text-[#4b9e5f]']"
           @click="handleSelect(index)"
         >
-          <span :class="[{ 'text-[#4b9e5f]': historyStore.active === index }]">
+          <span>
             <SvgIcon icon="ri:message-3-line" />
           </span>
           <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap">

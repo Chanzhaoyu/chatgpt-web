@@ -12,7 +12,7 @@ const collapsed = ref(appStore.siderCollapsed ?? false)
 
 function handleAdd() {
   historyStore.addHistory({
-    title: '',
+    title: 'New Chat',
     isEdit: false,
     data: [],
   })
