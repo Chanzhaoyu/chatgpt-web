@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { NButton, NInput, useMessage } from 'naive-ui'
 import { Message } from './components'
 import { Layout } from './layout'
@@ -9,13 +9,15 @@ import { HoverButton, SvgIcon } from '@/components/common'
 import { useHistoryStore } from '@/store'
 import { isNumber } from '@/utils/is'
 
+let controller = new AbortController()
+
 const ms = useMessage()
 
 const historyStore = useHistoryStore()
 
 const scrollRef = ref<HTMLDivElement>()
 
-const { addChat, clearChat } = useChat()
+const { addChat, clearChat: handleClear } = useChat()
 
 const prompt = ref('')
 const loading = ref(false)
@@ -47,11 +49,12 @@ async function handleSubmit() {
 
   try {
     loading.value = true
-    const { data } = await fetchChatAPI(message, options)
+    const { data } = await fetchChatAPI(message, options, controller.signal)
     addMessage(data?.text ?? '', { options: { conversationId: data.conversationId, parentMessageId: data.id } })
   }
   catch (error: any) {
-    addMessage(`Error: ${error.message ?? 'Request failed, please try again later.'}`, { error: true })
+    if (error.message !== 'cancelled')
+      addMessage(`Error: ${error.message ?? 'Request failed, please try again later.'}`, { error: true })
   }
   finally {
     loading.value = false
@@ -69,22 +72,32 @@ function addMessage(
   uuid?: number | null,
 ) {
   addChat(message, args, uuid)
+  scrollToBottom()
+}
+
+function scrollToBottom() {
   nextTick(() => scrollRef.value && (scrollRef.value.scrollTop = scrollRef.value.scrollHeight))
 }
 
-function handleClear() {
-  clearChat()
+function handleCancel() {
+  // 取消之后一定要重新赋值，否则会报错
+  controller.abort()
+  controller = new AbortController()
+  loading.value = false
 }
+
+onMounted(() => {
+  scrollToBottom()
+})
 
 watch(
   currentActive,
-  (active: number | null) => {
+  (active) => {
     if (isNumber(active)) {
-      loading.value = false
-      nextTick(() => scrollRef.value && (scrollRef.value.scrollTop = scrollRef.value.scrollHeight))
+      handleCancel()
+      scrollToBottom()
     }
   },
-  { immediate: true },
 )
 </script>
 
@@ -109,7 +122,7 @@ watch(
             </span>
           </HoverButton>
           <NInput v-model:value="prompt" placeholder="Type a message..." @keypress="handleEnter" />
-          <NButton type="primary" :loading="loading" @click="handleSubmit">
+          <NButton type="primary" :loading="loading" @click="handleCancel">
             <template #icon>
               <SvgIcon icon="ri:send-plane-fill" />
             </template>

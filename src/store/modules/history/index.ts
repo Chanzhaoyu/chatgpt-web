@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import type { HistoryState } from './helper'
 import { getLocalHistory, setLocalHistory } from './helper'
-
 export const useHistoryStore = defineStore('history-store', {
   state: (): HistoryState => getLocalHistory(),
   getters: {
@@ -65,6 +64,8 @@ export const useHistoryStore = defineStore('history-store', {
     },
 
     chooseHistory(index: number) {
+      if (this.active === index)
+        return
       this.active = index
       setLocalHistory(this.$state)
     },
