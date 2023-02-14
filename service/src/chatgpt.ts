@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv'
+import 'isomorphic-fetch'
 import type { SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI } from 'chatgpt'
 import { sendResponse } from './utils'
