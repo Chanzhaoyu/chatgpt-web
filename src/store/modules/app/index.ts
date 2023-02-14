@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia'
 import type { AppState } from './helper'
-import { getAppSetting, setAppSetting } from './helper'
+import { getLocalSetting, setLocalSetting } from './helper'
 
 export const useAppStore = defineStore('app-store', {
-  state: (): AppState => getAppSetting(),
+  state: (): AppState => getLocalSetting(),
   actions: {
     setSiderCollapsed(collapsed: boolean) {
       this.siderCollapsed = collapsed
-      setAppSetting(this.$state)
+      setLocalSetting(this.$state)
     },
     toggleSiderCollapse() {
       this.setSiderCollapsed(!this.siderCollapsed)

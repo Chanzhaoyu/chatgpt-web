@@ -1,27 +1,26 @@
 <script setup lang='ts'>
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { NButton, NInput, useMessage } from 'naive-ui'
-import type { ChatOptions, ChatProps } from './types'
 import { Message } from './components'
 import { Layout } from './layout'
+import { useChat } from './hooks/useChat'
 import { fetchChatAPI } from '@/api'
 import { HoverButton, SvgIcon } from '@/components/common'
+import { useHistoryStore } from '@/store'
+
+const ms = useMessage()
+
+const historyStore = useHistoryStore()
 
 const scrollRef = ref<HTMLDivElement>()
 
-const ms = useMessage()
+const { addChat, clearChat } = useChat()
 
 const prompt = ref('')
 const loading = ref(false)
 
-const list = ref<ChatProps[]>([])
-const chatList = computed(() => list.value.filter(item => (!item.reversal && !item.error)))
-
-function initChat() {
-  addMessage('Hi, I am ChatGPT, a chatbot based on GPT-3.')
-}
-
-onMounted(initChat)
+const list = computed<Chat.Chat[]>(() => historyStore.getCurrentChat)
+const chatList = computed<Chat.Chat[]>(() => list.value.filter(item => (!item.reversal && !item.error)))
 
 async function handleSubmit() {
   if (loading.value)
@@ -37,7 +36,7 @@ async function handleSubmit() {
   addMessage(message, { reversal: true })
   prompt.value = ''
 
-  let options: ChatOptions = {}
+  let options: Chat.ChatOptions = {}
   const lastContext = chatList.value[chatList.value.length - 1]?.options
 
   if (lastContext)
@@ -63,21 +62,14 @@ function handleEnter(event: KeyboardEvent) {
 
 function addMessage(
   message: string,
-  args?: { reversal?: boolean; error?: boolean; options?: ChatOptions },
+  args?: { reversal?: boolean; error?: boolean; options?: Chat.ChatOptions },
 ) {
-  list.value.push({
-    dateTime: new Date().toLocaleString(),
-    message,
-    reversal: args?.reversal ?? false,
-    error: args?.error ?? false,
-    options: args?.options ?? undefined,
-  })
+  addChat(message, args)
   nextTick(() => scrollRef.value && (scrollRef.value.scrollTop = scrollRef.value.scrollHeight))
 }
 
 function handleClear() {
-  list.value = []
-  setTimeout(initChat, 100)
+  clearChat()
 }
 </script>
 
@@ -96,8 +88,8 @@ function handleClear() {
       </main>
       <footer class="p-4">
         <div class="flex items-center justify-between space-x-2">
-          <HoverButton tooltip="Clear conversations" @click="handleClear">
-            <span class="text-xl text-[#4f555e]">
+          <HoverButton tooltip="Clear conversations">
+            <span class="text-xl text-[#4f555e]" @click="handleClear">
               <SvgIcon icon="ri:delete-bin-line" />
             </span>
           </HoverButton>

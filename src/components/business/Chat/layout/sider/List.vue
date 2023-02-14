@@ -1,50 +1,65 @@
 <script setup lang='ts'>
-import { NScrollbar } from 'naive-ui'
-import type { HistoryChatProps } from '../../types'
+import { ref } from 'vue'
+import { NInput, NScrollbar } from 'naive-ui'
 import { SvgIcon } from '@/components/common'
+import { useHistoryStore } from '@/store'
 
-interface Props {
-  data: HistoryChatProps[]
+const historyStore = useHistoryStore()
+
+const dataSources = ref(historyStore.historyChat)
+
+function handleSelect(index: number) {
+  historyStore.chooseHistory(index)
 }
 
-interface Emit {
-  (ev: 'delete', index: number): void
-  (ev: 'edit', index: number): void
+function handleEdit(index: number, isEdit: boolean) {
+  historyStore.editHistory(index, isEdit)
 }
 
-defineProps<Props>()
-
-const emit = defineEmits<Emit>()
-
-function handleEdit(index: number) {
-  emit('delete', index)
+function handleRemove(index: number) {
+  historyStore.removeHistory(index)
 }
 
-function handleDelete(index: number) {
-  emit('delete', index)
+function handleEnter(index: number, isEdit: boolean, event: KeyboardEvent) {
+  if (event.key === 'Enter')
+    handleEdit(index, isEdit)
 }
 </script>
 
 <template>
   <NScrollbar class="px-4">
     <div class="flex flex-col gap-2 text-sm">
-      <div v-for="(item, index) of data" :key="index">
+      <div v-for="(item, index) of dataSources" :key="index">
         <a
           class="relative flex items-center gap-3 px-3 py-3 break-all rounded-md cursor-pointer bg-neutral-50 pr-14 hover:bg-neutral-100 group"
+          @click="handleSelect(index)"
         >
           <span>
             <SvgIcon icon="ri:message-3-line" />
           </span>
-          <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap max-h-5">
-            <span>{{ item.title }}</span>
+          <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap">
+            <NInput
+              v-if="item.isEdit"
+              v-model:value="item.title"
+              size="tiny"
+              @keypress="handleEnter(index, false, $event)"
+            />
+            <span v-else>{{ item.title }}</span>
           </div>
           <div class="absolute z-10 flex visible right-1">
-            <button class="p-1">
-              <SvgIcon icon="ri:edit-line" @click="handleEdit(index)" />
-            </button>
-            <button class="p-1" @click="handleDelete(index)">
-              <SvgIcon icon="ri:delete-bin-line" />
-            </button>
+            <template v-if="item.isEdit">
+              <button class="p-1" @click="handleEdit(index, false)">
+                <SvgIcon icon="ri:save-line" />
+              </button>
+            </template>
+            <template v-else>
+              <button class="p-1">
+                <SvgIcon icon="ri:edit-line" @click="handleEdit(index, true)" />
+              </button>
+              <button class="p-1" @click="handleRemove(index)">
+                <SvgIcon icon="ri:delete-bin-line" />
+              </button>
+            </template>
           </div>
         </a>
       </div>
