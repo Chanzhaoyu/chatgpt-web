@@ -50,7 +50,7 @@ function handleCollapsed() {
     bordered
     @update:collapsed="handleCollapsed"
   >
-    <div class="flex flex-col h-full">
+    <div class="flex flex-col h-full sider-content">
       <main class="flex-1 min-h-0 overflow-hidden">
         <div class="p-4">
           <NButton dashed block @click="handleAdd">
@@ -63,3 +63,9 @@ function handleCollapsed() {
     </div>
   </NLayoutSider>
 </template>
+
+<style>
+.n-layout-sider:has(.sider-content) {
+@apply hidden md:flex;
+}
+</style>
