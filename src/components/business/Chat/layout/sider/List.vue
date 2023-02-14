@@ -34,14 +34,12 @@ function handleEnter(index: number, isEdit: boolean, event: KeyboardEvent) {
           class="relative flex items-center gap-3 px-3 py-3 break-all rounded-md cursor-pointer bg-neutral-50 pr-14 hover:bg-neutral-100 group"
           @click="handleSelect(index)"
         >
-          <span>
+          <span :class="[{ 'text-[#4b9e5f]': historyStore.active === index }]">
             <SvgIcon icon="ri:message-3-line" />
           </span>
           <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap">
             <NInput
-              v-if="item.isEdit"
-              v-model:value="item.title"
-              size="tiny"
+              v-if="item.isEdit" v-model:value="item.title" size="tiny"
               @keypress="handleEnter(index, false, $event)"
             />
             <span v-else>{{ item.title }}</span>
