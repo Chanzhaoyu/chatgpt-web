@@ -1,34 +1,14 @@
 <script setup lang='ts'>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { NButton, NLayoutSider, useMessage } from 'naive-ui'
 import List from './List.vue'
 import Footer from './Footer.vue'
+import { useAppStore } from '@/store'
 
-interface Props {
-  collapsed?: boolean
-}
-
-interface Emit {
-  (e: 'update:collapsed', value: boolean): void
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  collapsed: false,
-})
-
-const emit = defineEmits<Emit>()
-
+const appStore = useAppStore()
 const ms = useMessage()
 
-const collapsed = ref(props.collapsed)
-
-watch(
-  () => props.collapsed,
-  (value: boolean) => {
-    collapsed.value = value
-  },
-  { immediate: true },
-)
+const collapsed = ref(appStore.siderCollapsed ?? false)
 
 function handleAdd() {
   ms.info('Coming soon...')
@@ -36,7 +16,7 @@ function handleAdd() {
 
 function handleCollapsed() {
   collapsed.value = !collapsed.value
-  emit('update:collapsed', collapsed.value)
+  appStore.setSiderCollapsed(collapsed.value)
 }
 </script>
 
