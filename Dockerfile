@@ -19,6 +19,7 @@ RUN pnpm install
 COPY . $BUILD_DIR
 
 ENV NODE_ENV=production
+RUN sh build.sh
 
 WORKDIR $WORK_DIR
 COPY  ./service $WORK_DIR
