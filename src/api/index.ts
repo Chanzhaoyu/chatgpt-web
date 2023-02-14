@@ -1,9 +1,12 @@
 import { post } from '@/utils/request'
 
-export function fetchChatAPI<T = any>(prompt: string) {
+export function fetchChatAPI<T = any>(
+  prompt: string,
+  options?: { conversationId?: string; parentMessageId?: string },
+) {
   return post<T>({
     url: '/chat',
-    data: { prompt },
+    data: { prompt, options },
   })
 }
 

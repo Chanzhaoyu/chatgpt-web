@@ -2,12 +2,13 @@
   "name": "chatgpt-web-service",
   "version": "1.0.0",
   "private": false,
-  "description": "ChatGPT Web Bot node service",
+  "description": "ChatGPT Web Service",
+  "author": "ChenZhaoYu <chenzhaoyu1994@gmail.com>",
   "keywords": [
+    "chatgpt-web",
     "chatgpt",
     "chatbot",
-    "web",
-    "vue"
+    "express"
   ],
   "engines": {
     "node": ">=18.0.0"

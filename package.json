@@ -2,12 +2,12 @@
   "name": "chatgpt-web",
   "version": "2.0.0",
   "private": false,
-  "description": "ChatGPT Web Bot",
-  "author": "ChenZhaoYu <chenzhaoyu1994@gami.com>",
+  "description": "ChatGPT Web",
+  "author": "ChenZhaoYu <chenzhaoyu1994@gmail.com>",
   "keywords": [
+    "chatgpt-web",
     "chatgpt",
     "chatbot",
-    "web",
     "vue"
   ],
   "scripts": {
@@ -47,9 +47,8 @@
     "vue-tsc": "^1.0.24"
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx,vue}": [
-      "pnpm lint:fix",
-      "pnpm type-check"
+    "*.{ts,tsx,vue}": [
+      "pnpm lint:fix"
     ]
   }
 }
