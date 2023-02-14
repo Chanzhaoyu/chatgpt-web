@@ -18,7 +18,7 @@ if (apiKey === undefined)
 /**
  * More Info: https://github.com/transitive-bullshit/chatgpt-api
  */
-const api = new ChatGPTAPI({ apiKey, debug: false })
+const api = new ChatGPTAPI({ apiKey })
 
 async function chatReply(
   message: string,
@@ -28,7 +28,9 @@ async function chatReply(
     return sendResponse({ type: 'Fail', message: 'Message is empty' })
 
   try {
-    let options: SendMessageOptions = {}
+    let options: SendMessageOptions = {
+      timeoutMs: 1000 * 30
+    }
 
     if (lastContext)
       options = { ...lastContext }

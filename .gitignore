@@ -6,6 +6,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+service/.env
+service/public/*
 
 node_modules
 .DS_Store
