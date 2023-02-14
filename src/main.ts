@@ -1,21 +1,17 @@
-import './styles/global.css'
-
 import { createApp } from 'vue'
 import App from './App.vue'
+import { setupAssets } from '@/plugins'
+import { setupStore } from '@/store'
 import { setupRouter } from '@/router'
 
-/** Tailwind's Preflight Style Override */
-function naiveStyleOverride() {
-  const meta = document.createElement('meta')
-  meta.name = 'naive-ui-style'
-  document.head.appendChild(meta)
-}
-
-/** Setup */
 async function bootstrap() {
   const app = createApp(App)
-  naiveStyleOverride()
+  setupAssets()
+
+  setupStore(app)
+
   await setupRouter(app)
+
   app.mount('#app')
 }
 
