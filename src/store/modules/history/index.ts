@@ -16,15 +16,16 @@ export const useHistoryStore = defineStore('history-store', {
     },
   },
   actions: {
-    addChat(data: Chat.Chat) {
+    addChat(data: Chat.Chat, uuid: number | null = null) {
       if (this.active === null) {
         this.historyChat.push({ title: data.message, isEdit: false, data: [data] })
         this.active = this.historyChat.length - 1
       }
       else {
-        if (this.historyChat[this.active].title === '')
-          this.historyChat[this.active].title = data.message
-        this.historyChat[this.active].data.push(data)
+        const active = uuid !== null ? uuid : this.active
+        if (this.historyChat[active].title === '')
+          this.historyChat[active].title = data.message
+        this.historyChat[active].data.push(data)
       }
       setLocalHistory(this.$state)
     },

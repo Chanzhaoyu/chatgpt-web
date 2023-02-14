@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { NButton, NInput, useMessage } from 'naive-ui'
 import { Message } from './components'
 import { Layout } from './layout'
@@ -7,6 +7,7 @@ import { useChat } from './hooks/useChat'
 import { fetchChatAPI } from '@/api'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useHistoryStore } from '@/store'
+import { isNumber } from '@/utils/is'
 
 const ms = useMessage()
 
@@ -18,6 +19,8 @@ const { addChat, clearChat } = useChat()
 
 const prompt = ref('')
 const loading = ref(false)
+
+const currentActive = computed(() => historyStore.active)
 
 const list = computed<Chat.Chat[]>(() => historyStore.getCurrentChat)
 const chatList = computed<Chat.Chat[]>(() => list.value.filter(item => (!item.reversal && !item.error)))
@@ -63,14 +66,26 @@ function handleEnter(event: KeyboardEvent) {
 function addMessage(
   message: string,
   args?: { reversal?: boolean; error?: boolean; options?: Chat.ChatOptions },
+  uuid?: number | null,
 ) {
-  addChat(message, args)
+  addChat(message, args, uuid)
   nextTick(() => scrollRef.value && (scrollRef.value.scrollTop = scrollRef.value.scrollHeight))
 }
 
 function handleClear() {
   clearChat()
 }
+
+watch(
+  currentActive,
+  (active: number | null) => {
+    if (isNumber(active)) {
+      loading.value = false
+      nextTick(() => scrollRef.value && (scrollRef.value.scrollTop = scrollRef.value.scrollHeight))
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
