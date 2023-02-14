@@ -1,7 +1,9 @@
 import axios, { type AxiosResponse } from 'axios'
 
+const baseURL = import.meta.env.VITE_GLOB_API_URL || '/'
+
 const service = axios.create({
-  baseURL: process.env.VITE_GLOB_API_URL,
+  baseURL,
   timeout: 30 * 1000,
 })
 
