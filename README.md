@@ -95,6 +95,16 @@ pnpm build
 pnpm prod
 ```
 
+## Docker build & run
+
+```
+docker rm -f $(docker ps -a| grep marlkiller/chatgpt-web | awk '{print $1}')
+docker rmi $(docker images 'marlkiller/chatgpt-web' -q)
+
+docker build -t marlkiller/chatgpt-web .
+docker run -p 1002:1002 marlkiller/chatgpt-web
+```
+
 PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 
 ### 网页
