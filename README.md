@@ -117,9 +117,5 @@ Q: 文件保存时全部爆红?
 
 A: `vscode` 请安装项目推荐插件，或手动安装 `Eslint` 插件。
 
-## 贡献者
-<!-- readme: collaborators,contributors -start -->
-<!-- readme: collaborators,contributors -end -->
-
 ## License
 MIT © [ChenZhaoYu](./license)
