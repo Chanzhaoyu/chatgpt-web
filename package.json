@@ -22,6 +22,7 @@
     "common:prepare": "husky install"
   },
   "dependencies": {
+    "highlight.js": "^11.7.0",
     "naive-ui": "^2.34.3",
     "pinia": "^2.0.30",
     "vue": "^3.2.47",
