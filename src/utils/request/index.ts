@@ -1,4 +1,4 @@
-import type { AxiosResponse } from 'axios'
+import type { AxiosResponse, GenericAbortSignal } from 'axios'
 import request from './axios'
 
 export interface HttpOption {
@@ -6,6 +6,7 @@ export interface HttpOption {
   data?: any
   method?: string
   headers?: any
+  signal?: GenericAbortSignal
   beforeRequest?: () => void
   afterRequest?: () => void
 }
@@ -20,7 +21,7 @@ export interface Response<T = any> {
   status: string
 }
 
-function http<T = any>({ url, data, method, headers, beforeRequest, afterRequest }: HttpOption) {
+function http<T = any>({ url, data, method, headers, signal, beforeRequest, afterRequest }: HttpOption) {
   const successHandler = (res: AxiosResponse<Response<T>>) => {
     if (res.data.status === 'Success')
       return res.data
@@ -40,30 +41,32 @@ function http<T = any>({ url, data, method, headers, beforeRequest, afterRequest
   const params = Object.assign(typeof data === 'function' ? data() : data ?? {}, {})
 
   return method === 'GET'
-    ? request.get(url, { params }).then(successHandler, failHandler)
-    : request.post(url, params, { headers }).then(successHandler, failHandler)
+    ? request.get(url, { params, signal }).then(successHandler, failHandler)
+    : request.post(url, params, { headers, signal }).then(successHandler, failHandler)
 }
 
 export function get<T = any>(
-  { url, data, method = 'GET', beforeRequest, afterRequest }: HttpOption,
+  { url, data, method = 'GET', signal, beforeRequest, afterRequest }: HttpOption,
 ): Promise<Response<T>> {
   return http<T>({
     url,
     method,
     data,
+    signal,
     beforeRequest,
     afterRequest,
   })
 }
 
 export function post<T = any>(
-  { url, data, method = 'POST', headers, beforeRequest, afterRequest }: HttpOption,
+  { url, data, method = 'POST', headers, signal, beforeRequest, afterRequest }: HttpOption,
 ): Promise<Response<T>> {
   return http<T>({
     url,
     method,
     data,
     headers,
+    signal,
     beforeRequest,
     afterRequest,
   })
