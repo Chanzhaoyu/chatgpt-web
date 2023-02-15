@@ -29,7 +29,7 @@ function handleCollapsed() {
     :collapsed="collapsed"
     :collapsed-width="0"
     :width="260"
-    collapse-mode="width"
+    collapse-mode="transform"
     show-trigger="arrow-circle"
     bordered
     @update:collapsed="handleCollapsed"

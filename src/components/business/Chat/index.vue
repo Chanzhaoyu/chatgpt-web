@@ -17,7 +17,7 @@ const historyStore = useHistoryStore()
 
 const scrollRef = ref<HTMLDivElement>()
 
-const { addChat, clearChat: handleClear } = useChat()
+const { addChat, clearChat } = useChat()
 
 const prompt = ref('')
 const loading = ref(false)
@@ -30,6 +30,8 @@ const chatList = computed<Chat.Chat[]>(() => list.value.filter(item => (!item.re
 async function handleSubmit() {
   if (loading.value)
     return
+
+  controller = new AbortController()
 
   const message = prompt.value.trim()
 
@@ -53,8 +55,8 @@ async function handleSubmit() {
     addMessage(data?.text ?? '', { options: { conversationId: data.conversationId, parentMessageId: data.id } })
   }
   catch (error: any) {
-    if (error.message !== 'cancelled')
-      addMessage(`Error: ${error.message ?? 'Request failed, please try again later.'}`, { error: true })
+    if (error.message !== 'canceled')
+      addMessage(`${error.message ?? 'Request failed, please try again later.'}`, { error: true })
   }
   finally {
     loading.value = false
@@ -79,8 +81,12 @@ function scrollToBottom() {
   nextTick(() => scrollRef.value && (scrollRef.value.scrollTop = scrollRef.value.scrollHeight))
 }
 
+function handleClear() {
+  handleCancel()
+  clearChat()
+}
+
 function handleCancel() {
-  // 取消之后一定要重新赋值，否则会报错
   controller.abort()
   controller = new AbortController()
   loading.value = false
@@ -122,7 +128,7 @@ watch(
             </span>
           </HoverButton>
           <NInput v-model:value="prompt" placeholder="Type a message..." @keypress="handleEnter" />
-          <NButton type="primary" :loading="loading" @click="handleCancel">
+          <NButton type="primary" :loading="loading" @click="handleSubmit">
             <template #icon>
               <SvgIcon icon="ri:send-plane-fill" />
             </template>

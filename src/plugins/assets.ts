@@ -1,3 +1,4 @@
+import 'highlight.js/styles/xcode.css'
 import '@/styles/global.css'
 
 /** Tailwind's Preflight Style Override */

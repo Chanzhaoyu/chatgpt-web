@@ -1,71 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
-  <head>
-    <meta charset="UTF-8">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT Web</title>
-  </head>
-  <body>
-    <div id="app">
-			<style>
-        .loading-wrap {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-        }
 
-        .balls {
-          width: 4em;
-          display: flex;
-          flex-flow: row nowrap;
-          align-items: center;
-          justify-content: space-between;
-        }
+<head>
+	<meta charset="UTF-8">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover" />
+	<title>ChatGPT Web</title>
+</head>
 
-        .balls div {
-          width: 0.8em;
-          height: 0.8em;
-          border-radius: 50%;
-          background-color: #4b9e5f;
-        }
+<body>
+	<div id="app">
+		<style>
+			.loading-wrap {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+			}
 
-        .balls div:nth-of-type(1) {
-          transform: translateX(-100%);
-          animation: left-swing 0.5s ease-in alternate infinite;
-        }
+			.balls {
+				width: 4em;
+				display: flex;
+				flex-flow: row nowrap;
+				align-items: center;
+				justify-content: space-between;
+			}
 
-        .balls div:nth-of-type(3) {
-          transform: translateX(-95%);
-          animation: right-swing 0.5s ease-out alternate infinite;
-        }
+			.balls div {
+				width: 0.8em;
+				height: 0.8em;
+				border-radius: 50%;
+				background-color: #4b9e5f;
+			}
 
-        @keyframes left-swing {
-          50%,
-          100% {
-            transform: translateX(95%);
-          }
-        }
+			.balls div:nth-of-type(1) {
+				transform: translateX(-100%);
+				animation: left-swing 0.5s ease-in alternate infinite;
+			}
 
-        @keyframes right-swing {
-          50% {
-            transform: translateX(-95%);
-          }
+			.balls div:nth-of-type(3) {
+				transform: translateX(-95%);
+				animation: right-swing 0.5s ease-out alternate infinite;
+			}
 
-          100% {
-            transform: translateX(100%);
-          }
-        }
-      </style>
-      <div class="loading-wrap">
-        <div class="balls">
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div>
+			@keyframes left-swing {
+
+				50%,
+				100% {
+					transform: translateX(95%);
+				}
+			}
+
+			@keyframes right-swing {
+				50% {
+					transform: translateX(-95%);
+				}
+
+				100% {
+					transform: translateX(100%);
+				}
+			}
+		</style>
+		<div class="loading-wrap">
+			<div class="balls">
+				<div></div>
+				<div></div>
+				<div></div>
+			</div>
 		</div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+	</div>
+	<script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
