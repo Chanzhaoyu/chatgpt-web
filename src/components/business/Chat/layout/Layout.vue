@@ -13,7 +13,3 @@ import Sider from './sider/index.vue'
     </NLayout>
   </div>
 </template>
-
-<style>
-
-</style>
