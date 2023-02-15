@@ -31,6 +31,8 @@ async function handleSubmit() {
   if (loading.value)
     return
 
+  controller = new AbortController()
+
   const message = prompt.value.trim()
 
   if (!message || !message.length) {
@@ -53,7 +55,7 @@ async function handleSubmit() {
     addMessage(data?.text ?? '', { options: { conversationId: data.conversationId, parentMessageId: data.id } })
   }
   catch (error: any) {
-    if (error.message !== 'cancelled')
+    if (error.message !== 'canceled')
       addMessage(`${error.message ?? 'Request failed, please try again later.'}`, { error: true })
   }
   finally {

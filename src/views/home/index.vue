@@ -7,7 +7,3 @@ import { Chat } from '@/components/business'
     <Chat />
   </div>
 </template>
-
-<style>
-
-</style>
