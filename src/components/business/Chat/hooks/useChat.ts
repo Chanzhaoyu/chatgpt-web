@@ -6,7 +6,6 @@ export function useChat() {
   function addChat(
     message: string,
     args?: { reversal?: boolean; error?: boolean; options?: Chat.ChatOptions },
-    uuid?: number | null,
   ) {
     historyStore.addChat(
       {
@@ -16,7 +15,6 @@ export function useChat() {
         error: args?.error ?? false,
         options: args?.options ?? undefined,
       },
-      uuid,
     )
   }
 
