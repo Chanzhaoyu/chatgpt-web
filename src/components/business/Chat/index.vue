@@ -126,7 +126,7 @@ watch(
             </span>
           </HoverButton>
           <NInput v-model:value="prompt" placeholder="Type a message..." @keypress="handleEnter" />
-          <NButton type="primary" :loading="loading" @click="handleCancel">
+          <NButton type="primary" :loading="loading" @click="handleSubmit">
             <template #icon>
               <SvgIcon icon="ri:send-plane-fill" />
             </template>
