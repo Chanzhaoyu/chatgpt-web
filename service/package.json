@@ -11,7 +11,7 @@
     "express"
   ],
   "engines": {
-    "node": ">=18.0.0"
+    "node": "^16 || ^18"
   },
   "scripts": {
     "start": "esno ./src/index.ts",
@@ -23,7 +23,8 @@
   },
   "dependencies": {
     "chatgpt": "^4.3.2",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "isomorphic-fetch": "^3.0.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.35.2",

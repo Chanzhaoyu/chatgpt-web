@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv'
-import type { SendMessageOptions } from 'chatgpt'
-import { ChatGPTAPI } from 'chatgpt'
+import 'isomorphic-fetch'
+import type { ChatGPTAPI, SendMessageOptions } from 'chatgpt'
 import { sendResponse } from './utils'
 
 export interface ChatContext {
@@ -18,7 +18,14 @@ if (apiKey === undefined)
 /**
  * More Info: https://github.com/transitive-bullshit/chatgpt-api
  */
-const api = new ChatGPTAPI({ apiKey, debug: false })
+let api: ChatGPTAPI
+// To use ESM in CommonJS, you can use a dynamic import
+(async () => {
+  const { ChatGPTAPI } = await import('chatgpt')
+
+  api = new ChatGPTAPI(
+    { apiKey: process.env.OPENAI_API_KEY })
+})()
 
 async function chatReply(
   message: string,
