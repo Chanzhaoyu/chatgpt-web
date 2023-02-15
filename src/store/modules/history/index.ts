@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import type { HistoryState } from './helper'
 import { getLocalHistory, setLocalHistory } from './helper'
+
 export const useHistoryStore = defineStore('history-store', {
   state: (): HistoryState => getLocalHistory(),
   getters: {
@@ -18,16 +19,16 @@ export const useHistoryStore = defineStore('history-store', {
     },
   },
   actions: {
-    addChat(data: Chat.Chat, uuid: number | null = null) {
+    addChat(data: Chat.Chat) {
       if (this.active === null) {
         this.historyChat.push({ title: data.message, isEdit: false, data: [data] })
         this.active = this.historyChat.length - 1
       }
       else {
-        const active = uuid !== null ? uuid : this.active
-        if (this.historyChat[active].title === 'New Chat')
-          this.historyChat[active].title = data.message
-        this.historyChat[active].data.push(data)
+        if (this.historyChat[this.active].title === 'New Chat')
+          this.historyChat[this.active].title = data.message
+
+        this.historyChat[this.active].data.push(data)
       }
       setLocalHistory(this.$state)
     },
@@ -52,14 +53,19 @@ export const useHistoryStore = defineStore('history-store', {
 
     removeHistory(index: number) {
       this.historyChat.splice(index, 1)
+
       if (this.active === index) {
         if (this.historyChat.length === 0)
           this.active = null
         else if (this.active === this.historyChat.length)
-          this.active--
-        else
-          this.active = 0
+          this.active = this.historyChat.length - 1
       }
+
+      if (this.historyChat.length === 0)
+        this.active = null
+
+      this.toggleHeartbeat()
+
       setLocalHistory(this.$state)
     },
 
@@ -68,6 +74,10 @@ export const useHistoryStore = defineStore('history-store', {
         return
       this.active = index
       setLocalHistory(this.$state)
+    },
+
+    toggleHeartbeat() {
+      this.heartbeat = !this.heartbeat
     },
   },
 })

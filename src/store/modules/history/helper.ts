@@ -5,10 +5,11 @@ const LOCAL_NAME = 'historyChat'
 export interface HistoryState {
   historyChat: Chat.HistoryChat[]
   active: number | null
+  heartbeat: boolean
 }
 
 export function defaultSetting() {
-  return { historyChat: [], active: null }
+  return { historyChat: [], active: null, heartbeat: false }
 }
 
 export function getLocalHistory() {
