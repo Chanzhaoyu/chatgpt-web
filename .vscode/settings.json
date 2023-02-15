@@ -4,7 +4,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "scss.lint.unknownAtRules": "ignore",
   "eslint.validate": [
     "javascript",
     "javascriptreact",
