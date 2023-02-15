@@ -17,7 +17,7 @@ const historyStore = useHistoryStore()
 
 const scrollRef = ref<HTMLDivElement>()
 
-const { addChat, clearChat: handleClear } = useChat()
+const { addChat, clearChat } = useChat()
 
 const prompt = ref('')
 const loading = ref(false)
@@ -54,7 +54,7 @@ async function handleSubmit() {
   }
   catch (error: any) {
     if (error.message !== 'cancelled')
-      addMessage(`Error: ${error.message ?? 'Request failed, please try again later.'}`, { error: true })
+      addMessage(`${error.message ?? 'Request failed, please try again later.'}`, { error: true })
   }
   finally {
     loading.value = false
@@ -79,8 +79,12 @@ function scrollToBottom() {
   nextTick(() => scrollRef.value && (scrollRef.value.scrollTop = scrollRef.value.scrollHeight))
 }
 
+function handleClear() {
+  handleCancel()
+  clearChat()
+}
+
 function handleCancel() {
-  // 取消之后一定要重新赋值，否则会报错
   controller.abort()
   controller = new AbortController()
   loading.value = false
