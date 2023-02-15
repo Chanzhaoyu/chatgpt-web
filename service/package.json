@@ -19,7 +19,8 @@
     "build": "pnpm clean && tsup",
     "clean": "rimraf build",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "common:cleanup": "rimraf node_modules && rimraf pnpm-lock.yaml"
   },
   "dependencies": {
     "chatgpt": "^4.3.2",
