@@ -9,8 +9,5 @@ export const useAppStore = defineStore('app-store', {
       this.siderCollapsed = collapsed
       setLocalSetting(this.$state)
     },
-    toggleSiderCollapse() {
-      this.setSiderCollapsed(!this.siderCollapsed)
-    },
   },
 })

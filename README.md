@@ -107,8 +107,23 @@ docker run -p 1002:1002 marlkiller/chatgpt-web
 
 PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 
+## Docker build & run
+
+[参考信息](https://github.com/Chanzhaoyu/chatgpt-web/pull/33)
+
+```
+docker rm -f $(docker ps -a| grep marlkiller/chatgpt-web | awk '{print $1}')
+docker rmi $(docker images 'marlkiller/chatgpt-web' -q)
+
+docker build -t marlkiller/chatgpt-web .
+docker run -p 1002:1002 marlkiller/chatgpt-web
+```
+
 ### 网页
+
 根目录下运行以下命令，然后将 `dist` 文件夹复制到你的托管服务器上
+
+[参考信息](https://cn.vitejs.dev/guide/static-deploy.html#building-the-app)
 
 ```shell
 pnpm build
@@ -126,6 +141,16 @@ A: 根目录下 `.env` 文件中的 `VITE_GLOB_API_URL` 字段。
 Q: 文件保存时全部爆红?
 
 A: `vscode` 请安装项目推荐插件，或手动安装 `Eslint` 插件。
+
+## 参与贡献
+
+贡献之前请先阅读 [贡献指南](./CONTRIBUTING.md)
+
+感谢所有做过贡献的人!
+
+<a href="https://github.com/Chanzhaoyu/chatgpt-web/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Chanzhaoyu/chatgpt-web" />
+</a>
 
 ## License
 MIT © [ChenZhaoYu](./license)
