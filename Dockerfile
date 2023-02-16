@@ -1,5 +1,5 @@
 # build front-end
-FROM node:lts AS builder
+FROM node:lts-alpine AS builder
 
 COPY ./ /app
 WORKDIR /app
@@ -7,7 +7,7 @@ WORKDIR /app
 RUN npm install pnpm -g && pnpm install && pnpm run build
 
 # service
-FROM node:lts
+FROM node:lts-alpine
 
 COPY /service /app
 COPY --from=builder /app/dist /app/public
