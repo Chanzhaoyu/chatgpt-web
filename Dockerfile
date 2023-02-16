@@ -1,19 +1,19 @@
-FROM node:lts
+# build front-end
+FROM node:lts AS builder
 
-# copy resource
-RUN mkdir /app
 COPY ./ /app
 WORKDIR /app
 
-# build
-RUN npm install pnpm -g
-RUN pnpm bootstrap
-WORKDIR /app/service
-RUN pnpm install
+RUN npm install pnpm -g && pnpm install && pnpm run build
+
+# service
+FROM node:lts
+
+COPY /service /app
+COPY --from=builder /app/dist /app/public
+
 WORKDIR /app
+RUN npm install pnpm -g && pnpm install
+RUN pnpm run start
 
-EXPOSE 1002
 EXPOSE 3002
-
-CMD ["/bin/bash","./start.sh"]
-
