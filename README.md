@@ -99,16 +99,27 @@ PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 
 ## Docker build & run
 
-[参考信息](https://github.com/Chanzhaoyu/chatgpt-web/pull/33)
+[参考信息](https://github.com/Chanzhaoyu/chatgpt-web/pull/42)
 
 ```bash
 docker build -t chatgpt-web .
-
-# 前台运行
-docker run --name chatgpt-web --rm -it -p 1002:1002 --env OPENAI_API_KEY=your_api_key chatgpt-web
-# 后台运行
-docker run --name chatgpt-web -d -p 1002:1002 --env OPENAI_API_KEY=your_api_key chatgpt-web
 ```
+
+
+## Docker compose
+
+```yml
+version: '3'
+
+service:
+  app:
+    image: 0xjerry/chatgpt-web
+    ports:
+      - 3002:3002
+    environment:
+      OPENAI_API_KEY: xxxxxx
+```
+
 
 ### 网页
 
