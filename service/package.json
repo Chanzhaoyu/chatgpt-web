@@ -23,7 +23,7 @@
     "common:cleanup": "rimraf node_modules && rimraf pnpm-lock.yaml"
   },
   "dependencies": {
-    "chatgpt": "^4.4.1",
+    "chatgpt": "^4.3.2",
     "dotenv": "^16.0.3",
     "esno": "^0.16.3",
     "express": "^4.18.2",
@@ -35,7 +35,7 @@
     "@types/node": "^18.13.0",
     "eslint": "^8.34.0",
     "rimraf": "^4.1.2",
-    "tsup": "^6.6.3",
+    "tsup": "^6.6.2",
     "typescript": "^4.9.5"
   }
 }
