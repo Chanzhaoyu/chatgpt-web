@@ -2,7 +2,7 @@ name: build_docker
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build_docker:
@@ -15,7 +15,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: 0xjerry/chatgpt-web
+          images: chenzhaoyu94/chatgpt-web
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
