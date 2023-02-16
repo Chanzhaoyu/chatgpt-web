@@ -105,7 +105,6 @@ PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 docker build -t chatgpt-web .
 ```
 
-
 ## Docker compose
 
 ```yml
