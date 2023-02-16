@@ -132,5 +132,15 @@ Q: 文件保存时全部爆红?
 
 A: `vscode` 请安装项目推荐插件，或手动安装 `Eslint` 插件。
 
+## 参与贡献
+
+贡献之前请先阅读 [贡献指南](./CONTRIBUTING.md)
+
+感谢所有做过贡献的人!
+
+<a href="https://github.com/Chanzhaoyu/chatgpt-web/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Chanzhaoyu/chatgpt-web" />
+</a>
+
 ## License
 MIT © [ChenZhaoYu](./license)
