@@ -115,7 +115,7 @@ docker run -p 1002:1002 marlkiller/chatgpt-web
 version: '3'
 
 service:
-  - app:
+  app:
     image: 0xjerry/chatgpt-web
     ports:
       - 3002:3002
