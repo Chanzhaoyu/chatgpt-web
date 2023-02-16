@@ -101,12 +101,13 @@ PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 
 [参考信息](https://github.com/Chanzhaoyu/chatgpt-web/pull/33)
 
-```
-docker rm -f $(docker ps -a| grep marlkiller/chatgpt-web | awk '{print $1}')
-docker rmi $(docker images 'marlkiller/chatgpt-web' -q)
+```bash
+docker build -t chatgpt-web .
 
-docker build -t marlkiller/chatgpt-web .
-docker run -p 1002:1002 marlkiller/chatgpt-web
+# 前台运行
+docker run --name chatgpt-web --rm -it -p 1002:1002 --env OPENAI_API_KEY=your_api_key chatgpt-web
+# 后台运行
+docker run --name chatgpt-web -d -p 1002:1002 --env OPENAI_API_KEY=your_api_key chatgpt-web
 ```
 
 ### 网页
