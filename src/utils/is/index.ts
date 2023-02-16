@@ -14,7 +14,7 @@ export function isNull<T extends null>(value: T | unknown): value is null {
   return Object.prototype.toString.call(value) === '[object Null]'
 }
 
-export function isUndefine<T extends undefined>(value: T | unknown): value is undefined {
+export function isUndefined<T extends undefined>(value: T | unknown): value is undefined {
   return Object.prototype.toString.call(value) === '[object Undefined]'
 }
 
