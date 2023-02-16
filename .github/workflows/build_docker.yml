@@ -15,7 +15,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: chenzhaoyu94/chatgpt-web
+          images: marlkiller/chatgpt-web
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
