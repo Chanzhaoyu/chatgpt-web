@@ -1,3 +1,15 @@
+## v2.3.3
+
+`2023-02-16`
+
+### Feature
+- 添加 `README` 部份说明和贡献列表
+- 添加 `docker` 镜像
+- 添加 `GitHub Action` 自动化构建
+
+### BugFix
+- 回退依赖更新导致的 [Eslint 报错](https://github.com/eslint/eslint/issues/16896)
+
 ## v2.3.2
 
 `2023-02-16`

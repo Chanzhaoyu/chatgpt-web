@@ -107,12 +107,14 @@ docker build -t chatgpt-web .
 
 ## Docker compose
 
+[Hub 地址](https://hub.docker.com/repository/docker/chenzhaoyu94/chatgpt-web/general)
+
 ```yml
 version: '3'
 
 service:
   app:
-    image: 0xjerry/chatgpt-web
+    image: chenzhaoyu94/chatgpt-web
     ports:
       - 3002:3002
     environment:
