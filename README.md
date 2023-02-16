@@ -95,7 +95,11 @@ pnpm build
 pnpm prod
 ```
 
+PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
+
 ## Docker build & run
+
+[参考信息](https://github.com/Chanzhaoyu/chatgpt-web/pull/33)
 
 ```
 docker rm -f $(docker ps -a| grep marlkiller/chatgpt-web | awk '{print $1}')
@@ -105,10 +109,11 @@ docker build -t marlkiller/chatgpt-web .
 docker run -p 1002:1002 marlkiller/chatgpt-web
 ```
 
-PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
-
 ### 网页
+
 根目录下运行以下命令，然后将 `dist` 文件夹复制到你的托管服务器上
+
+[参考信息](https://cn.vitejs.dev/guide/static-deploy.html#building-the-app)
 
 ```shell
 pnpm build
