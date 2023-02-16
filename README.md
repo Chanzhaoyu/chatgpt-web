@@ -112,15 +112,15 @@ docker run -p 1002:1002 marlkiller/chatgpt-web
 ## Docker compose
 
 ```yml
-version: "3"
+version: '3'
 
-service: 
+service:
   - app:
-        image: 0xjerry/chatgpt-web
-        ports:
-        - 3002:3002
-        environment:
-        OPENAI_API_KEY: xxxxxx
+    image: 0xjerry/chatgpt-web
+    ports:
+      - 3002:3002
+    environment:
+      OPENAI_API_KEY: xxxxxx
 ```
 
 ### 网页
