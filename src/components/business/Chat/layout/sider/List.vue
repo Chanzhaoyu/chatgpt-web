@@ -12,17 +12,21 @@ function handleSelect(index: number) {
   historyStore.chooseHistory(index)
 }
 
-function handleEdit(index: number, isEdit: boolean) {
+function handleEdit(index: number, isEdit: boolean, event?: MouseEvent) {
   historyStore.editHistory(index, isEdit)
+  event?.stopPropagation()
 }
 
-function handleRemove(index: number) {
+function handleRemove(index: number, event?: MouseEvent) {
   historyStore.removeHistory(index)
+  event?.stopPropagation()
 }
 
 function handleEnter(index: number, isEdit: boolean, event: KeyboardEvent) {
-  if (event.key === 'Enter')
+  if (event.key === 'Enter') {
     handleEdit(index, isEdit)
+    event.stopPropagation()
+  }
 }
 </script>
 
@@ -31,8 +35,8 @@ function handleEnter(index: number, isEdit: boolean, event: KeyboardEvent) {
     <div class="flex flex-col gap-2 text-sm">
       <div v-for="(item, index) of dataSources" :key="index">
         <a
-          class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer pr-14 hover:bg-neutral-100 group"
-          :class="historyStore.active === index && ['border-[#4b9e5f]', 'bg-neutral-100', 'text-[#4b9e5f]']"
+          class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-neutral-100 group"
+          :class="historyStore.active === index && ['border-[#4b9e5f]', 'bg-neutral-100', 'text-[#4b9e5f]', 'pr-14']"
           @click="handleSelect(index)"
         >
           <span>
@@ -45,17 +49,17 @@ function handleEnter(index: number, isEdit: boolean, event: KeyboardEvent) {
             />
             <span v-else>{{ item.title }}</span>
           </div>
-          <div class="absolute z-10 flex visible right-1">
+          <div v-if="historyStore.active === index" class="absolute z-10 flex visible right-1">
             <template v-if="item.isEdit">
-              <button class="p-1" @click="handleEdit(index, false)">
+              <button class="p-1" @click="handleEdit(index, false, $event)">
                 <SvgIcon icon="ri:save-line" />
               </button>
             </template>
             <template v-else>
               <button class="p-1">
-                <SvgIcon icon="ri:edit-line" @click="handleEdit(index, true)" />
+                <SvgIcon icon="ri:edit-line" @click="handleEdit(index, true, $event)" />
               </button>
-              <button class="p-1" @click="handleRemove(index)">
+              <button class="p-1" @click="handleRemove(index, $event)">
                 <SvgIcon icon="ri:delete-bin-line" />
               </button>
             </template>

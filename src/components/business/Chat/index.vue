@@ -7,7 +7,6 @@ import { useChat } from './hooks/useChat'
 import { fetchChatAPI } from '@/api'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useHistoryStore } from '@/store'
-import { isNumber } from '@/utils/is'
 
 let controller = new AbortController()
 
@@ -23,6 +22,7 @@ const prompt = ref('')
 const loading = ref(false)
 
 const currentActive = computed(() => historyStore.active)
+const heartbeat = computed(() => historyStore.heartbeat)
 
 const list = computed<Chat.Chat[]>(() => historyStore.getCurrentChat)
 const chatList = computed<Chat.Chat[]>(() => list.value.filter(item => (!item.reversal && !item.error)))
@@ -71,9 +71,8 @@ function handleEnter(event: KeyboardEvent) {
 function addMessage(
   message: string,
   args?: { reversal?: boolean; error?: boolean; options?: Chat.ChatOptions },
-  uuid?: number | null,
 ) {
-  addChat(message, args, uuid)
+  addChat(message, args)
   scrollToBottom()
 }
 
@@ -97,9 +96,17 @@ onMounted(() => {
 })
 
 watch(
+  heartbeat,
+  () => {
+    handleCancel()
+    scrollToBottom()
+  },
+)
+
+watch(
   currentActive,
-  (active) => {
-    if (isNumber(active)) {
+  (_, oldActive) => {
+    if (oldActive !== null) {
       handleCancel()
       scrollToBottom()
     }
