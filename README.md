@@ -23,7 +23,7 @@
 
 ### Node
 
-`node` 版本需要 >= 18，使用 [nvm](https://github.com/nvm-sh/nvm) 可管理本地多个 `node` 版本
+`node` 需要 `^16 || ^18` 版本，使用 [nvm](https://github.com/nvm-sh/nvm) 可管理本地多个 `node` 版本
 
 ```shell
 node -v
