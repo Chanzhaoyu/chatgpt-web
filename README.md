@@ -109,6 +109,20 @@ docker build -t marlkiller/chatgpt-web .
 docker run -p 1002:1002 marlkiller/chatgpt-web
 ```
 
+## Docker compose
+
+```yml
+version: '3'
+
+service:
+  app:
+    image: 0xjerry/chatgpt-web
+    ports:
+      - 3002:3002
+    environment:
+      OPENAI_API_KEY: xxxxxx
+```
+
 ### 网页
 
 根目录下运行以下命令，然后将 `dist` 文件夹复制到你的托管服务器上
