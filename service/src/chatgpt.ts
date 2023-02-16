@@ -3,6 +3,11 @@ import 'isomorphic-fetch'
 import type { ChatGPTAPI, SendMessageOptions } from 'chatgpt'
 import { sendResponse } from './utils'
 
+export interface ChatContext {
+  conversationId?: string
+  parentMessageId?: string
+}
+
 dotenv.config()
 
 const apiKey = process.env.OPENAI_API_KEY
