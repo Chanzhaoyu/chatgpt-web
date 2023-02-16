@@ -11,10 +11,6 @@ export interface HttpOption {
   afterRequest?: () => void
 }
 
-export interface ExtraOption {
-  notification?: boolean
-}
-
 export interface Response<T = any> {
   data: T
   message: string | null
