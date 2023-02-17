@@ -53,6 +53,7 @@ async function handleSubmit() {
     loading.value = true
     const { data } = await fetchChatAPI(message, options, controller.signal)
     addMessage(data?.text ?? '', { options: { conversationId: data.conversationId, parentMessageId: data.id } })
+    prompt.value = ''
   }
   catch (error: any) {
     if (error.message !== 'canceled')
@@ -64,8 +65,15 @@ async function handleSubmit() {
 }
 
 function handleEnter(event: KeyboardEvent) {
-  if (event.key === 'Enter')
-    handleSubmit()
+  if (event.key === 'Enter') {
+    if (event.ctrlKey || event.shiftKey) {
+      if (event.ctrlKey)
+        prompt.value = `${prompt.value}\n`
+    }
+    else {
+      handleSubmit()
+    }
+  }
 }
 
 function addMessage(
@@ -134,7 +142,7 @@ watch(
               <SvgIcon icon="ri:delete-bin-line" />
             </span>
           </HoverButton>
-          <NInput v-model:value="prompt" placeholder="Type a message..." @keypress="handleEnter" />
+          <NInput v-model:value="prompt" type="textarea" placeholder="Type a message..." @keypress="handleEnter" />
           <NButton type="primary" :loading="loading" @click="handleSubmit">
             <template #icon>
               <SvgIcon icon="ri:send-plane-fill" />
