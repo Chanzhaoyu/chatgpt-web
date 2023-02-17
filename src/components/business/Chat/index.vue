@@ -1,5 +1,6 @@
 <script setup lang='ts'>
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import type { MessageReactive } from 'naive-ui'
 import { NButton, NInput, useMessage } from 'naive-ui'
 import { Message } from './components'
 import { Layout } from './layout'
@@ -13,6 +14,8 @@ let controller = new AbortController()
 const ms = useMessage()
 
 const historyStore = useHistoryStore()
+
+let messageReactive: MessageReactive | null = null
 
 const scrollRef = ref<HTMLDivElement>()
 
@@ -51,6 +54,7 @@ async function handleSubmit() {
 
   try {
     loading.value = true
+    createMessage()
     const { data } = await fetchChatAPI(message, options, controller.signal)
     addMessage(data?.text ?? '', { options: { conversationId: data.conversationId, parentMessageId: data.id } })
   }
@@ -60,6 +64,7 @@ async function handleSubmit() {
   }
   finally {
     loading.value = false
+    removeMessage()
   }
 }
 
@@ -89,10 +94,30 @@ function handleCancel() {
   controller.abort()
   controller = new AbortController()
   loading.value = false
+  removeMessage()
+}
+
+function createMessage() {
+  if (!messageReactive) {
+    messageReactive = ms.loading('Thinking...', {
+      duration: 0,
+    })
+  }
+}
+
+function removeMessage() {
+  if (messageReactive) {
+    messageReactive.destroy()
+    messageReactive = null
+  }
 }
 
 onMounted(() => {
   scrollToBottom()
+})
+
+onBeforeUnmount(() => {
+  handleCancel()
 })
 
 watch(
@@ -143,7 +168,7 @@ watch(
             </span>
           </HoverButton>
           <NInput v-model:value="prompt" placeholder="Type a message..." @keypress="handleEnter" />
-          <NButton type="primary" :loading="loading" @click="handleSubmit">
+          <NButton type="primary" :disabled="loading" @click="handleSubmit">
             <template #icon>
               <SvgIcon icon="ri:send-plane-fill" />
             </template>
