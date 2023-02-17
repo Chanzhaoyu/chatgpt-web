@@ -2,7 +2,9 @@
 
 使用 express 和 vue3 搭建的 ChartGPT 演示网页
 
-![cover](./docs/cover-2.png)
+![PC](./docs/c1.png)
+
+![Mobile](./docs/c2.png)
 
 > 提示：目前 `OpenAI` 开放的模型最高只有 `GPT-3`，和现在网页所使用的 `GPT-3.5` 或 `GPT-4` 有很大差距，需要等官方开放最新的模型接口。
 
@@ -112,9 +114,9 @@ docker build -t chatgpt-web .
 ```yml
 version: '3'
 
-service:
+services:
   app:
-    image: chenzhaoyu94/chatgpt-web
+    image: chenzhaoyu94/chatgpt-web:main
     ports:
       - 3002:3002
     environment:
