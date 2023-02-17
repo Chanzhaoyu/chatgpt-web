@@ -17,7 +17,3 @@ import { GithubSite } from '@/components/custom'
     </div>
   </div>
 </template>
-
-<style>
-
-</style>
