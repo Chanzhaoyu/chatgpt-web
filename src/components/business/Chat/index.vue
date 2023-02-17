@@ -119,12 +119,20 @@ watch(
     <div class="flex flex-col h-full">
       <main class="flex-1 overflow-hidden">
         <div ref="scrollRef" class="h-full p-4 overflow-hidden overflow-y-auto">
-          <div>
-            <Message
-              v-for="(item, index) of list" :key="index" :date-time="item.dateTime" :message="item.message"
-              :reversal="item.reversal" :error="item.error"
-            />
-          </div>
+          <template v-if="!list.length">
+            <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
+              <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
+              <span>Aha~</span>
+            </div>
+          </template>
+          <template v-else>
+            <div>
+              <Message
+                v-for="(item, index) of list" :key="index" :date-time="item.dateTime" :message="item.message"
+                :reversal="item.reversal" :error="item.error"
+              />
+            </div>
+          </template>
         </div>
       </main>
       <footer class="p-4">

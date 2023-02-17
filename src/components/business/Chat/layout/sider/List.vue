@@ -33,39 +33,47 @@ function handleEnter(index: number, isEdit: boolean, event: KeyboardEvent) {
 <template>
   <NScrollbar class="px-4">
     <div class="flex flex-col gap-2 text-sm">
-      <div v-for="(item, index) of dataSources" :key="index">
-        <a
-          class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-neutral-100 group"
-          :class="historyStore.active === index && ['border-[#4b9e5f]', 'bg-neutral-100', 'text-[#4b9e5f]', 'pr-14']"
-          @click="handleSelect(index)"
-        >
-          <span>
-            <SvgIcon icon="ri:message-3-line" />
-          </span>
-          <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap">
-            <NInput
-              v-if="item.isEdit" v-model:value="item.title" size="tiny"
-              @keypress="handleEnter(index, false, $event)"
-            />
-            <span v-else>{{ item.title }}</span>
-          </div>
-          <div v-if="historyStore.active === index" class="absolute z-10 flex visible right-1">
-            <template v-if="item.isEdit">
-              <button class="p-1" @click="handleEdit(index, false, $event)">
-                <SvgIcon icon="ri:save-line" />
-              </button>
-            </template>
-            <template v-else>
-              <button class="p-1">
-                <SvgIcon icon="ri:edit-line" @click="handleEdit(index, true, $event)" />
-              </button>
-              <button class="p-1" @click="handleRemove(index, $event)">
-                <SvgIcon icon="ri:delete-bin-line" />
-              </button>
-            </template>
-          </div>
-        </a>
-      </div>
+      <template v-if="!dataSources.length">
+        <div class="flex flex-col items-center mt-4 text-center text-neutral-300">
+          <SvgIcon icon="ri:inbox-line" class="mb-2 text-3xl" />
+          <span>No history</span>
+        </div>
+      </template>
+      <template v-else>
+        <div v-for="(item, index) of dataSources" :key="index">
+          <a
+            class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-neutral-100 group"
+            :class="historyStore.active === index && ['border-[#4b9e5f]', 'bg-neutral-100', 'text-[#4b9e5f]', 'pr-14']"
+            @click="handleSelect(index)"
+          >
+            <span>
+              <SvgIcon icon="ri:message-3-line" />
+            </span>
+            <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap">
+              <NInput
+                v-if="item.isEdit" v-model:value="item.title" size="tiny"
+                @keypress="handleEnter(index, false, $event)"
+              />
+              <span v-else>{{ item.title }}</span>
+            </div>
+            <div v-if="historyStore.active === index" class="absolute z-10 flex visible right-1">
+              <template v-if="item.isEdit">
+                <button class="p-1" @click="handleEdit(index, false, $event)">
+                  <SvgIcon icon="ri:save-line" />
+                </button>
+              </template>
+              <template v-else>
+                <button class="p-1">
+                  <SvgIcon icon="ri:edit-line" @click="handleEdit(index, true, $event)" />
+                </button>
+                <button class="p-1" @click="handleRemove(index, $event)">
+                  <SvgIcon icon="ri:delete-bin-line" />
+                </button>
+              </template>
+            </div>
+          </a>
+        </div>
+      </template>
     </div>
   </NScrollbar>
 </template>
