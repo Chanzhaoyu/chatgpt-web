@@ -29,7 +29,10 @@ watch(
   (val) => {
     appStore.setSiderCollapsed(val)
   },
-  { flush: 'post' },
+  {
+    immediate: true,
+    flush: 'post',
+  },
 )
 </script>
 
@@ -42,6 +45,7 @@ watch(
     collapse-mode="transform"
     position="absolute"
     bordered
+    style="z-index: 50;"
     @update-collapsed="handleUpdateCollapsed"
   >
     <div class="flex flex-col h-full" :class="[{ 'pt-14': isMobile }]">
@@ -63,4 +67,7 @@ watch(
       </footer>
     </div>
   </NLayoutSider>
+  <template v-if="isMobile">
+    <div v-show="!collapsed" class="absolute inset-0 z-40 bg-black/40" @click="handleUpdateCollapsed" />
+  </template>
 </template>
