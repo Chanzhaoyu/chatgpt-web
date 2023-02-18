@@ -8,12 +8,15 @@ import { useChat } from './hooks/useChat'
 import { fetchChatAPI } from '@/api'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useHistoryStore } from '@/store'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
 
 let controller = new AbortController()
 
 const ms = useMessage()
 
 const historyStore = useHistoryStore()
+
+const { isMobile } = useBasicLayout()
 
 let messageReactive: MessageReactive | null = null
 
@@ -160,7 +163,7 @@ watch(
           </template>
         </div>
       </main>
-      <footer class="p-4">
+      <footer class="p-4" :class="[{ 'pl-2': isMobile }]">
         <div class="flex items-center justify-between space-x-2">
           <HoverButton tooltip="Clear conversations">
             <span class="text-xl text-[#4f555e]" @click="handleClear">
