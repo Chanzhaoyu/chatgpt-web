@@ -78,8 +78,10 @@ async function handleSubmit() {
 }
 
 function handleEnter(event: KeyboardEvent) {
-  if (event.key === 'Enter')
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault()
     handleSubmit()
+  }
 }
 
 function addMessage(
@@ -189,7 +191,9 @@ watch(
           </HoverButton>
           <NInput
             v-model:value="prompt"
-            placeholder="Type a message..."
+            type="textarea"
+            :autosize="{ minRows: 1, maxRows: 2 }"
+            placeholder="Ask me anything..."
             @keypress="handleEnter"
           />
           <NButton type="primary" :disabled="loading" @click="handleSubmit">
