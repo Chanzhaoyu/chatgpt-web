@@ -78,26 +78,7 @@ pnpm dev
 ```
 
 ## 打包
-
-### 后端服务
-> 如果你不需要本项目的 `node` 接口，可以省略如下操作
-
-复制 `service` 文件夹到你有 `node` 服务环境的服务器上。（搜索关键字：`express部署`）
-
-```shell
-# 安装
-pnpm install
-
-# 打包
-pnpm build
-
-# 运行
-pnpm prod
-```
-
-PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
-
-## Docker build & run
+## Docker build
 
 [参考信息](https://github.com/Chanzhaoyu/chatgpt-web/pull/42)
 
@@ -121,8 +102,25 @@ services:
       OPENAI_API_KEY: xxxxxx
 ```
 
+### 后端服务
+> 如果你不需要本项目的 `node` 接口，可以省略如下操作
 
-### 网页
+复制 `service` 文件夹到你有 `node` 服务环境的服务器上。（搜索关键字：`express部署`）
+
+```shell
+# 安装
+pnpm install
+
+# 打包
+pnpm build
+
+# 运行
+pnpm prod
+```
+
+PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
+
+### 前端打包
 
 根目录下运行以下命令，然后将 `dist` 文件夹复制到你的托管服务器上
 
