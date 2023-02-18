@@ -8,12 +8,15 @@ import { useChat } from './hooks/useChat'
 import { fetchChatAPI } from '@/api'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useHistoryStore } from '@/store'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
 
 let controller = new AbortController()
 
 const ms = useMessage()
 
 const historyStore = useHistoryStore()
+
+const { isMobile } = useBasicLayout()
 
 let messageReactive: MessageReactive | null = null
 
@@ -29,6 +32,12 @@ const heartbeat = computed(() => historyStore.heartbeat)
 
 const list = computed<Chat.Chat[]>(() => historyStore.getCurrentChat)
 const chatList = computed<Chat.Chat[]>(() => list.value.filter(item => (!item.reversal && !item.error)))
+
+const footerMobileStyle = computed(() => {
+  if (isMobile.value)
+    return ['pl-2', 'pt-2', 'pb-6', 'fixed', 'bottom-0', 'left-0', 'right-0', 'z-30']
+  return []
+})
 
 async function handleSubmit() {
   if (loading.value)
@@ -57,7 +66,6 @@ async function handleSubmit() {
     createMessage()
     const { data } = await fetchChatAPI(message, options, controller.signal)
     addMessage(data?.text ?? '', { options: { conversationId: data.conversationId, parentMessageId: data.id } })
-    prompt.value = ''
   }
   catch (error: any) {
     if (error.message !== 'canceled')
@@ -70,14 +78,9 @@ async function handleSubmit() {
 }
 
 function handleEnter(event: KeyboardEvent) {
-  if (event.key === 'Enter') {
-    if (event.ctrlKey || event.shiftKey) {
-      if (event.ctrlKey)
-        prompt.value = `${prompt.value}\n`
-    }
-    else {
-      handleSubmit()
-    }
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault()
+    handleSubmit()
   }
 }
 
@@ -151,7 +154,11 @@ watch(
   <Layout>
     <div class="flex flex-col h-full">
       <main class="flex-1 overflow-hidden">
-        <div ref="scrollRef" class="h-full p-4 overflow-hidden overflow-y-auto">
+        <div
+          ref="scrollRef"
+          class="h-full p-4 overflow-hidden overflow-y-auto"
+          :class="[{ 'p-2': isMobile }]"
+        >
           <template v-if="!list.length">
             <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
               <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
@@ -161,21 +168,34 @@ watch(
           <template v-else>
             <div>
               <Message
-                v-for="(item, index) of list" :key="index" :date-time="item.dateTime" :message="item.message"
-                :reversal="item.reversal" :error="item.error"
+                v-for="(item, index) of list"
+                :key="index"
+                :date-time="item.dateTime"
+                :message="item.message"
+                :reversal="item.reversal"
+                :error="item.error"
               />
             </div>
           </template>
         </div>
       </main>
-      <footer class="p-4">
+      <footer
+        class="p-4"
+        :class="footerMobileStyle"
+      >
         <div class="flex items-center justify-between space-x-2">
           <HoverButton tooltip="Clear conversations">
             <span class="text-xl text-[#4f555e]" @click="handleClear">
               <SvgIcon icon="ri:delete-bin-line" />
             </span>
           </HoverButton>
-          <NInput v-model:value="prompt" type="textarea" placeholder="Type a message..." @keypress="handleEnter" />
+          <NInput
+            v-model:value="prompt"
+            type="textarea"
+            :autosize="{ minRows: 1, maxRows: 2 }"
+            placeholder="Ask me anything..."
+            @keypress="handleEnter"
+          />
           <NButton type="primary" :disabled="loading" @click="handleSubmit">
             <template #icon>
               <SvgIcon icon="ri:send-plane-fill" />
