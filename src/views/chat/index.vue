@@ -21,11 +21,49 @@ const loading = ref<boolean>(false)
 
 const footerMobileStyle = computed(() => ([]))
 
-function handleSubmit() {}
+function handleSubmit() {
+  if (loading.value || !prompt.value)
+    return
 
-function handleClear() {}
+  chatStore.addChatByUuid(
+    +uuid,
+    {
+      dateTime: new Date().toLocaleString(),
+      text: prompt.value,
+      inversion: true,
+      error: false,
+    },
+  )
 
-function handleEnter() {}
+  loading.value = true
+  prompt.value = ''
+
+  setTimeout(() => {
+    chatStore.addChatByUuid(
+      +uuid,
+      {
+        dateTime: new Date().toLocaleString(),
+        text: 'Hello, I am a chat bot.',
+        inversion: false,
+        error: false,
+      },
+    )
+    loading.value = false
+  }, 2 * 1000)
+}
+
+function handleClear() {
+  chatStore.clearChatByUuid(+uuid)
+}
+
+function handleEnter(event: KeyboardEvent) {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault()
+    handleSubmit()
+  }
+}
+
+window.console.log('Page Reload: uuid: ', uuid)
 </script>
 
 <template>
@@ -73,7 +111,7 @@ function handleEnter() {}
           placeholder="Ask me anything..."
           @keypress="handleEnter"
         />
-        <NButton type="primary" :disabled="loading" @click="handleSubmit">
+        <NButton type="primary" :loading="loading" @click="handleSubmit">
           <template #icon>
             <SvgIcon icon="ri:send-plane-fill" />
           </template>

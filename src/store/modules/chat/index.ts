@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { getLocalState, setLocalState } from './helper'
-import type { ChatState, History } from '@/views/chat/types'
+import type { Chat, ChatState, History } from '@/views/chat/types'
 import { router } from '@/router'
 
 export const useChatStore = defineStore('chat-store', {
@@ -66,13 +66,28 @@ export const useChatStore = defineStore('chat-store', {
 
     setActive(uuid: number) {
       this.active = uuid
-      this.recordState()
+      this.reloadRoute(uuid)
+    },
+
+    addChatByUuid(uuid: number, chat: Chat) {
+      const index = this.chat.findIndex(item => item.uuid === uuid)
+      if (index !== -1) {
+        this.chat[index].data.push(chat)
+        this.recordState()
+      }
+    },
+
+    clearChatByUuid(uuid: number) {
+      const index = this.chat.findIndex(item => item.uuid === uuid)
+      if (index !== -1) {
+        this.chat[index].data = []
+        this.recordState()
+      }
     },
 
     async reloadRoute(uuid?: number) {
       this.recordState()
       await router.push({ name: 'Chat', params: { uuid } })
-      window.location.reload()
     },
 
     recordState() {

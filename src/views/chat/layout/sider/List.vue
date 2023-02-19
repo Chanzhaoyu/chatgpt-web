@@ -1,12 +1,9 @@
 <script setup lang='ts'>
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { NInput, NScrollbar } from 'naive-ui'
 import type { History } from '@/views/chat/types'
 import { SvgIcon } from '@/components/common'
 import { useChatStore } from '@/store'
-
-const router = useRouter()
 
 const chatStore = useChatStore()
 
@@ -17,8 +14,6 @@ async function handleSelect({ uuid }: History) {
     return
 
   chatStore.setActive(uuid)
-  await router.push({ name: 'Chat', params: { uuid } })
-  window.location.reload()
 }
 
 function handleEdit({ uuid }: History, isEdit: boolean, event?: MouseEvent) {
