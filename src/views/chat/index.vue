@@ -1,8 +1,9 @@
 <script setup lang='ts'>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { NButton, NInput } from 'naive-ui'
 import { Message } from './components'
+import { useScroll } from './hooks/useScroll'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore } from '@/store'
@@ -19,6 +20,8 @@ const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
 
+const { scrollRef, scrollToBottom } = useScroll()
+
 const footerMobileStyle = computed(() => ([]))
 
 function handleSubmit() {
@@ -34,6 +37,7 @@ function handleSubmit() {
       error: false,
     },
   )
+  scrollToBottom()
 
   loading.value = true
   prompt.value = ''
@@ -48,6 +52,7 @@ function handleSubmit() {
         error: false,
       },
     )
+    scrollToBottom()
     loading.value = false
   }, 2 * 1000)
 }
@@ -63,7 +68,9 @@ function handleEnter(event: KeyboardEvent) {
   }
 }
 
-window.console.log('Page Reload: uuid: ', uuid)
+onMounted(() => {
+  scrollToBottom()
+})
 </script>
 
 <template>

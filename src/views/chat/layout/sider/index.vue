@@ -14,7 +14,7 @@ const { isMobile } = useBasicLayout()
 const collapsed = computed(() => appStore.siderCollapsed)
 
 function handleAdd() {
-  chatStore.addHistory({ title: 'New chat', uuid: Date.now(), isEdit: false })
+  chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
 }
 
 function handleUpdateCollapsed() {
