@@ -1,12 +1,21 @@
 import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
+import { ChatLayout } from '@/views/chat/layout'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'Home',
-    component: () => import('@/views/home/index.vue'),
+    name: 'Root',
+    component: ChatLayout,
+    redirect: '/chat',
+    children: [
+      {
+        path: '/chat/:uuid?',
+        name: 'Chat',
+        component: () => import('@/views/chat/index.vue'),
+      },
+    ],
   },
 ]
 
