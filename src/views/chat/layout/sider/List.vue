@@ -13,6 +13,9 @@ const chatStore = useChatStore()
 const dataSources = computed(() => chatStore.history)
 
 async function handleSelect({ uuid }: History) {
+  if (isActive(uuid))
+    return
+
   chatStore.setActive(uuid)
   await router.push({ name: 'Chat', params: { uuid } })
   window.location.reload()
@@ -23,9 +26,9 @@ function handleEdit({ uuid }: History, isEdit: boolean, event?: MouseEvent) {
   chatStore.updateHistory(uuid, { isEdit })
 }
 
-function handleDelete({ uuid }: History, event?: MouseEvent) {
+function handleDelete(index: number, event?: MouseEvent) {
   event?.stopPropagation()
-  chatStore.deleteHistory(uuid)
+  chatStore.deleteHistory(index)
 }
 
 function handleEnter({ uuid }: History, isEdit: boolean, event: KeyboardEvent) {
@@ -34,7 +37,7 @@ function handleEnter({ uuid }: History, isEdit: boolean, event: KeyboardEvent) {
     chatStore.updateHistory(uuid, { isEdit })
 }
 
-function isActive({ uuid }: History) {
+function isActive(uuid: number) {
   return chatStore.active === uuid
 }
 </script>
@@ -52,7 +55,7 @@ function isActive({ uuid }: History) {
         <div v-for="(item, index) of dataSources" :key="index">
           <a
             class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-neutral-100 group"
-            :class="isActive(item) && ['border-[#4b9e5f]', 'bg-neutral-100', 'text-[#4b9e5f]', 'pr-14']"
+            :class="isActive(item.uuid) && ['border-[#4b9e5f]', 'bg-neutral-100', 'text-[#4b9e5f]', 'pr-14']"
             @click="handleSelect(item)"
           >
             <span>
@@ -67,7 +70,7 @@ function isActive({ uuid }: History) {
               />
               <span v-else>{{ item.title }}</span>
             </div>
-            <div v-if="isActive(item)" class="absolute z-10 flex visible right-1">
+            <div v-if="isActive(item.uuid)" class="absolute z-10 flex visible right-1">
               <template v-if="item.isEdit">
                 <button class="p-1" @click="handleEdit(item, false, $event)">
                   <SvgIcon icon="ri:save-line" />
@@ -77,7 +80,7 @@ function isActive({ uuid }: History) {
                 <button class="p-1">
                   <SvgIcon icon="ri:edit-line" @click="handleEdit(item, true, $event)" />
                 </button>
-                <button class="p-1" @click="handleDelete(item, $event)">
+                <button class="p-1" @click="handleDelete(index, $event)">
                   <SvgIcon icon="ri:delete-bin-line" />
                 </button>
               </template>

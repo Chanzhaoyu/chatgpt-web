@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { getLocalState, setLocalState } from './helper'
 import type { ChatState, History } from '@/views/chat/types'
+import { router } from '@/router'
 
 export const useChatStore = defineStore('chat-store', {
   state: (): ChatState => getLocalState(),
@@ -20,7 +21,7 @@ export const useChatStore = defineStore('chat-store', {
       this.history.push(history)
       this.chat.push({ uuid: history.uuid, data: [] })
       this.active = history.uuid
-      this.recordState()
+      this.reloadRoute(history.uuid)
     },
 
     updateHistory(uuid: number, edit: Partial<History>) {
@@ -31,15 +32,47 @@ export const useChatStore = defineStore('chat-store', {
       }
     },
 
-    deleteHistory(uuid: number) {
-      this.history = this.history.filter(item => item.uuid !== uuid)
-      this.chat = this.chat.filter(item => item.uuid !== uuid)
-      this.recordState()
+    async deleteHistory(index: number) {
+      this.history.splice(index, 1)
+      this.chat.splice(index, 1)
+
+      if (this.history.length === 0) {
+        this.active = null
+        this.reloadRoute()
+        return
+      }
+
+      if (index > 0 && index <= this.history.length) {
+        const uuid = this.history[index - 1].uuid
+        this.active = uuid
+        this.reloadRoute(uuid)
+        return
+      }
+
+      if (index === 0) {
+        if (this.history.length > 0) {
+          const uuid = this.history[0].uuid
+          this.active = uuid
+          this.reloadRoute(uuid)
+        }
+      }
+
+      if (index > this.history.length) {
+        const uuid = this.history[this.history.length - 1].uuid
+        this.active = uuid
+        this.reloadRoute(uuid)
+      }
     },
 
     setActive(uuid: number) {
       this.active = uuid
       this.recordState()
+    },
+
+    async reloadRoute(uuid?: number) {
+      this.recordState()
+      await router.push({ name: 'Chat', params: { uuid } })
+      window.location.reload()
     },
 
     recordState() {
