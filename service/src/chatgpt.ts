@@ -10,10 +10,14 @@ export interface ChatContext {
 
 dotenv.config()
 
-const apiKey = process.env.OPENAI_API_KEY
+const apiKey = function () {
+	let keys = process.env.OPENAI_API_KEY.toString().split(",")
+	return keys[Math.floor(Math.random()*keys.length)];
+}
 
-if (apiKey === undefined)
-  throw new Error('OPENAI_API_KEY is not defined')
+if (!apiKey) {
+	throw new Error('OPENAI_API_KEY is not defined')
+}
 
 let api: ChatGPTAPI
 
