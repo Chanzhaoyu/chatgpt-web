@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { computed } from 'vue'
-import { NInput, NScrollbar } from 'naive-ui'
+import { NInput, NPopconfirm, NScrollbar } from 'naive-ui'
 import { SvgIcon } from '@/components/common'
 import { useChatStore } from '@/store'
 
@@ -20,7 +20,7 @@ function handleEdit({ uuid }: Chat.History, isEdit: boolean, event?: MouseEvent)
   chatStore.updateHistory(uuid, { isEdit })
 }
 
-function handleDelete(index: number, event?: MouseEvent) {
+function handleDelete(index: number, event?: MouseEvent | TouchEvent) {
   event?.stopPropagation()
   chatStore.deleteHistory(index)
 }
@@ -74,9 +74,14 @@ function isActive(uuid: number) {
                 <button class="p-1">
                   <SvgIcon icon="ri:edit-line" @click="handleEdit(item, true, $event)" />
                 </button>
-                <button class="p-1" @click="handleDelete(index, $event)">
-                  <SvgIcon icon="ri:delete-bin-line" />
-                </button>
+                <NPopconfirm placement="bottom" @positive-click="handleDelete(index, $event)">
+                  <template #trigger>
+                    <button class="p-1">
+                      <SvgIcon icon="ri:delete-bin-line" />
+                    </button>
+                  </template>
+                  Are you sure to clear this history?
+                </NPopconfirm>
               </template>
             </div>
           </a>
