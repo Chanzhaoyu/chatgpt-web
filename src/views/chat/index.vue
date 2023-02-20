@@ -5,7 +5,6 @@ import { NButton, NInput, useDialog } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
-import type { ConversationRequest, ConversationResponse } from './types'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore } from '@/store'
@@ -56,7 +55,7 @@ async function onConversation() {
   loading.value = true
   prompt.value = ''
 
-  let options: ConversationRequest = {}
+  let options: Chat.ConversationRequest = {}
   const lastContext = conversationList.value[conversationList.value.length - 1]?.conversationOptions
 
   if (lastContext)
@@ -76,7 +75,7 @@ async function onConversation() {
   scrollToBottom()
 
   try {
-    const { data } = await fetchChatAPI<ConversationResponse>(message, options)
+    const { data } = await fetchChatAPI<Chat.ConversationResponse>(message, options)
     updateChat(
       +uuid,
       dataSources.value.length - 1,
@@ -121,7 +120,7 @@ async function handleRegenerate(index: number) {
 
   const message = requestOptions?.prompt ?? ''
 
-  let options: ConversationRequest = {}
+  let options: Chat.ConversationRequest = {}
 
   if (requestOptions.options)
     options = { ...requestOptions.options }
@@ -143,7 +142,7 @@ async function handleRegenerate(index: number) {
   scrollToBottom()
 
   try {
-    const { data } = await fetchChatAPI<ConversationResponse>(message, options)
+    const { data } = await fetchChatAPI<Chat.ConversationResponse>(message, options)
     updateChat(
       +uuid,
       index,

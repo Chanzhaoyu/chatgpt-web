@@ -1,13 +1,12 @@
 import { defineStore } from 'pinia'
 import { getLocalState, setLocalState } from './helper'
-import type { Chat, ChatState, History } from '@/views/chat/types'
 import { router } from '@/router'
 
 export const useChatStore = defineStore('chat-store', {
-  state: (): ChatState => getLocalState(),
+  state: (): Chat.ChatState => getLocalState(),
 
   getters: {
-    getChatByUuid(state: ChatState) {
+    getChatByUuid(state: Chat.ChatState) {
       return (uuid?: number) => {
         if (uuid)
           return state.chat.find(item => item.uuid === uuid)?.data ?? []
@@ -17,14 +16,14 @@ export const useChatStore = defineStore('chat-store', {
   },
 
   actions: {
-    addHistory(history: History, chatData: Chat[] = []) {
+    addHistory(history: Chat.History, chatData: Chat.Chat[] = []) {
       this.history.push(history)
       this.chat.push({ uuid: history.uuid, data: chatData })
       this.active = history.uuid
       this.reloadRoute(history.uuid)
     },
 
-    updateHistory(uuid: number, edit: Partial<History>) {
+    updateHistory(uuid: number, edit: Partial<Chat.History>) {
       const index = this.history.findIndex(item => item.uuid === uuid)
       if (index !== -1) {
         this.history[index] = { ...this.history[index], ...edit }
@@ -69,7 +68,7 @@ export const useChatStore = defineStore('chat-store', {
       this.reloadRoute(uuid)
     },
 
-    addChatByUuid(uuid: number, chat: Chat) {
+    addChatByUuid(uuid: number, chat: Chat.Chat) {
       if (!uuid || uuid === 0) {
         if (this.history.length === 0) {
           const uuid = Date.now()
@@ -95,7 +94,7 @@ export const useChatStore = defineStore('chat-store', {
       }
     },
 
-    updateChatByUuid(uuid: number, index: number, chat: Chat) {
+    updateChatByUuid(uuid: number, index: number, chat: Chat.Chat) {
       if (!uuid || uuid === 0) {
         if (this.chat.length) {
           this.chat[0].data[index] = chat

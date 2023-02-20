@@ -1,19 +1,15 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { SvgIcon } from '@/components/common'
-import { useAppStore, useHistoryStore } from '@/store'
+import { useAppStore, useChatStore } from '@/store'
 
 const appStore = useAppStore()
-const historyStore = useHistoryStore()
+const chatStore = useChatStore()
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
 function handleAdd() {
-  historyStore.addHistory({
-    title: 'New Chat',
-    isEdit: false,
-    data: [],
-  })
+  chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
 }
 
 function handleUpdateCollapsed() {

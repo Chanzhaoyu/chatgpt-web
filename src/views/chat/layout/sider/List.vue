@@ -1,7 +1,6 @@
 <script setup lang='ts'>
 import { computed } from 'vue'
 import { NInput, NScrollbar } from 'naive-ui'
-import type { History } from '@/views/chat/types'
 import { SvgIcon } from '@/components/common'
 import { useChatStore } from '@/store'
 
@@ -9,14 +8,14 @@ const chatStore = useChatStore()
 
 const dataSources = computed(() => chatStore.history)
 
-async function handleSelect({ uuid }: History) {
+async function handleSelect({ uuid }: Chat.History) {
   if (isActive(uuid))
     return
 
   chatStore.setActive(uuid)
 }
 
-function handleEdit({ uuid }: History, isEdit: boolean, event?: MouseEvent) {
+function handleEdit({ uuid }: Chat.History, isEdit: boolean, event?: MouseEvent) {
   event?.stopPropagation()
   chatStore.updateHistory(uuid, { isEdit })
 }
@@ -26,7 +25,7 @@ function handleDelete(index: number, event?: MouseEvent) {
   chatStore.deleteHistory(index)
 }
 
-function handleEnter({ uuid }: History, isEdit: boolean, event: KeyboardEvent) {
+function handleEnter({ uuid }: Chat.History, isEdit: boolean, event: KeyboardEvent) {
   event?.stopPropagation()
   if (event.key === 'Enter')
     chatStore.updateHistory(uuid, { isEdit })
