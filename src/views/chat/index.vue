@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { NButton, NInput } from 'naive-ui'
+import { NButton, NInput, useDialog } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
@@ -12,6 +12,8 @@ import { useChatStore } from '@/store'
 import { fetchChatAPI } from '@/api'
 
 const route = useRoute()
+const dialog = useDialog()
+
 const chatStore = useChatStore()
 
 const { isMobile } = useBasicLayout()
@@ -177,7 +179,15 @@ async function handleRegenerate(index: number) {
 }
 
 function handleClear() {
-  chatStore.clearChatByUuid(+uuid)
+  dialog.warning({
+    title: 'Clear Chat',
+    content: 'Are you sure to clear this chat?',
+    positiveText: 'Yes',
+    negativeText: 'No',
+    onPositiveClick: () => {
+      chatStore.clearChatByUuid(+uuid)
+    },
+  })
 }
 
 function handleEnter(event: KeyboardEvent) {
@@ -214,7 +224,7 @@ onMounted(() => {
     </main>
     <footer class="p-4" :class="footerMobileStyle">
       <div class="flex items-center justify-between space-x-2">
-        <HoverButton tooltip="Clear conversations" @click="handleClear">
+        <HoverButton @click="handleClear">
           <span class="text-xl text-[#4f555e]">
             <SvgIcon icon="ri:delete-bin-line" />
           </span>
