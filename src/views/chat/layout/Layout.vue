@@ -1,12 +1,17 @@
 <script setup lang='ts'>
 import { computed } from 'vue'
 import { NLayout, NLayoutContent } from 'naive-ui'
+import { useRouter } from 'vue-router'
 import Sider from './sider/index.vue'
 import Header from './header/index.vue'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useAppStore } from '@/store'
+import { useAppStore, useChatStore } from '@/store'
 
+const router = useRouter()
 const appStore = useAppStore()
+const chatStore = useChatStore()
+
+router.replace({ name: 'Chat', params: { uuid: chatStore.active } })
 
 const { isMobile } = useBasicLayout()
 
