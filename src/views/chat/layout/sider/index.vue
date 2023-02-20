@@ -1,4 +1,5 @@
 <script setup lang='ts'>
+import type { CSSProperties } from 'vue'
 import { computed, watch } from 'vue'
 import { NButton, NLayoutSider } from 'naive-ui'
 import List from './List.vue'
@@ -21,6 +22,16 @@ function handleUpdateCollapsed() {
   appStore.setSiderCollapsed(!collapsed.value)
 }
 
+const getMobileClass = computed<CSSProperties>(() => {
+  if (isMobile.value) {
+    return {
+      position: 'fixed',
+      zIndex: 50,
+    }
+  }
+  return {}
+})
+
 watch(
   isMobile,
   (val) => {
@@ -42,7 +53,7 @@ watch(
     collapse-mode="transform"
     position="absolute"
     bordered
-    style="z-index: 50;"
+    :style="getMobileClass"
     @update-collapsed="handleUpdateCollapsed"
   >
     <div class="flex flex-col h-full" :class="[{ 'pt-14': isMobile }]">
@@ -54,7 +65,7 @@ watch(
         </div>
         <List />
       </main>
-      <footer class="flex items-center justify-between min-w-0 p-4 overflow-hidden border-t h-[70px]">
+      <footer class="flex items-center justify-between min-w-0 p-4 overflow-hidden border-t">
         <UserAvatar />
         <HoverButton tooltip="Setting">
           <span class="text-xl text-[#4f555e]">
@@ -65,6 +76,6 @@ watch(
     </div>
   </NLayoutSider>
   <template v-if="isMobile">
-    <div v-show="!collapsed" class="absolute inset-0 z-40 bg-black/40" @click="handleUpdateCollapsed" />
+    <div v-show="!collapsed" class="fixed inset-0 z-40 bg-black/40" @click="handleUpdateCollapsed" />
   </template>
 </template>
