@@ -72,7 +72,7 @@ async function onConversation() {
     +uuid,
     {
       dateTime: new Date().toLocaleString(),
-      text: 'Thinking...',
+      text: 'Aha, Thinking...',
       inversion: false,
       error: false,
       conversationOptions: null,
@@ -144,7 +144,7 @@ async function onRegenerate(index: number) {
     index,
     {
       dateTime: new Date().toLocaleString(),
-      text: 'Let me think again...',
+      text: 'Aha, Let me think again...',
       inversion: false,
       error: false,
       conversationOptions: null,
@@ -239,8 +239,13 @@ onUnmounted(() => {
         <template v-else>
           <div>
             <Message
-              v-for="(item, index) of dataSources" :key="index" :date-time="item.dateTime" :text="item.text"
-              :inversion="item.inversion" :error="item.error" @regenerate="onRegenerate(index)"
+              v-for="(item, index) of dataSources"
+              :key="index"
+              :date-time="item.dateTime"
+              :text="item.text"
+              :inversion="item.inversion"
+              :error="item.error"
+              @regenerate="onRegenerate(index)"
             />
           </div>
         </template>
@@ -254,8 +259,11 @@ onUnmounted(() => {
           </span>
         </HoverButton>
         <NInput
-          v-model:value="prompt" type="textarea" :autosize="{ minRows: 1, maxRows: 2 }"
-          placeholder="Ask me anything..." @keypress="handleEnter"
+          v-model:value="prompt"
+          type="textarea"
+          :autosize="{ minRows: 1, maxRows: 2 }"
+          placeholder="Ask me anything..."
+          @keypress="handleEnter"
         />
         <NButton type="primary" :loading="loading" @click="handleSubmit">
           <template #icon>
