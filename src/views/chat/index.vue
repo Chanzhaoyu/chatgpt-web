@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { NButton, NInput, useDialog } from 'naive-ui'
 import { Message } from './components'
@@ -9,6 +9,8 @@ import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore } from '@/store'
 import { fetchChatAPI } from '@/api'
+
+let controller = new AbortController()
 
 const route = useRoute()
 const dialog = useDialog()
@@ -36,8 +38,13 @@ function handleSubmit() {
 async function onConversation() {
   const message = prompt.value
 
-  if (loading.value || !message || message.trim() === '')
+  if (loading.value)
     return
+
+  if (!message || message.trim() === '')
+    return
+
+  controller = new AbortController()
 
   addChat(
     +uuid,
@@ -75,7 +82,7 @@ async function onConversation() {
   scrollToBottom()
 
   try {
-    const { data } = await fetchChatAPI<Chat.ConversationResponse>(message, options)
+    const { data } = await fetchChatAPI<Chat.ConversationResponse>(message, options, controller.signal)
     updateChat(
       +uuid,
       dataSources.value.length - 1,
@@ -91,12 +98,17 @@ async function onConversation() {
     scrollToBottom()
   }
   catch (error: any) {
+    let errorMessage = error?.message ?? 'Something went wrong, please try again later.'
+
+    if (error.message === 'canceled')
+      errorMessage = 'Request canceled. Please try again.'
+
     updateChat(
       +uuid,
       dataSources.value.length - 1,
       {
         dateTime: new Date().toLocaleString(),
-        text: error?.message ?? '',
+        text: errorMessage,
         inversion: false,
         error: true,
         conversationOptions: null,
@@ -110,11 +122,11 @@ async function onConversation() {
   }
 }
 
-async function handleRegenerate(index: number) {
+async function onRegenerate(index: number) {
   if (loading.value)
     return
 
-  loading.value = true
+  controller = new AbortController()
 
   const { requestOptions } = dataSources.value[index]
 
@@ -142,7 +154,7 @@ async function handleRegenerate(index: number) {
   scrollToBottom()
 
   try {
-    const { data } = await fetchChatAPI<Chat.ConversationResponse>(message, options)
+    const { data } = await fetchChatAPI<Chat.ConversationResponse>(message, options, controller.signal)
     updateChat(
       +uuid,
       index,
@@ -158,12 +170,17 @@ async function handleRegenerate(index: number) {
     scrollToBottom()
   }
   catch (error: any) {
+    let errorMessage = 'Something went wrong, please try again later.'
+
+    if (error.message === 'canceled')
+      errorMessage = 'Request canceled. Please try again.'
+
     updateChat(
       +uuid,
       index,
       {
         dateTime: new Date().toLocaleString(),
-        text: error?.message ?? '',
+        text: errorMessage,
         inversion: false,
         error: true,
         conversationOptions: null,
@@ -178,6 +195,9 @@ async function handleRegenerate(index: number) {
 }
 
 function handleClear() {
+  if (loading.value)
+    return
+
   dialog.warning({
     title: 'Clear Chat',
     content: 'Are you sure to clear this chat?',
@@ -199,6 +219,11 @@ function handleEnter(event: KeyboardEvent) {
 onMounted(() => {
   scrollToBottom()
 })
+
+onUnmounted(() => {
+  if (loading.value)
+    controller.abort()
+})
 </script>
 
 <template>
@@ -215,7 +240,7 @@ onMounted(() => {
           <div>
             <Message
               v-for="(item, index) of dataSources" :key="index" :date-time="item.dateTime" :text="item.text"
-              :inversion="item.inversion" :error="item.error" @regenerate="handleRegenerate(index)"
+              :inversion="item.inversion" :error="item.error" @regenerate="onRegenerate(index)"
             />
           </div>
         </template>
