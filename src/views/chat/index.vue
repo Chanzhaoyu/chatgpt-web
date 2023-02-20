@@ -4,14 +4,17 @@ import { useRoute } from 'vue-router'
 import { NButton, NInput } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
+import { useChat } from './hooks/useChat'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore } from '@/store'
 
-const { isMobile } = useBasicLayout()
-
 const route = useRoute()
 const chatStore = useChatStore()
+
+const { isMobile } = useBasicLayout()
+const { addChat, updateChat } = useChat()
+const { scrollRef, scrollToBottom } = useScroll()
 
 const { uuid } = route.params as { uuid: string }
 
@@ -20,15 +23,13 @@ const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
 
-const { scrollRef, scrollToBottom } = useScroll()
-
 const footerMobileStyle = computed(() => ([]))
 
 function handleSubmit() {
   if (loading.value || !prompt.value)
     return
 
-  chatStore.addChatByUuid(
+  addChat(
     +uuid,
     {
       dateTime: new Date().toLocaleString(),
@@ -42,9 +43,20 @@ function handleSubmit() {
   loading.value = true
   prompt.value = ''
 
+  addChat(
+    +uuid,
+    {
+      dateTime: new Date().toLocaleString(),
+      text: 'Thinking...',
+      inversion: false,
+      error: false,
+    },
+  )
+
   setTimeout(() => {
-    chatStore.addChatByUuid(
+    updateChat(
       +uuid,
+      dataSources.value.length - 1,
       {
         dateTime: new Date().toLocaleString(),
         text: 'Hello, I am a chat bot.',
@@ -52,7 +64,40 @@ function handleSubmit() {
         error: false,
       },
     )
+
     scrollToBottom()
+    loading.value = false
+  }, 2 * 1000)
+}
+
+function handleRegenerate(index: number) {
+  if (loading.value)
+    return
+
+  loading.value = true
+
+  updateChat(
+    +uuid,
+    index,
+    {
+      dateTime: new Date().toLocaleString(),
+      text: 'Thinking...',
+      inversion: false,
+      error: false,
+    },
+  )
+
+  setTimeout(() => {
+    updateChat(
+      +uuid,
+      index,
+      {
+        dateTime: new Date().toLocaleString(),
+        text: 'Hello, I am a chat bot.',
+        inversion: false,
+        error: false,
+      },
+    )
     loading.value = false
   }, 2 * 1000)
 }
@@ -96,6 +141,7 @@ onMounted(() => {
               :text="item.text"
               :inversion="item.inversion"
               :error="item.error"
+              @regenerate="handleRegenerate(index)"
             />
           </div>
         </template>
@@ -106,8 +152,8 @@ onMounted(() => {
       :class="footerMobileStyle"
     >
       <div class="flex items-center justify-between space-x-2">
-        <HoverButton tooltip="Clear conversations">
-          <span class="text-xl text-[#4f555e]" @click="handleClear">
+        <HoverButton tooltip="Clear conversations" @click="handleClear">
+          <span class="text-xl text-[#4f555e]">
             <SvgIcon icon="ri:delete-bin-line" />
           </span>
         </HoverButton>

@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import Avatar from './Avatar.vue'
 import Text from './Text.vue'
+import { SvgIcon } from '@/components/common'
 
 interface Props {
   dateTime?: string
@@ -9,7 +10,17 @@ interface Props {
   error?: boolean
 }
 
+interface Emit {
+  (ev: 'regenerate'): void
+}
+
 defineProps<Props>()
+
+const emit = defineEmits<Emit>()
+
+function handleRegenerate() {
+  emit('regenerate')
+}
 </script>
 
 <template>
@@ -24,9 +35,18 @@ defineProps<Props>()
       <span class="text-xs text-[#b4bbc4]">
         {{ dateTime }}
       </span>
-      <Text :inversion="inversion" :error="error">
-        {{ text }}
-      </Text>
+      <div class="flex items-end mt-2">
+        <Text :inversion="inversion" :error="error">
+          {{ text }}
+        </Text>
+        <button
+          v-if="!inversion"
+          class="mb-2 ml-2 transition text-neutral-400 hover:text-neutral-800"
+          @click="handleRegenerate"
+        >
+          <SvgIcon icon="ri:restart-line" />
+        </button>
+      </div>
     </div>
   </div>
 </template>

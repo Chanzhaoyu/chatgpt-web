@@ -95,7 +95,31 @@ export const useChatStore = defineStore('chat-store', {
       }
     },
 
+    updateChatByUuid(uuid: number, index: number, chat: Chat) {
+      if (!uuid || uuid === 0) {
+        if (this.chat.length) {
+          this.chat[0].data[index] = chat
+          this.recordState()
+        }
+        return
+      }
+
+      const chatIndex = this.chat.findIndex(item => item.uuid === uuid)
+      if (chatIndex !== -1) {
+        this.chat[chatIndex].data[index] = chat
+        this.recordState()
+      }
+    },
+
     clearChatByUuid(uuid: number) {
+      if (!uuid || uuid === 0) {
+        if (this.chat.length) {
+          this.chat[0].data = []
+          this.recordState()
+        }
+        return
+      }
+
       const index = this.chat.findIndex(item => item.uuid === uuid)
       if (index !== -1) {
         this.chat[index].data = []
