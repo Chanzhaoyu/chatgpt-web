@@ -22,7 +22,6 @@ const getContainerClass = computed(() => {
   return [
     'h-full',
     { 'pt-14': isMobile.value },
-    { 'pb-[70px]': isMobile.value },
     { 'pl-[260px]': !isMobile.value && !collapsed.value },
   ]
 })

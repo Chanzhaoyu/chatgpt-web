@@ -29,8 +29,6 @@ const conversationList = computed(() => dataSources.value.filter(item => (!item.
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
 
-const footerMobileStyle = computed(() => ([]))
-
 function handleSubmit() {
   onConversation()
 }
@@ -73,6 +71,7 @@ async function onConversation() {
     {
       dateTime: new Date().toLocaleString(),
       text: 'Aha, Thinking...',
+      loading: true,
       inversion: false,
       error: false,
       conversationOptions: null,
@@ -91,6 +90,7 @@ async function onConversation() {
         text: data.text ?? '',
         inversion: false,
         error: false,
+        loading: false,
         conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
         requestOptions: { prompt: message, options: { ...options } },
       },
@@ -111,6 +111,7 @@ async function onConversation() {
         text: errorMessage,
         inversion: false,
         error: true,
+        loading: false,
         conversationOptions: null,
         requestOptions: { prompt: message, options: { ...options } },
       },
@@ -147,6 +148,7 @@ async function onRegenerate(index: number) {
       text: 'Aha, Let me think again...',
       inversion: false,
       error: false,
+      loading: true,
       conversationOptions: null,
       requestOptions: { prompt: message, ...options },
     },
@@ -163,6 +165,7 @@ async function onRegenerate(index: number) {
         text: data.text ?? '',
         inversion: false,
         error: false,
+        loading: false,
         conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
         requestOptions: { prompt: message, ...options },
       },
@@ -183,6 +186,7 @@ async function onRegenerate(index: number) {
         text: errorMessage,
         inversion: false,
         error: true,
+        loading: false,
         conversationOptions: null,
         requestOptions: { prompt: message, ...options },
       },
@@ -216,6 +220,17 @@ function handleEnter(event: KeyboardEvent) {
   }
 }
 
+const buttonDisabled = computed(() => {
+  return loading.value || !prompt.value || prompt.value.trim() === ''
+})
+
+const footerClass = computed(() => {
+  let classes = ['p-4']
+  if (isMobile.value)
+    classes = [...classes, 'pl-2', 'pt-2', 'pb-2', 'fixed', 'bottom-0', 'left-0', 'right-0', 'z-30']
+  return classes
+})
+
 onMounted(() => {
   scrollToBottom()
 })
@@ -245,13 +260,14 @@ onUnmounted(() => {
               :text="item.text"
               :inversion="item.inversion"
               :error="item.error"
+              :loading="item.loading"
               @regenerate="onRegenerate(index)"
             />
           </div>
         </template>
       </div>
     </main>
-    <footer class="p-4" :class="footerMobileStyle">
+    <footer :class="footerClass">
       <div class="flex items-center justify-between space-x-2">
         <HoverButton @click="handleClear">
           <span class="text-xl text-[#4f555e]">
@@ -265,7 +281,7 @@ onUnmounted(() => {
           placeholder="Ask me anything..."
           @keypress="handleEnter"
         />
-        <NButton type="primary" :loading="loading" @click="handleSubmit">
+        <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
           <template #icon>
             <SvgIcon icon="ri:send-plane-fill" />
           </template>
