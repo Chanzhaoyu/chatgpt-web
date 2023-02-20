@@ -22,7 +22,6 @@ const getContainerClass = computed(() => {
   return [
     'h-full',
     { 'pt-14': isMobile.value },
-    { 'pb-[70px]': isMobile.value },
     { 'pl-[260px]': !isMobile.value && !collapsed.value },
   ]
 })
@@ -35,7 +34,9 @@ const getContainerClass = computed(() => {
         <Sider />
         <Header v-if="isMobile" />
         <NLayoutContent class="h-full">
-          <slot />
+          <RouterView v-slot="{ Component, route }">
+            <component :is="Component" :key="route.fullPath" />
+          </RouterView>
         </NLayoutContent>
       </NLayout>
     </div>
