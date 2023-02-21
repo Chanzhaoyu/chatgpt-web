@@ -2,7 +2,7 @@ import axios, { type AxiosResponse } from 'axios'
 
 const service = axios.create({
   baseURL: import.meta.env.VITE_GLOB_API_URL,
-  timeout: 60 * 1000,
+  timeout: !isNaN(+import.meta.env.VITE_GLOB_API_TIMEOUT) ? Number(import.meta.env.VITE_GLOB_API_TIMEOUT) : 60 * 1000,
 })
 
 service.interceptors.request.use(
