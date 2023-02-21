@@ -11,7 +11,7 @@
 
 |  方式   | 免费？  | 可靠性  | 质量 |
 |  ----  | ----  | ----  | ----  |
-| `ChatGPTAPI(GPT-3)`  | 是 | 	可靠 | 较笨 |
+| `ChatGPTAPI(GPT-3)`  | 否 | 	可靠 | 较笨 |
 | `ChatGPTUnofficialProxyAPI(网页 accessToken)`  | 	是 |  不可靠 | 聪明 |
 
 ***Note:*** 网页 `accessToken` 存在大约 8 小时，而且国内地区网络问题更推荐使用 `GPT-3` 的方式
