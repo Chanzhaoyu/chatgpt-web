@@ -224,6 +224,13 @@ const buttonDisabled = computed(() => {
   return loading.value || !prompt.value || prompt.value.trim() === ''
 })
 
+const wrapClass = computed(() => {
+  if (isMobile.value)
+    return ['pt-14', 'pb-14']
+
+  return []
+})
+
 const footerClass = computed(() => {
   let classes = ['p-4']
   if (isMobile.value)
@@ -242,7 +249,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col h-full pt-14 pb-14">
+  <div class="flex flex-col h-full" :class="wrapClass">
     <main class="flex-1 overflow-hidden">
       <div ref="scrollRef" class="h-full p-4 overflow-hidden overflow-y-auto" :class="[{ 'p-2': isMobile }]">
         <template v-if="!dataSources.length">
