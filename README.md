@@ -161,7 +161,6 @@ services:
       TIMEOUT_MS: 60000
 ```
 
-
 ## 手动打包
 ### 后端服务
 > 如果你不需要本项目的 `node` 接口，可以省略如下操作
@@ -192,6 +191,31 @@ PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 ```shell
 pnpm build
 ```
+
+###  使用 Railway 免费 一键部署
+
+> - 点击下方按钮 一键部署        
+> - 免费注册, 无需信用卡验证      
+> - 每月 `$5.00` 免费额度 / 每月 500 小时免费执行时间
+> - 无需保活, 在免费额度用完之前永不停止运行
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/yytmgc?referralCode=SwVIN3)
+
+
+##### Railway 环境变量
+
+| 环境变量名称                | 必填 | 备注                    |
+| --------------------------- | ---- | ----------------------- |
+| `PORT` | √    | 默认3002即可，勿动！ |
+| `OPENAI_API_KEY` | √(OpenAI API)    | 使用 OpenAI API Key 请填写此字段。[(获取 apiKey)](https://platform.openai.com/overview)   |
+| `OPENAI_ACCESS_TOKEN` | √(Web API)    | 使用 Web API 请在此字段填入 accessToken 。。[(获取 accessToken)](https://chat.openai.com/api/auth/session)   |
+| `API_REVERSE_PROXY` | √(Web API)    | 使用 Web API 请在此字段填入反向代理地址 。[详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)   |
+
+
+> 注意:    
+> - Railway 修改环境变量 会 触发 重新 Deploy   
+
+
 
 ### 常见问题
 Q: 为什么 `Git` 提交总是报错？
