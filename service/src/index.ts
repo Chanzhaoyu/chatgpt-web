@@ -1,6 +1,6 @@
 import express from 'express'
 import type { ChatContext } from './chatgpt'
-import { chatReply } from './chatgpt'
+import { chatConfig, chatReply } from './chatgpt'
 
 const app = express()
 const router = express.Router()
@@ -19,6 +19,16 @@ router.post('/chat', async (req, res) => {
   try {
     const { prompt, options = {} } = req.body as { prompt: string; options?: ChatContext }
     const response = await chatReply(prompt, options)
+    res.send(response)
+  }
+  catch (error) {
+    res.send(error)
+  }
+})
+
+router.post('/config', async (req, res) => {
+  try {
+    const response = await chatConfig()
     res.send(response)
   }
   catch (error) {
