@@ -17,8 +17,8 @@ export const useChatStore = defineStore('chat-store', {
 
   actions: {
     addHistory(history: Chat.History, chatData: Chat.Chat[] = []) {
-      this.history.push(history)
-      this.chat.push({ uuid: history.uuid, data: chatData })
+      this.history.unshift(history)
+      this.chat.unshift({ uuid: history.uuid, data: chatData })
       this.active = history.uuid
       this.reloadRoute(history.uuid)
     },
