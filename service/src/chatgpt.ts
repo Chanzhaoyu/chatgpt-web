@@ -30,7 +30,15 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     apiModel = 'ChatGPTAPI'
   }
   else {
-    api = new ChatGPTUnofficialProxyAPI({ accessToken: process.env.OPENAI_ACCESS_TOKEN })
+    let options = {}
+
+    if (process.env.API_REVERSE_PROXY)
+      options = { apiReverseProxyUrl: process.env.API_REVERSE_PROXY }
+
+    api = new ChatGPTUnofficialProxyAPI({
+      accessToken: process.env.OPENAI_ACCESS_TOKEN,
+      ...options,
+    })
     apiModel = 'ChatGPTUnofficialProxyAPI'
   }
 })()
@@ -62,6 +70,7 @@ async function chatConfig() {
     type: 'Success',
     data: {
       apiModel,
+      reverseProxy: process.env.API_REVERSE_PROXY,
       timeoutMs,
     },
   })

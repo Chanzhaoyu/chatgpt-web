@@ -13,6 +13,7 @@ interface Emit {
 
 interface ConfigState {
   timeoutMs?: number
+  reverseProxy?: string
   apiModel?: string
 }
 
@@ -58,6 +59,7 @@ watch(
           当前后台设置
         </h1>
         <p>API方式：{{ config?.apiModel }}</p>
+        <p>反向代理{{ config?.reverseProxy }}</p>
         <p>超时时间：{{ config?.timeoutMs }}</p>
       </div>
     </NCard>
