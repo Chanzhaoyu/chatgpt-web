@@ -40,7 +40,7 @@ const text = computed(() => {
     </template>
     <template v-else>
       <code v-if="includeCode(text)" v-highlight class="leading-relaxed" v-text="text" />
-      <div v-else class="leading-relaxed" v-html="text" />
+      <div v-else class="leading-relaxed break-all" v-html="text" />
     </template>
   </div>
 </template>
