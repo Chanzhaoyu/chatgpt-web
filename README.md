@@ -199,7 +199,7 @@ pnpm build
 > - 每月 `$5.00` 免费额度 / 每月 500 小时免费执行时间
 > - 无需保活, 在免费额度用完之前永不停止运行
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/yytmgc?referralCode=SwVIN3)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/yytmgc)
 
 
 ##### Railway 环境变量
