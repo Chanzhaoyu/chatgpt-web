@@ -17,8 +17,8 @@ export const useChatStore = defineStore('chat-store', {
 
   actions: {
     addHistory(history: Chat.History, chatData: Chat.Chat[] = []) {
-      this.history.push(history)
-      this.chat.push({ uuid: history.uuid, data: chatData })
+      this.history.unshift(history)
+      this.chat.unshift({ uuid: history.uuid, data: chatData })
       this.active = history.uuid
       this.reloadRoute(history.uuid)
     },
@@ -63,9 +63,9 @@ export const useChatStore = defineStore('chat-store', {
       }
     },
 
-    setActive(uuid: number) {
+    async setActive(uuid: number) {
       this.active = uuid
-      this.reloadRoute(uuid)
+      return await this.reloadRoute(uuid)
     },
 
     addChatByUuid(uuid: number, chat: Chat.Chat) {

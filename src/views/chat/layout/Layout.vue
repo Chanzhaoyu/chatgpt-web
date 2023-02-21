@@ -26,14 +26,13 @@ const getMobileClass = computed(() => {
 const getContainerClass = computed(() => {
   return [
     'h-full',
-    { 'pt-14': isMobile.value },
     { 'pl-[260px]': !isMobile.value && !collapsed.value },
   ]
 })
 </script>
 
 <template>
-  <div class="h-screen" :class="[isMobile ? 'p-0' : 'p-4']">
+  <div class="h-full" :class="[isMobile ? 'p-0' : 'p-4']">
     <div class="h-full overflow-hidden" :class="getMobileClass">
       <NLayout class="z-40 transition" :class="getContainerClass" has-sider>
         <Sider />

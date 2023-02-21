@@ -18,7 +18,7 @@ function handleUpdateCollapsed() {
 </script>
 
 <template>
-  <header class="fixed top-0 left-0 right-0 z-50 border-b bg-white/80 backdrop-blur">
+  <header class="fixed top-0 left-0 right-0 z-30 border-b bg-white/80 backdrop-blur">
     <div class="relative flex items-center justify-between h-14">
       <button class="flex items-center justify-center w-11 h-11" @click="handleUpdateCollapsed">
         <SvgIcon v-if="collapsed" class="text-2xl" icon="ri:align-justify" />

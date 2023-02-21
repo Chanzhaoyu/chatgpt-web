@@ -2,8 +2,12 @@
 import { computed } from 'vue'
 import { NInput, NPopconfirm, NScrollbar } from 'naive-ui'
 import { SvgIcon } from '@/components/common'
-import { useChatStore } from '@/store'
+import { useAppStore, useChatStore } from '@/store'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
 
+const { isMobile } = useBasicLayout()
+
+const appStore = useAppStore()
 const chatStore = useChatStore()
 
 const dataSources = computed(() => chatStore.history)
@@ -12,7 +16,10 @@ async function handleSelect({ uuid }: Chat.History) {
   if (isActive(uuid))
     return
 
-  chatStore.setActive(uuid)
+  await chatStore.setActive(uuid)
+
+  if (isMobile.value)
+    appStore.setSiderCollapsed(true)
 }
 
 function handleEdit({ uuid }: Chat.History, isEdit: boolean, event?: MouseEvent) {
