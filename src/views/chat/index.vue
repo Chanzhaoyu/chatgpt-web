@@ -153,7 +153,6 @@ async function onRegenerate(index: number) {
       requestOptions: { prompt: message, ...options },
     },
   )
-  scrollToBottom()
 
   try {
     const { data } = await fetchChatAPI<Chat.ConversationResponse>(message, options, controller.signal)
@@ -170,7 +169,6 @@ async function onRegenerate(index: number) {
         requestOptions: { prompt: message, ...options },
       },
     )
-    scrollToBottom()
   }
   catch (error: any) {
     let errorMessage = 'Something went wrong, please try again later.'
@@ -191,7 +189,6 @@ async function onRegenerate(index: number) {
         requestOptions: { prompt: message, ...options },
       },
     )
-    scrollToBottom()
   }
   finally {
     loading.value = false
