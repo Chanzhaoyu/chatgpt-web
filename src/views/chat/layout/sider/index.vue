@@ -56,14 +56,16 @@ watch(
     :style="getMobileClass"
     @update-collapsed="handleUpdateCollapsed"
   >
-    <div class="flex flex-col h-full" :class="[{ 'pt-14': isMobile }]">
-      <main class="flex-1 min-h-0 overflow-hidden">
+    <div class="flex flex-col h-full">
+      <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
           <NButton dashed block @click="handleAdd">
             New chat
           </NButton>
         </div>
-        <List />
+        <div class="flex-1 min-h-0 pb-4 overflow-hidden">
+          <List />
+        </div>
       </main>
       <footer class="flex items-center justify-between min-w-0 p-4 overflow-hidden border-t">
         <UserAvatar />
