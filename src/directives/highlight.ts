@@ -1,9 +1,9 @@
 import type { App, Directive } from 'vue'
 import hljs from 'highlight.js'
+import includeCode from '@/utils/functions/includeCode'
 
 function highlightCode(el: HTMLElement) {
-  const regexp = /^(?:\s{4}|\t).+/gm
-  if (el.textContent?.indexOf(' = ') !== -1 || el.textContent.match(regexp))
+  if (includeCode(el.textContent))
     hljs.highlightBlock(el)
 }
 
