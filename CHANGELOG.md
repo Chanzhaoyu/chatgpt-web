@@ -1,10 +1,20 @@
+## v2.5.2
+
+`2023-02-21`
+### Feature
+- 增加对 `markdown` 格式的支持 [Demo](https://github.com/Chanzhaoyu/chatgpt-web/pull/77)
+### BugFix
+- 重载会话时滚动条保持
+
 ## v2.5.1
 
 `2023-02-21`
+
 ### Enhancement
 - 调整路由模式为 `hash`
-- 调整新增会话添加到列表最前
+- 调整新增会话添加到
 - 调整移动端样式
+
 
 ## v2.5.0
 

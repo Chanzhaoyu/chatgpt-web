@@ -6,6 +6,7 @@ specifiers:
   '@commitlint/config-conventional': ^17.4.4
   '@iconify/vue': ^4.1.0
   '@types/crypto-js': ^4.1.1
+  '@types/marked': ^4.0.8
   '@types/node': ^18.14.0
   '@types/web-bluetooth': ^0.0.16
   '@vitejs/plugin-vue': ^4.0.0
@@ -18,6 +19,7 @@ specifiers:
   husky: ^8.0.3
   less: ^4.1.3
   lint-staged: ^13.1.2
+  marked: ^4.2.12
   naive-ui: ^2.34.3
   npm-run-all: ^4.1.5
   pinia: ^2.0.30
@@ -33,6 +35,7 @@ specifiers:
 dependencies:
   '@vueuse/core': 9.13.0_vue@3.2.47
   highlight.js: 11.7.0
+  marked: 4.2.12
   naive-ui: 2.34.3_vue@3.2.47
   pinia: 2.0.30_hmuptsblhheur2tugfgucj7gc4
   vue: 3.2.47
@@ -44,6 +47,7 @@ devDependencies:
   '@commitlint/config-conventional': 17.4.4
   '@iconify/vue': 4.1.0_vue@3.2.47
   '@types/crypto-js': 4.1.1
+  '@types/marked': 4.0.8
   '@types/node': 18.14.0
   '@types/web-bluetooth': 0.0.16
   '@vitejs/plugin-vue': 4.0.0_vite@4.1.2+vue@3.2.47
@@ -734,6 +738,10 @@ packages:
   /@types/lodash/4.14.191:
     resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
     dev: false
+
+  /@types/marked/4.0.8:
+    resolution: {integrity: sha512-HVNzMT5QlWCOdeuBsgXP8EZzKUf0+AXzN+sLmjvaB3ZlLqO+e4u0uXrdw9ub69wBKFs+c6/pA4r9sy6cCDvImw==}
+    dev: true
 
   /@types/mdast/3.0.10:
     resolution: {integrity: sha512-W864tg/Osz1+9f4lrGTZpCSO5/z4608eUp19tbozkq2HJK6i3z1kT0H9tlADXuYIb1YYOBByU4Jsqkk75q48qA==}
@@ -3228,6 +3236,12 @@ packages:
     resolution: {integrity: sha512-hdN1wVrZbb29eBGiGjJbeP8JbKjq1urkHJ/LIP/NY48MZ1QVXUsQBV1G1zvYFHn1XE06cwjBsOI2K3Ulnj1YXQ==}
     engines: {node: '>=8'}
     dev: true
+
+  /marked/4.2.12:
+    resolution: {integrity: sha512-yr8hSKa3Fv4D3jdZmtMMPghgVt6TWbk86WQaWhDloQjRSQhMMYCAro7jP7VDJrjjdV8pxVxMssXS8B8Y5DZ5aw==}
+    engines: {node: '>= 12'}
+    hasBin: true
+    dev: false
 
   /mdast-util-from-markdown/0.8.5:
     resolution: {integrity: sha512-2hkTXtYYnr+NubD/g6KGBS/0mFmBcifAsI0yIWRiRo0PjVs6SSOSOdtzbp6kSGnShDN6G5aWZpKQ2lWRy27mWQ==}

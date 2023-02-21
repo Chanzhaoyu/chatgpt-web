@@ -1,6 +1,6 @@
 {
   "name": "chatgpt-web",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "private": false,
   "description": "ChatGPT Web",
   "author": "ChenZhaoYu <chenzhaoyu1994@gmail.com>",
@@ -25,6 +25,7 @@
   "dependencies": {
     "@vueuse/core": "^9.13.0",
     "highlight.js": "^11.7.0",
+    "marked": "^4.2.12",
     "naive-ui": "^2.34.3",
     "pinia": "^2.0.30",
     "vue": "^3.2.47",
@@ -36,6 +37,7 @@
     "@commitlint/config-conventional": "^17.4.4",
     "@iconify/vue": "^4.1.0",
     "@types/crypto-js": "^4.1.1",
+    "@types/marked": "^4.0.8",
     "@types/node": "^18.14.0",
     "@types/web-bluetooth": "^0.0.16",
     "@vitejs/plugin-vue": "^4.0.0",
