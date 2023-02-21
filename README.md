@@ -207,9 +207,10 @@ pnpm build
 | 环境变量名称                | 必填 | 备注                    |
 | --------------------------- | ---- | ----------------------- |
 | `PORT` | √    | 默认3002即可，勿动！ |
-| `OPENAI_API_KEY` | √    | 使用 OpenAI API 所需的 apiKey 。[(获取 apiKey)](https://platform.openai.com/overview)   |
-| `OPENAI_ACCESS_TOKEN` | √    | 使用 Web API 所需的 accessToken 。[(获取 accessToken)](https://chat.openai.com/api/auth/session)   |
-| `API_REVERSE_PROXY` | √    | 使用 Web API 所需的反向代理地址 。[详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)   |
+| `TIMEOUT_MS` | x    | 超时时间，单位毫秒，可选   |
+| `OPENAI_API_KEY` | OpenAI API必填    | 使用 OpenAI API 所需的 apiKey 。[(获取 apiKey)](https://platform.openai.com/overview)   |
+| `OPENAI_ACCESS_TOKEN` | Web API必填    | 使用 Web API 所需的 accessToken 。[(获取 accessToken)](https://chat.openai.com/api/auth/session)   |
+| `API_REVERSE_PROXY` | Web API必填    | 使用 Web API 所需的反向代理地址 。[详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)   |
 
 
 > 注意:    
