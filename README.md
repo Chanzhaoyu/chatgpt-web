@@ -11,8 +11,6 @@
 
 [✓] 对代码等消息类型的格式化美化处理
 
-[✗] 用户模块（注册、登录、个人中心）
-
 [✗] 界面多语言
 
 [✗] 界面主题
@@ -61,7 +59,6 @@ pnpm install
 pnpm bootstrap
 ```
 
-
 ## 运行
 ### 后端服务
 
@@ -78,15 +75,24 @@ pnpm dev
 ```
 
 ## 打包
-## Docker build
 
-[参考信息](https://github.com/Chanzhaoyu/chatgpt-web/pull/42)
+### 使用 Docker
+### Docker build & Run
 
 ```bash
 docker build -t chatgpt-web .
+
+# 前台运行
+docker run --name chatgpt-web --rm -it -p 3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
+
+# 后台运行
+docker run --name chatgpt-web -d -p 3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
+
+# 运行地址
+http://localhost:3002/
 ```
 
-## Docker compose
+### Docker compose
 
 [Hub 地址](https://hub.docker.com/repository/docker/chenzhaoyu94/chatgpt-web/general)
 
@@ -102,10 +108,12 @@ services:
       OPENAI_API_KEY: xxxxxx
 ```
 
+
+## 手动打包
 ### 后端服务
 > 如果你不需要本项目的 `node` 接口，可以省略如下操作
 
-复制 `service` 文件夹到你有 `node` 服务环境的服务器上。（搜索关键字：`express部署`）
+复制 `service` 文件夹到你有 `node` 服务环境的服务器上。
 
 ```shell
 # 安装
@@ -122,7 +130,9 @@ PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 
 ### 前端打包
 
-根目录下运行以下命令，然后将 `dist` 文件夹复制到你的托管服务器上
+1、修改根目录下 `.env` 内 `VITE_APP_API_BASE_URL` 为你的实际后端接口地址
+
+2、根目录下运行以下命令，然后将 `dist` 文件夹内的文件复制到你网站服务的根目录下
 
 [参考信息](https://cn.vitejs.dev/guide/static-deploy.html#building-the-app)
 
