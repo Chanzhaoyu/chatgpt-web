@@ -12,3 +12,9 @@ export function fetchChatAPI<T = any>(
     signal,
   })
 }
+
+export function fetchChatConfig<T = any>() {
+  return post<T>({
+    url: '/config',
+  })
+}
