@@ -3,7 +3,7 @@ import type { CSSProperties } from 'vue'
 import { computed, watch } from 'vue'
 import { NButton, NLayoutSider } from 'naive-ui'
 import List from './List.vue'
-import { HoverButton, SvgIcon, UserAvatar } from '@/components/common'
+import Footer from './Footer.vue'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 
@@ -67,14 +67,7 @@ watch(
           <List />
         </div>
       </main>
-      <footer class="flex items-center justify-between min-w-0 p-4 overflow-hidden border-t">
-        <UserAvatar />
-        <HoverButton tooltip="Setting">
-          <span class="text-xl text-[#4f555e]">
-            <SvgIcon icon="ri:settings-4-line" />
-          </span>
-        </HoverButton>
-      </footer>
+      <Footer />
     </div>
   </NLayoutSider>
   <template v-if="isMobile">
