@@ -12,9 +12,9 @@
 |  方式   | 免费？  | 可靠性  | 质量 |
 |  ----  | ----  | ----  | ----  |
 | `ChatGPTAPI(GPT-3)`  | 是 | 	可靠 | 较笨 |
-| `ChatGPTUnofficialProxyAPI(Web API)`  | 	是 |  不可靠 | 聪明 |
+| `ChatGPTUnofficialProxyAPI(网页 accessToken)`  | 	是 |  不可靠 | 聪明 |
 
-***Note:*** 国内地区更推荐使用 `GPT-3` 的方式，不过随你喜欢
+***Note:*** 网页 `accessToken` 存在大约 8 小时，而且国内地区网络问题更推荐使用 `GPT-3` 的方式
 
 对比：
 1. `ChatGPTAPI` 使用 `text-davinci-003` 通过官方`OpenAI`补全`API`模拟`ChatGPT`（最稳健的方法，但它不是免费的，并且没有使用针对聊天进行微调的模型）

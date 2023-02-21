@@ -1,3 +1,13 @@
+## v2.6.0
+
+`2023-02-21`
+### Feature
+- 新增对 `网页 accessToken` 调用 `ChatGPT`，更智能不过不太稳定 [#51](https://github.com/Chanzhaoyu/chatgpt-web/issues/51)
+- 前端页面设置按钮显示查看当前后端服务配置
+
+### Enhancement
+- 新增 `TIMEOUT_MS` 环境变量设定后端超时时常（单位：毫秒）[#62](https://github.com/Chanzhaoyu/chatgpt-web/issues/62)
+
 ## v2.5.2
 
 `2023-02-21`
