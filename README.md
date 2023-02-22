@@ -192,12 +192,7 @@ PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 pnpm build
 ```
 
-###  使用 Railway 免费 一键部署
-
-> - 点击下方按钮 一键部署        
-> - 免费注册, 无需信用卡验证      
-> - 每月 `$5.00` 免费额度 / 每月 500 小时免费执行时间
-> - 无需保活, 在免费额度用完之前永不停止运行
+###  使用 Railway 部署
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/yytmgc)
 
@@ -206,16 +201,13 @@ pnpm build
 
 | 环境变量名称                | 必填 | 备注                    |
 | --------------------------- | ---- | ----------------------- |
-| `PORT` | √    | 默认3002即可，勿动！ |
-| `TIMEOUT_MS` | x    | 超时时间，单位毫秒，可选   |
-| `OPENAI_API_KEY` | OpenAI API必填    | 使用 OpenAI API 所需的 apiKey 。[(获取 apiKey)](https://platform.openai.com/overview)   |
-| `OPENAI_ACCESS_TOKEN` | Web API必填    | 使用 Web API 所需的 accessToken 。[(获取 accessToken)](https://chat.openai.com/api/auth/session)   |
-| `API_REVERSE_PROXY` | Web API必填    | 使用 Web API 所需的反向代理地址 。[详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)   |
+| `PORT` | 必填    | 默认 `3002`  |
+| `TIMEOUT_MS` | 可选    | 超时时间，单位毫秒，   |
+| `OPENAI_API_KEY` | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)   |
+| `OPENAI_ACCESS_TOKEN` | `Web API` 二选一   | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session)   |
+| `API_REVERSE_PROXY` | 可选，`Web API` 时可用    | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)   |
 
-
-> 注意:    
-> - Railway 修改环境变量 会 触发 重新 Deploy   
-
+> 注意: `Railway` 修改环境变量会重新 `Deploy`   
 
 
 ### 常见问题
