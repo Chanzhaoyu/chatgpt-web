@@ -15,7 +15,7 @@ const props = defineProps<Props>()
 const wrapClass = computed(() => {
   return [
     'text-wrap',
-    'p-2',
+    'p-3',
     'min-w-[20px]',
     'rounded-md',
     props.inversion ? 'bg-[#d2f9d1]' : 'bg-[#f4f6f8]',
@@ -50,6 +50,9 @@ const text = computed(() => {
   img{
     max-width: 100%;
     vertical-align: middle;
+  }
+  a {
+    color: #2d5cf6
   }
 }
 

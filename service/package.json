@@ -15,6 +15,7 @@
   },
   "scripts": {
     "start": "esno ./src/index.ts",
+    "dev": "esno watch ./src/index.ts",
     "prod": "esno ./build/index.js",
     "build": "pnpm clean && tsup",
     "clean": "rimraf build",
