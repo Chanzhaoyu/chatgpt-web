@@ -161,7 +161,6 @@ services:
       TIMEOUT_MS: 60000
 ```
 
-
 ## 手动打包
 ### 后端服务
 > 如果你不需要本项目的 `node` 接口，可以省略如下操作
@@ -192,6 +191,24 @@ PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 ```shell
 pnpm build
 ```
+
+###  使用 Railway 部署
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/yytmgc)
+
+
+##### Railway 环境变量
+
+| 环境变量名称                | 必填 | 备注                    |
+| --------------------------- | ---- | ----------------------- |
+| `PORT` | 必填    | 默认 `3002`  |
+| `TIMEOUT_MS` | 可选    | 超时时间，单位毫秒，   |
+| `OPENAI_API_KEY` | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)   |
+| `OPENAI_ACCESS_TOKEN` | `Web API` 二选一   | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session)   |
+| `API_REVERSE_PROXY` | 可选，`Web API` 时可用    | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)   |
+
+> 注意: `Railway` 修改环境变量会重新 `Deploy`   
+
 
 ### 常见问题
 Q: 为什么 `Git` 提交总是报错？
