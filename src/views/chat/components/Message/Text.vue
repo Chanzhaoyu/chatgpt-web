@@ -51,6 +51,9 @@ const text = computed(() => {
     max-width: 100%;
     vertical-align: middle;
   }
+  a {
+    color: #2d5cf6
+  }
 }
 
 .hljs {
