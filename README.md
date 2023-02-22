@@ -1,10 +1,36 @@
 # ChatGPT Web
 
-使用 `express` 和 `vue3` 搭建的支持 `ChatGPT` 双模型演示网页
+> 使用 `express` 和 `vue3` 搭建的支持 `ChatGPT` 双模型演示网页
 
 ![cover](./docs/cover.png)
 ![cover2](./docs/cover2.png)
 
+- [ChatGPT Web](#chatgpt-web)
+	- [介绍](#介绍)
+	- [待实现路线](#待实现路线)
+	- [前置要求](#前置要求)
+		- [Node](#node)
+		- [PNPM](#pnpm)
+		- [填写密钥](#填写密钥)
+	- [安装依赖](#安装依赖)
+		- [后端](#后端)
+		- [前端](#前端)
+	- [测试环境运行](#测试环境运行)
+		- [后端服务](#后端服务)
+		- [前端网页](#前端网页)
+	- [打包](#打包)
+		- [使用 Docker](#使用-docker)
+			- [Docker 参数示例](#docker-参数示例)
+			- [Docker build \& Run](#docker-build--run)
+			- [Docker compose](#docker-compose)
+		- [使用 Railway 部署](#使用-railway-部署)
+			- [Railway 环境变量](#railway-环境变量)
+		- [手动打包](#手动打包)
+			- [后端服务](#后端服务-1)
+			- [前端网页](#前端网页-1)
+	- [常见问题](#常见问题)
+	- [参与贡献](#参与贡献)
+	- [License](#license)
 ## 介绍
 
 支持双模型，提供了两种非官方 `ChatGPT API` 方法
@@ -81,7 +107,7 @@ OPENAI_ACCESS_TOKEN=
 
 > 为了简便 `后端开发人员` 的了解负担，所以并没有采用前端 `workspace` 模式，而是分文件夹存放。如果只需要前端页面做二次开发，删除 `service` 文件夹即可。
 
-### 后端服务
+### 后端
 
 进入文件夹 `/service` 运行以下命令
 
@@ -89,7 +115,7 @@ OPENAI_ACCESS_TOKEN=
 pnpm install
 ```
 
-### 网页
+### 前端
 根目录下运行以下命令
 ```shell
 pnpm bootstrap
@@ -165,7 +191,7 @@ services:
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/yytmgc)
 
-##### Railway 环境变量
+#### Railway 环境变量
 
 | 环境变量名称                | 必填 | 备注                    |
 | --------------------------- | ---- | ----------------------- |
@@ -175,7 +201,7 @@ services:
 | `OPENAI_ACCESS_TOKEN` | `Web API` 二选一   | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session)   |
 | `API_REVERSE_PROXY` | 可选，`Web API` 时可用    | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)   |
 
-> 注意: `Railway` 修改环境变量会重新 `Deploy`   
+> 注意: `Railway` 修改环境变量会重新 `Deploy`
 
 ### 手动打包
 #### 后端服务
