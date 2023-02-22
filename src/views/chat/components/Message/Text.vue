@@ -15,7 +15,7 @@ const props = defineProps<Props>()
 const wrapClass = computed(() => {
   return [
     'text-wrap',
-    'p-2',
+    'p-3',
     'min-w-[20px]',
     'rounded-md',
     props.inversion ? 'bg-[#d2f9d1]' : 'bg-[#f4f6f8]',
