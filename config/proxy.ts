@@ -8,7 +8,7 @@ export function createViteProxy(isOpenProxy: boolean, viteEnv: ImportMetaEnv) {
     '/api': {
       target: viteEnv.VITE_GLOB_API_URL,
       changeOrigin: true,
-      rewrite: path => path.replace('/api/', '/'),
+      rewrite: path => path.replace(/^\/api/, ''),
     },
   }
 
