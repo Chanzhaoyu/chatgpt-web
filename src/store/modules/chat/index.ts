@@ -110,6 +110,22 @@ export const useChatStore = defineStore('chat-store', {
       }
     },
 
+    deleteChatByUuid(uuid: number, index: number) {
+      if (!uuid || uuid === 0) {
+        if (this.chat.length) {
+          this.chat[0].data.splice(index, 1)
+          this.recordState()
+        }
+        return
+      }
+
+      const chatIndex = this.chat.findIndex(item => item.uuid === uuid)
+      if (chatIndex !== -1) {
+        this.chat[chatIndex].data.splice(index, 1)
+        this.recordState()
+      }
+    },
+
     clearChatByUuid(uuid: number) {
       if (!uuid || uuid === 0) {
         if (this.chat.length) {

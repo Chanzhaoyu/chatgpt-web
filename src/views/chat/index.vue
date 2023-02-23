@@ -1,7 +1,8 @@
 <script setup lang='ts'>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { NButton, NInput, useDialog } from 'naive-ui'
+import { NButton, NInput, useDialog, useMessage } from 'naive-ui'
+import { useClipboard } from '@vueuse/core'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
@@ -14,6 +15,9 @@ let controller = new AbortController()
 
 const route = useRoute()
 const dialog = useDialog()
+const ms = useMessage()
+
+const { copy, isSupported } = useClipboard()
 
 const chatStore = useChatStore()
 
@@ -195,6 +199,34 @@ async function onRegenerate(index: number) {
   }
 }
 
+async function handleCopy(index: number) {
+  if (loading.value)
+    return
+
+  if (isSupported.value) {
+    await copy(dataSources.value[index].text)
+    ms.success('Copied to clipboard')
+  }
+  else {
+    ms.error('Copy to clipboard is not supported')
+  }
+}
+
+function handleDelete(index: number) {
+  if (loading.value)
+    return
+
+  dialog.warning({
+    title: 'Delete Message',
+    content: 'Are you sure to delete this message?',
+    positiveText: 'Yes',
+    negativeText: 'No',
+    onPositiveClick: () => {
+      chatStore.deleteChatByUuid(+uuid, index)
+    },
+  })
+}
+
 function handleClear() {
   if (loading.value)
     return
@@ -273,6 +305,8 @@ onUnmounted(() => {
               :error="item.error"
               :loading="item.loading"
               @regenerate="onRegenerate(index)"
+              @copy="handleCopy(index)"
+              @delete="handleDelete(index)"
             />
             <div class="flex justify-center">
               <NButton v-if="loading" ghost @click="handleStop">

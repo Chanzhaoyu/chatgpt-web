@@ -13,11 +13,21 @@ interface Props {
 
 interface Emit {
   (ev: 'regenerate'): void
+  (ev: 'copy'): void
+  (ev: 'delete'): void
 }
 
 defineProps<Props>()
 
 const emit = defineEmits<Emit>()
+
+function handleCopy() {
+  emit('copy')
+}
+
+function handleDelete() {
+  emit('delete')
+}
 
 function handleRegenerate() {
   emit('regenerate')
@@ -37,7 +47,14 @@ function handleRegenerate() {
         {{ dateTime }}
       </span>
       <div class="flex items-end mt-2">
-        <Text :inversion="inversion" :error="error" :text="text" :loading="loading" />
+        <Text
+          :inversion="inversion"
+          :error="error"
+          :text="text"
+          :loading="loading"
+          @copy="handleCopy"
+          @delete="handleDelete"
+        />
         <button
           v-if="!inversion"
           class="mb-2 ml-2 transition text-neutral-400 hover:text-neutral-800"
