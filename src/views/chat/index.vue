@@ -217,6 +217,13 @@ function handleEnter(event: KeyboardEvent) {
   }
 }
 
+function handleStop() {
+  if (loading.value) {
+    controller.abort()
+    loading.value = false
+  }
+}
+
 const buttonDisabled = computed(() => {
   return loading.value || !prompt.value || prompt.value.trim() === ''
 })
@@ -267,6 +274,14 @@ onUnmounted(() => {
               :loading="item.loading"
               @regenerate="onRegenerate(index)"
             />
+            <div class="flex justify-center">
+              <NButton v-if="loading" ghost @click="handleStop">
+                <template #icon>
+                  <SvgIcon icon="ri:stop-circle-line" />
+                </template>
+                Stop Responding
+              </NButton>
+            </div>
           </div>
         </template>
       </div>
