@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import { NDropdown } from 'naive-ui'
-import { computed, h } from 'vue'
+import { computed } from 'vue'
 import { marked } from 'marked'
 import includeCode from '@/utils/functions/includeCode'
-import { SvgIcon } from '@/components/common'
 
 interface Props {
   inversion?: boolean
@@ -12,44 +10,7 @@ interface Props {
   loading?: boolean
 }
 
-interface Emit {
-  (ev: 'copy'): void
-  (ev: 'delete'): void
-}
-
 const props = defineProps<Props>()
-
-const emit = defineEmits<Emit>()
-
-const options = [
-  {
-    label: 'Copy',
-    key: 'copy',
-    icon: renderIcon('ri:file-copy-2-line'),
-  },
-  {
-    label: 'Delete',
-    key: 'delete',
-    icon: renderIcon('ri:delete-bin-6-line'),
-  },
-]
-
-function renderIcon(icon: string) {
-  return () => {
-    return h(SvgIcon, { icon })
-  }
-}
-
-function handleSelect(key: string | number) {
-  switch (key) {
-    case 'copy':
-      emit('copy')
-      break
-    case 'delete':
-      emit('delete')
-      break
-  }
-}
 
 const wrapClass = computed(() => {
   return [
@@ -73,17 +34,15 @@ const text = computed(() => {
 </script>
 
 <template>
-  <NDropdown trigger="click" :options="options" @select="handleSelect">
-    <div :class="wrapClass">
-      <template v-if="loading">
-        <span class="w-[5px] h-[20px] block animate-blink" />
-      </template>
-      <template v-else>
-        <code v-if="includeCode(text)" v-highlight class="leading-relaxed" v-text="text" />
-        <div v-else class="leading-relaxed break-all" v-html="text" />
-      </template>
-    </div>
-  </NDropdown>
+  <div :class="wrapClass">
+    <template v-if="loading">
+      <span class="w-[5px] h-[20px] block animate-blink" />
+    </template>
+    <template v-else>
+      <code v-if="includeCode(text)" v-highlight class="leading-relaxed" v-text="text" />
+      <div v-else class="leading-relaxed break-all" v-html="text" />
+    </template>
+  </div>
 </template>
 
 <style lang="less">
