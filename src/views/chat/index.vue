@@ -109,7 +109,20 @@ async function onConversation() {
           scrollToBottom()
         }
         catch (error) {
-          //
+          updateChat(
+            +uuid,
+            dataSources.value.length - 1,
+            {
+              dateTime: new Date().toLocaleString(),
+              text: 'Something went wrong, please try again later.',
+              inversion: false,
+              error: true,
+              loading: false,
+              conversationOptions: { },
+              requestOptions: { prompt: message, options: { ...options } },
+            },
+          )
+          scrollToBottom()
         }
       },
     })
@@ -200,7 +213,19 @@ async function onRegenerate(index: number) {
           )
         }
         catch (error) {
-          //
+          updateChat(
+            +uuid,
+            index,
+            {
+              dateTime: new Date().toLocaleString(),
+              text: 'Something went wrong, please try again later.',
+              inversion: false,
+              error: true,
+              loading: false,
+              conversationOptions: { },
+              requestOptions: { prompt: message, ...options },
+            },
+          )
         }
       },
     })

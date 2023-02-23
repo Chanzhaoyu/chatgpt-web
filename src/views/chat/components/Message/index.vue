@@ -39,7 +39,7 @@ function handleRegenerate() {
       <div class="flex items-end mt-2">
         <Text :inversion="inversion" :error="error" :text="text" :loading="loading" />
         <button
-          v-if="!inversion && !loading"
+          v-if="!inversion"
           class="mb-2 ml-2 transition text-neutral-400 hover:text-neutral-800"
           @click="handleRegenerate"
         >
