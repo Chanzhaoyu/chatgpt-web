@@ -8,7 +8,7 @@ import { useChat } from './hooks/useChat'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore } from '@/store'
-import { fetchChatAPIProcess } from '@/api'
+import { fetchChatAPI } from '@/api'
 
 let controller = new AbortController()
 
@@ -80,39 +80,22 @@ async function onConversation() {
   )
   scrollToBottom()
 
-  let offset = 0
   try {
-    await fetchChatAPIProcess<Chat.ConversationResponse>({
-      prompt: message,
-      options,
-      signal: controller.signal,
-      onDownloadProgress: ({ event }) => {
-        const xhr = event.target
-        const { responseText } = xhr
-        const chunk = responseText.substring(offset)
-        offset = responseText.length
-        try {
-          const data = JSON.parse(chunk)
-          updateChat(
-            +uuid,
-            dataSources.value.length - 1,
-            {
-              dateTime: new Date().toLocaleString(),
-              text: data.text ?? '',
-              inversion: false,
-              error: false,
-              loading: false,
-              conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-              requestOptions: { prompt: message, options: { ...options } },
-            },
-          )
-          scrollToBottom()
-        }
-        catch (error) {
-          //
-        }
+    const { data } = await fetchChatAPI<Chat.ConversationResponse>(message, options, controller.signal)
+    updateChat(
+      +uuid,
+      dataSources.value.length - 1,
+      {
+        dateTime: new Date().toLocaleString(),
+        text: data.text ?? '',
+        inversion: false,
+        error: false,
+        loading: false,
+        conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+        requestOptions: { prompt: message, options: { ...options } },
       },
-    })
+    )
+    scrollToBottom()
   }
   catch (error: any) {
     let errorMessage = error?.message ?? 'Something went wrong, please try again later.'
@@ -136,7 +119,6 @@ async function onConversation() {
     scrollToBottom()
   }
   finally {
-    offset = 0
     loading.value = false
   }
 }
@@ -172,41 +154,24 @@ async function onRegenerate(index: number) {
     },
   )
 
-  let offset = 0
   try {
-    await fetchChatAPIProcess<Chat.ConversationResponse>({
-      prompt: message,
-      options,
-      signal: controller.signal,
-      onDownloadProgress: ({ event }) => {
-        const xhr = event.target
-        const { responseText } = xhr
-        const chunk = responseText.substring(offset)
-        offset = responseText.length
-        try {
-          const data = JSON.parse(chunk)
-          updateChat(
-            +uuid,
-            index,
-            {
-              dateTime: new Date().toLocaleString(),
-              text: data.text ?? '',
-              inversion: false,
-              error: false,
-              loading: false,
-              conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-              requestOptions: { prompt: message, ...options },
-            },
-          )
-        }
-        catch (error) {
-          //
-        }
+    const { data } = await fetchChatAPI<Chat.ConversationResponse>(message, options, controller.signal)
+    updateChat(
+      +uuid,
+      index,
+      {
+        dateTime: new Date().toLocaleString(),
+        text: data.text ?? '',
+        inversion: false,
+        error: false,
+        loading: false,
+        conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+        requestOptions: { prompt: message, ...options },
       },
-    })
+    )
   }
   catch (error: any) {
-    let errorMessage = error?.message ?? 'Something went wrong, please try again later.'
+    let errorMessage = 'Something went wrong, please try again later.'
 
     if (error.message === 'canceled')
       errorMessage = 'Request canceled. Please try again.'
@@ -227,7 +192,6 @@ async function onRegenerate(index: number) {
   }
   finally {
     loading.value = false
-    offset = 0
   }
 }
 
