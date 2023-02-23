@@ -1,19 +1,20 @@
 <script setup lang='ts'>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { NButton, NInput, useDialog } from 'naive-ui'
+import { NButton, NInput, useDialog, useMessage } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore } from '@/store'
-import { fetchChatAPIProcess } from '@/api'
+import { fetchChatAPI } from '@/api'
 
 let controller = new AbortController()
 
 const route = useRoute()
 const dialog = useDialog()
+const ms = useMessage()
 
 const chatStore = useChatStore()
 
@@ -80,39 +81,22 @@ async function onConversation() {
   )
   scrollToBottom()
 
-  let offset = 0
   try {
-    await fetchChatAPIProcess<Chat.ConversationResponse>({
-      prompt: message,
-      options,
-      signal: controller.signal,
-      onDownloadProgress: ({ event }) => {
-        const xhr = event.target
-        const { responseText } = xhr
-        const chunk = responseText.substring(offset)
-        offset = responseText.length
-        try {
-          const data = JSON.parse(chunk)
-          updateChat(
-            +uuid,
-            dataSources.value.length - 1,
-            {
-              dateTime: new Date().toLocaleString(),
-              text: data.text ?? '',
-              inversion: false,
-              error: false,
-              loading: false,
-              conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-              requestOptions: { prompt: message, options: { ...options } },
-            },
-          )
-          scrollToBottom()
-        }
-        catch (error) {
-          //
-        }
+    const { data } = await fetchChatAPI<Chat.ConversationResponse>(message, options, controller.signal)
+    updateChat(
+      +uuid,
+      dataSources.value.length - 1,
+      {
+        dateTime: new Date().toLocaleString(),
+        text: data.text ?? '',
+        inversion: false,
+        error: false,
+        loading: false,
+        conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+        requestOptions: { prompt: message, options: { ...options } },
       },
-    })
+    )
+    scrollToBottom()
   }
   catch (error: any) {
     let errorMessage = error?.message ?? 'Something went wrong, please try again later.'
@@ -136,7 +120,6 @@ async function onConversation() {
     scrollToBottom()
   }
   finally {
-    offset = 0
     loading.value = false
   }
 }
@@ -172,41 +155,24 @@ async function onRegenerate(index: number) {
     },
   )
 
-  let offset = 0
   try {
-    await fetchChatAPIProcess<Chat.ConversationResponse>({
-      prompt: message,
-      options,
-      signal: controller.signal,
-      onDownloadProgress: ({ event }) => {
-        const xhr = event.target
-        const { responseText } = xhr
-        const chunk = responseText.substring(offset)
-        offset = responseText.length
-        try {
-          const data = JSON.parse(chunk)
-          updateChat(
-            +uuid,
-            index,
-            {
-              dateTime: new Date().toLocaleString(),
-              text: data.text ?? '',
-              inversion: false,
-              error: false,
-              loading: false,
-              conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-              requestOptions: { prompt: message, ...options },
-            },
-          )
-        }
-        catch (error) {
-          //
-        }
+    const { data } = await fetchChatAPI<Chat.ConversationResponse>(message, options, controller.signal)
+    updateChat(
+      +uuid,
+      index,
+      {
+        dateTime: new Date().toLocaleString(),
+        text: data.text ?? '',
+        inversion: false,
+        error: false,
+        loading: false,
+        conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+        requestOptions: { prompt: message, ...options },
       },
-    })
+    )
   }
   catch (error: any) {
-    let errorMessage = error?.message ?? 'Something went wrong, please try again later.'
+    let errorMessage = 'Something went wrong, please try again later.'
 
     if (error.message === 'canceled')
       errorMessage = 'Request canceled. Please try again.'
@@ -227,8 +193,23 @@ async function onRegenerate(index: number) {
   }
   finally {
     loading.value = false
-    offset = 0
   }
+}
+
+function handleDelete(index: number) {
+  if (loading.value)
+    return
+
+  dialog.warning({
+    title: 'Delete Message',
+    content: 'Are you sure to delete this message?',
+    positiveText: 'Yes',
+    negativeText: 'No',
+    onPositiveClick: () => {
+      chatStore.deleteChatByUuid(+uuid, index)
+      ms.success('Message deleted successfully.')
+    },
+  })
 }
 
 function handleClear() {
@@ -250,6 +231,13 @@ function handleEnter(event: KeyboardEvent) {
   if (event.key === 'Enter' && !event.shiftKey) {
     event.preventDefault()
     handleSubmit()
+  }
+}
+
+function handleStop() {
+  if (loading.value) {
+    controller.abort()
+    loading.value = false
   }
 }
 
@@ -302,7 +290,16 @@ onUnmounted(() => {
               :error="item.error"
               :loading="item.loading"
               @regenerate="onRegenerate(index)"
+              @delete="handleDelete(index)"
             />
+            <div class="flex justify-center">
+              <NButton v-if="loading" ghost @click="handleStop">
+                <template #icon>
+                  <SvgIcon icon="ri:stop-circle-line" />
+                </template>
+                Stop Responding
+              </NButton>
+            </div>
           </div>
         </template>
       </div>

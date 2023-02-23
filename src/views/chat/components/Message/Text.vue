@@ -36,7 +36,7 @@ const text = computed(() => {
 <template>
   <div :class="wrapClass">
     <template v-if="loading">
-      <span class="w-[3px] h-[20px] block animate-blink" />
+      <span class="w-[5px] h-[20px] block animate-blink" />
     </template>
     <template v-else>
       <code v-if="includeCode(text)" v-highlight class="leading-relaxed" v-text="text" />

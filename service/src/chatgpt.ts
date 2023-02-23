@@ -65,6 +65,7 @@ async function chatReply(
   }
 }
 
+/**  实验性质的函数，用于处理聊天过程中的中间结果 */
 async function chatReplyProcess(
   message: string,
   lastContext?: { conversationId?: string; parentMessageId?: string },
