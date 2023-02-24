@@ -16,6 +16,7 @@ interface ConfigState {
   timeoutMs?: number
   reverseProxy?: string
   apiModel?: string
+  socksProxy?: string
 }
 
 const props = defineProps<Props>()
@@ -69,6 +70,7 @@ watch(
         <p>API方式：{{ config?.apiModel ?? '-' }}</p>
         <p>反向代理：{{ config?.reverseProxy ?? '-' }}</p>
         <p>超时时间：{{ config?.timeoutMs ?? '-' }}</p>
+        <p>Socks代理：{{ config?.socksProxy ?? '-' }}</p>
       </div>
     </NCard>
   </NModal>
