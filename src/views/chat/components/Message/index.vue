@@ -1,6 +1,6 @@
 <script setup lang='ts'>
-import Avatar from './Avatar.vue'
-import Text from './Text.vue'
+import AvatarComponent from './Avatar.vue'
+import TextComponent from './Text.vue'
 import { SvgIcon } from '@/components/common'
 
 interface Props {
@@ -36,14 +36,14 @@ function handleRegenerate() {
       class="flex items-center justify-center rounded-full overflow-hidden w-[32px] h-[32px]"
       :class="[inversion ? 'ml-3' : 'mr-3']"
     >
-      <Avatar :image="inversion" />
+      <AvatarComponent :image="inversion" />
     </div>
     <div class="flex flex-col flex-1 text-sm" :class="[inversion ? 'items-end' : 'items-start']">
       <span class="text-xs text-[#b4bbc4]">
         {{ dateTime }}
       </span>
       <div class="flex items-end gap-2 mt-2" :class="[inversion ? 'flex-row-reverse' : 'flex-row']">
-        <Text
+        <TextComponent
           :inversion="inversion"
           :error="error"
           :text="text"

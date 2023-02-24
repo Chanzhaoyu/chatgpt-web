@@ -1,6 +1,6 @@
 {
   "name": "chatgpt-web",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "private": false,
   "description": "ChatGPT Web",
   "author": "ChenZhaoYu <chenzhaoyu1994@gmail.com>",
@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^9.13.0",
+    "github-markdown-css": "^5.2.0",
     "highlight.js": "^11.7.0",
     "marked": "^4.2.12",
     "naive-ui": "^2.34.3",
