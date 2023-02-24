@@ -15,7 +15,6 @@ specifiers:
   axios: ^1.3.3
   crypto-js: ^4.1.1
   eslint: ^8.34.0
-  github-markdown-css: ^5.2.0
   highlight.js: ^11.7.0
   husky: ^8.0.3
   less: ^4.1.3
@@ -35,7 +34,6 @@ specifiers:
 
 dependencies:
   '@vueuse/core': 9.13.0_vue@3.2.47
-  github-markdown-css: 5.2.0
   highlight.js: 11.7.0
   marked: 4.2.12
   naive-ui: 2.34.3_vue@3.2.47
@@ -2525,10 +2523,6 @@ packages:
       split2: 3.2.2
       through2: 4.0.2
     dev: true
-
-  /github-markdown-css/5.2.0:
-    resolution: {integrity: sha512-hq5RaCInSUZ48bImOZpkppW2/MT44StRgsbsZ8YA4vJFwLKB/Vo3k7R2t+pUGqO+ThG0QDMi96TewV/B3vyItg==}
-    dev: false
 
   /glob-parent/5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}

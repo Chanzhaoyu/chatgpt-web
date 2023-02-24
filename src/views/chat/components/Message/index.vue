@@ -52,13 +52,13 @@ function handleRegenerate() {
         <div class="flex flex-col">
           <button
             v-if="!inversion"
-            class="mb-2 transition text-neutral-400 hover:text-neutral-800"
+            class="mb-2 transition text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
             @click="handleRegenerate"
           >
             <SvgIcon icon="ri:restart-line" />
           </button>
           <button
-            class="mb-1 transition text-neutral-400 hover:text-neutral-800"
+            class="mb-1 transition text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
             @click="handleDelete"
           >
             <SvgIcon icon="ri:delete-bin-6-line" />

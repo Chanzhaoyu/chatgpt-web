@@ -26,6 +26,7 @@ const wrapClass = computed(() => {
     'min-w-[20px]',
     'rounded-md',
     props.inversion ? 'bg-[#d2f9d1]' : 'bg-[#f4f6f8]',
+    props.inversion ? 'dark:bg-[#d2f9d1]' : 'dark:bg-[#24272e]',
     { 'text-red-500': props.error },
   ]
 })
@@ -38,9 +39,9 @@ const text = computed(() => {
 </script>
 
 <template>
-  <div :class="wrapClass">
+  <div class="text-black" :class="wrapClass">
     <template v-if="loading">
-      <span class="w-[5px] h-[20px] block animate-blink" />
+      <span class="dark:text-white w-[4px] h-[20px] block animate-blink" />
     </template>
     <template v-else>
       <div class="leading-relaxed break-all">

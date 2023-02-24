@@ -7,6 +7,15 @@ export const useAppStore = defineStore('app-store', {
   actions: {
     setSiderCollapsed(collapsed: boolean) {
       this.siderCollapsed = collapsed
+      this.recordState()
+    },
+
+    setTheme(theme: 'light' | 'dark') {
+      this.theme = theme
+      this.recordState()
+    },
+
+    recordState() {
       setLocalSetting(this.$state)
     },
   },
