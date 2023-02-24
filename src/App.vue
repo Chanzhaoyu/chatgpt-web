@@ -1,29 +1,17 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue'
-import { NConfigProvider, darkTheme } from 'naive-ui'
+import { NConfigProvider } from 'naive-ui'
 import { NaiveProvider } from '@/components/common'
-import { useAppStore } from '@/store'
+import { useTheme } from '@/hooks/useTheme'
 
-const appStore = useAppStore()
-
-watch(
-  () => appStore.theme,
-  (theme) => {
-    if (theme === 'dark')
-      document.documentElement.classList.add('dark')
-    else
-      document.documentElement.classList.remove('dark')
-  },
-  { immediate: true },
-)
-
-const theme = computed(() => {
-  return appStore.theme === 'dark' ? darkTheme : undefined
-})
+const { theme, themeOverrides } = useTheme()
 </script>
 
 <template>
-  <NConfigProvider class="h-full" :theme="theme">
+  <NConfigProvider
+    class="h-full"
+    :theme="theme"
+    :theme-overrides="themeOverrides"
+  >
     <NaiveProvider>
       <RouterView />
     </NaiveProvider>

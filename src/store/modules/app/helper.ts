@@ -2,9 +2,11 @@ import { ss } from '@/utils/storage'
 
 const LOCAL_NAME = 'appSetting'
 
+export type Theme = 'light' | 'dark' | 'auto'
+
 export interface AppState {
   siderCollapsed: boolean
-  theme: 'light' | 'dark'
+  theme: Theme
 }
 
 export function defaultSetting(): AppState {

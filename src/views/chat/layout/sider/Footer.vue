@@ -1,5 +1,6 @@
 <script setup lang='ts'>
-import { computed, ref } from 'vue'
+import { computed, h, ref } from 'vue'
+import { NDropdown } from 'naive-ui'
 import { HoverButton, Setting, SvgIcon, UserAvatar } from '@/components/common'
 import { useAppStore } from '@/store'
 
@@ -7,10 +8,34 @@ const appStore = useAppStore()
 
 const show = ref(false)
 
-const isDark = computed(() => appStore.theme === 'dark')
+const theme = computed(() => appStore.theme)
 
-function handleThemeChange() {
-  appStore.setTheme(isDark.value ? 'light' : 'dark')
+const options = [
+  {
+    label: 'Dark',
+    key: 'dark',
+    icon: renderIcon('ri:moon-foggy-line'),
+  },
+  {
+    label: 'Light',
+    key: 'light',
+    icon: renderIcon('ri:sun-foggy-line'),
+  },
+  {
+    label: 'Auto',
+    key: 'auto',
+    icon: renderIcon('ri:contrast-line'),
+  },
+]
+
+function renderIcon(icon: string) {
+  return () => {
+    return h(SvgIcon, { icon })
+  }
+}
+
+function handleThemeChange(key: 'light' | 'dark' | 'auto') {
+  appStore.setTheme(key)
 }
 </script>
 
@@ -18,12 +43,15 @@ function handleThemeChange() {
   <footer class="flex items-center justify-between min-w-0 p-4 overflow-hidden border-t dark:border-neutral-800">
     <UserAvatar />
 
-    <HoverButton tooltip="Theme" @click="handleThemeChange">
-      <span class="text-xl text-[#4f555e] dark:text-white">
-        <SvgIcon v-if="isDark" icon="ri:sun-foggy-line" />
-        <SvgIcon v-else icon="ri:moon-foggy-line" />
-      </span>
-    </HoverButton>
+    <NDropdown :options="options" placement="top" trigger="click" @select="handleThemeChange">
+      <HoverButton>
+        <span class="text-xl text-[#4f555e] dark:text-white">
+          <SvgIcon v-if="theme === 'dark'" icon="ri:sun-foggy-line" />
+          <SvgIcon v-if="theme === 'light'" icon="ri:moon-foggy-line" />
+          <SvgIcon v-if="theme === 'auto'" icon="ri:contrast-line" />
+        </span>
+      </HoverButton>
+    </NDropdown>
 
     <HoverButton tooltip="Setting" @click="show = true">
       <span class="text-xl text-[#4f555e] dark:text-white">
