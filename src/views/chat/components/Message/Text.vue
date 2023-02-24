@@ -31,9 +31,9 @@ const wrapClass = computed(() => {
 })
 
 const text = computed(() => {
-  if (props.text)
+  if (props.text && !props.inversion)
     return marked(props.text)
-  return ''
+  return props.text
 })
 </script>
 
