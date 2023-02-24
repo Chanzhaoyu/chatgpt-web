@@ -247,7 +247,7 @@ const buttonDisabled = computed(() => {
 
 const wrapClass = computed(() => {
   if (isMobile.value)
-    return ['pt-14', 'pb-14']
+    return ['pt-14', 'pb-16']
 
   return []
 })
@@ -307,7 +307,7 @@ onUnmounted(() => {
     <footer :class="footerClass">
       <div class="flex items-center justify-between space-x-2">
         <HoverButton @click="handleClear">
-          <span class="text-xl text-[#4f555e]">
+          <span class="text-xl text-[#4f555e] dark:text-white">
             <SvgIcon icon="ri:delete-bin-line" />
           </span>
         </HoverButton>
@@ -320,7 +320,9 @@ onUnmounted(() => {
         />
         <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
           <template #icon>
-            <SvgIcon icon="ri:send-plane-fill" />
+            <span class="dark:text-black">
+              <SvgIcon icon="ri:send-plane-fill" />
+            </span>
           </template>
         </NButton>
       </div>

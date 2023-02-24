@@ -31,9 +31,9 @@ function handleRegenerate() {
 </script>
 
 <template>
-  <div class="flex w-full mb-6" :class="[{ 'flex-row-reverse': inversion }]">
+  <div class="flex w-full mb-6 overflow-hidden" :class="[{ 'flex-row-reverse': inversion }]">
     <div
-      class="flex items-center justify-center rounded-full overflow-hidden w-[32px] h-[32px]"
+      class="flex items-center justify-center rounded-full overflow-hidden flex-shrink-0 w-[32px] h-[32px]"
       :class="[inversion ? 'ml-3' : 'mr-3']"
     >
       <AvatarComponent :image="inversion" />
@@ -42,7 +42,10 @@ function handleRegenerate() {
       <span class="text-xs text-[#b4bbc4]">
         {{ dateTime }}
       </span>
-      <div class="flex items-end gap-2 mt-2" :class="[inversion ? 'flex-row-reverse' : 'flex-row']">
+      <div
+        class="flex items-end gap-2 mt-2"
+        :class="[inversion ? 'flex-row-reverse' : 'flex-row']"
+      >
         <TextComponent
           :inversion="inversion"
           :error="error"
@@ -52,13 +55,13 @@ function handleRegenerate() {
         <div class="flex flex-col">
           <button
             v-if="!inversion"
-            class="mb-2 transition text-neutral-400 hover:text-neutral-800"
+            class="mb-2 transition text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
             @click="handleRegenerate"
           >
             <SvgIcon icon="ri:restart-line" />
           </button>
           <button
-            class="mb-1 transition text-neutral-400 hover:text-neutral-800"
+            class="mb-1 transition text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
             @click="handleDelete"
           >
             <SvgIcon icon="ri:delete-bin-6-line" />

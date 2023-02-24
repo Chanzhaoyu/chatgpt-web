@@ -26,25 +26,27 @@ const wrapClass = computed(() => {
     'min-w-[20px]',
     'rounded-md',
     props.inversion ? 'bg-[#d2f9d1]' : 'bg-[#f4f6f8]',
+    props.inversion ? 'dark:bg-[#a1dc95]' : 'dark:bg-[#1e1e20]',
     { 'text-red-500': props.error },
   ]
 })
 
 const text = computed(() => {
-  if (props.text)
+  if (props.text && !props.inversion)
     return marked(props.text)
-  return ''
+  return props.text
 })
 </script>
 
 <template>
-  <div :class="wrapClass">
+  <div class="text-black" :class="wrapClass">
     <template v-if="loading">
-      <span class="w-[5px] h-[20px] block animate-blink" />
+      <span class="dark:text-white w-[4px] h-[20px] block animate-blink" />
     </template>
     <template v-else>
       <div class="leading-relaxed break-all">
-        <div :class="[{ 'markdown-body': !inversion }]" v-html="text" />
+        <div v-if="!inversion" class="markdown-body" v-html="text" />
+        <div v-else v-text="text" />
       </div>
     </template>
   </div>
