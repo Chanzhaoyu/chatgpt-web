@@ -247,7 +247,7 @@ const buttonDisabled = computed(() => {
 
 const wrapClass = computed(() => {
   if (isMobile.value)
-    return ['pt-14', 'pb-14']
+    return ['pt-14', 'pb-16']
 
   return []
 })
