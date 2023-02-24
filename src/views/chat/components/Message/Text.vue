@@ -1,7 +1,16 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { marked } from 'marked'
-import includeCode from '@/utils/functions/includeCode'
+import hljs from 'highlight.js'
+
+const props = defineProps<Props>()
+
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  highlight(code) {
+    return hljs.highlightAuto(code).value
+  },
+})
 
 interface Props {
   inversion?: boolean
@@ -9,8 +18,6 @@ interface Props {
   text?: string
   loading?: boolean
 }
-
-const props = defineProps<Props>()
 
 const wrapClass = computed(() => {
   return [
@@ -24,11 +31,8 @@ const wrapClass = computed(() => {
 })
 
 const text = computed(() => {
-  if (props.text) {
-    if (!includeCode(props.text))
-      return marked.parse(props.text)
-    return props.text
-  }
+  if (props.text)
+    return marked(props.text)
   return ''
 })
 </script>
@@ -39,25 +43,13 @@ const text = computed(() => {
       <span class="w-[5px] h-[20px] block animate-blink" />
     </template>
     <template v-else>
-      <code v-if="includeCode(text)" v-highlight class="leading-relaxed" v-text="text" />
-      <div v-else class="leading-relaxed break-all" v-html="text" />
+      <div class="leading-relaxed break-all">
+        <div :class="[{ 'markdown-body': !inversion }]" v-html="text" />
+      </div>
     </template>
   </div>
 </template>
 
 <style lang="less">
-.text-wrap{
-  img{
-    max-width: 100%;
-    vertical-align: middle;
-  }
-  a {
-    color: #2d5cf6
-  }
-}
-
-.hljs {
-  background-color: #fff0 !important;
-  white-space: break-spaces;
-}
+@import url(./style.less);
 </style>
