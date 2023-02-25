@@ -1,6 +1,6 @@
 import express from 'express'
-import type { ChatContext } from './chatgpt'
-import { chatConfig, chatReply } from './chatgpt'
+import type { ChatContext, ChatMessage } from './chatgpt'
+import { chatConfig, chatReply, chatReplyProcess } from './chatgpt'
 
 const app = express()
 const router = express.Router()
@@ -23,6 +23,26 @@ router.post('/chat', async (req, res) => {
   }
   catch (error) {
     res.send(error)
+  }
+})
+
+/**  实验性质的函数，用于处理聊天过程中的中间结果 */
+router.post('/chat-process', async (req, res) => {
+  res.setHeader('Content-type', 'application/octet-stream')
+
+  try {
+    const { prompt, options = {} } = req.body as { prompt: string; options?: ChatContext }
+    let firstChunk = true
+    await chatReplyProcess(prompt, options, (chat: ChatMessage) => {
+      res.write(firstChunk ? JSON.stringify(chat) : `\n${JSON.stringify(chat)}`)
+      firstChunk = false
+    })
+  }
+  catch (error) {
+    res.write(JSON.stringify(error))
+  }
+  finally {
+    res.end()
   }
 })
 
