@@ -345,7 +345,7 @@ onUnmounted(() => {
 <template>
   <div class="flex flex-col h-full" :class="wrapClass">
     <main class="flex-1 overflow-hidden">
-      <div ref="scrollRef" class="h-full p-4 overflow-hidden overflow-y-auto" :class="[{ 'p-2': isMobile }]">
+      <div ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" :class="[isMobile ? 'p-2' : 'p-4']">
         <template v-if="!dataSources.length">
           <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
             <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
