@@ -46,8 +46,8 @@ function handleThemeChange(key: 'light' | 'dark' | 'auto') {
     <NDropdown :options="options" placement="top" trigger="click" @select="handleThemeChange">
       <HoverButton>
         <span class="text-xl text-[#4f555e] dark:text-white">
-          <SvgIcon v-if="theme === 'dark'" icon="ri:sun-foggy-line" />
-          <SvgIcon v-if="theme === 'light'" icon="ri:moon-foggy-line" />
+          <SvgIcon v-if="theme === 'dark'" icon="ri:moon-foggy-line" />
+          <SvgIcon v-if="theme === 'light'" icon="ri:sun-foggy-line" />
           <SvgIcon v-if="theme === 'auto'" icon="ri:contrast-line" />
         </span>
       </HoverButton>

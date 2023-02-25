@@ -13,7 +13,6 @@ interface Props {
 
 interface Emit {
   (ev: 'regenerate'): void
-  (ev: 'copy'): void
   (ev: 'delete'): void
 }
 
@@ -33,15 +32,15 @@ function handleRegenerate() {
 <template>
   <div class="flex w-full mb-6 overflow-hidden" :class="[{ 'flex-row-reverse': inversion }]">
     <div
-      class="flex items-center justify-center rounded-full overflow-hidden flex-shrink-0 w-[32px] h-[32px]"
-      :class="[inversion ? 'ml-3' : 'mr-3']"
+      class="flex items-center justify-center flex-shrink-0 h-8 overflow-hidden rounded-full basis-8"
+      :class="[inversion ? 'ml-2' : 'mr-2']"
     >
       <AvatarComponent :image="inversion" />
     </div>
-    <div class="flex flex-col flex-1 text-sm" :class="[inversion ? 'items-end' : 'items-start']">
-      <span class="text-xs text-[#b4bbc4]">
+    <div class="overflow-hidden text-sm " :class="[inversion ? 'items-end' : 'items-start']">
+      <p class="text-xs text-[#b4bbc4]" :class="[inversion ? 'text-right' : 'text-left']">
         {{ dateTime }}
-      </span>
+      </p>
       <div
         class="flex items-end gap-2 mt-2"
         :class="[inversion ? 'flex-row-reverse' : 'flex-row']"

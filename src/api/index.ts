@@ -19,7 +19,6 @@ export function fetchChatConfig<T = any>() {
   })
 }
 
-/**  实验性质的函数，用于处理聊天过程中的中间结果 */
 export function fetchChatAPIProcess<T = any>(
   params: {
     prompt: string
