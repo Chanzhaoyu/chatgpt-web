@@ -313,7 +313,7 @@ onUnmounted(() => {
       <div
         id="scrollRef"
         ref="scrollRef"
-        class="h-full overflow-hidden overflow-y-auto scroll-smooth"
+        class="h-full overflow-hidden overflow-y-auto"
         :class="[isMobile ? 'p-2' : 'p-4']"
       >
         <template v-if="!dataSources.length">
