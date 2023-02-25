@@ -27,7 +27,7 @@ const wrapClass = computed(() => {
     'text-wrap',
     'min-w-[20px]',
     'rounded-md',
-    isMobile.value ? 'p-2' : 'p-4',
+    isMobile.value ? 'p-2' : 'p-3',
     props.inversion ? 'bg-[#d2f9d1]' : 'bg-[#f4f6f8]',
     props.inversion ? 'dark:bg-[#a1dc95]' : 'dark:bg-[#1e1e20]',
     { 'text-red-500': props.error },

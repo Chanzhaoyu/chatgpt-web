@@ -95,7 +95,6 @@ async function onConversation() {
         if (lastIndex !== -1)
           chunk = responseText.substring(lastIndex)
         try {
-          globalThis.console.log(`trunk = ${chunk}`)
           const data = JSON.parse(chunk)
           updateChat(
             +uuid,
@@ -117,23 +116,6 @@ async function onConversation() {
         }
       },
     })
-    /*
-    const { data } = await fetchChatAPI<Chat.ConversationResponse>(message, options, controller.signal)
-    updateChat(
-      +uuid,
-      dataSources.value.length - 1,
-      {
-        dateTime: new Date().toLocaleString(),
-        text: data.text ?? '',
-        inversion: false,
-        error: false,
-        loading: false,
-        conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-        requestOptions: { prompt: message, options: { ...options } },
-      },
-    )
-    scrollToBottom()
-*/
   }
   catch (error: any) {
     let errorMessage = error?.message ?? 'Something went wrong, please try again later.'
@@ -206,7 +188,6 @@ async function onRegenerate(index: number) {
         if (lastIndex !== -1)
           chunk = responseText.substring(lastIndex)
         try {
-          globalThis.console.log(`trunk = ${chunk}`)
           const data = JSON.parse(chunk)
           updateChat(
             +uuid,
@@ -227,22 +208,6 @@ async function onRegenerate(index: number) {
         }
       },
     })
-    /*
-    const { data } = await fetchChatAPI<Chat.ConversationResponse>(message, options, controller.signal)
-    updateChat(
-      +uuid,
-      index,
-      {
-        dateTime: new Date().toLocaleString(),
-        text: data.text ?? '',
-        inversion: false,
-        error: false,
-        loading: false,
-        conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-        requestOptions: { prompt: message, ...options },
-      },
-    )
-*/
   }
   catch (error: any) {
     let errorMessage = error?.message ?? 'Something went wrong, please try again later.'

@@ -26,7 +26,6 @@ router.post('/chat', async (req, res) => {
   }
 })
 
-/**  实验性质的函数，用于处理聊天过程中的中间结果 */
 router.post('/chat-process', async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
