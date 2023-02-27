@@ -3,6 +3,8 @@ name: build_docker
 on:
   push:
     branches: [main]
+  release:
+    types: [created] # 表示在创建新的 Release 时触发
 
 jobs:
   build_docker:
@@ -11,11 +13,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: chenzhaoyu94/chatgpt-web
+
+      - run: |
+          echo "本次构建的版本为：${GITHUB_REF_NAME} (但是这个变量目前上下文中无法获取到)"
+          echo 本次构建的版本为：${{ github.ref_name }}
+          env
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -32,6 +34,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/chatgpt-web:${{ github.ref_name }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/chatgpt-web:latest

@@ -174,7 +174,7 @@ version: '3'
 
 services:
   app:
-    image: chenzhaoyu94/chatgpt-web:main
+    image: chenzhaoyu94/chatgpt-web  # 总是使用latest,更新时重新pull该tag镜像即可
     ports:
       - 3002:3002
     environment:
