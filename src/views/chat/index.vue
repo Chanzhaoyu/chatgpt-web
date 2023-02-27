@@ -266,9 +266,11 @@ function handleClear() {
 }
 
 function handleEnter(event: KeyboardEvent) {
-  if (event.key === 'Enter' && !event.shiftKey) {
-    event.preventDefault()
-    handleSubmit()
+  if (!isMobile.value) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault()
+      handleSubmit()
+    }
   }
 }
 
@@ -278,6 +280,12 @@ function handleStop() {
     loading.value = false
   }
 }
+
+const placeholder = computed(() => {
+  if (isMobile.value)
+    return 'Ask me anything...'
+  return 'Ask me anything... (Shift + Enter = line break)'
+})
 
 const buttonDisabled = computed(() => {
   return loading.value || !prompt.value || prompt.value.trim() === ''
@@ -358,7 +366,7 @@ onUnmounted(() => {
           v-model:value="prompt"
           type="textarea"
           :autosize="{ minRows: 1, maxRows: 2 }"
-          placeholder="Ask me anything..."
+          :placeholder="placeholder"
           @keypress="handleEnter"
         />
         <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
