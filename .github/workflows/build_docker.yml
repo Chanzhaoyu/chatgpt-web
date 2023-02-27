@@ -17,6 +17,10 @@ jobs:
         with:
           images: chenzhaoyu94/chatgpt-web
 
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=today::$(date +'%Y-%m-%d_%H-%M')"
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -32,6 +36,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
+          tags: |
+            chenzhaoyu94/chatgpt-web:${{ steps.date.outputs.today }}
+            chenzhaoyu94/chatgpt-web:latest
