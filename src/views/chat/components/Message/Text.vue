@@ -48,7 +48,7 @@ const text = computed(() => {
     </template>
     <template v-else>
       <div class="leading-relaxed break-all">
-        <div v-if="!inversion" class="markdown-body" v-html="text" />
+        <pre v-if="!inversion" class="markdown-body" v-html="text" />
         <div v-else class="whitespace-pre-wrap" v-text="text" />
       </div>
     </template>
