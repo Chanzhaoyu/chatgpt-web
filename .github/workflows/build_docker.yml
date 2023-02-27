@@ -3,6 +3,8 @@ name: build_docker
 on:
   push:
     branches: [main]
+  release:
+    types: [created] # 表示在创建新的 Release 时触发
 
 jobs:
   build_docker:
@@ -16,10 +18,6 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: chenzhaoyu94/chatgpt-web
-
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=today::$(date +'%Y-%m-%d_%H-%M')"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -39,5 +37,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
           tags: |
-            chenzhaoyu94/chatgpt-web:${{ steps.date.outputs.today }}
-            chenzhaoyu94/chatgpt-web:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/chatgpt-web:"${GITHUB_REF_NAME}"
+            ${{ secrets.DOCKERHUB_USERNAME }}/chatgpt-web:latest
