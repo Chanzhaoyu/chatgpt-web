@@ -2,8 +2,8 @@
 
 > 使用 `express` 和 `vue3` 搭建的支持 `ChatGPT` 双模型演示网页
 
-![cover](./docs/c1.png)
-![cover2](./docs/c2.png)
+![cover](./docs/c1-2.8.0.png)
+![cover2](./docs/c2-2.8.0.png)
 
 - [ChatGPT Web](#chatgpt-web)
 	- [介绍](#介绍)
@@ -30,6 +30,7 @@
 			- [前端网页](#前端网页-1)
 	- [常见问题](#常见问题)
 	- [参与贡献](#参与贡献)
+	- [赞助](#赞助)
 	- [License](#license)
 ## 介绍
 
@@ -43,6 +44,8 @@
 对比：
 1. `ChatGPTAPI` 使用 `text-davinci-003` 通过官方`OpenAI`补全`API`模拟`ChatGPT`（最稳健的方法，但它不是免费的，并且没有使用针对聊天进行微调的模型）
 2. `ChatGPTUnofficialProxyAPI` 使用非官方代理服务器访问 `ChatGPT` 的后端`API`，绕过`Cloudflare`（使用真实的的`ChatGPT`，非常轻量级，但依赖于第三方服务器，并且有速率限制）
+
+[查看详情](https://github.com/Chanzhaoyu/chatgpt-web/issues/138)
 
 切换方式：
 1. 进入 `service/.env` 文件
@@ -254,6 +257,21 @@ A: `vscode` 请安装项目推荐插件，或手动安装 `Eslint` 插件。
 <a href="https://github.com/Chanzhaoyu/chatgpt-web/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Chanzhaoyu/chatgpt-web" />
 </a>
+
+## 赞助
+
+如果你觉得这个项目对你有帮助，并且情况允许的话，可以给我一点点支持，总之非常感谢支持～
+
+<div style="display: flex; gap: 20px;">
+	<div style="text-align: center">
+		<img style="max-width: 100%" src="./docs/wechat.png" alt="微信" />
+		<p>WeChat Pay</p>
+	</div>
+	<div style="text-align: center">
+		<img style="max-width: 100%" src="./docs/alipay.png" alt="支付宝" />
+		<p>Alipay</p>
+	</div>
+</div>
 
 ## License
 MIT © [ChenZhaoYu](./license)
