@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { marked } from 'marked'
 import hljs from 'highlight.js'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
+import { encodeHTML } from '@/utils/format'
 
 interface Props {
   inversion?: boolean
@@ -15,12 +16,19 @@ const props = defineProps<Props>()
 
 const { isMobile } = useBasicLayout()
 
-marked.setOptions({
-  renderer: new marked.Renderer(),
-  highlight(code) {
-    return hljs.highlightAuto(code).value
-  },
-})
+const renderer = new marked.Renderer()
+
+renderer.html = (html) => {
+  return `<p>${encodeHTML(html)}</p>`
+}
+
+renderer.code = (code, language) => {
+  const validLang = !!(language && hljs.getLanguage(language))
+  const highlighted = validLang ? hljs.highlight(language, code).value : code
+  return `<pre><code class="hljs ${language}">${highlighted}</code></pre>`
+}
+
+marked.setOptions({ renderer })
 
 const wrapClass = computed(() => {
   return [
@@ -35,9 +43,10 @@ const wrapClass = computed(() => {
 })
 
 const text = computed(() => {
-  if (props.text && !props.inversion)
-    return marked(props.text)
-  return props.text
+  const value = props.text ?? ''
+  if (!props.inversion)
+    return marked(value)
+  return value
 })
 </script>
 
