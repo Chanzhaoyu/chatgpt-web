@@ -43,7 +43,7 @@ const wrapClass = computed(() => {
     'rounded-md',
     isMobile.value ? 'p-2' : 'p-3',
     props.inversion ? 'bg-[#d2f9d1]' : 'bg-[#f4f6f8]',
-    props.inversion ? 'dark:bg-[#a1dc95]' : 'dark:bg-[#1e1e20]',
+    props.inversion ? 'dark:bg-[#a1dc95]' : 'dark:bg-[#232428]',
     { 'text-red-500': props.error },
   ]
 })
@@ -64,7 +64,7 @@ const text = computed(() => {
     <template v-else>
       <div class="leading-relaxed break-all">
         <div v-if="!inversion" class="markdown-body" v-html="text" />
-        <div v-else class="whitespace-pre-wrap" v-text="text" />
+        <div v-else class="text-base whitespace-pre-wrap" v-text="text" />
       </div>
     </template>
   </div>
