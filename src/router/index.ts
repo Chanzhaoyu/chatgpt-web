@@ -38,16 +38,32 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+
   {
-    name: 'login',
     path: '/login',
+    name: 'Login',
     component: () => import('@/views/system/login/index.vue'),
     meta: { title: 'Login' },
   },
+
+  {
+    path: '/403',
+    name: '403',
+    component: () => import('@/views/exception/403/index.vue'),
+    meta: { title: '403' },
+  },
+
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('@/views/exception/404/index.vue'),
+    meta: { title: '404' },
+  },
+
   {
     path: '/:pathMatch(.*)*',
     name: 'notFound',
-    component: () => import('@/views/exception/404/index.vue'),
+    redirect: '/404',
   },
 ]
 

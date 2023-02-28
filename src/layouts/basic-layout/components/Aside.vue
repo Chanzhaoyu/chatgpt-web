@@ -12,10 +12,7 @@ function toRoute(pathName: string) {
 <template>
   <aside class="py-4 flex flex-col items-center justify-between w-20 h-full bg-[#e0e1e5] dark:bg-[#1e1f22]">
     <div class="flex flex-col flex-1 space-y-4">
-      <a
-        class="flex items-center justify-center w-12 h-12 bg-white rounded-lg cursor-pointer"
-        @click="toRoute('Root')"
-      >
+      <a class="flex items-center justify-center w-12 h-12 bg-white rounded-lg cursor-pointer" @click="toRoute('Root')">
         <span class="text-2xl">
           <OpenAILogo />
         </span>
