@@ -40,9 +40,8 @@ function handleThemeChange(key: 'light' | 'dark' | 'auto') {
 </script>
 
 <template>
-  <footer class="flex items-center justify-between min-w-0 p-4 overflow-hidden border-t dark:border-neutral-800">
+  <footer class="flex items-center justify-between min-w-0 p-4 overflow-hidden border-t border-neutral-100 dark:border-neutral-800">
     <UserAvatar />
-
     <NDropdown :options="options" placement="top" trigger="click" @select="handleThemeChange">
       <HoverButton>
         <span class="text-xl text-[#4f555e] dark:text-white">

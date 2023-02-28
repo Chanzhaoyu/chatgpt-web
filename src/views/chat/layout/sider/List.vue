@@ -41,6 +41,12 @@ function handleEnter({ uuid }: Chat.History, isEdit: boolean, event: KeyboardEve
 function isActive(uuid: number) {
   return chatStore.active === uuid
 }
+
+function isActiveClass(uuid: number) {
+  if (isActive(uuid))
+    return 'bg-white dark:bg-[#404248] text-[#4ca85e]'
+  return 'dark:text-white'
+}
 </script>
 
 <template>
@@ -55,18 +61,15 @@ function isActive(uuid: number) {
       <template v-else>
         <div v-for="(item, index) of dataSources" :key="index">
           <a
-            class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-neutral-100 group dark:border-neutral-800 dark:hover:bg-[#24272e]"
-            :class="isActive(item.uuid) && ['border-[#4b9e5f]', 'bg-neutral-100', 'text-[#4b9e5f]', 'dark:bg-[#24272e]', 'dark:border-[#4b9e5f]', 'pr-14']"
-            @click="handleSelect(item)"
+            class="relative flex items-center gap-3 px-3 py-3 transition break-all rounded-md cursor-pointer hover:bg-white dark:border-neutral-800 dark:hover:bg-[#404248]"
+            :class="isActiveClass(item.uuid)" @click="handleSelect(item)"
           >
             <span>
               <SvgIcon icon="ri:message-3-line" />
             </span>
             <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap">
               <NInput
-                v-if="item.isEdit"
-                v-model:value="item.title"
-                size="tiny"
+                v-if="item.isEdit" v-model:value="item.title" size="tiny"
                 @keypress="handleEnter(item, false, $event)"
               />
               <span v-else>{{ item.title }}</span>

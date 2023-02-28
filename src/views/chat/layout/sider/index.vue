@@ -1,9 +1,7 @@
 <script setup lang='ts'>
-import type { CSSProperties } from 'vue'
-import { computed, watch } from 'vue'
-import { NButton, NLayoutSider } from 'naive-ui'
+import { watch } from 'vue'
+import { NButton } from 'naive-ui'
 import List from './List.vue'
-import Footer from './Footer.vue'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 
@@ -12,25 +10,9 @@ const chatStore = useChatStore()
 
 const { isMobile } = useBasicLayout()
 
-const collapsed = computed(() => appStore.siderCollapsed)
-
 function handleAdd() {
   chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
 }
-
-function handleUpdateCollapsed() {
-  appStore.setSiderCollapsed(!collapsed.value)
-}
-
-const getMobileClass = computed<CSSProperties>(() => {
-  if (isMobile.value) {
-    return {
-      position: 'fixed',
-      zIndex: 50,
-    }
-  }
-  return {}
-})
 
 watch(
   isMobile,
@@ -45,17 +27,7 @@ watch(
 </script>
 
 <template>
-  <NLayoutSider
-    :collapsed="collapsed"
-    :collapsed-width="0"
-    :width="260"
-    :show-trigger="isMobile ? false : 'arrow-circle'"
-    collapse-mode="transform"
-    position="absolute"
-    bordered
-    :style="getMobileClass"
-    @update-collapsed="handleUpdateCollapsed"
-  >
+  <div class="h-full w-[260px] bg-[#f0f1f2] dark:bg-[#2b2d31]">
     <div class="flex flex-col h-full">
       <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
@@ -67,10 +39,6 @@ watch(
           <List />
         </div>
       </main>
-      <Footer />
     </div>
-  </NLayoutSider>
-  <template v-if="isMobile">
-    <div v-show="!collapsed" class="fixed inset-0 z-40 bg-black/40" @click="handleUpdateCollapsed" />
-  </template>
+  </div>
 </template>
