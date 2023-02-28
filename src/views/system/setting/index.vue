@@ -1,7 +1,7 @@
 <script setup lang='ts'>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { NSelect } from 'naive-ui'
-import type { Theme } from '@/store/modules/app/helper'
+import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon } from '@/components/common'
 import { useAppStore } from '@/store'
 
@@ -9,7 +9,14 @@ const appStore = useAppStore()
 
 const theme = computed(() => appStore.theme)
 
-const language = ref<string>('zh-CN')
+const language = computed({
+  get() {
+    return appStore.language
+  },
+  set(value: Language) {
+    appStore.setLanguage(value)
+  },
+})
 
 const themeOptions: { label: string; key: Theme; icon: string }[] = [
   {
@@ -29,9 +36,9 @@ const themeOptions: { label: string; key: Theme; icon: string }[] = [
   },
 ]
 
-const languageOptions: { label: string; value: string }[] = [
+const languageOptions: { label: string; value: Language }[] = [
   { label: '中文', value: 'zh-CN' },
-  { label: 'English', value: 'en' },
+  { label: 'English', value: 'en-US' },
 ]
 
 function handleTheme(theme: Theme) {
@@ -43,7 +50,7 @@ function handleTheme(theme: Theme) {
   <div class="container m-auto">
     <div class="p-4">
       <h2 class="py-6 mb-4 text-2xl font-bold">
-        Setting
+        设置
       </h2>
       <div class="space-y-4">
         <div class="flex items-center space-x-4">

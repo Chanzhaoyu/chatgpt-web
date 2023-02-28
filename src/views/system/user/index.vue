@@ -6,7 +6,7 @@
   <div class="container m-auto">
     <div class="p-4">
       <h2 class="py-6 mb-4 text-2xl font-bold">
-        User
+        个人中心
       </h2>
     </div>
   </div>
