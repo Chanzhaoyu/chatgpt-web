@@ -24,11 +24,17 @@ renderer.html = (html) => {
 
 renderer.code = (code, language) => {
   const validLang = !!(language && hljs.getLanguage(language))
-  const highlighted = validLang ? hljs.highlight(language, code).value : code
-  return `<pre><code class="hljs ${language}">${highlighted}</code></pre>`
+  if (validLang)
+    return `<pre><code class="hljs ${language}">${hljs.highlight(language, code).value}</code></pre>`
+  return `<pre style="background: none">${hljs.highlightAuto(code).value}</pre>`
 }
 
-marked.setOptions({ renderer })
+marked.setOptions({
+  renderer,
+  highlight(code) {
+    return hljs.highlightAuto(code).value
+  },
+})
 
 const wrapClass = computed(() => {
   return [
