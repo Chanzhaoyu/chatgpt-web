@@ -1,5 +1,4 @@
 <script setup lang='ts'>
-import { GithubSite } from '@/components/custom'
 </script>
 
 <template>
