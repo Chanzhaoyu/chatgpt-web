@@ -31,5 +31,6 @@ export function fetchChatAPIProcess<T = any>(
     data: { prompt: params.prompt, options: params.options },
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
+		timeout:600000
   })
 }
