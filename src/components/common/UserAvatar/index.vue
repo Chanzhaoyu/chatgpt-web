@@ -10,8 +10,7 @@
       <h2 class="font-bold text-md">
         KuanYaLiao
       </h2>
-      <p class="text-xs text-gray-500">
-      </p>
+      <p class="text-xs text-gray-500" />
     </div>
   </div>
 </template>
