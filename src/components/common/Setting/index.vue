@@ -62,15 +62,10 @@ watch(
         </h2>
         <hr>
         <p>
-          此项目开源于
-          <a class="text-blue-600" href="https://github.com/Chanzhaoyu/chatgpt-web" target="_blank">Github</a>
-          如果你觉得此项目对你有帮助，请帮我点个 Star，谢谢！
+          此项目为个人项目，仅限学习！如果你觉得此项目对你有所帮助，请关注下方公众号，谢谢！
         </p>
         <hr>
-        <p>API方式：{{ config?.apiModel ?? '-' }}</p>
-        <p>反向代理：{{ config?.reverseProxy ?? '-' }}</p>
-        <p>超时时间：{{ config?.timeoutMs ?? '-' }}</p>
-        <p>Socks代理：{{ config?.socksProxy ?? '-' }}</p>
+        <img v-if="image" src="@/assets/qrcode.jpg" class="object-cover w-full h-full " alt="avatar">
       </div>
     </NCard>
   </NModal>
