@@ -1,10 +1,13 @@
 <script setup lang='ts'>
-import { computed, h, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { NDropdown } from 'naive-ui'
 import { HoverButton, Setting, SvgIcon, UserAvatar } from '@/components/common'
 import { useAppStore } from '@/store'
+import { useIconRender } from '@/hooks/useIconRender'
 
 const appStore = useAppStore()
+
+const { iconRender } = useIconRender()
 
 const show = ref(false)
 
@@ -14,25 +17,19 @@ const options = [
   {
     label: 'Dark',
     key: 'dark',
-    icon: renderIcon('ri:moon-foggy-line'),
+    icon: iconRender({ icon: 'ri:moon-foggy-line' }),
   },
   {
     label: 'Light',
     key: 'light',
-    icon: renderIcon('ri:sun-foggy-line'),
+    icon: iconRender({ icon: 'ri:sun-foggy-line' }),
   },
   {
     label: 'Auto',
     key: 'auto',
-    icon: renderIcon('ri:contrast-line'),
+    icon: iconRender({ icon: 'ri:contrast-line' }),
   },
 ]
-
-function renderIcon(icon: string) {
-  return () => {
-    return h(SvgIcon, { icon })
-  }
-}
 
 function handleThemeChange(key: 'light' | 'dark' | 'auto') {
   appStore.setTheme(key)
