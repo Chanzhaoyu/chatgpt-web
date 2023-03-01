@@ -129,6 +129,22 @@ export const useChatStore = defineStore('chat-store', {
       }
     },
 
+    updateChatSomeByUuid(uuid: number, index: number, chat: Partial<Chat.Chat>) {
+      if (!uuid || uuid === 0) {
+        if (this.chat.length) {
+          this.chat[0].data[index] = { ...this.chat[0].data[index], ...chat }
+          this.recordState()
+        }
+        return
+      }
+
+      const chatIndex = this.chat.findIndex(item => item.uuid === uuid)
+      if (chatIndex !== -1) {
+        this.chat[chatIndex].data[index] = { ...this.chat[chatIndex].data[index], ...chat }
+        this.recordState()
+      }
+    },
+
     deleteChatByUuid(uuid: number, index: number) {
       if (!uuid || uuid === 0) {
         if (this.chat.length) {
