@@ -1,7 +1,10 @@
 <script setup lang='ts'>
+import { NDropdown, useMessage } from 'naive-ui'
 import AvatarComponent from './Avatar.vue'
 import TextComponent from './Text.vue'
 import { SvgIcon } from '@/components/common'
+import { copyText } from '@/utils/format'
+import { useIconRender } from '@/hooks/useIconRender'
 
 interface Props {
   dateTime?: string
@@ -16,12 +19,40 @@ interface Emit {
   (ev: 'delete'): void
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const emit = defineEmits<Emit>()
 
+const ms = useMessage()
+
+const { iconRender } = useIconRender()
+
+const options = [
+  {
+    label: 'Copy',
+    key: 'copy',
+    icon: iconRender({ icon: 'ri:file-copy-2-line' }),
+  }, {
+    label: 'Delete',
+    key: 'delete',
+    icon: iconRender({ icon: 'ri:delete-bin-line' }),
+  },
+]
+
+function handleSelect(key: 'copy' | 'delete') {
+  if (key === 'copy')
+    handleCopy()
+  else
+    handleDelete()
+}
+
 function handleDelete() {
   emit('delete')
+}
+
+function handleCopy() {
+  copyText(props.text ?? '')
+  ms.success('Copied')
 }
 
 function handleRegenerate() {
@@ -59,12 +90,11 @@ function handleRegenerate() {
           >
             <SvgIcon icon="ri:restart-line" />
           </button>
-          <button
-            class="mb-1 transition text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
-            @click="handleDelete"
-          >
-            <SvgIcon icon="ri:delete-bin-6-line" />
-          </button>
+          <NDropdown :options="options" @select="handleSelect">
+            <button class="transition text-neutral-300 hover:text-neutral-800 dark:hover:text-neutral-200">
+              <SvgIcon icon="ri:function-line" />
+            </button>
+          </NDropdown>
         </div>
       </div>
     </div>
