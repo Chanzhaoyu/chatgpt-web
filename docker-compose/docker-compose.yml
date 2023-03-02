@@ -22,6 +22,6 @@ services:
     expose:
       - "80"
     volumes:
-      - ./nginx/dist/:/etc/nginx/html/
+      - ./nginx/html/:/etc/nginx/html/
     links:
       - app
