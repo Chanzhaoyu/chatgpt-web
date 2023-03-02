@@ -13,10 +13,11 @@
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vite/client", "node", "naive-ui/volar", "web-bluetooth"]
+    "types": ["vite/client", "node", "naive-ui/volar"]
   },
   "exclude": ["node_modules", "dist", "service"]
 }

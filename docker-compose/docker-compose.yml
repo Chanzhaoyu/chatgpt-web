@@ -18,9 +18,9 @@ services:
     build: nginx
     image: chatgpt/nginx
     ports:
-      - "80:80"
+      - '80:80'
     expose:
-      - "80"
+      - '80'
     volumes:
       - ./nginx/html/:/etc/nginx/html/
     links:

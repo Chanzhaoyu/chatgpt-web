@@ -5,6 +5,10 @@ import General from './General.vue'
 import About from './About.vue'
 import { SvgIcon } from '@/components/common'
 
+const props = defineProps<Props>()
+
+const emit = defineEmits<Emit>()
+
 interface Props {
   visible: boolean
 }
@@ -12,10 +16,6 @@ interface Props {
 interface Emit {
   (e: 'update:visible', visible: boolean): void
 }
-
-const props = defineProps<Props>()
-
-const emit = defineEmits<Emit>()
 
 const active = ref('General')
 
@@ -39,13 +39,13 @@ function handleReload() {
 </script>
 
 <template>
-  <NModal v-model:show="show">
+  <NModal v-model:show="show" :auto-focus="false">
     <NCard role="dialog" aria-modal="true" :bordered="false" style="width: 100%; max-width: 640px">
       <NTabs v-model:value="active" type="line" animated>
         <NTabPane name="General" tab="General">
           <template #tab>
             <SvgIcon class="text-lg" icon="ri:file-user-line" />
-            <span class="ml-2">General</span>
+            <span class="ml-2">{{ $t('setting.general') }}</span>
           </template>
           <div class="min-h-[100px]">
             <General v-if="!reload" @update="handleReload" />
@@ -54,7 +54,7 @@ function handleReload() {
         <NTabPane name="Config" tab="Config">
           <template #tab>
             <SvgIcon class="text-lg" icon="ri:list-settings-line" />
-            <span class="ml-2">Config</span>
+            <span class="ml-2">{{ $t('setting.config') }}</span>
           </template>
           <About />
         </NTabPane>

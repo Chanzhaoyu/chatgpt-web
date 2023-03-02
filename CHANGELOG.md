@@ -1,3 +1,19 @@
+## v2.9.1
+
+`2023-03-02`
+
+### Feature
+- 代码块添加当前代码语言显示和复制功能[#197][#196]
+- 完善多语言，现在可以切换中英文显示
+
+## Enhancement
+- 由[Zo3i](https://github.com/Chanzhaoyu/chatgpt-web/pull/187) 完善 `docker-compose` 部署文档
+
+### BugFix
+- 由 [ottocsb](https://github.com/Chanzhaoyu/chatgpt-web/pull/200) 修复头像修改不同步的问题
+## Other
+- 更新依赖至最新
+- 修改 `README` 内容
 ## v2.9.0
 
 `2023-03-02`
