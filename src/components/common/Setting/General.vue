@@ -5,6 +5,7 @@ import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useUserStore } from '@/store'
 import type { UserInfo } from '@/store/modules/user/helper'
+import { t } from '@/locales'
 
 interface Emit {
   (event: 'update'): void
@@ -61,12 +62,12 @@ const languageOptions: { label: string; key: Language; value: Language }[] = [
 
 function updateUserInfo(options: Partial<UserInfo>) {
   userStore.updateUserInfo(options)
-  ms.success('Update success')
+  ms.success(t('common.success'))
 }
 
 function handleReset() {
   userStore.resetUserInfo()
-  ms.success('Reset success')
+  ms.success(t('common.success'))
   emit('update')
 }
 </script>

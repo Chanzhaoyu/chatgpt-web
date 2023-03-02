@@ -39,7 +39,7 @@ function handleReload() {
 </script>
 
 <template>
-  <NModal v-model:show="show">
+  <NModal v-model:show="show" :auto-focus="false">
     <NCard role="dialog" aria-modal="true" :bordered="false" style="width: 100%; max-width: 640px">
       <NTabs v-model:value="active" type="line" animated>
         <NTabPane name="General" tab="General">

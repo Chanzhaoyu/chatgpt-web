@@ -7,6 +7,8 @@ export default {
     no: 'No',
     noData: 'No Data',
     wrong: 'Something went wrong, please try again later.',
+    success: 'Success',
+    failed: 'Failed',
   },
   chat: {
     placeholder: 'Ask me anything...(Shift + Enter = line break)',
