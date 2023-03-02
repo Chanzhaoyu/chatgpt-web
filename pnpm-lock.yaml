@@ -1,19 +1,19 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@antfu/eslint-config': ^0.35.2
+  '@antfu/eslint-config': ^0.35.3
   '@commitlint/cli': ^17.4.4
   '@commitlint/config-conventional': ^17.4.4
   '@iconify/vue': ^4.1.0
   '@types/crypto-js': ^4.1.1
   '@types/marked': ^4.0.8
-  '@types/node': ^18.14.0
+  '@types/node': ^18.14.4
   '@vitejs/plugin-vue': ^4.0.0
   '@vueuse/core': ^9.13.0
   autoprefixer: ^10.4.13
-  axios: ^1.3.3
+  axios: ^1.3.4
   crypto-js: ^4.1.1
-  eslint: ^8.34.0
+  eslint: ^8.35.0
   highlight.js: ^11.7.0
   husky: ^8.0.3
   less: ^4.1.3
@@ -21,16 +21,16 @@ specifiers:
   marked: ^4.2.12
   naive-ui: ^2.34.3
   npm-run-all: ^4.1.5
-  pinia: ^2.0.30
+  pinia: ^2.0.32
   postcss: ^8.4.21
-  rimraf: ^4.1.2
+  rimraf: ^4.1.3
   tailwindcss: ^3.2.7
   typescript: ~4.9.5
-  vite: ^4.1.2
+  vite: ^4.1.4
   vue: ^3.2.47
   vue-i18n: ^9.2.2
   vue-router: ^4.1.6
-  vue-tsc: ^1.1.4
+  vue-tsc: ^1.2.0
 
 dependencies:
   '@vueuse/core': 9.13.0_vue@3.2.47
