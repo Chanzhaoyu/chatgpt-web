@@ -6,6 +6,7 @@ import TextComponent from './Text.vue'
 import { SvgIcon } from '@/components/common'
 import { copyText } from '@/utils/format'
 import { useIconRender } from '@/hooks/useIconRender'
+import { t } from '@/locales'
 
 interface Props {
   dateTime?: string
@@ -32,17 +33,17 @@ const textRef = ref<HTMLElement>()
 
 const options = [
   {
-    label: 'Copy Raw',
+    label: t('chat.copyRaw'),
     key: 'copyRaw',
     icon: iconRender({ icon: 'ri:file-copy-2-line' }),
   },
   {
-    label: 'Copy Text',
+    label: t('chat.copyText'),
     key: 'copyText',
     icon: iconRender({ icon: 'ri:file-copy-line' }),
   },
   {
-    label: 'Delete',
+    label: t('common.delete'),
     key: 'delete',
     icon: iconRender({ icon: 'ri:delete-bin-line' }),
   },
