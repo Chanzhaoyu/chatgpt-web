@@ -13,8 +13,8 @@ export default {
   chat: {
     placeholder: 'Ask me anything...(Shift + Enter = line break)',
     placeholderMobile: 'Ask me anything...',
-    copyRaw: 'Copy Raw',
-    copyText: 'Copy Text',
+    copy: 'Copy',
+    copied: 'Copied',
     copyCode: 'Copy Code',
     clearChat: 'Clear Chat',
     clearChatConfirm: 'Are you sure to clear this chat?',

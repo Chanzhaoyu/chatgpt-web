@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { ref } from 'vue'
-import { NDropdown, useMessage } from 'naive-ui'
+import { NDropdown } from 'naive-ui'
 import AvatarComponent from './Avatar.vue'
 import TextComponent from './Text.vue'
 import { SvgIcon } from '@/components/common'
@@ -25,22 +25,15 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<Emit>()
 
-const ms = useMessage()
-
 const { iconRender } = useIconRender()
 
 const textRef = ref<HTMLElement>()
 
 const options = [
   {
-    label: t('chat.copyRaw'),
-    key: 'copyRaw',
-    icon: iconRender({ icon: 'ri:file-copy-2-line' }),
-  },
-  {
-    label: t('chat.copyText'),
+    label: t('chat.copy'),
     key: 'copyText',
-    icon: iconRender({ icon: 'ri:file-copy-line' }),
+    icon: iconRender({ icon: 'ri:file-copy-2-line' }),
   },
   {
     label: t('common.delete'),
@@ -51,15 +44,8 @@ const options = [
 
 function handleSelect(key: 'copyRaw' | 'copyText' | 'delete') {
   switch (key) {
-    case 'copyRaw':
-      if (textRef.value && (textRef.value as any).textRef) {
-        copyText({ text: (textRef.value as any).textRef.innerText })
-        ms.success('Copied Raw')
-      }
-      return
     case 'copyText':
-      copyText({ text: props.text ?? '', origin: false })
-      ms.success('Copied Text')
+      copyText({ text: props.text ?? '' })
       return
     case 'delete':
       emit('delete')

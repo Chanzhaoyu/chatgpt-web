@@ -5,6 +5,7 @@ import { NButton, NInput, useDialog } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
+import { useCopyCode } from './hooks/useCopyCode'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore } from '@/store'
@@ -18,6 +19,7 @@ const dialog = useDialog()
 
 const chatStore = useChatStore()
 
+useCopyCode()
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 const { scrollRef, scrollToBottom } = useScroll()

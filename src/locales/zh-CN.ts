@@ -13,8 +13,8 @@ export default {
   chat: {
     placeholder: '来说点什么...（Shift + Enter = 换行）',
     placeholderMobile: '来说点什么...',
-    copyRaw: '复制原内容',
-    copyText: '复制文本',
+    copy: '复制',
+    copied: '复制成功',
     copyCode: '复制代码',
     clearChat: '清空会话',
     clearChatConfirm: '是否清空会话?',
