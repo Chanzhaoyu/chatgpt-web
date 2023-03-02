@@ -4,8 +4,8 @@ import type { ChatMessage, SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import fetch from 'node-fetch'
-import { sendResponse } from './utils'
-import type { ApiModel, ChatContext, ChatGPTAPIOptions, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from './types'
+import { sendResponse } from '../utils'
+import type { ApiModel, ChatContext, ChatGPTAPIOptions, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
 
 dotenv.config()
 
