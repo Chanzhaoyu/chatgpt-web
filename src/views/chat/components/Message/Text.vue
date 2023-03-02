@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { marked } from 'marked'
 import hljs from 'highlight.js'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -17,6 +17,8 @@ const props = defineProps<Props>()
 const { isMobile } = useBasicLayout()
 
 const renderer = new marked.Renderer()
+
+const textRef = ref<HTMLElement>()
 
 renderer.html = (html) => {
   return `<p>${encodeHTML(html)}</p>`
@@ -54,6 +56,8 @@ const text = computed(() => {
     return marked(value)
   return value
 })
+
+defineExpose({ textRef })
 </script>
 
 <template>
@@ -62,7 +66,7 @@ const text = computed(() => {
       <span class="dark:text-white w-[4px] h-[20px] block animate-blink" />
     </template>
     <template v-else>
-      <div class="leading-relaxed break-all">
+      <div ref="textRef" class="leading-relaxed break-all">
         <div v-if="!inversion" class="markdown-body" v-html="text" />
         <div v-else class="whitespace-pre-wrap" v-text="text" />
       </div>
