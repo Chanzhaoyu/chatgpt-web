@@ -47,16 +47,16 @@ onMounted(() => {
           >
             Github
           </a>
-          免费，并且没有任何形式分付费行为！
+          ，免费且基于 MIT 协议，没有任何形式的付费行为！
         </p>
         <p>
           如果你觉得此项目对你有帮助，请在 Github 帮我点个 Star 或者给予一点赞助，谢谢！
         </p>
       </div>
-      <p>API方式：{{ config?.apiModel ?? '-' }}</p>
-      <p>反向代理：{{ config?.reverseProxy ?? '-' }}</p>
-      <p>超时时间：{{ config?.timeoutMs ?? '-' }}</p>
-      <p>Socks代理：{{ config?.socksProxy ?? '-' }}</p>
+      <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
+      <p>{{ $t("setting.reverseProxy") }}：{{ config?.reverseProxy ?? '-' }}</p>
+      <p>{{ $t("setting.timeout") }}：{{ config?.timeoutMs ?? '-' }}</p>
+      <p>{{ $t("setting.socks") }}：{{ config?.socksProxy ?? '-' }}</p>
     </div>
   </NSpin>
 </template>

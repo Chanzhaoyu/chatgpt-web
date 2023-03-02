@@ -1,23 +1,25 @@
 <script setup lang='ts'>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { NButton, NInput, useDialog, useMessage } from 'naive-ui'
+import { NButton, NInput, useDialog } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
+import { useCopyCode } from './hooks/useCopyCode'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
+import { t } from '@/locales'
 
 let controller = new AbortController()
 
 const route = useRoute()
 const dialog = useDialog()
-const ms = useMessage()
 
 const chatStore = useChatStore()
 
+useCopyCode()
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 const { scrollRef, scrollToBottom } = useScroll()
@@ -118,7 +120,7 @@ async function onConversation() {
     })
   }
   catch (error: any) {
-    const errorMessage = error?.message ?? 'Something went wrong, please try again later.'
+    const errorMessage = error?.message ?? t('common.wrong')
 
     if (error.message === 'canceled') {
       updateChatSome(
@@ -245,7 +247,7 @@ async function onRegenerate(index: number) {
       return
     }
 
-    const errorMessage = error?.message ?? 'Something went wrong, please try again later.'
+    const errorMessage = error?.message ?? t('common.wrong')
 
     updateChat(
       +uuid,
@@ -271,13 +273,12 @@ function handleDelete(index: number) {
     return
 
   dialog.warning({
-    title: 'Delete Message',
-    content: 'Are you sure to delete this message?',
-    positiveText: 'Yes',
-    negativeText: 'No',
+    title: t('chat.deleteMessage'),
+    content: t('chat.deleteMessageConfirm'),
+    positiveText: t('common.yes'),
+    negativeText: t('common.no'),
     onPositiveClick: () => {
       chatStore.deleteChatByUuid(+uuid, index)
-      ms.success('Message deleted successfully.')
     },
   })
 }
@@ -287,10 +288,10 @@ function handleClear() {
     return
 
   dialog.warning({
-    title: 'Clear Chat',
-    content: 'Are you sure to clear this chat?',
-    positiveText: 'Yes',
-    negativeText: 'No',
+    title: t('chat.clearChat'),
+    content: t('chat.clearChatConfirm'),
+    positiveText: t('common.yes'),
+    negativeText: t('common.no'),
     onPositiveClick: () => {
       chatStore.clearChatByUuid(+uuid)
     },
@@ -315,8 +316,8 @@ function handleStop() {
 
 const placeholder = computed(() => {
   if (isMobile.value)
-    return 'Ask me anything...'
-  return 'Ask me anything... (Shift + Enter = line break)'
+    return t('chat.placeholderMobile')
+  return t('chat.placeholder')
 })
 
 const buttonDisabled = computed(() => {

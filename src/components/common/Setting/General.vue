@@ -5,6 +5,7 @@ import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useUserStore } from '@/store'
 import type { UserInfo } from '@/store/modules/user/helper'
+import { t } from '@/locales'
 
 interface Emit {
   (event: 'update'): void
@@ -61,12 +62,12 @@ const languageOptions: { label: string; key: Language; value: Language }[] = [
 
 function updateUserInfo(options: Partial<UserInfo>) {
   userStore.updateUserInfo(options)
-  ms.success('Update success')
+  ms.success(t('common.success'))
 }
 
 function handleReset() {
   userStore.resetUserInfo()
-  ms.success('Reset success')
+  ms.success(t('common.success'))
   emit('update')
 }
 </script>
@@ -75,40 +76,40 @@ function handleReset() {
   <div class="p-4 space-y-5 min-h-[200px]">
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">Avatar Link</span>
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
         <div class="flex-1">
           <NInput v-model:value="avatar" placeholder="" />
         </div>
         <NButton size="tiny" text type="primary" @click="updateUserInfo({ avatar })">
-          Save
+          {{ $t('common.save') }}
         </NButton>
       </div>
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">Name</span>
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
         <div class="w-[200px]">
           <NInput v-model:value="name" placeholder="" />
         </div>
         <NButton size="tiny" text type="primary" @click="updateUserInfo({ name })">
-          Save
+          {{ $t('common.save') }}
         </NButton>
       </div>
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">Description</span>
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.description') }}</span>
         <div class="flex-1">
           <NInput v-model:value="description" placeholder="" />
         </div>
         <NButton size="tiny" text type="primary" @click="updateUserInfo({ description })">
-          Save
+          {{ $t('common.save') }}
         </NButton>
       </div>
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">Reset UserInfo</span>
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.resetUserInfo') }}</span>
         <NButton text type="primary" @click="handleReset">
-          Reset
+          {{ $t('common.reset') }}
         </NButton>
       </div>
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">Theme</span>
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.theme') }}</span>
         <div class="flex items-center space-x-4">
           <template v-for="item of themeOptions" :key="item.key">
             <a
@@ -124,7 +125,7 @@ function handleReset() {
         </div>
       </div>
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">Language</span>
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.language') }}</span>
         <div class="flex items-center space-x-4">
           <template v-for="item of languageOptions" :key="item.key">
             <a

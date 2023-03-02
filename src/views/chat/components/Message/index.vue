@@ -1,11 +1,12 @@
 <script setup lang='ts'>
 import { ref } from 'vue'
-import { NDropdown, useMessage } from 'naive-ui'
+import { NDropdown } from 'naive-ui'
 import AvatarComponent from './Avatar.vue'
 import TextComponent from './Text.vue'
 import { SvgIcon } from '@/components/common'
 import { copyText } from '@/utils/format'
 import { useIconRender } from '@/hooks/useIconRender'
+import { t } from '@/locales'
 
 interface Props {
   dateTime?: string
@@ -24,25 +25,18 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<Emit>()
 
-const ms = useMessage()
-
 const { iconRender } = useIconRender()
 
 const textRef = ref<HTMLElement>()
 
 const options = [
   {
-    label: 'Copy Raw',
-    key: 'copyRaw',
+    label: t('chat.copy'),
+    key: 'copyText',
     icon: iconRender({ icon: 'ri:file-copy-2-line' }),
   },
   {
-    label: 'Copy Text',
-    key: 'copyText',
-    icon: iconRender({ icon: 'ri:file-copy-line' }),
-  },
-  {
-    label: 'Delete',
+    label: t('common.delete'),
     key: 'delete',
     icon: iconRender({ icon: 'ri:delete-bin-line' }),
   },
@@ -50,15 +44,8 @@ const options = [
 
 function handleSelect(key: 'copyRaw' | 'copyText' | 'delete') {
   switch (key) {
-    case 'copyRaw':
-      if (textRef.value && (textRef.value as any).textRef) {
-        copyText({ text: (textRef.value as any).textRef.innerText })
-        ms.success('Copied Raw')
-      }
-      return
     case 'copyText':
-      copyText({ text: props.text ?? '', origin: false })
-      ms.success('Copied Text')
+      copyText({ text: props.text ?? '' })
       return
     case 'delete':
       emit('delete')
