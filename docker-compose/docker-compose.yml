@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  app:
+    image: chenzhaoyu94/chatgpt-web # 总是使用latest,更新时重新pull该tag镜像即可
+    ports:
+      - 3002:3002
+    environment:
+      # 二选一
+      OPENAI_API_KEY: xxxx
+      # 二选一
+      OPENAI_ACCESS_TOKEN: xxxxxx
+      # 反向代理，可选
+      API_REVERSE_PROXY: xxx
+      # 超时，单位毫秒，可选
+      TIMEOUT_MS: 60000
+  nginx:
+    build: nginx
+    image: chatgpt/nginx
+    ports:
+      - "80:80"
+    expose:
+      - "80"
+    volumes:
+      - ./nginx/html/:/etc/nginx/html/
+    links:
+      - app
