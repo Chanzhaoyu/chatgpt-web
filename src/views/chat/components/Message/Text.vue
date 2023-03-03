@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
+import katex from 'katex'
 import { marked } from 'marked'
 import hljs from 'highlight.js'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -41,6 +42,54 @@ marked.setOptions({
   },
 })
 
+const katexOptions = {
+  throwOnError: false,
+}
+
+const katexInline = {
+  name: 'katexInline',
+  level: 'inline',
+  start(src: string) {
+    return src.indexOf('$')
+  },
+  tokenizer(src: string) {
+    const match = src.match(/^\$+([^$\n]+?)\$+/)
+    if (match) {
+      return {
+        type: 'katexInline',
+        raw: match[0],
+        text: match[1].trim(),
+      }
+    }
+  },
+  renderer(token: marked.Tokens.Generic) {
+    return katex.renderToString(token.text, katexOptions)
+  },
+}
+
+const katexBlock = {
+  name: 'katexBlock',
+  level: 'block',
+  start(src: string) {
+    return src.indexOf('\n$$')
+  },
+  tokenizer(src: string) {
+    const match = src.match(/^\$\$+\n([^$]+?)\n\$\$+\n/)
+    if (match) {
+      return {
+        type: 'katexBlock',
+        raw: match[0],
+        text: match[1].trim(),
+      }
+    }
+  },
+  renderer(token: marked.Tokens.Generic) {
+    return `<p>${katex.renderToString(token.text, katexOptions)}</p>`
+  },
+}
+
+marked.use({ extensions: [katexInline, katexBlock] })
+
 const wrapClass = computed(() => {
   return [
     'text-wrap',
@@ -79,4 +128,8 @@ defineExpose({ textRef })
 
 <style lang="less">
 @import url(./style.less);
+</style>
+
+<style lang="css">
+@import url(katex/dist/katex.min.css);
 </style>
