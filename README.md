@@ -36,10 +36,10 @@
 
 支持双模型，提供了两种非官方 `ChatGPT API` 方法
 
-|  方式   | 免费？  | 可靠性  | 质量 |
-|  ----  | ----  | ----  | ----  |
-| `ChatGPTAPI(GPT-3)`  | 否 | 	可靠 | 较笨 |
-| `ChatGPTUnofficialProxyAPI(网页 accessToken)`  | 	是 |  相对不可靠 | 聪明 |
+| 方式                                          | 免费？ | 可靠性     | 质量 |
+| --------------------------------------------- | ------ | ---------- | ---- |
+| `ChatGPTAPI(GPT-3)`                           | 否     | 可靠       | 较笨 |
+| `ChatGPTUnofficialProxyAPI(网页 accessToken)` | 是     | 相对不可靠 | 聪明 |
 
 对比：
 1. `ChatGPTAPI` 使用 `text-davinci-003` 通过官方`OpenAI`补全`API`模拟`ChatGPT`（最稳健的方法，但它不是免费的，并且没有使用针对聊天进行微调的模型）
@@ -147,6 +147,8 @@ pnpm dev
 - `OPENAI_ACCESS_TOKEN`  二选一，同时存在时，`OPENAI_API_KEY` 优先
 - `API_REVERSE_PROXY` 可选，设置 `OPENAI_ACCESS_TOKEN` 时可用 [参考](#介绍)
 - `TIMEOUT_MS` 超时，单位毫秒，可选
+- `SOCKS_PROXY_HOST` 可选，和 SOCKS_PROXY_PORT 一起时生效
+- `SOCKS_PROXY_PORT` 可选，和 SOCKS_PROXY_HOST 一起时生效
 
 ![docker](./docs/docker.png)
 
@@ -186,6 +188,10 @@ services:
       API_REVERSE_PROXY: xxx
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
+      # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
+      SOCKS_PROXY_HOST: xxxx
+      # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
+      SOCKS_PROXY_PORT: xxxx
 ```
 
 ###  使用 Railway 部署
@@ -194,13 +200,15 @@ services:
 
 #### Railway 环境变量
 
-| 环境变量名称                | 必填 | 备注                    |
-| --------------------------- | ---- | ----------------------- |
-| `PORT` | 必填    | 默认 `3002`  |
-| `TIMEOUT_MS` | 可选    | 超时时间，单位毫秒，   |
-| `OPENAI_API_KEY` | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)   |
-| `OPENAI_ACCESS_TOKEN` | `Web API` 二选一   | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session)   |
-| `API_REVERSE_PROXY` | 可选，`Web API` 时可用    | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)   |
+| 环境变量名称          | 必填                   | 备注                                                                                               |
+| --------------------- | ---------------------- | -------------------------------------------------------------------------------------------------- |
+| `PORT`                | 必填                   | 默认 `3002`                                                                                        |
+| `TIMEOUT_MS`          | 可选                   | 超时时间，单位毫秒，                                                                               |
+| `OPENAI_API_KEY`      | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)            |
+| `OPENAI_ACCESS_TOKEN` | `Web API` 二选一       | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session) |
+| `API_REVERSE_PROXY`   | 可选，`Web API` 时可用 | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)    |
+| `SOCKS_PROXY_HOST`   | 可选，和 `SOCKS_PROXY_PORT` 一起时生效 | Socks代理    |
+| `SOCKS_PROXY_PORT`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理端口    |
 
 > 注意: `Railway` 修改环境变量会重新 `Deploy`
 

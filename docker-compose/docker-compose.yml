@@ -14,6 +14,10 @@ services:
       API_REVERSE_PROXY: xxx
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
+      # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
+      SOCKS_PROXY_HOST: xxxx
+      # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
+      SOCKS_PROXY_PORT: xxxx
   nginx:
     build: nginx
     image: chatgpt/nginx
