@@ -63,13 +63,6 @@ OpenAI 已开放 GPT3.5 的 API，本项目默认使用的方法即为该 API �
 API_REVERSE_PROXY=
 ```
 
-目前 OpenAI 的 API 服务可能已经屏蔽了来自中国的请求，例如出现 `fetch failed`。可以通过添加代理的方式解决，在 `service/.env` 文件添加如下配置即可
-```shell
-#socks proxy
-SOCKS_PROXY_HOST=
-SOCKS_PROXY_PORT=
-```
-
 ## 待实现路线
 [✓] 双模型
 
