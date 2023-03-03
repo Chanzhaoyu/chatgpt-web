@@ -33,3 +33,10 @@ export function fetchChatAPIProcess<T = any>(
     onDownloadProgress: params.onDownloadProgress,
   })
 }
+
+export function fetchVerify<T = any>(secretKey: string) {
+  return post<T>({
+    url: '/verify',
+    data: { secretKey },
+  })
+}

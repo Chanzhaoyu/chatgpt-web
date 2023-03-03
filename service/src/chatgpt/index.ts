@@ -115,14 +115,18 @@ async function chatReplyProcess(
 }
 
 async function chatConfig() {
+  const reverseProxy = process.env.API_REVERSE_PROXY ?? '-'
+  let socksProxy = '-'
+  const authorized = (typeof process.env.AUTH_SECRET_KEY === 'string' && process.env.AUTH_SECRET_KEY.length) > 0
+    ? '1'
+    : '0'
+
+  if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
+    socksProxy = `${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`
+
   return sendResponse({
     type: 'Success',
-    data: {
-      apiModel,
-      reverseProxy: process.env.API_REVERSE_PROXY,
-      timeoutMs,
-      socksProxy: (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`) : '-',
-    } as ModelConfig,
+    data: { apiModel, authorized, reverseProxy, timeoutMs, socksProxy } as ModelConfig,
   })
 }
 

@@ -1,33 +1,57 @@
 <script lang="ts" setup>
-import { NButton } from 'naive-ui'
+import { ref } from 'vue'
+import { NButton, NInput, useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
+import { fetchVerify } from '@/api'
+import { useAuthStore } from '@/store'
 
 const router = useRouter()
 
-function goHome() {
-  router.push('/')
+const authStore = useAuthStore()
+
+const ms = useMessage()
+
+const token = ref('')
+const loading = ref(false)
+
+async function handleVerify() {
+  const secretKey = token.value.trim()
+
+  if (!secretKey)
+    return
+
+  try {
+    loading.value = true
+    await fetchVerify(secretKey)
+    authStore.setToken(secretKey)
+    ms.success('success')
+    router.replace('/')
+  }
+  catch (error: any) {
+    ms.error(error.message ?? 'error')
+    authStore.removeToken()
+    token.value = ''
+  }
+  finally {
+    loading.value = false
+  }
 }
 </script>
 
 <template>
-  <div class="flex h-full">
-    <div class="px-4 m-auto space-y-4 text-center max-[400px]">
-      <h1 class="text-4xl text-slate-800 dark:text-neutral-200">
-        No permission
+  <div class="flex h-full dark:bg-neutral-800">
+    <div class="px-4 m-auto space-y-4 text-center w-[500px]">
+      <h1 class="text-2xl font-bold text-slate-800 dark:text-neutral-200">
+        403
       </h1>
-      <p class="text-base text-slate-500 dark:text-neutral-400">
-        The page you're trying access has restricted access.
-        Please refer to your system administrator
+      <p class="text-base text-slate-500 dark:text-slate-500">
+        Please Enter the Secret Key!
       </p>
-      <div class="flex items-center justify-center text-center">
-        <div class="w-[300px]">
-          <div class="w-[300px]">
-            <img src="../../../icons/403.svg" alt="404">
-          </div>
-        </div>
+      <div>
+        <NInput v-model:value="token" type="text" placeholder="" />
       </div>
-      <NButton type="primary" @click="goHome">
-        Go to Home
+      <NButton type="primary" :loading="loading" @click="handleVerify">
+        verify
       </NButton>
     </div>
   </div>
