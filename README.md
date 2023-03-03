@@ -34,15 +34,16 @@
 	- [License](#license)
 ## 介绍
 
+OpenAI 已开放 GPT3.5 的 API，本项目默认使用的方法即为该 API 方式。
 支持双模型，提供了两种非官方 `ChatGPT API` 方法
 
 | 方式                                          | 免费？ | 可靠性     | 质量 |
 | --------------------------------------------- | ------ | ---------- | ---- |
-| `ChatGPTAPI(GPT-3)`                           | 否     | 可靠       | 较笨 |
+| `ChatGPTAPI(GPT-3.5)`                         | 否     | 可靠       | 聪明 |
 | `ChatGPTUnofficialProxyAPI(网页 accessToken)` | 是     | 相对不可靠 | 聪明 |
 
 对比：
-1. `ChatGPTAPI` 使用 `text-davinci-003` 通过官方`OpenAI`补全`API`模拟`ChatGPT`（最稳健的方法，但它不是免费的，并且没有使用针对聊天进行微调的模型）
+1. `ChatGPTAPI` 使用 `gpt-3.5-turbo-0301` 通过官方`OpenAI`补全`API`模拟`ChatGPT`（最稳健的方法，但它不是免费的，并且没有使用针对聊天进行微调的模型）
 2. `ChatGPTUnofficialProxyAPI` 使用非官方代理服务器访问 `ChatGPT` 的后端`API`，绕过`Cloudflare`（使用真实的的`ChatGPT`，非常轻量级，但依赖于第三方服务器，并且有速率限制）
 
 [查看详情](https://github.com/Chanzhaoyu/chatgpt-web/issues/138)
@@ -60,6 +61,13 @@
 ```shell
 # service/.env
 API_REVERSE_PROXY=
+```
+
+目前 OpenAI 的 API 服务可能已经屏蔽了来自中国的请求，例如出现 `fetch failed`。可以通过添加代理的方式解决，在 `service/.env` 文件添加如下配置即可
+```shell
+#socks proxy
+SOCKS_PROXY_HOST=
+SOCKS_PROXY_PORT=
 ```
 
 ## 待实现路线
