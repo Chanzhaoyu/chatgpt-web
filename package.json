@@ -25,6 +25,7 @@
   "dependencies": {
     "@vueuse/core": "^9.13.0",
     "highlight.js": "^11.7.0",
+    "katex": "^0.16.4",
     "marked": "^4.2.12",
     "naive-ui": "^2.34.3",
     "pinia": "^2.0.32",
@@ -38,6 +39,7 @@
     "@commitlint/config-conventional": "^17.4.4",
     "@iconify/vue": "^4.1.0",
     "@types/crypto-js": "^4.1.1",
+    "@types/katex": "^0.16.0",
     "@types/marked": "^4.0.8",
     "@types/node": "^18.14.4",
     "@vitejs/plugin-vue": "^4.0.0",
