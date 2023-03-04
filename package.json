@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^9.13.0",
+    "@zodash/doreamon": "^1.2.7",
     "highlight.js": "^11.7.0",
     "katex": "^0.16.4",
     "marked": "^4.2.12",
