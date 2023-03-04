@@ -129,7 +129,3 @@ defineExpose({ textRef })
 <style lang="less">
 @import url(./style.less);
 </style>
-
-<style lang="css">
-@import url(katex/dist/katex.min.css);
-</style>
