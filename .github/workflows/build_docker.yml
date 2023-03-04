@@ -3,7 +3,7 @@ name: Publish Docker Package
 on:
   push:
     tags:
-      - "v*"
+      - 'v*'
 
 jobs:
   on-success:
@@ -16,13 +16,13 @@ jobs:
         uses: whatwewant/action-robot-feishu@v0.0.13
         with:
           url: ${{ secrets.DOCKER_VERSION_FEISHU_BOT_WEBHOOK_URL }}
-          title: "✅ Docker 发布：${{ github.repository }}"
+          title: '✅ Docker 发布：${{ github.repository }}'
           text: |
             分支: ${{ github.ref }}
             提交信息: ${{ github.event.head_commit.message }}
             提交人: ${{ github.actor }}
             状态: 构建成功（https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}）
-  
+
   on-failure:
     needs: publish
     runs-on: ubuntu-latest
@@ -33,13 +33,13 @@ jobs:
         uses: whatwewant/action-robot-feishu@v0.0.13
         with:
           url: ${{ secrets.DOCKER_VERSION_FEISHU_BOT_WEBHOOK_URL }}
-          title: "❌ Docker 发布：${{ github.repository }}"
+          title: '❌ Docker 发布：${{ github.repository }}'
           text: |
             分支: ${{ github.ref }}
             提交信息: ${{ github.event.head_commit.message }}
             提交人: ${{ github.actor }}
             状态: 构建失败（https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}）
-  
+
   publish:
     runs-on: ubuntu-latest
 
@@ -50,7 +50,7 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
-          fetch-depth: "0"
+          fetch-depth: '0'
 
       - name: Docker Meta
         uses: zmicro-design/action-docker-image-meta@v1
