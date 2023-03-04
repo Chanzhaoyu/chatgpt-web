@@ -27,6 +27,9 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
       debug: false,
     }
 
+    if (process.env.OPENAI_API_BASE_URL && process.env.OPENAI_API_BASE_URL.trim().length > 0)
+      options.apiBaseUrl = process.env.OPENAI_API_BASE_URL
+
     if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) {
       const agent = new SocksProxyAgent({
         hostname: process.env.SOCKS_PROXY_HOST,

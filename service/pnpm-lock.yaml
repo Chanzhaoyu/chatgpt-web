@@ -3,8 +3,8 @@ lockfileVersion: 5.4
 specifiers:
   '@antfu/eslint-config': ^0.35.3
   '@types/express': ^4.17.17
-  '@types/node': ^18.14.5
-  chatgpt: ^5.0.5
+  '@types/node': ^18.14.6
+  chatgpt: ^5.0.6
   dotenv: ^16.0.3
   eslint: ^8.35.0
   esno: ^0.16.3
@@ -17,7 +17,7 @@ specifiers:
   typescript: ^4.9.5
 
 dependencies:
-  chatgpt: 5.0.5
+  chatgpt: 5.0.6
   dotenv: 16.0.3
   esno: 0.16.3
   express: 4.18.2
@@ -28,7 +28,7 @@ dependencies:
 devDependencies:
   '@antfu/eslint-config': 0.35.3_ycpbpc6yetojsgtrx3mwntkhsu
   '@types/express': 4.17.17
-  '@types/node': 18.14.5
+  '@types/node': 18.14.6
   eslint: 8.35.0
   rimraf: 4.2.0
   tsup: 6.6.3_typescript@4.9.5
@@ -428,19 +428,19 @@ packages:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
     dependencies:
       '@types/connect': 3.4.35
-      '@types/node': 18.14.5
+      '@types/node': 18.14.6
     dev: true
 
   /@types/connect/3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
-      '@types/node': 18.14.5
+      '@types/node': 18.14.6
     dev: true
 
   /@types/express-serve-static-core/4.17.33:
     resolution: {integrity: sha512-TPBqmR/HRYI3eC2E5hmiivIzv+bidAfXofM+sbonAGvyDhySGw9/PQZFt2BLOrjUUR++4eJVpx6KnLQK1Fk9tA==}
     dependencies:
-      '@types/node': 18.14.5
+      '@types/node': 18.14.6
       '@types/qs': 6.9.7
       '@types/range-parser': 1.2.4
     dev: true
@@ -472,8 +472,8 @@ packages:
     resolution: {integrity: sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==}
     dev: true
 
-  /@types/node/18.14.5:
-    resolution: {integrity: sha512-CRT4tMK/DHYhw1fcCEBwME9CSaZNclxfzVMe7GsO6ULSwsttbj70wSiX6rZdIjGblu93sTJxLdhNIT85KKI7Qw==}
+  /@types/node/18.14.6:
+    resolution: {integrity: sha512-93+VvleD3mXwlLI/xASjw0FzKcwzl3OdTCzm1LaRfqgS21gfFtK3zDXM5Op9TeeMsJVOaJ2VRDpT9q4Y3d0AvA==}
     dev: true
 
   /@types/normalize-package-data/2.4.1:
@@ -495,7 +495,7 @@ packages:
     resolution: {integrity: sha512-z5xyF6uh8CbjAu9760KDKsH2FcDxZ2tFCsA4HIMWE6IkiYMXfVoa+4f9KX+FN0ZLsaMw1WNG2ETLA6N+/YA+cg==}
     dependencies:
       '@types/mime': 3.0.1
-      '@types/node': 18.14.5
+      '@types/node': 18.14.6
     dev: true
 
   /@types/unist/2.0.6:
@@ -902,8 +902,8 @@ packages:
     resolution: {integrity: sha512-mKKUkUbhPpQlCOfIuZkvSEgktjPFIsZKRRbC6KWVEMvlzblj3i3asQv5ODsrwt0N3pHAEvjP8KTQPHkp0+6jOg==}
     dev: true
 
-  /chatgpt/5.0.5:
-    resolution: {integrity: sha512-86IlhtgHKDOvV+Hl4DLUOKZ354OH784ciI8xxbM4pmfzewQCP5VnjI0yb/nCVKAjyerFdIFHpcWdw2TVdhlcVw==}
+  /chatgpt/5.0.6:
+    resolution: {integrity: sha512-BQ0eN2GpAlw9ojsxkHmW+bTuekbllZbOkKqjDSIVSMtbMoYDx59vcg6xXnCPkB0OBFGuG89eqGhLAfMIW34Hcw==}
     engines: {node: '>=14'}
     hasBin: true
     dependencies:

@@ -2,8 +2,8 @@
 
 > 声明：此项目只发布于 Github，基于 MIT 协议，免费且作为开源学习使用。并且不会有任何形式的卖号、付费服务、讨论群、讨论组等行为。谨防受骗。
 
-![cover](./docs/c1-2.8.0.png)
-![cover2](./docs/c2-2.8.0.png)
+![cover](./docs/c1.png)
+![cover2](./docs/c2.png)
 
 - [ChatGPT Web](#chatgpt-web)
 	- [介绍](#介绍)
@@ -38,7 +38,7 @@
 
 | 方式                                          | 免费？ | 可靠性     | 质量 |
 | --------------------------------------------- | ------ | ---------- | ---- |
-| `ChatGPTAPI(GPT-3.5)`                           | 否     | 可靠       | 较笨 |
+| `ChatGPTAPI(gpt-3.5-turbo-0301)`                           | 否     | 可靠       | 相对较笨 |
 | `ChatGPTUnofficialProxyAPI(网页 accessToken)` | 是     | 相对不可靠 | 聪明 |
 
 对比：
@@ -55,11 +55,19 @@
 
 反向代理：
 
-`ChatGPTUnofficialProxyAPI`时可用 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)
+`ChatGPTUnofficialProxyAPI`时可用
 
 ```shell
 # service/.env
 API_REVERSE_PROXY=
+```
+
+环境变量：
+
+全部参数变量请查看或[这里](#docker-参数示例)
+
+```
+/service/.env
 ```
 
 ## 待实现路线
@@ -145,6 +153,7 @@ pnpm dev
 
 - `OPENAI_API_KEY` 二选一
 - `OPENAI_ACCESS_TOKEN`  二选一，同时存在时，`OPENAI_API_KEY` 优先
+- `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 - `API_REVERSE_PROXY` 可选，设置 `OPENAI_ACCESS_TOKEN` 时可用 [参考](#介绍)
 - `TIMEOUT_MS` 超时，单位毫秒，可选
 - `AUTH_SECRET_KEY` 访问权限密钥，可选
@@ -185,6 +194,8 @@ services:
       OPENAI_API_KEY: xxxxxx
       # 二选一
       OPENAI_ACCESS_TOKEN: xxxxxx
+      # API接口地址，可选，设置 OPENAI_API_KEY 时可用
+      OPENAI_API_BASE_URL: xxxx
       # 反向代理，可选
       API_REVERSE_PROXY: xxx
       # 超时，单位毫秒，可选
@@ -196,7 +207,7 @@ services:
       # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
       SOCKS_PROXY_PORT: xxxx
 ```
-
+- `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 ###  使用 Railway 部署
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/yytmgc)
@@ -208,8 +219,7 @@ services:
 | `PORT`                | 必填                   | 默认 `3002`                                                                                        |
 | `OPENAI_API_KEY`      | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)            |
 | `OPENAI_ACCESS_TOKEN` | `Web API` 二选一       | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session) |
-| `TIMEOUT_MS`          | 可选                   | 超时时间，单位毫秒，                                                                               |
-| `AUTH_SECRET_KEY`          | 可选                   | 访问权限密钥                                                                               |
+| `OPENAI_API_BASE_URL`   | 可选，`OpenAI API` 时可用 |  `API`接口地址  |
 | `API_REVERSE_PROXY`   | 可选，`Web API` 时可用 | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)    |
 | `SOCKS_PROXY_HOST`   | 可选，和 `SOCKS_PROXY_PORT` 一起时生效 | Socks代理    |
 | `SOCKS_PROXY_PORT`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理端口    |
