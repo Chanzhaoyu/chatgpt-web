@@ -326,15 +326,14 @@ const buttonDisabled = computed(() => {
 
 const wrapClass = computed(() => {
   if (isMobile.value)
-    return ['pt-14', 'pb-16']
-
+    return ['pt-14']
   return []
 })
 
 const footerClass = computed(() => {
   let classes = ['p-4']
   if (isMobile.value)
-    classes = ['p-2', 'pr-4', 'fixed', 'bottom-4', 'left-0', 'right-0', 'z-30', 'h-14', 'overflow-hidden']
+    classes = ['sticky', 'left-0', 'bottom-0', 'right-0', 'p-2', 'pr-4', 'h-14', 'overflow-hidden']
   return classes
 })
 
