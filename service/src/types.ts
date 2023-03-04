@@ -1,14 +1,8 @@
-import type { FetchFn, openai } from 'chatgpt'
+import type { FetchFn } from 'chatgpt'
 
 export interface ChatContext {
   conversationId?: string
   parentMessageId?: string
-}
-
-export interface ChatGPTAPIOptions {
-  apiKey: string
-  debug?: boolean
-  completionParams?: Partial<openai.CompletionParams>
 }
 
 export interface ChatGPTUnofficialProxyAPIOptions {
