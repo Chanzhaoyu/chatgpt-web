@@ -1,14 +1,15 @@
 <script setup lang='ts'>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { NButton, NInput, useDialog } from 'naive-ui'
+import { storeToRefs } from 'pinia'
+import { NAutoComplete, NButton, NInput, useDialog } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import { useCopyCode } from './hooks/useCopyCode'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useChatStore } from '@/store'
+import { useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
 
@@ -31,6 +32,11 @@ const conversationList = computed(() => dataSources.value.filter(item => (!item.
 
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
+
+// 添加PromptStore
+const promptStore = usePromptStore()
+// 使用storeToRefs，保证store修改后，联想部分能够重新渲染
+const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
 
 function handleSubmit() {
   onConversation()
@@ -314,6 +320,31 @@ function handleStop() {
   }
 }
 
+// 可优化部分
+// 搜索选项计算，这里使用value作为索引项，所以当出现重复value时渲染异常(多项同时出现选中效果)
+// 理想状态下其实应该是key作为索引项,但官方的renderOption会出现问题，所以就需要value反renderLabel实现
+const searchOptions = computed(() => {
+  if (prompt.value.startsWith('/')) {
+    return promptTemplate.value.filter((item: { key: string }) => item.key.toLowerCase().includes(prompt.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
+      return {
+        label: obj.value,
+        value: obj.value,
+      }
+    })
+  }
+  else {
+    return []
+  }
+})
+// value反渲染key
+const renderOption = (option: { label: string }) => {
+  for (const i of promptTemplate.value) {
+    if (i.value === option.label)
+      return [i.key]
+  }
+  return []
+}
+
 const placeholder = computed(() => {
   if (isMobile.value)
     return t('chat.placeholderMobile')
@@ -397,13 +428,14 @@ onUnmounted(() => {
               <SvgIcon icon="ri:delete-bin-line" />
             </span>
           </HoverButton>
-          <NInput
-            v-model:value="prompt"
-            type="textarea"
-            :autosize="{ minRows: 1, maxRows: 2 }"
-            :placeholder="placeholder"
-            @keypress="handleEnter"
-          />
+          <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
+            <template #default="{ handleInput, handleBlur, handleFocus }">
+              <NInput
+                v-model:value="prompt" type="textarea" :placeholder="placeholder"
+                :autosize="{ minRows: 1, maxRows: 2 }" @input="handleInput" @focus="handleFocus" @blur="handleBlur" @keypress="handleEnter"
+              />
+            </template>
+          </NAutoComplete>
           <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
             <template #icon>
               <span class="dark:text-black">
