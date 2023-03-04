@@ -1,3 +1,24 @@
+## v2.9.2
+
+`2023-03-04`
+
+手动部署的同学，务必删除根目录和`service`中的`node_modules`重新安装依赖，降低出现问题的概率，自动部署的不需要做改动。
+
+### Feature
+- 感谢 [hyln9](https://github.com/Chanzhaoyu/chatgpt-web/pull/247) 添加对渲染 `LaTex` 数学公式的支持
+- 感谢 [ottocsb](https://github.com/Chanzhaoyu/chatgpt-web/pull/227) 添加支持 `webAPP` (苹果添加到主页书签访问)支持
+- 添加 `OPENAI_API_BASE_URL` 可选环境变量[#249]
+## Enhancement
+- 优化在高分屏上主题内容的最大宽度[#257]
+- 现在文字按单词截断[#215][#225]
+### BugFix
+- 修复动态生成时代码块不能被复制的问题[#251][#260]
+- 修复 `iOS` 移动端输入框不会被键盘顶起的问题[#256]
+- 修复控制台渲染警告
+## Other
+- 更新依赖至最新
+- 修改 `README` 内容
+
 ## v2.9.1
 
 `2023-03-02`

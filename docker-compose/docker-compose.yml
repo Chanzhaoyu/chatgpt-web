@@ -10,6 +10,8 @@ services:
       OPENAI_API_KEY: xxxx
       # 二选一
       OPENAI_ACCESS_TOKEN: xxxxxx
+      # API接口地址，可选，设置 OPENAI_API_KEY 时可用
+      OPENAI_API_BASE_URL: xxxx
       # 反向代理，可选
       API_REVERSE_PROXY: xxx
       # 超时，单位毫秒，可选
