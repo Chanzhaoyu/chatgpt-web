@@ -1,4 +1,4 @@
-import { onMounted } from 'vue'
+import { onMounted, onUpdated } from 'vue'
 
 export function useCopyCode() {
   function copyCodeBlock() {
@@ -15,4 +15,6 @@ export function useCopyCode() {
   }
 
   onMounted(() => copyCodeBlock())
+
+  onUpdated(() => copyCodeBlock())
 }
