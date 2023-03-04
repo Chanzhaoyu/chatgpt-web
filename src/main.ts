@@ -6,6 +6,8 @@ import { setupAssets } from './plugins'
 import { setupStore } from './store'
 import { setupRouter } from './router'
 
+import { useUserStore } from '@/store'
+
 async function bootstrap() {
   const app = createApp(App)
   setupAssets()
@@ -17,6 +19,10 @@ async function bootstrap() {
   setupI18n(app)
 
   await setupRouter(app)
+
+  const userStore = useUserStore()
+
+  userStore.setupUserInfo()
 
   app.mount('#app')
 }

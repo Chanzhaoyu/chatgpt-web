@@ -29,12 +29,6 @@ const userInfo = computed(() => userStore.userInfo)
       <h2 class="font-bold text-md">
         {{ userInfo.name ?? 'ChenZhaoYu' }}
       </h2>
-      <p class="text-xs text-gray-500">
-        <span
-          v-if="isString(userInfo.description) && userInfo.description !== ''"
-          v-html="userInfo.description"
-        />
-      </p>
     </div>
   </div>
 </template>

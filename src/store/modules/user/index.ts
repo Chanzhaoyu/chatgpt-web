@@ -18,5 +18,19 @@ export const useUserStore = defineStore('user-store', {
     recordState() {
       setLocalState(this.$state)
     },
+
+    async setupUserInfo() {
+      const response = await fetch('/api/user')
+      const data = await response.json()
+      const user = data?.result
+
+      if (user) {
+        this.userInfo = {
+          avatar: user.avatar,
+          name: user.nickname,
+          description: user.description,
+        }
+      }
+    },
   },
 })

@@ -2,7 +2,6 @@
 import { computed, ref } from 'vue'
 import { NCard, NModal, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
-import About from './About.vue'
 import { SvgIcon } from '@/components/common'
 
 const props = defineProps<Props>()
@@ -51,13 +50,13 @@ function handleReload() {
             <General v-if="!reload" @update="handleReload" />
           </div>
         </NTabPane>
-        <NTabPane name="Config" tab="Config">
+        <!-- <NTabPane name="Config" tab="Config">
           <template #tab>
             <SvgIcon class="text-lg" icon="ri:list-settings-line" />
             <span class="ml-2">{{ $t('setting.config') }}</span>
           </template>
           <About />
-        </NTabPane>
+        </NTabPane> -->
       </NTabs>
     </NCard>
   </NModal>
