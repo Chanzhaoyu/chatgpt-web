@@ -30,19 +30,19 @@ router.post('/chat', async (req, res) => {
 router.post('/chat-process', async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
-  try {
-    const {
-      prompt,
-      options = {},
-      user,
-    } = req.body as {
-      prompt: string
-      options?: ChatContext
-      user?: {
-        nickname: string
-      }
+  const {
+    prompt,
+    options = {},
+    user,
+  } = req.body as {
+    prompt: string
+    options?: ChatContext
+    user?: {
+      nickname: string
     }
+  }
 
+  try {
     let firstChunk = true
     doreamon.logger.info(`${user?.nickname} ask ChatGPT: ${prompt}`)
 
@@ -55,7 +55,7 @@ router.post('/chat-process', async (req, res) => {
     doreamon.logger.info(`ChatGPT answer ${user?.nickname}: done for prompt => ${prompt}`)
   }
   catch (error) {
-    doreamon.logger.error('ChatGPT error:', error)
+    doreamon.logger.error(`ChatGPT answer ${user?.nickname}: error for prompt => ${prompt}, error detail:`, error)
     res.write(JSON.stringify(error))
   }
   finally {
