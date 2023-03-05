@@ -8,12 +8,33 @@ export async function setupDoreamon(app: App) {
   await userStore.setupUserInfo()
 
   // setup on page show => user login
-  doreamon.dom.page.onPageShow(async () => {
-    const response = await fetch('/api/user')
-    if (response.status === 401) {
-      const rootSelector = document.querySelector('#app')
+  doreamon.dom.page.onPageShow(checkUser)
 
-      rootSelector!.innerHTML = `
+  // page heart beat: 5min
+  pageHeartBeat(5 * 60 * 1000)
+}
+
+function pageHeartBeat(interval: number) {
+  return setTimeout(async () => {
+    try {
+      await checkUser()
+
+      pageHeartBeat(interval)
+    }
+    catch (error) {
+      console.error('failed to page heart beat:', error)
+    }
+  }, interval)
+}
+
+async function checkUser() {
+  doreamon.logger.info('page heart beat')
+
+  const response = await fetch('/api/user')
+  if (response.status === 401) {
+    const rootSelector = document.querySelector('#app')
+
+    rootSelector!.innerHTML = `
 <style>
 .loading-wrap {
   display: flex;
@@ -79,9 +100,8 @@ export async function setupDoreamon(app: App) {
 </div>
 </div>`
 
-      await doreamon.delay(300)
+    await doreamon.delay(300)
 
-      window.location.reload()
-    }
-  })
+    window.location.reload()
+  }
 }
