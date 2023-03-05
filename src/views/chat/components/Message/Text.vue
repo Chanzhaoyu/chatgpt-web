@@ -2,9 +2,8 @@
 import { computed, ref } from 'vue'
 import MarkdownIt from 'markdown-it'
 import mdKatex from '@traptitech/markdown-it-katex'
-import hljs from 'highlight.js'
+import mdhljs from 'markdown-it-highlightjs'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { t } from '@/locales'
 
 interface Props {
   inversion?: boolean
@@ -21,17 +20,11 @@ const textRef = ref<HTMLElement>()
 
 const mdi = new MarkdownIt({
   linkify: true,
-  highlight: (code, language) => {
-    const validLang = !!(language && hljs.getLanguage(language))
-    if (validLang) {
-      const lang = language ?? ''
-      return `<pre class="code-block-wrapper"><div class="code-block-header"><span class="code-block-header__lang">${lang}</span><span class="code-block-header__copy">${t('chat.copyCode')}</span></div><code class="hljs code-block-body ${language}">${hljs.highlight(code, { language: lang }).value}</code></pre>`
-    }
-    return `<pre style="background: none">${hljs.highlightAuto(code).value}</pre>`
-  },
 })
 
-mdi.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
+mdi
+  .use(mdhljs, { auto: true, inline: true })
+  .use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
 
 const wrapClass = computed(() => {
   return [

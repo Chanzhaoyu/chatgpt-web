@@ -16,12 +16,12 @@ specifiers:
   axios: ^1.3.4
   crypto-js: ^4.1.1
   eslint: ^8.35.0
-  highlight.js: ^11.7.0
   husky: ^8.0.3
   katex: ^0.16.4
   less: ^4.1.3
   lint-staged: ^13.1.2
   markdown-it: ^13.0.1
+  markdown-it-highlightjs: ^4.0.1
   naive-ui: ^2.34.3
   npm-run-all: ^4.1.5
   pinia: ^2.0.32
@@ -38,9 +38,9 @@ specifiers:
 dependencies:
   '@traptitech/markdown-it-katex': 3.6.0
   '@vueuse/core': 9.13.0_vue@3.2.47
-  highlight.js: 11.7.0
   katex: 0.16.4
   markdown-it: 13.0.1
+  markdown-it-highlightjs: 4.0.1
   naive-ui: 2.34.3_vue@3.2.47
   pinia: 2.0.32_hmuptsblhheur2tugfgucj7gc4
   vue: 3.2.47
@@ -3345,6 +3345,12 @@ packages:
     resolution: {integrity: sha512-hdN1wVrZbb29eBGiGjJbeP8JbKjq1urkHJ/LIP/NY48MZ1QVXUsQBV1G1zvYFHn1XE06cwjBsOI2K3Ulnj1YXQ==}
     engines: {node: '>=8'}
     dev: true
+
+  /markdown-it-highlightjs/4.0.1:
+    resolution: {integrity: sha512-EPXwFEN6P5nqR3G4KjT20r20xbGYKMMA/360hhSYFmeoGXTE6hsLtJAiB/8ID8slVH4CWHHEL7GX0YenyIstVQ==}
+    dependencies:
+      highlight.js: 11.7.0
+    dev: false
 
   /markdown-it/13.0.1:
     resolution: {integrity: sha512-lTlxriVoy2criHP0JKRhO2VDG9c2ypWCsT237eDiLqi09rmbKoUetyGHq2uOIRoRS//kfoJckS0eUzzkDR+k2Q==}
