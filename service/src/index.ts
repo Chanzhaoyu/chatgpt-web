@@ -44,14 +44,18 @@ router.post('/chat-process', async (req, res) => {
     }
 
     let firstChunk = true
-    doreamon.logger.log(`${user?.nickname} ask ChatGPT: ${prompt}`)
+    doreamon.logger.info(`${user?.nickname} ask ChatGPT: ${prompt}`)
+
     await chatReplyProcess(prompt, options, (chat: ChatMessage) => {
-      // console.log(`ChatGPT answer ${user?.nickname}: ${prompt}`);
+      // doreamon.logger.info(`ChatGPT answer ${user?.nickname}: ${prompt}`);
       res.write(firstChunk ? JSON.stringify(chat) : `\n${JSON.stringify(chat)}`)
       firstChunk = false
     })
+
+    doreamon.logger.info(`ChatGPT answer ${user?.nickname}: done for prompt => ${prompt}`)
   }
   catch (error) {
+    doreamon.logger.error('ChatGPT error:', error)
     res.write(JSON.stringify(error))
   }
   finally {

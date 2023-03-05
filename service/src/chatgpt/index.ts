@@ -3,6 +3,7 @@ import 'isomorphic-fetch'
 import type { ChatGPTAPIOptions, ChatMessage, SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
+import { HttpsProxyAgent } from 'https-proxy-agent'
 import fetch from 'node-fetch'
 import { sendResponse } from '../utils'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
@@ -35,6 +36,14 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
         hostname: process.env.SOCKS_PROXY_HOST,
         port: process.env.SOCKS_PROXY_PORT,
       })
+      options.fetch = (url, options) => {
+        return fetch(url, { agent, ...options })
+      }
+    }
+
+    const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
+    if (httpsProxy) {
+      const agent = new HttpsProxyAgent(httpsProxy)
       options.fetch = (url, options) => {
         return fetch(url, { agent, ...options })
       }
