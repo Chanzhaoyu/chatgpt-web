@@ -1,4 +1,5 @@
 import express from 'express'
+import doreamon from '@zodash/doreamon'
 import type { ChatContext, ChatMessage } from './chatgpt'
 import { chatConfig, chatReply, chatReplyProcess } from './chatgpt'
 
@@ -30,9 +31,22 @@ router.post('/chat-process', async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
   try {
-    const { prompt, options = {} } = req.body as { prompt: string; options?: ChatContext }
+    const {
+      prompt,
+      options = {},
+      user,
+    } = req.body as {
+      prompt: string
+      options?: ChatContext
+      user?: {
+        nickname: string
+      }
+    }
+
     let firstChunk = true
+    doreamon.logger.log(`${user?.nickname} ask ChatGPT: ${prompt}`)
     await chatReplyProcess(prompt, options, (chat: ChatMessage) => {
+      // console.log(`ChatGPT answer ${user?.nickname}: ${prompt}`);
       res.write(firstChunk ? JSON.stringify(chat) : `\n${JSON.stringify(chat)}`)
       firstChunk = false
     })

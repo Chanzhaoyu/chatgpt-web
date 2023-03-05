@@ -30,7 +30,9 @@ export const useUserStore = defineStore('user-store', {
             avatar: user.avatar,
             name: user.nickname,
             description: user.description,
-          }
+          };
+
+          (window as any)._user = user
         }
       }
       catch (error) {

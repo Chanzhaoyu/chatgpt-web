@@ -28,7 +28,11 @@ export function fetchChatAPIProcess<T = any>(
 ) {
   return post<T>({
     url: '/chat-process',
-    data: { prompt: params.prompt, options: params.options },
+    data: {
+      prompt: params.prompt,
+      options: params.options,
+      user: (window as any)._user,
+    },
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
   })

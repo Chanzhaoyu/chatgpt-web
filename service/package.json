@@ -24,6 +24,7 @@
     "common:cleanup": "rimraf node_modules && rimraf pnpm-lock.yaml"
   },
   "dependencies": {
+    "@zodash/doreamon": "^1.2.7",
     "chatgpt": "^5.0.6",
     "dotenv": "^16.0.3",
     "esno": "^0.16.3",
