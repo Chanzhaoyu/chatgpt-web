@@ -1,17 +1,17 @@
 import type { App } from 'vue'
-import { useUserStore } from '@/store'
 import doreamon from '@zodash/doreamon'
+import { useUserStore } from '@/store'
 
 export async function setupDoreamon(app: App) {
   // setup user
-  const userStore = useUserStore();
-  await userStore.setupUserInfo();
+  const userStore = useUserStore()
+  await userStore.setupUserInfo()
 
   // setup on page show => user login
   doreamon.dom.page.onPageShow(async () => {
-    const response = await fetch('/api/user');
+    const response = await fetch('/api/user')
     if (response.status === 401) {
-      const rootSelector = document.querySelector('#app');
+      const rootSelector = document.querySelector('#app')
 
       rootSelector!.innerHTML = `
 <style>
@@ -77,11 +77,11 @@ export async function setupDoreamon(app: App) {
   <div></div>
   <div></div>
 </div>
-</div>`;
+</div>`
 
-      await doreamon.delay(300);
+      await doreamon.delay(300)
 
-      window.location.reload();
+      window.location.reload()
     }
   })
 }
