@@ -36,6 +36,7 @@ export default {
     reverseProxy: 'Reverse Proxy',
     timeout: 'Timeout',
     socks: 'Socks',
+    httpsProxy: 'HTTPS Proxy',
   },
 
 }
