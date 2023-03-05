@@ -56,7 +56,14 @@ router.post('/chat-process', async (req, res) => {
   }
   catch (error) {
     doreamon.logger.error(`ChatGPT answer ${user?.nickname}: error for prompt => ${prompt}, error detail:`, error)
-    res.write(JSON.stringify(error))
+    // @TODO context_length_exceeded
+    if (error.message.includes('context_length_exceeded')) {
+      res.write('对话内容长度异常，请勿提问过快，通过 New Chat 创建新对话即可解决问题')
+    }
+    else {
+      // unknown error
+      res.write(JSON.stringify(error))
+    }
   }
   finally {
     res.end()
