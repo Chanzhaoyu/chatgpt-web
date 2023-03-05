@@ -40,6 +40,20 @@ function handleEnter({ uuid }: Chat.History, isEdit: boolean, event: KeyboardEve
     chatStore.updateHistory(uuid, { isEdit })
 }
 
+let dragIndex: number = -1
+
+function handleDragStart(index: number) {
+  dragIndex = index
+}
+
+function handleDrop(index: number) {
+  if (dragIndex === -1 || index === dragIndex) {
+    return;
+  }
+  chatStore.swapHistoryOrder(dragIndex, index)
+  dragIndex = -1
+}
+
 function isActive(uuid: number) {
   return chatStore.active === uuid
 }
@@ -55,7 +69,8 @@ function isActive(uuid: number) {
         </div>
       </template>
       <template v-else>
-        <div v-for="(item, index) of dataSources" :key="index">
+        <div v-for="(item, index) of dataSources" :key="index" :draggable="true" @dragstart="handleDragStart(index)"
+          @drop="handleDrop(index)" @dragover.prevent>
           <a
             class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-neutral-100 group dark:border-neutral-800 dark:hover:bg-[#24272e]"
             :class="isActive(item.uuid) && ['border-[#4b9e5f]', 'bg-neutral-100', 'text-[#4b9e5f]', 'dark:bg-[#24272e]', 'dark:border-[#4b9e5f]', 'pr-14']"
