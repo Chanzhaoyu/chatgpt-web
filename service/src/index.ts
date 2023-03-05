@@ -52,7 +52,7 @@ router.post('/chat-process', async (req, res) => {
       firstChunk = false
     })
 
-    doreamon.logger.info(`ChatGPT answer ${user?.nickname}: done for prompt => ${prompt}`)
+    doreamon.logger.info(`ChatGPT answer ${user?.nickname}: success for prompt => ${prompt}`)
   }
   catch (error) {
     doreamon.logger.error(`ChatGPT answer ${user?.nickname}: error for prompt => ${prompt}, error detail:`, error)
