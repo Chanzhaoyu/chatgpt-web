@@ -13,6 +13,7 @@ specifiers:
   '@vueuse/core': ^9.13.0
   autoprefixer: ^10.4.13
   axios: ^1.3.4
+  copy-text-to-clipboard: ^3.0.1
   crypto-js: ^4.1.1
   eslint: ^8.35.0
   highlight.js: ^11.7.0
@@ -36,6 +37,7 @@ specifiers:
 
 dependencies:
   '@vueuse/core': 9.13.0_vue@3.2.47
+  copy-text-to-clipboard: 3.0.1
   highlight.js: 11.7.0
   katex: 0.16.4
   marked: 4.2.12
@@ -1594,6 +1596,11 @@ packages:
     dependencies:
       is-what: 3.14.1
     dev: true
+
+  /copy-text-to-clipboard/3.0.1:
+    resolution: {integrity: sha512-rvVsHrpFcL4F2P8ihsoLdFHmd404+CMg71S756oRSeQgqk51U3kicGdnvfkrxva0xXH92SjGS62B0XIJsbh+9Q==}
+    engines: {node: '>=12'}
+    dev: false
 
   /cosmiconfig-typescript-loader/4.3.0_y2okb5cfqgxv537umje5rj3w6m:
     resolution: {integrity: sha512-NTxV1MFfZDLPiBMjxbHRwSh5LaLcPMwNdCutmnHJCKoVnlvldPWlllonKwrsRJ5pYZBIBGRWWU2tfvzxgeSW5Q==}

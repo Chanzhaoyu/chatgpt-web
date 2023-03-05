@@ -5,7 +5,6 @@ import { marked } from 'marked'
 import hljs from 'highlight.js'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { encodeHTML } from '@/utils/format'
-import { t } from '@/locales'
 
 interface Props {
   inversion?: boolean
@@ -30,7 +29,7 @@ renderer.code = (code, language) => {
   const validLang = !!(language && hljs.getLanguage(language))
   if (validLang) {
     const lang = language ?? ''
-    return `<pre class="code-block-wrapper"><div class="code-block-header"><span class="code-block-header__lang">${lang}</span><span class="code-block-header__copy">${t('chat.copyCode')}</span></div><code class="hljs code-block-body ${language}">${hljs.highlight(code, { language: lang }).value}</code></pre>`
+    return `<pre><code class="hljs ${language}">${hljs.highlight(code, { language: lang }).value}</code></pre>`
   }
   return `<pre style="background: none">${hljs.highlightAuto(code).value}</pre>`
 }
@@ -118,7 +117,7 @@ defineExpose({ textRef })
       <span class="dark:text-white w-[4px] h-[20px] block animate-blink" />
     </template>
     <template v-else>
-      <div ref="textRef" class="leading-relaxed break-words">
+      <div ref="textRef" v-copy class="leading-relaxed break-words">
         <div v-if="!inversion" class="markdown-body" v-html="text" />
         <div v-else class="whitespace-pre-wrap" v-text="text" />
       </div>

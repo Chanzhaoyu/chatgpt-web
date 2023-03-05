@@ -22,39 +22,18 @@
 	.highlight pre,
 	pre {
 		background-color: #fff;
+		position: relative;
+		&:hover{
+			.icon-copy {
+				opacity: 1;
+			}
+		}
 	}
 
 	code.hljs {
 		padding: 0;
 	}
 
-	.code-block {
-		&-wrapper {
-			position: relative;
-			padding-top: 24px;
-		}
-
-		&-header {
-			position: absolute;
-			top: 5px;
-			right: 0;
-			width: 100%;
-			padding: 0 1rem;
-			display: flex;
-			justify-content: flex-end;
-			align-items: center;
-			color: #b3b3b3;
-
-			&__copy{
-				cursor: pointer;
-				margin-left: 0.5rem;
-				user-select: none;
-				&:hover {
-					color: #65a665;
-				}
-			}
-		}
-	}
 }
 
 html.dark {
@@ -62,5 +41,66 @@ html.dark {
 	.highlight pre,
 	pre {
 		background-color: #282c34;
+	}
+}
+
+.copy-btn {
+	position: absolute;
+	top: 4px;
+	right: 8px;
+
+	&.clicked .tooltip-copy {
+			&::before {
+				opacity: 1!important;
+			}
+			&::after {
+				opacity: 1;
+			}
+	}
+
+	.tooltip-copy {
+		position: relative;
+
+		img{
+			background-color: transparent;
+		}
+
+		&::before {
+			content: attr(data-content-before);
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			right: 100%;
+			margin-right: 5px;
+			padding: 2px 7px;
+			border-radius: 5px;
+			background: #444;
+			color: #fff;
+			text-align: center;
+			opacity: 0;
+			transition: opacity .3s;
+		}
+	 	&::after {
+			content: "";
+			position: absolute;
+			right: 100%;
+			margin-right: -5px;
+			top: 50%;
+			transform: translateY(-50%);
+			border-style: solid;
+			border-width: 2px 2px 5px 8px;
+			border-color: transparent transparent transparent #444;
+			opacity: 0;
+			transition: opacity .3s;
+		}
+	}
+
+	.icon-copy {
+		opacity: 0;
+		transition: opacity .3s;
+		height: 18px;
+		width: 18px;
+		cursor: pointer;
+		padding: 5px;
 	}
 }
