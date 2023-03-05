@@ -14,12 +14,7 @@ const userInfo = computed(() => userStore.userInfo)
   <div class="flex items-center">
     <div class="w-10 h-10 overflow-hidden rounded-full">
       <template v-if="isString(userInfo.avatar) && userInfo.avatar.length > 0">
-        <NAvatar
-          size="large"
-          round
-          :src="userInfo.avatar"
-          :fallback-src="defaultAvatar"
-        />
+        <NAvatar size="large" round :src="userInfo.avatar" :fallback-src="defaultAvatar" />
       </template>
       <template v-else>
         <NAvatar size="large" round :src="defaultAvatar" />
@@ -27,8 +22,14 @@ const userInfo = computed(() => userStore.userInfo)
     </div>
     <div class="ml-2">
       <h2 class="font-bold text-md">
-        {{ userInfo.name ?? 'ChenZhaoYu' }}
+        {{ userInfo.name ?? 'Zero' }}
       </h2>
+      <p class="text-xs text-gray-500">
+        <span
+          v-if="isString(userInfo.description) && userInfo.description !== ''"
+          v-html="userInfo.description"
+        />
+      </p>
     </div>
   </div>
 </template>

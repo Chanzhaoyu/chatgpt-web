@@ -20,16 +20,21 @@ export const useUserStore = defineStore('user-store', {
     },
 
     async setupUserInfo() {
-      const response = await fetch('/api/user')
-      const data = await response.json()
-      const user = data?.result
+      try {
+        const response = await fetch('/api/user')
+        const data = await response.json()
+        const user = data?.result
 
-      if (user) {
-        this.userInfo = {
-          avatar: user.avatar,
-          name: user.nickname,
-          description: user.description,
+        if (user) {
+          this.userInfo = {
+            avatar: user.avatar,
+            name: user.nickname,
+            description: user.description,
+          }
         }
+      }
+      catch (error) {
+        console.error('failed to setup user info:', error)
       }
     },
   },

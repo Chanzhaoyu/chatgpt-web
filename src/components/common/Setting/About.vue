@@ -42,7 +42,7 @@ onMounted(() => {
           此项目开源于
           <a
             class="text-blue-600 dark:text-blue-500"
-            href="https://github.com/Chanzhaoyu/chatgpt-web"
+            href="https://github.com/go-zoox/chatgpt-for-chatbot-feishu"
             target="_blank"
           >
             Github
@@ -53,10 +53,10 @@ onMounted(() => {
           如果你觉得此项目对你有帮助，请在 Github 帮我点个 Star 或者给予一点赞助，谢谢！
         </p>
       </div>
-      <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
+      <!-- <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
       <p>{{ $t("setting.reverseProxy") }}：{{ config?.reverseProxy ?? '-' }}</p>
       <p>{{ $t("setting.timeout") }}：{{ config?.timeoutMs ?? '-' }}</p>
-      <p>{{ $t("setting.socks") }}：{{ config?.socksProxy ?? '-' }}</p>
+      <p>{{ $t("setting.socks") }}：{{ config?.socksProxy ?? '-' }}</p> -->
     </div>
   </NSpin>
 </template>
