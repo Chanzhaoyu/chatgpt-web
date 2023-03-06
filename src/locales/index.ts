@@ -2,6 +2,7 @@ import type { App } from 'vue'
 import { createI18n } from 'vue-i18n'
 import en from './en-US'
 import cn from './zh-CN'
+import tw from './zh-TW'
 import { useAppStoreWithOut } from '@/store/modules/app'
 import type { Language } from '@/store/modules/app/helper'
 
@@ -16,6 +17,7 @@ const i18n = createI18n({
   messages: {
     'en-US': en,
     'zh-CN': cn,
+    'zh-TW': tw,
   },
 })
 
