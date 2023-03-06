@@ -8,7 +8,7 @@ export const useChatStore = defineStore('chat-store', {
 
   getters: {
     getChatHistoryByCurrentActive(state: Chat.ChatState) {
-      const index = state.history.findIndex(item => item.uuid === state.active)
+      const index = state.history.findIndex(item => String(item.uuid) === state.active)
       if (index !== -1)
         return state.history[index]
       return null
@@ -32,7 +32,7 @@ export const useChatStore = defineStore('chat-store', {
     },
 
     updateHistory(uuid: string, edit: Partial<Chat.History>) {
-      const index = this.history.findIndex(item => item.uuid === uuid)
+      const index = this.history.findIndex(item => String(item.uuid) === uuid)
       if (index !== -1) {
         this.history[index] = { ...this.history[index], ...edit }
         this.recordState()
@@ -82,7 +82,7 @@ export const useChatStore = defineStore('chat-store', {
           return this.chat[0].data[index]
         return null
       }
-      const chatIndex = this.chat.findIndex(item => item.uuid === uuid)
+      const chatIndex = this.chat.findIndex(item => String(item.uuid) === uuid)
       if (chatIndex !== -1)
         return this.chat[chatIndex].data[index]
       return null
@@ -105,7 +105,7 @@ export const useChatStore = defineStore('chat-store', {
         }
       }
 
-      const index = this.chat.findIndex(item => item.uuid === uuid)
+      const index = this.chat.findIndex(item => String(item.uuid) === uuid)
       if (index !== -1) {
         this.chat[index].data.push(chat)
         if (this.history[index].title === 'New Chat')
@@ -123,7 +123,7 @@ export const useChatStore = defineStore('chat-store', {
         return
       }
 
-      const chatIndex = this.chat.findIndex(item => item.uuid === uuid)
+      const chatIndex = this.chat.findIndex(item => String(item.uuid) === uuid)
       if (chatIndex !== -1) {
         this.chat[chatIndex].data[index] = chat
         this.recordState()
@@ -139,7 +139,7 @@ export const useChatStore = defineStore('chat-store', {
         return
       }
 
-      const chatIndex = this.chat.findIndex(item => item.uuid === uuid)
+      const chatIndex = this.chat.findIndex(item => String(item.uuid) === uuid)
       if (chatIndex !== -1) {
         this.chat[chatIndex].data[index] = { ...this.chat[chatIndex].data[index], ...chat }
         this.recordState()
@@ -155,7 +155,7 @@ export const useChatStore = defineStore('chat-store', {
         return
       }
 
-      const chatIndex = this.chat.findIndex(item => item.uuid === uuid)
+      const chatIndex = this.chat.findIndex(item => String(item.uuid) === uuid)
       if (chatIndex !== -1) {
         this.chat[chatIndex].data.splice(index, 1)
         this.recordState()
@@ -171,7 +171,7 @@ export const useChatStore = defineStore('chat-store', {
         return
       }
 
-      const index = this.chat.findIndex(item => item.uuid === uuid)
+      const index = this.chat.findIndex(item => String(item.uuid) === uuid)
       if (index !== -1) {
         this.chat[index].data = []
         this.recordState()
