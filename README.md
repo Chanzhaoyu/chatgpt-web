@@ -2,7 +2,7 @@
 
 <div style="font-size: 1.5rem;">
   <a href="./README.md">中文</a> |
-  <a href="./README.en.md">English</a> 
+  <a href="./README.en.md">English</a>
 </div>
 </br>
 
@@ -61,7 +61,7 @@
 
 反向代理：
 
-`ChatGPTUnofficialProxyAPI`时可用
+`ChatGPTUnofficialProxyAPI`时可用，[详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)
 
 ```shell
 # service/.env

@@ -2,7 +2,7 @@
 
 <div style="font-size: 1.5rem;">
   <a href="./README.md">中文</a> |
-  <a href="./README.en.md">English</a> 
+  <a href="./README.en.md">English</a>
 </div>
 </br>
 
@@ -27,16 +27,16 @@
 	- [Packaging](#packaging)
 		- [Using Docker](#using-docker)
 			- [Docker Parameter Example](#docker-parameter-example)
-			- [Docker Build & Run](#docker-build--run)
+			- [Docker Build \& Run](#docker-build--run)
 			- [Docker Compose](#docker-compose)
-		- [Deploying with Railway](#deploying-with-railway)
+		- [Deployment with Railway](#deployment-with-railway)
 			- [Railway Environment Variables](#railway-environment-variables)
-		- [Manual Packaging](#manual-packaging)
-			- [Backend Service](#backend-service-1)
-			- [Frontend Webpage](#frontend-webpage-1)
-	- [FAQ](#faq)
+		- [Manual packaging](#manual-packaging)
+			- [Backend service](#backend-service-1)
+			- [Frontend webpage](#frontend-webpage-1)
+	- [Frequently Asked Questions](#frequently-asked-questions)
 	- [Contributing](#contributing)
-	- [Sponsor](#sponsor)
+	- [Sponsorship](#sponsorship)
 	- [License](#license)
 
 ## Introduction
@@ -62,7 +62,7 @@ Switching Methods:
 
 Reverse Proxy:
 
-Available when using `ChatGPTUnofficialProxyAPI`.
+Available when using `ChatGPTUnofficialProxyAPI`.[Details](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)
 
 ```shell
 # service/.env
