@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import katex from 'katex'
-import { marked } from 'marked'
+import MarkdownIt from 'markdown-it'
+import mdKatex from '@traptitech/markdown-it-katex'
 import hljs from 'highlight.js'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { encodeHTML } from '@/utils/format'
 import { t } from '@/locales'
 
 interface Props {
@@ -18,77 +17,21 @@ const props = defineProps<Props>()
 
 const { isMobile } = useBasicLayout()
 
-const renderer = new marked.Renderer()
-
 const textRef = ref<HTMLElement>()
 
-renderer.html = (html) => {
-  return `<p>${encodeHTML(html)}</p>`
-}
-
-renderer.code = (code, language) => {
-  const validLang = !!(language && hljs.getLanguage(language))
-  if (validLang) {
-    const lang = language ?? ''
-    return `<pre class="code-block-wrapper"><div class="code-block-header"><span class="code-block-header__lang">${lang}</span><span class="code-block-header__copy">${t('chat.copyCode')}</span></div><code class="hljs code-block-body ${language}">${hljs.highlight(code, { language: lang }).value}</code></pre>`
-  }
-  return `<pre style="background: none">${hljs.highlightAuto(code).value}</pre>`
-}
-
-marked.setOptions({
-  renderer,
-  highlight(code) {
-    return hljs.highlightAuto(code).value
+const mdi = new MarkdownIt({
+  linkify: true,
+  highlight(code, language) {
+    const validLang = !!(language && hljs.getLanguage(language))
+    if (validLang) {
+      const lang = language ?? ''
+      return highlightBlock(hljs.highlight(lang, code, true).value, lang)
+    }
+    return highlightBlock(hljs.highlightAuto(code).value, '')
   },
 })
 
-const katexOptions = {
-  throwOnError: false,
-}
-
-const katexInline = {
-  name: 'katexInline',
-  level: 'inline',
-  start(src: string) {
-    return src.indexOf('$')
-  },
-  tokenizer(src: string) {
-    const match = src.match(/^\$+([^$\n]+?)\$+/)
-    if (match) {
-      return {
-        type: 'katexInline',
-        raw: match[0],
-        text: match[1].trim(),
-      }
-    }
-  },
-  renderer(token: marked.Tokens.Generic) {
-    return katex.renderToString(token.text, katexOptions)
-  },
-}
-
-const katexBlock = {
-  name: 'katexBlock',
-  level: 'block',
-  start(src: string) {
-    return src.indexOf('\n$$')
-  },
-  tokenizer(src: string) {
-    const match = src.match(/^\$\$+\n([^$]+?)\n\$\$+\n/)
-    if (match) {
-      return {
-        type: 'katexBlock',
-        raw: match[0],
-        text: match[1].trim(),
-      }
-    }
-  },
-  renderer(token: marked.Tokens.Generic) {
-    return `<p>${katex.renderToString(token.text, katexOptions)}</p>`
-  },
-}
-
-marked.use({ extensions: [katexInline, katexBlock] })
+mdi.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
 
 const wrapClass = computed(() => {
   return [
@@ -105,9 +48,13 @@ const wrapClass = computed(() => {
 const text = computed(() => {
   const value = props.text ?? ''
   if (!props.inversion)
-    return marked(value)
+    return mdi.render(value)
   return value
 })
+
+function highlightBlock(str: string, lang?: string) {
+  return `<pre class="code-block-wrapper"><div class="code-block-header"><span class="code-block-header__lang">${lang}</span><span class="code-block-header__copy">${t('chat.copyCode')}</span></div><code class="hljs code-block-body ${lang}">${str}</code></pre>`
+}
 
 defineExpose({ textRef })
 </script>

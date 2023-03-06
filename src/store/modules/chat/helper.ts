@@ -1,10 +1,11 @@
-import doreamon from '@zodash/doreamon'
+// import doreamon from '@zodash/doreamon'
 import { ss } from '@/utils/storage'
 
 const LOCAL_NAME = 'chatStorage'
 
 export function defaultState(): Chat.ChatState {
-  const uuid = doreamon.uuid()
+  // const uuid = doreamon.uuid()
+  const uuid = '1002'
   return { active: uuid, history: [{ uuid, title: 'New Chat', isEdit: false }], chat: [{ uuid, data: [] }] }
 }
 

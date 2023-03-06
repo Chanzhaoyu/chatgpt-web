@@ -1,7 +1,7 @@
 import express from 'express'
 import doreamon from '@zodash/doreamon'
 import type { ChatContext, ChatMessage } from './chatgpt'
-import { chatConfig, chatReply, chatReplyProcess } from './chatgpt'
+import { chatConfig, chatReplyProcess } from './chatgpt'
 
 const app = express()
 const router = express.Router()
@@ -14,17 +14,6 @@ app.all('*', (_, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Content-Type')
   res.header('Access-Control-Allow-Methods', '*')
   next()
-})
-
-router.post('/chat', async (req, res) => {
-  try {
-    const { prompt, options = {} } = req.body as { prompt: string; options?: ChatContext }
-    const response = await chatReply(prompt, options)
-    res.send(response)
-  }
-  catch (error) {
-    res.send(error)
-  }
 })
 
 router.post('/chat-process', async (req, res) => {
