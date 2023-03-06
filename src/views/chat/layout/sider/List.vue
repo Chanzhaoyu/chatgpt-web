@@ -40,7 +40,7 @@ function handleEnter({ uuid }: Chat.History, isEdit: boolean, event: KeyboardEve
     chatStore.updateHistory(uuid, { isEdit })
 }
 
-function isActive(uuid: number) {
+function isActive(uuid: string) {
   return chatStore.active === uuid
 }
 </script>

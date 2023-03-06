@@ -2,7 +2,7 @@ import type { App } from 'vue'
 import doreamon from '@zodash/doreamon'
 import { useUserStore } from '@/store'
 
-export async function setupDoreamon(app: App) {
+export async function setupDoreamon(_app: App) {
   // setup user
   const userStore = useUserStore()
   await userStore.setupUserInfo()
