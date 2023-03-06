@@ -1,3 +1,17 @@
+## v2.9.3
+
+`2023-03-06`
+
+## Enhancement
+- 感谢 [ChandlerVer5](https://github.com/Chanzhaoyu/chatgpt-web/pull/305) 使用 `markdown-it` 替换 `marked`，解决代码块闪烁的问题
+- 感谢 [shansing](https://github.com/Chanzhaoyu/chatgpt-web/pull/277) 改善文档
+- 感谢 [nalf3in](https://github.com/Chanzhaoyu/chatgpt-web/pull/293) 添加英文翻译
+
+## BugFix
+- 感谢[sepcnt ](https://github.com/Chanzhaoyu/chatgpt-web/pull/279) 修复切换记录时编辑状态未关闭的问题
+- 修复复制代码的兼容性报错问题
+- 修复部分优化小问题
+
 ## v2.9.2
 
 `2023-03-04`
