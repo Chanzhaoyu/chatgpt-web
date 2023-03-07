@@ -12,6 +12,8 @@ export default {
     wrong: 'Something went wrong, please try again later.',
     success: 'Success',
     failed: 'Failed',
+    verify: 'Verify',
+    unauthorizedTips: 'Unauthorized, please verify first.',
   },
   chat: {
     placeholder: 'Ask me anything...(Shift + Enter = line break)',
