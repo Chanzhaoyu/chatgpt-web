@@ -84,6 +84,12 @@ For all parameter variables, check [here](#docker-parameter-example) or see:
 
 [✓] Formatting and beautifying code-like message types
 
+[✓] Access rights control
+
+[✓] Data import and export
+
+[✓] Save message to local image
+
 [✓] Multilingual interface
 
 [✓] Interface themes
