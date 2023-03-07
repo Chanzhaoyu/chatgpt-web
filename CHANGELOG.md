@@ -12,8 +12,10 @@
 - 感谢 [GermMC](https://github.com/Chanzhaoyu/chatgpt-web/pull/369) 添加聊天记录导入、导出、清空的功能
 - 感谢 [CornerSkyless](https://github.com/Chanzhaoyu/chatgpt-web/pull/374) 添加会话保存为本地图片的功能
 
+
 ## Enhancement
 - 感谢 [CornerSkyless](https://github.com/Chanzhaoyu/chatgpt-web/pull/363) 添加 `ctrl+enter`  发送消息
+- 现在新消息只有在结束了之后才滚动到底部，而不是之前的强制性
 - 优化部分代码
 
 ## BugFix
@@ -23,6 +25,8 @@
 - 更新依赖到最新
 
 ## 演示
+> 不是界面最新效果，有美化改动
+
 权限
 
 ![权限](https://user-images.githubusercontent.com/24789441/223438518-80d58d42-e344-4e39-b87c-251ff73925ed.png)
@@ -32,6 +36,7 @@
 ![聊天记录导出](https://user-images.githubusercontent.com/57023771/223372153-6d8e9ec1-d82c-42af-b4bd-232e50504a25.gif)
 
 保存图片到本地
+
 ![保存图片到本地](https://user-images.githubusercontent.com/13901424/223423555-b69b95ef-8bcf-4951-a7c9-98aff2677e18.gif)
 
 ## v2.9.3
