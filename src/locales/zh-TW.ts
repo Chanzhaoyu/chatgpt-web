@@ -21,6 +21,8 @@ export default {
     copyCode: '複製代碼',
     clearChat: '清空對話',
     clearChatConfirm: '是否清空對話?',
+    exportImage: '儲存對話為圖片',
+    exportImageConfirm: '是否將對話儲存為圖片?',
     deleteMessage: '刪除訊息',
     deleteMessageConfirm: '是否刪除此訊息?',
     deleteHistoryConfirm: '確定刪除此紀錄?',

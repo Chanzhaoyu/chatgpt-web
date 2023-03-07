@@ -21,6 +21,8 @@ export default {
     copyCode: 'Copy Code',
     clearChat: 'Clear Chat',
     clearChatConfirm: 'Are you sure to clear this chat?',
+    exportImage: 'Export Image',
+    exportImageConfirm: 'Are you sure to export this chat to png?',
     deleteMessage: 'Delete Message',
     deleteMessageConfirm: 'Are you sure to delete this message?',
     deleteHistoryConfirm: 'Are you sure to clear this history?',

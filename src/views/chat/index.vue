@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { NButton, NInput, useDialog } from 'naive-ui'
+import html2canvas from 'html2canvas'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
@@ -268,6 +269,35 @@ async function onRegenerate(index: number) {
   }
 }
 
+function handleExport() {
+  if (loading.value)
+    return
+
+  dialog.warning({
+    title: t('chat.exportImage'),
+    content: t('chat.exportImageConfirm'),
+    positiveText: t('common.yes'),
+    negativeText: t('common.no'),
+    onPositiveClick: () => {
+      const ele = document.getElementById('image-wrapper')
+      html2canvas(ele as HTMLElement).then((canvas) => {
+        const imgUrl = canvas.toDataURL('image/png')
+        const tempLink = document.createElement('a')
+        tempLink.style.display = 'none'
+        tempLink.href = imgUrl
+        tempLink.setAttribute('download', 'chat-shot.png')
+        if (typeof tempLink.download === 'undefined')
+          tempLink.setAttribute('target', '_blank')
+
+        document.body.appendChild(tempLink)
+        tempLink.click()
+        document.body.removeChild(tempLink)
+        window.URL.revokeObjectURL(imgUrl)
+      })
+    },
+  })
+}
+
 function handleDelete(index: number) {
   if (loading.value)
     return
@@ -370,7 +400,7 @@ onUnmounted(() => {
             </div>
           </template>
           <template v-else>
-            <div>
+            <div id="image-wrapper">
               <Message
                 v-for="(item, index) of dataSources"
                 :key="index"
@@ -401,6 +431,11 @@ onUnmounted(() => {
           <HoverButton @click="handleClear">
             <span class="text-xl text-[#4f555e] dark:text-white">
               <SvgIcon icon="ri:delete-bin-line" />
+            </span>
+          </HoverButton>
+          <HoverButton @click="handleExport">
+            <span class="text-xl text-[#4f555e] dark:text-white">
+              <SvgIcon icon="ri:download-2-line" />
             </span>
           </HoverButton>
           <NInput
