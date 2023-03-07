@@ -5,6 +5,7 @@ import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useUserStore } from '@/store'
 import type { UserInfo } from '@/store/modules/user/helper'
+import { getCurrentDate } from '@/utils/functions'
 import { t } from '@/locales'
 
 interface Emit {
@@ -68,19 +69,18 @@ function updateUserInfo(options: Partial<UserInfo>) {
 function handleReset() {
   userStore.resetUserInfo()
   ms.success(t('common.success'))
-  emit('update')
+  window.location.reload()
 }
 
 function exportData(): void {
+  const date = getCurrentDate()
   const data: string = localStorage.getItem('chatStorage') || '{}'
-
   const jsonString: string = JSON.stringify(JSON.parse(data), null, 2)
-
   const blob: Blob = new Blob([jsonString], { type: 'application/json' })
   const url: string = URL.createObjectURL(blob)
   const link: HTMLAnchorElement = document.createElement('a')
   link.href = url
-  link.download = 'chat-store.json'
+  link.download = `chat-store_${date}.json`
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
@@ -153,26 +153,31 @@ function handleImportButtonClick(): void {
           {{ $t('common.save') }}
         </NButton>
       </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.resetUserInfo') }}</span>
-        <NButton text type="primary" @click="handleReset">
-          {{ $t('common.reset') }}
-        </NButton>
-      </div>
+
       <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.chatHistory') }}</span>
-        <NButton text type="primary" @click="exportData">
+
+        <NButton @click="exportData">
+          <template #icon>
+            <SvgIcon icon="ri:download-2-fill" />
+          </template>
           {{ $t('common.export') }}
         </NButton>
 
         <input id="fileInput" type="file" style="display:none" @change="importData">
-        <NButton text type="primary" @click="handleImportButtonClick">
+        <NButton @click="handleImportButtonClick">
+          <template #icon>
+            <SvgIcon icon="ri:upload-2-fill" />
+          </template>
           {{ $t('common.import') }}
         </NButton>
 
         <NPopconfirm placement="bottom" @positive-click="clearData">
           <template #trigger>
-            <NButton text type="primary">
+            <NButton>
+              <template #icon>
+                <SvgIcon icon="ri:close-circle-line" />
+              </template>
               {{ $t('common.clear') }}
             </NButton>
           </template>
@@ -183,15 +188,14 @@ function handleImportButtonClick(): void {
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.theme') }}</span>
         <div class="flex items-center space-x-4">
           <template v-for="item of themeOptions" :key="item.key">
-            <a
-              class="flex items-center justify-center h-8 px-4 border rounded-md cursor-pointer dark:border-neutral-700"
-              :class="item.key === theme && ['bg-[#4ca85e]', 'border-[#4ca85e]', 'text-white']"
+            <NButton
+              :type="item.key === theme ? 'primary' : undefined"
               @click="appStore.setTheme(item.key)"
             >
-              <span class="text-xl">
+              <template #icon>
                 <SvgIcon :icon="item.icon" />
-              </span>
-            </a>
+              </template>
+            </NButton>
           </template>
         </div>
       </div>
@@ -199,17 +203,20 @@ function handleImportButtonClick(): void {
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.language') }}</span>
         <div class="flex items-center space-x-4">
           <template v-for="item of languageOptions" :key="item.key">
-            <a
-              class="flex items-center justify-center h-8 px-4 border rounded-md cursor-pointer dark:border-neutral-700"
-              :class="item.key === language && ['bg-[#4ca85e]', 'border-[#4ca85e]', 'text-white']"
+            <NButton
+              :type="item.key === language ? 'primary' : undefined"
               @click="appStore.setLanguage(item.key)"
             >
-              <span class="text-sm">
-                {{ item.label }}
-              </span>
-            </a>
+              {{ item.label }}
+            </NButton>
           </template>
         </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.resetUserInfo') }}</span>
+        <NButton @click="handleReset">
+          {{ $t('common.reset') }}
+        </NButton>
       </div>
     </div>
   </div>
