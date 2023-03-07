@@ -23,6 +23,8 @@ export default {
     clearChatConfirm: '是否清空会话?',
     exportImage: '保存会话到图片',
     exportImageConfirm: '是否将会话保存为图片?',
+    exportSuccess: '保存成功',
+    exportFailed: '保存失败',
     deleteMessage: '删除消息',
     deleteMessageConfirm: '是否删除此消息?',
     deleteHistoryConfirm: '确定删除此记录?',

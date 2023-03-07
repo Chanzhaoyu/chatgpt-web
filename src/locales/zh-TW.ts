@@ -23,6 +23,8 @@ export default {
     clearChatConfirm: '是否清空對話?',
     exportImage: '儲存對話為圖片',
     exportImageConfirm: '是否將對話儲存為圖片?',
+    exportSuccess: '儲存成功',
+    exportFailed: '儲存失敗',
     deleteMessage: '刪除訊息',
     deleteMessageConfirm: '是否刪除此訊息?',
     deleteHistoryConfirm: '確定刪除此紀錄?',

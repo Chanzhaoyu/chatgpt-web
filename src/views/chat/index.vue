@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { NButton, NInput, useDialog } from 'naive-ui'
+import { NButton, NInput, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
@@ -17,6 +17,7 @@ let controller = new AbortController()
 
 const route = useRoute()
 const dialog = useDialog()
+const ms = useMessage()
 
 const chatStore = useChatStore()
 
@@ -273,14 +274,16 @@ function handleExport() {
   if (loading.value)
     return
 
-  dialog.warning({
+  const d = dialog.warning({
     title: t('chat.exportImage'),
     content: t('chat.exportImageConfirm'),
     positiveText: t('common.yes'),
     negativeText: t('common.no'),
-    onPositiveClick: () => {
-      const ele = document.getElementById('image-wrapper')
-      html2canvas(ele as HTMLElement).then((canvas) => {
+    onPositiveClick: async () => {
+      try {
+        d.loading = true
+        const ele = document.getElementById('image-wrapper')
+        const canvas = await html2canvas(ele as HTMLDivElement)
         const imgUrl = canvas.toDataURL('image/png')
         const tempLink = document.createElement('a')
         tempLink.style.display = 'none'
@@ -293,7 +296,16 @@ function handleExport() {
         tempLink.click()
         document.body.removeChild(tempLink)
         window.URL.revokeObjectURL(imgUrl)
-      })
+        d.loading = false
+        ms.success(t('chat.exportSuccess'))
+        Promise.resolve()
+      }
+      catch (error: any) {
+        ms.error(t('chat.exportFailed'))
+      }
+      finally {
+        d.loading = false
+      }
     },
   })
 }
@@ -390,9 +402,8 @@ onUnmounted(() => {
         id="scrollRef"
         ref="scrollRef"
         class="h-full overflow-hidden overflow-y-auto"
-        :class="[isMobile ? 'p-2' : 'p-4']"
       >
-        <div class="w-full max-w-screen-xl m-auto">
+        <div id="image-wrapper" class="w-full max-w-screen-xl m-auto" :class="[isMobile ? 'p-2' : 'p-4']">
           <template v-if="!dataSources.length">
             <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
               <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
@@ -400,7 +411,7 @@ onUnmounted(() => {
             </div>
           </template>
           <template v-else>
-            <div id="image-wrapper">
+            <div>
               <Message
                 v-for="(item, index) of dataSources"
                 :key="index"
