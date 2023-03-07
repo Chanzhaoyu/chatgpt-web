@@ -8,12 +8,6 @@ import type { UserInfo } from '@/store/modules/user/helper'
 import { getCurrentDate } from '@/utils/functions'
 import { t } from '@/locales'
 
-interface Emit {
-  (event: 'update'): void
-}
-
-const emit = defineEmits<Emit>()
-
 const appStore = useAppStore()
 const userStore = useUserStore()
 
@@ -101,7 +95,6 @@ function importData(event: Event): void {
       const data = JSON.parse(reader.result as string)
       localStorage.setItem('chatStorage', JSON.stringify(data))
       ms.success(t('common.success'))
-      emit('update')
       location.reload()
     }
     catch (error) {
