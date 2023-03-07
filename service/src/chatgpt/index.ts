@@ -113,7 +113,7 @@ async function chatReplyProcess(
     global.console.log(error)
     if (Reflect.has(ErrorCodeMessage, code))
       return sendResponse({ type: 'Fail', message: ErrorCodeMessage[code] })
-    return sendResponse({ type: 'Fail', message: `${error.statusCode}-${error.statusText}` })
+    return sendResponse({ type: 'Fail', message: error.message ?? 'Please check the back-end console' })
   }
 }
 
