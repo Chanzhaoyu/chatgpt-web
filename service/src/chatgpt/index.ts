@@ -7,6 +7,14 @@ import fetch from 'node-fetch'
 import { sendResponse } from '../utils'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
 
+const ErrorCodeMessage: Record<string, string> = {
+  401: '提供错误的API密钥 | Incorrect API key provided',
+  429: '服务器限流，请稍后再试 | Server was limited, please try again later',
+  503: '服务器繁忙，请稍后再试 | Server is busy, please try again later',
+  500: '服务器繁忙，请稍后再试 | Server is busy, please try again later',
+  403: '服务器拒绝访问，请稍后再试 | Server refused to access, please try again later',
+}
+
 dotenv.config()
 
 const timeoutMs: number = !isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 30 * 1000
@@ -98,8 +106,10 @@ async function chatReplyProcess(
     return sendResponse({ type: 'Success', data: response })
   }
   catch (error: any) {
-    global.console.error(error)
-    return sendResponse({ type: 'Fail', message: error.message })
+    const code = error.statusCode || 'unknown'
+    if (Reflect.has(ErrorCodeMessage, code))
+      return sendResponse({ type: 'Fail', message: ErrorCodeMessage[code] })
+    return sendResponse({ type: 'Fail', message: `${error.statusCode}-${error.statusText}` })
   }
 }
 
