@@ -52,6 +52,7 @@ const themeOptions: { label: string; key: Theme; icon: string }[] = [
 
 const languageOptions: { label: string; key: Language; value: Language }[] = [
   { label: '中文', key: 'zh-CN', value: 'zh-CN' },
+  { label: '繁體中文', key: 'zh-TW', value: 'zh-TW' },
   { label: 'English', key: 'en-US', value: 'en-US' },
 ]
 
