@@ -22,8 +22,12 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
 
   if (process.env.OPENAI_API_KEY) {
+    const openaiApiKey = process.env.OPENAI_API_KEY
+    const openaiApiKeys = openaiApiKey.split(',')
+    const randomIndex = Math.floor(Math.random() * openaiApiKeys.length)
+    const selectedApiKey = openaiApiKeys[randomIndex]
     const options: ChatGPTAPIOptions = {
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: selectedApiKey,
       completionParams: {
         model: 'gpt-3.5-turbo',
       },
