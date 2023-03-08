@@ -39,6 +39,7 @@ export default {
     name: '名稱',
     description: '描述',
     resetUserInfo: '重設使用者資訊',
+    chatHistory: '紀錄',
     theme: '主題',
     language: '語言',
     api: 'API',
