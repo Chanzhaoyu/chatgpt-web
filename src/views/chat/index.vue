@@ -366,17 +366,18 @@ function handleStop() {
 
 function toggleUsingContext() {
   usingContext.value = !usingContext.value
-  if(usingContext.value){
+  if (usingContext.value) {
     dialog.info({
       title: t('chat.usingContext'),
       content: t('chat.turnOnContext'),
-      positiveText: t('common.yes')
+      positiveText: t('common.yes'),
     })
-  }else{
+  }
+  else {
     dialog.info({
       title: t('chat.usingContext'),
       content: t('chat.turnOffContext'),
-      positiveText: t('common.yes')
+      positiveText: t('common.yes'),
     })
   }
 }
@@ -469,7 +470,7 @@ onUnmounted(() => {
             </span>
           </HoverButton>
           <HoverButton @click="toggleUsingContext">
-            <span class="text-xl" :class="{'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext}">
+            <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
               <SvgIcon icon="ri:chat-history-line" />
             </span>
           </HoverButton>
