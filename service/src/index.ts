@@ -1,6 +1,6 @@
 import express from 'express'
 import type { ChatContext, ChatMessage } from './chatgpt'
-import { chatConfig, chatReplyProcess } from './chatgpt'
+import { chatConfig, chatReplyProcess, generateImage } from './chatgpt'
 import { auth } from './middleware/auth'
 
 const app = express()
@@ -32,6 +32,16 @@ router.post('/chat-process', auth, async (req, res) => {
   }
   finally {
     res.end()
+  }
+})
+
+router.post('/generate-image', async (req, res) => {
+  try {
+    const { prompt } = req.body as { prompt: string }
+    res.send(await generateImage(prompt))
+  }
+  catch (error) {
+    res.send(error)
   }
 })
 

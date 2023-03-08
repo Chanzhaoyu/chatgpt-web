@@ -10,7 +10,7 @@ import { useCopyCode } from './hooks/useCopyCode'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore } from '@/store'
-import { fetchChatAPIProcess } from '@/api'
+import { fetchChatAPIProcess, fetchGenerateImage } from '@/api'
 import { t } from '@/locales'
 
 let controller = new AbortController()
@@ -48,6 +48,7 @@ async function onConversation() {
     return
 
   controller = new AbortController()
+  const isGenerateImage = message.startsWith('@image ')
 
   addChat(
     +uuid,
@@ -57,7 +58,7 @@ async function onConversation() {
       inversion: true,
       error: false,
       conversationOptions: null,
-      requestOptions: { prompt: message, options: null },
+      requestOptions: { prompt: message, options: null, generateImage: isGenerateImage },
     },
   )
   scrollToBottom()
@@ -80,47 +81,68 @@ async function onConversation() {
       inversion: false,
       error: false,
       conversationOptions: null,
-      requestOptions: { prompt: message, options: { ...options } },
+      requestOptions: { prompt: message, options: { ...options }, generateImage: isGenerateImage },
     },
   )
   scrollToBottom()
 
   try {
-    await fetchChatAPIProcess<Chat.ConversationResponse>({
-      prompt: message,
-      options,
-      signal: controller.signal,
-      onDownloadProgress: ({ event }) => {
-        const xhr = event.target
-        const { responseText } = xhr
-        // Always process the final line
-        const lastIndex = responseText.lastIndexOf('\n')
-        let chunk = responseText
-        if (lastIndex !== -1)
-          chunk = responseText.substring(lastIndex)
-        try {
-          const data = JSON.parse(chunk)
-          updateChat(
-            +uuid,
-            dataSources.value.length - 1,
-            {
-              dateTime: new Date().toLocaleString(),
-              text: data.text ?? '',
-              inversion: false,
-              error: false,
-              loading: false,
-              conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-              requestOptions: { prompt: message, options: { ...options } },
-            },
-          )
-          scrollToBottom()
-        }
-        catch (error) {
+    if (!isGenerateImage) {
+      await fetchChatAPIProcess<Chat.ConversationResponse>({
+        prompt: message,
+        options,
+        signal: controller.signal,
+        onDownloadProgress: ({ event }) => {
+          const xhr = event.target
+          const { responseText } = xhr
+          // Always process the final line
+          const lastIndex = responseText.lastIndexOf('\n')
+          let chunk = responseText
+          if (lastIndex !== -1)
+            chunk = responseText.substring(lastIndex)
+          try {
+            const data = JSON.parse(chunk)
+            updateChat(
+              +uuid,
+              dataSources.value.length - 1,
+              {
+                dateTime: new Date().toLocaleString(),
+                text: data.text ?? '',
+                inversion: false,
+                error: false,
+                loading: false,
+                conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+                requestOptions: { prompt: message, options: { ...options } },
+              },
+            )
+            scrollToBottom()
+          }
+          catch (error) {
           //
-        }
-      },
-    })
-    scrollToBottom()
+          }
+        },
+      })
+    }
+    else {
+      const res = await fetchGenerateImage<Chat.GenerateImageResponse>(
+        message.replace('@image ', ''),
+        controller.signal,
+      )
+      updateChat(
+        +uuid,
+        dataSources.value.length - 1,
+        {
+          dateTime: new Date().toLocaleString(),
+          text: `![Image](${res.data.url})`,
+          inversion: false,
+          error: false,
+          loading: false,
+          conversationOptions: lastContext,
+          requestOptions: { prompt: message, options: { ...options }, generateImage: true },
+        },
+      )
+      scrollToBottom()
+    }
   }
   catch (error: any) {
     const errorMessage = error?.message ?? t('common.wrong')

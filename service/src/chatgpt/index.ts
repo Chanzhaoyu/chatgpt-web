@@ -4,6 +4,7 @@ import type { ChatGPTAPIOptions, ChatMessage, SendMessageOptions } from 'chatgpt
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import fetch from 'node-fetch'
+import { Configuration, OpenAIApi } from 'openai'
 import { sendResponse } from '../utils'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
 
@@ -28,6 +29,7 @@ if (!process.env.OPENAI_API_KEY && !process.env.OPENAI_ACCESS_TOKEN)
   throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
 
 let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
+let openAiApi: OpenAIApi;
 
 (async () => {
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
@@ -41,8 +43,14 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
       debug: false,
     }
 
-    if (process.env.OPENAI_API_BASE_URL && process.env.OPENAI_API_BASE_URL.trim().length > 0)
+    const openAiConfiguration = new Configuration({
+      apiKey: process.env.OPENAI_API_KEY,
+    })
+
+    if (process.env.OPENAI_API_BASE_URL && process.env.OPENAI_API_BASE_URL.trim().length > 0) {
       options.apiBaseUrl = process.env.OPENAI_API_BASE_URL
+      openAiConfiguration.basePath = process.env.OPENAI_API_BASE_URL
+    }
 
     if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) {
       const agent = new SocksProxyAgent({
@@ -52,9 +60,12 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
       options.fetch = (url, options) => {
         return fetch(url, { agent, ...options })
       }
+      openAiConfiguration.baseOptions.httpAgent = agent
+      openAiConfiguration.baseOptions.httpsAgent = agent
     }
 
     api = new ChatGPTAPI({ ...options })
+    openAiApi = new OpenAIApi(openAiConfiguration)
     apiModel = 'ChatGPTAPI'
   }
   else {
@@ -80,6 +91,34 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     apiModel = 'ChatGPTUnofficialProxyAPI'
   }
 })()
+
+async function generateImage(message: string) {
+  if (!message)
+    return sendResponse({ type: 'Fail', message: 'Message is empty' })
+
+  if (!process.env.OPENAI_API_KEY)
+    return sendResponse({ type: 'Fail', message: 'Need OPENAI_API_KEY' })
+
+  try {
+    const response = await openAiApi.createImage({
+      prompt: message,
+      n: 1,
+      size: '512x512',
+    })
+
+    if (!response.data.data)
+      return sendResponse({ type: 'Fail', message: 'Failed to generate image' })
+
+    return sendResponse({ type: 'Success', data: response.data.data[0] })
+  }
+  catch (error: any) {
+    const code = error.statusCode
+    global.console.log(error)
+    if (Reflect.has(ErrorCodeMessage, code))
+      return sendResponse({ type: 'Fail', message: ErrorCodeMessage[code] })
+    return sendResponse({ type: 'Fail', message: error.message ?? 'Please check the back-end console' })
+  }
+}
 
 async function chatReplyProcess(
   message: string,
@@ -131,4 +170,4 @@ async function chatConfig() {
 
 export type { ChatContext, ChatMessage }
 
-export { chatReplyProcess, chatConfig }
+export { chatReplyProcess, chatConfig, generateImage }

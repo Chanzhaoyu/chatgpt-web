@@ -19,6 +19,17 @@ export function fetchChatConfig<T = any>() {
   })
 }
 
+export function fetchGenerateImage<T = any>(
+  prompt: string,
+  signal?: GenericAbortSignal,
+) {
+  return post<T>({
+    url: '/generate-image',
+    data: { prompt },
+    signal,
+  })
+}
+
 export function fetchChatAPIProcess<T = any>(
   params: {
     prompt: string
