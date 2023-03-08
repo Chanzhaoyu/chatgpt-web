@@ -113,6 +113,7 @@ async function onConversation() {
               requestOptions: { prompt: message, options: { ...options } },
             },
           )
+          scrollToBottom()
         }
         catch (error) {
           //
