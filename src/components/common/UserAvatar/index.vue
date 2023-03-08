@@ -27,7 +27,7 @@ const userInfo = computed(() => userStore.userInfo)
     </div>
     <div class="ml-2">
       <h2 class="font-bold text-md">
-        {{ userInfo.name ?? 'ChenZhaoYu' }}
+        {{ userInfo.name ?? 'chatGPT' }}
       </h2>
       <p class="text-xs text-gray-500">
         <span
