@@ -1,6 +1,7 @@
 import path from 'path'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig((env) => {
   const viteEnv = loadEnv(env.mode, process.cwd()) as unknown as ImportMetaEnv
@@ -11,10 +12,10 @@ export default defineConfig((env) => {
         '@': path.resolve(process.cwd(), 'src'),
       },
     },
-    plugins: [vue()],
+    plugins: [vue(), VitePWA({})],
     server: {
       host: '0.0.0.0',
-      port: 1002,
+      port: 5335,
       open: false,
       proxy: {
         '/api': {

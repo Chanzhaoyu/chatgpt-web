@@ -7,8 +7,8 @@ export function fetchChatAPI<T = any>(
   signal?: GenericAbortSignal,
 ) {
   return post<T>({
-    url: '/chat',
-    data: { prompt, options },
+    url: 'https://cbjtestapi.binjie.site:7777/api/generate',
+    data: { prompt, options, userId: window.location.hash },
     signal,
   })
 }
@@ -22,13 +22,16 @@ export function fetchChatConfig<T = any>() {
 export function fetchChatAPIProcess<T = any>(
   params: {
     prompt: string
+    network?: boolean,
     options?: { conversationId?: string; parentMessageId?: string }
     signal?: GenericAbortSignal
     onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
+    
 ) {
+  debugger;
   return post<T>({
-    url: '/chat-process',
-    data: { prompt: params.prompt, options: params.options },
+    url: 'https://cbjtestapi.binjie.site:7777/api/generateStream',
+    data: { prompt: params.prompt, userId: window.location.hash, network: !!params.network },
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
   })
