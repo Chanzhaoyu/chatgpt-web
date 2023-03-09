@@ -284,7 +284,9 @@ function handleExport() {
       try {
         d.loading = true
         const ele = document.getElementById('image-wrapper')
-        const canvas = await html2canvas(ele as HTMLDivElement)
+        const canvas = await html2canvas(ele as HTMLDivElement, {
+          useCORS: true,
+        })
         const imgUrl = canvas.toDataURL('image/png')
         const tempLink = document.createElement('a')
         tempLink.style.display = 'none'
