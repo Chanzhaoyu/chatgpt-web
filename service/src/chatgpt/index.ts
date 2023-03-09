@@ -84,8 +84,8 @@ async function chatReplyProcess(
   lastContext?: { conversationId?: string; parentMessageId?: string },
   process?: (chat: ChatMessage) => void,
 ) {
-  if (!message)
-    return sendResponse({ type: 'Fail', message: 'Message is empty' })
+  // if (!message)
+  //   return sendResponse({ type: 'Fail', message: 'Message is empty' })
 
   try {
     let options: SendMessageOptions = { timeoutMs }
