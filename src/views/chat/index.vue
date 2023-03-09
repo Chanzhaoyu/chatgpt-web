@@ -24,7 +24,7 @@ const chatStore = useChatStore()
 useCopyCode()
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
-const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
+const { scrollRef, scrollToBottom } = useScroll()
 
 const { uuid } = route.params as { uuid: string }
 
@@ -114,7 +114,7 @@ async function onConversation() {
               requestOptions: { prompt: message, options: { ...options } },
             },
           )
-          scrollToBottomIfAtBottom()
+          scrollToBottom()
         }
         catch (error) {
           //
@@ -165,10 +165,10 @@ async function onConversation() {
         requestOptions: { prompt: message, options: { ...options } },
       },
     )
+    scrollToBottom()
   }
   finally {
     loading.value = false
-    scrollToBottom()
   }
 }
 
