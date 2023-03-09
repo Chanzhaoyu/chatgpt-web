@@ -26,6 +26,10 @@ coverage
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?=
 .history
 test
+*.sw?
+
+# Environment variables files
+/service/.env
+/.env
