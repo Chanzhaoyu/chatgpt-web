@@ -54,7 +54,7 @@
 [查看详情](https://github.com/Chanzhaoyu/chatgpt-web/issues/138)
 
 切换方式：
-1. 进入 `service/.env` 文件
+1. 进入 `service/.env.example` 文件，复制内容到 `service/.env` 文件
 2. 使用 `OpenAI API Key` 请填写 `OPENAI_API_KEY` 字段 [(获取 apiKey)](https://platform.openai.com/overview)
 3. 使用 `Web API` 请填写 `OPENAI_ACCESS_TOKEN` 字段 [(获取 accessToken)](https://chat.openai.com/api/auth/session)
 4. 同时存在时以 `OpenAI API Key` 优先
@@ -261,7 +261,7 @@ PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 
 #### 前端网页
 
-1、修改根目录下 `.env` 内 `VITE_APP_API_BASE_URL` 为你的实际后端接口地址
+1、参考根目录下 `.env.example` 文件内容创建 `.env` 文件，修改 `VITE_APP_API_BASE_URL` 为你的实际后端接口地址
 
 2、根目录下运行以下命令，然后将 `dist` 文件夹内的文件复制到你网站服务的根目录下
 

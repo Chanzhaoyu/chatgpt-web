@@ -55,7 +55,7 @@ Comparison:
 [Details](https://github.com/Chanzhaoyu/chatgpt-web/issues/138)
 
 Switching Methods:
-1. Go to the `service/.env` file.
+1. Go to the `service/.env.example` file and copy the contents to the `service/.env` file.
 2. For `OpenAI API Key`, fill in the `OPENAI_API_KEY` field [(Get apiKey)](https://platform.openai.com/overview).
 3. For `Web API`, fill in the `OPENAI_ACCESS_TOKEN` field [(Get accessToken)](https://chat.openai.com/api/auth/session).
 4. When both are present, `OpenAI API Key` takes precedence.
@@ -266,7 +266,7 @@ PS: You can also run `pnpm start` directly on the server without packaging.
 
 #### Frontend webpage
 
-1. Modify `VITE_APP_API_BASE_URL` in `.env` at the root directory to your actual backend interface address.
+1. Refer to the root directory `.env.example` file content to create `.env` file, modify `VITE_APP_API_BASE_URL` in `.env` at the root directory to your actual backend interface address.
 2. Run the following command in the root directory and then copy the files in the `dist` folder to the root directory of your website service.
 
 [Reference information](https://cn.vitejs.dev/guide/static-deploy.html#building-the-app)
