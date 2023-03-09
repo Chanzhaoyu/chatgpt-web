@@ -1,0 +1,6 @@
+services:
+  app:
+    build: .
+    environment:
+      OPENAI_API_KEY: $OPENAI_API_KEY
+      HTTPS_PROXY: http://127.0.0.1:17890
