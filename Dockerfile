@@ -47,8 +47,6 @@ RUN pnpm install --production
 
 COPY /service /app
 
-RUN pnpm build
-
 COPY --from=frontend /app/dist /app/public
 
 COPY --from=backend /app/build /app/build
