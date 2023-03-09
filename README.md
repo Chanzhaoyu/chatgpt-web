@@ -83,6 +83,12 @@ API_REVERSE_PROXY=
 
 [✓] 对代码等消息类型的格式化美化处理
 
+[✓] 访问权限控制
+
+[✓] 数据导入、导出
+
+[✓] 保存消息到本地图片
+
 [✓] 界面多语言
 
 [✓] 界面主题
@@ -161,6 +167,7 @@ pnpm dev
 - `OPENAI_ACCESS_TOKEN`  二选一，同时存在时，`OPENAI_API_KEY` 优先
 - `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 - `API_REVERSE_PROXY` 可选，设置 `OPENAI_ACCESS_TOKEN` 时可用 [参考](#介绍)
+- `AUTH_SECRET_KEY` 访问权限密钥，可选
 - `TIMEOUT_MS` 超时，单位毫秒，可选
 - `SOCKS_PROXY_HOST` 可选，和 SOCKS_PROXY_PORT 一起时生效
 - `SOCKS_PROXY_PORT` 可选，和 SOCKS_PROXY_HOST 一起时生效
@@ -203,6 +210,8 @@ services:
       OPENAI_API_BASE_URL: xxxx
       # 反向代理，可选
       API_REVERSE_PROXY: xxx
+      # 访问权限密钥，可选
+      AUTH_SECRET_KEY: xxx
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
       # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
@@ -219,8 +228,9 @@ services:
 
 | 环境变量名称          | 必填                   | 备注                                                                                               |
 | --------------------- | ---------------------- | -------------------------------------------------------------------------------------------------- |
-| `PORT`                | 必填                   | 默认 `3002`                                                                                        |
-| `TIMEOUT_MS`          | 可选                   | 超时时间，单位毫秒，                                                                               |
+| `PORT`                | 必填                   | 默认 `3002`
+| `AUTH_SECRET_KEY`          | 可选                   | 访问权限密钥                                        |
+| `TIMEOUT_MS`          | 可选                   | 超时时间，单位毫秒                                                                             |
 | `OPENAI_API_KEY`      | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)            |
 | `OPENAI_ACCESS_TOKEN` | `Web API` 二选一       | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session) |
 | `OPENAI_API_BASE_URL`   | 可选，`OpenAI API` 时可用 |  `API`接口地址  |

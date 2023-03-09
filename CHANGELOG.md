@@ -1,3 +1,44 @@
+## v2.10.0
+
+`2023-03-07`
+
+- 老规矩，手动部署的同学需要删除 `node_modules` 安装包重新安装降低出错概率，其他部署不受影响，但是可能会有缓存问题。
+- 虽然说了更新放缓，但是 `issues` 不看， `PR` 不改我睡不着，我的邮箱从每天早上`8`点到凌晨`12`永远在滴滴滴，所以求求各位，超时的`issues`自己关闭下哈，我真的需要缓冲一下。
+- 演示图片请看最后
+
+## Feature
+- 添加权限功能，用法：`service/.env` 中的 `AUTH_SECRET_KEY` 变量添加密码
+- 感谢 [PeterDaveHello](https://github.com/Chanzhaoyu/chatgpt-web/pull/348) 添加「繁体中文」翻译
+- 感谢 [GermMC](https://github.com/Chanzhaoyu/chatgpt-web/pull/369) 添加聊天记录导入、导出、清空的功能
+- 感谢 [CornerSkyless](https://github.com/Chanzhaoyu/chatgpt-web/pull/374) 添加会话保存为本地图片的功能
+
+
+## Enhancement
+- 感谢 [CornerSkyless](https://github.com/Chanzhaoyu/chatgpt-web/pull/363) 添加 `ctrl+enter`  发送消息
+- 现在新消息只有在结束了之后才滚动到底部，而不是之前的强制性
+- 优化部分代码
+
+## BugFix
+-	转义状态码前端显示，防止直接暴露 `key`（我可能需要更多的状态码补充）
+
+## Other
+- 更新依赖到最新
+
+## 演示
+> 不是界面最新效果，有美化改动
+
+权限
+
+![权限](https://user-images.githubusercontent.com/24789441/223438518-80d58d42-e344-4e39-b87c-251ff73925ed.png)
+
+聊天记录导出
+
+![聊天记录导出](https://user-images.githubusercontent.com/57023771/223372153-6d8e9ec1-d82c-42af-b4bd-232e50504a25.gif)
+
+保存图片到本地
+
+![保存图片到本地](https://user-images.githubusercontent.com/13901424/223423555-b69b95ef-8bcf-4951-a7c9-98aff2677e18.gif)
+
 ## v2.9.3
 
 `2023-03-06`

@@ -1,6 +1,6 @@
 {
   "name": "chatgpt-web",
-  "version": "2.9.3",
+  "version": "2.10.0",
   "private": false,
   "description": "ChatGPT Web",
   "author": "ChenZhaoYu <chenzhaoyu1994@gmail.com>",
@@ -27,6 +27,7 @@
     "@vueuse/core": "^9.13.0",
     "@zodash/doreamon": "^1.2.7",
     "highlight.js": "^11.7.0",
+    "html2canvas": "^1.4.1",
     "katex": "^0.16.4",
     "markdown-it": "^13.0.1",
     "naive-ui": "^2.34.3",
