@@ -7,7 +7,7 @@ interface ScrollReturn {
   scrollRef: Ref<ScrollElement>
   scrollToBottom: () => Promise<void>
   scrollToTop: () => Promise<void>
-	scrollToBottomIfAtBottom: () => Promise<void>
+  scrollToBottomIfAtBottom: () => Promise<void>
 }
 
 export function useScroll(): ScrollReturn {
@@ -26,20 +26,19 @@ export function useScroll(): ScrollReturn {
   }
 
   const scrollToBottomIfAtBottom = async () => {
-		await nextTick()
+    await nextTick()
     if (scrollRef.value) {
       const threshold = 50 // 阈值，表示滚动条到底部的距离阈值
       const distanceToBottom = scrollRef.value.scrollHeight - scrollRef.value.scrollTop - scrollRef.value.clientHeight
-      if (distanceToBottom <= threshold) {
+      if (distanceToBottom <= threshold)
         scrollRef.value.scrollTop = scrollRef.value.scrollHeight
-      }
     }
   }
-	
+
   return {
     scrollRef,
     scrollToBottom,
     scrollToTop,
-		scrollToBottomIfAtBottom,
+    scrollToBottomIfAtBottom,
   }
 }
