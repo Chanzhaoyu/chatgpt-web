@@ -9,11 +9,19 @@ RUN npm install pnpm -g && pnpm install && pnpm run build
 # service
 FROM node:lts-alpine
 
-COPY /service /app
-COPY --from=builder /app/dist /app/public
+RUN npm install pnpm -g
 
 WORKDIR /app
-RUN npm install pnpm -g && pnpm install
+
+COPY /service/package.json /app
+
+COPY /service/pnpm-lock.yaml /app
+
+RUN pnpm install --production
+
+COPY /service /app
+
+COPY --from=builder /app/dist /app/public
 
 EXPOSE 3002
 

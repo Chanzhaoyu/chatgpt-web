@@ -24,6 +24,8 @@
     "common:cleanup": "rimraf node_modules && rimraf pnpm-lock.yaml"
   },
   "dependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.14.6",
     "@zodash/doreamon": "^1.2.7",
     "chatgpt": "^5.0.8",
     "dotenv": "^16.0.3",
@@ -32,15 +34,13 @@
     "https-proxy-agent": "^5.0.1",
     "isomorphic-fetch": "^3.0.0",
     "node-fetch": "^3.3.0",
-    "socks-proxy-agent": "^7.0.0"
+    "socks-proxy-agent": "^7.0.0",
+        "typescript": "^4.9.5"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.35.3",
-    "@types/express": "^4.17.17",
-    "@types/node": "^18.14.6",
     "eslint": "^8.35.0",
     "rimraf": "^4.3.0",
-    "tsup": "^6.6.3",
-    "typescript": "^4.9.5"
+    "tsup": "^6.6.3"
   }
 }
