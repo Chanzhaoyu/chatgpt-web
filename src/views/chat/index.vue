@@ -33,6 +33,7 @@ const conversationList = computed(() => dataSources.value.filter(item => (!item.
 
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
+const usingContext = ref<boolean>(true)
 
 function handleSubmit() {
   onConversation()
@@ -68,7 +69,7 @@ async function onConversation() {
   let options: Chat.ConversationRequest = {}
   const lastContext = conversationList.value[conversationList.value.length - 1]?.conversationOptions
 
-  if (lastContext)
+  if (lastContext && usingContext.value)
     options = { ...lastContext }
 
   addChat(
@@ -364,6 +365,24 @@ function handleStop() {
   }
 }
 
+function toggleUsingContext() {
+  usingContext.value = !usingContext.value
+  if (usingContext.value) {
+    dialog.info({
+      title: t('chat.usingContext'),
+      content: t('chat.turnOnContext'),
+      positiveText: t('common.yes'),
+    })
+  }
+  else {
+    dialog.info({
+      title: t('chat.usingContext'),
+      content: t('chat.turnOffContext'),
+      positiveText: t('common.yes'),
+    })
+  }
+}
+
 const placeholder = computed(() => {
   if (isMobile.value)
     return t('chat.placeholderMobile')
@@ -453,6 +472,11 @@ onUnmounted(() => {
           <HoverButton @click="handleExport">
             <span class="text-xl text-[#4f555e] dark:text-white">
               <SvgIcon icon="ri:download-2-line" />
+            </span>
+          </HoverButton>
+          <HoverButton @click="toggleUsingContext">
+            <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
+              <SvgIcon icon="ri:chat-history-line" />
             </span>
           </HoverButton>
           <NInput

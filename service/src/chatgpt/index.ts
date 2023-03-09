@@ -36,7 +36,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     const options: ChatGPTAPIOptions = {
       apiKey: process.env.OPENAI_API_KEY,
       completionParams: {
-        model: 'gpt-3.5-turbo',
+        model: process.env.OPENAI_API_Model ?? 'gpt-3.5-turbo',
       },
       debug: false,
     }
