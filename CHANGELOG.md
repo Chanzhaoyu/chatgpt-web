@@ -2,8 +2,10 @@
 
 `2023-03-09`
 
+衔接 `2.10.1` 版本[详情](https://github.com/Chanzhaoyu/chatgpt-web/releases/tag/v2.10.1)
+
 ## BugFix
-- 修复 `2.10.1` 中添加 `OPENAI_API_MODEL` 变量的判断错误，会导致默认模型指定失效
+- 修复 `2.10.1` 中添加 `OPENAI_API_MODEL` 变量的判断错误，会导致默认模型指定失效，抱歉
 
 ## v2.10.1
 
