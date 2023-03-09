@@ -18,6 +18,10 @@ RUN pnpm run build
 # service
 FROM node:lts-alpine
 
+RUN npm install pnpm -g
+
+WORKDIR /app
+
 COPY /service/package.json /app
 
 COPY /service/pnpm-lock.yaml /app
