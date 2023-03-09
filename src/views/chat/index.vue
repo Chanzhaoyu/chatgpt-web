@@ -120,7 +120,7 @@ async function onConversation() {
         }
       },
     })
-    scrollToBottom()
+    scrollToBottomIfAtBottom()
   }
   catch (error: any) {
     const errorMessage = error?.message ?? t('common.wrong')
