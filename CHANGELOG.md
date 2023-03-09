@@ -4,6 +4,9 @@
 
 衔接 `2.10.1` 版本[详情](https://github.com/Chanzhaoyu/chatgpt-web/releases/tag/v2.10.1)
 
+## Enhancement
+- 移动端下输入框获得焦点时左侧按钮隐藏
+
 ## BugFix
 - 修复 `2.10.1` 中添加 `OPENAI_API_MODEL` 变量的判断错误，会导致默认模型指定失效，抱歉
 - 回退 `2.10.1` 中前端变量影响 `Docker` 打包
