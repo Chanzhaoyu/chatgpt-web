@@ -1,3 +1,10 @@
+## v2.10.2
+
+`2023-03-09`
+
+## BugFix
+- 修复 `2.10.1` 中添加 `OPENAI_API_MODEL` 变量的判断错误，会导致默认模型指定失效
+
 ## v2.10.1
 
 `2023-03-09`
@@ -22,7 +29,6 @@
 ## BugFix
 - 感谢 [CornerSkyless](https://github.com/Chanzhaoyu/chatgpt-web/pull/392) 修复导出图片会丢失头像的问题
 - 修复深色模式导出图片的样式问题
-
 
 
 ## v2.10.0
