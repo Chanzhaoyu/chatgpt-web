@@ -1,5 +1,5 @@
 # build front-end
-FROM node:lts-alpine AS builder
+FROM node:lts-alpine AS frontend
 
 RUN npm install pnpm -g
 
@@ -14,6 +14,23 @@ RUN pnpm install
 COPY . /app
 
 RUN pnpm run build
+
+# build backend
+FROM node:lts-alpine as backend
+
+RUN npm install pnpm -g
+
+WORKDIR /app
+
+COPY /service/package.json /app
+
+COPY /service/pnpm-lock.yaml /app
+
+RUN pnpm install --production
+
+COPY /service /app
+
+RUN pnpm build
 
 # service
 FROM node:lts-alpine
@@ -32,7 +49,9 @@ COPY /service /app
 
 RUN pnpm build
 
-COPY --from=builder /app/dist /app/public
+COPY --from=frontend /app/dist /app/public
+
+COPY --from=backend /app/build /app/build
 
 EXPOSE 3002
 
