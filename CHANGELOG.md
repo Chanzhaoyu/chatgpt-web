@@ -1,3 +1,30 @@
+## v2.10.1
+
+`2023-03-09`
+
+注意：删除了 `.env` 文件改用 `.env.example` 代替，如果是手动部署的同学现在需要手动创建 `.env` 文件并从 `.env.example` 中复制需要的变量，并且 `.env` 文件现在会在 `Git` 提交中被忽略，原因如下：
+
+- 在项目中添加 `.env` 从一开始就是个错误的示范
+- 如果是 `Fork` 项目进行修改测试总是会被 `Git` 修改提示给打扰
+- 感谢 [yi-ge](https://github.com/Chanzhaoyu/chatgpt-web/pull/395) 的提醒和修改
+
+
+这两天开始，官方已经开始对第三方代理进行了拉闸， `accessToken` 即将或已经开始可能会不可使用。异常 `API` 使用也开始封号，封号缘由不明，如果出现使用 `API` 提示错误，请查看后端控制台信息，或留意邮箱。
+
+## Feature
+- 感谢 [CornerSkyless](https://github.com/Chanzhaoyu/chatgpt-web/pull/393) 添加是否发送上下文开关功能
+
+## Enhancement
+- 感谢 [nagaame](https://github.com/Chanzhaoyu/chatgpt-web/pull/415) 优化`docker`打包镜像文件过大的问题
+- 感谢 [xieccc](https://github.com/Chanzhaoyu/chatgpt-web/pull/404) 新增 `API` 模型配置变量 `OPENAI_API_MODEL`
+- 感谢 [acongee](https://github.com/Chanzhaoyu/chatgpt-web/pull/394) 优化输出时滚动条问题
+
+## BugFix
+- 感谢 [CornerSkyless](https://github.com/Chanzhaoyu/chatgpt-web/pull/392) 修复导出图片会丢失头像的问题
+- 修复深色模式导出图片的样式问题
+
+
+
 ## v2.10.0
 
 `2023-03-07`

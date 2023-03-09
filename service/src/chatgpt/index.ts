@@ -8,10 +8,8 @@ import { sendResponse } from '../utils'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
 
 const ErrorCodeMessage: Record<string, string> = {
-  400: '[OpenAI] 模型的最大上下文长度是4096个令牌，请减少信息的长度。| This model\'s maximum context length is 4096 tokens.',
   401: '[OpenAI] 提供错误的API密钥 | Incorrect API key provided',
   403: '[OpenAI] 服务器拒绝访问，请稍后再试 | Server refused to access, please try again later',
-  429: '[OpenAI] 服务器限流，请稍后再试 | Server was limited, please try again later',
   502: '[OpenAI] 错误的网关 |  Bad Gateway',
   503: '[OpenAI] 服务器繁忙，请稍后再试 | Server is busy, please try again later',
   504: '[OpenAI] 网关超时 | Gateway Time-out',
@@ -36,7 +34,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     const options: ChatGPTAPIOptions = {
       apiKey: process.env.OPENAI_API_KEY,
       completionParams: {
-        model: 'gpt-3.5-turbo',
+        model: process.env.OPENAI_API_MODEL ?? 'gpt-3.5-turbo',
       },
       debug: false,
     }
