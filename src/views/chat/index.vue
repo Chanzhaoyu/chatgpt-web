@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, toRaw } from 'vue'
 import { useRoute } from 'vue-router'
 import { NButton, NInput, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
@@ -18,6 +18,8 @@ let controller = new AbortController()
 const route = useRoute()
 const dialog = useDialog()
 const ms = useMessage()
+
+const inputDom = ref(null)
 
 const chatStore = useChatStore()
 
@@ -341,21 +343,6 @@ function handleClear() {
   })
 }
 
-function handleEnter(event: KeyboardEvent) {
-  if (!isMobile.value) {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault()
-      handleSubmit()
-    }
-  }
-  else {
-    if (event.key === 'Enter' && event.ctrlKey) {
-      event.preventDefault()
-      handleSubmit()
-    }
-  }
-}
-
 function handleStop() {
   if (loading.value) {
     controller.abort()
@@ -385,6 +372,25 @@ const footerClass = computed(() => {
     classes = ['sticky', 'left-0', 'bottom-0', 'right-0', 'p-2', 'pr-4', 'overflow-hidden']
   return classes
 })
+
+function handleKeydown(event: KeyboardEvent) {
+  if (!isMobile.value) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault()
+      handleSubmit()
+    }
+  }
+  else {
+    if (event.key === 'Enter' && event.ctrlKey) {
+      event.preventDefault()
+      handleSubmit()
+    }
+  }
+  if (buttonDisabled.value && event.key === 'ArrowUp') {
+    const { requestOptions } = toRaw(dataSources.value[dataSources.value.length - 1])
+    prompt.value = requestOptions.prompt
+  }
+}
 
 onMounted(() => {
   scrollToBottom()
@@ -451,11 +457,12 @@ onUnmounted(() => {
             </span>
           </HoverButton>
           <NInput
+            ref="inputDom"
             v-model:value="prompt"
             type="textarea"
             :autosize="{ minRows: 1, maxRows: 2 }"
             :placeholder="placeholder"
-            @keypress="handleEnter"
+            @keydown="handleKeydown"
           />
           <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
             <template #icon>
