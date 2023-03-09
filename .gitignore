@@ -26,4 +26,6 @@ coverage
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
+*.sw?=
+.history
+test
