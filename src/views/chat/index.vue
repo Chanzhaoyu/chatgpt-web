@@ -7,6 +7,7 @@ import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import { useCopyCode } from './hooks/useCopyCode'
+import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore } from '@/store'
@@ -36,7 +37,6 @@ const conversationList = computed(() => dataSources.value.filter(item => (!item.
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
 const usingContext = ref<boolean>(true)
-const actionVisible = ref<boolean>(true)
 
 function handleSubmit() {
   onConversation()
@@ -400,16 +400,6 @@ function toggleUsingContext() {
     ms.warning(t('chat.turnOffContext'))
 }
 
-function onInputFocus() {
-  if (isMobile.value)
-    actionVisible.value = false
-}
-
-function onInputBlur() {
-  if (isMobile.value)
-    actionVisible.value = true
-}
-
 const placeholder = computed(() => {
   if (isMobile.value)
     return t('chat.placeholderMobile')
@@ -420,16 +410,10 @@ const buttonDisabled = computed(() => {
   return loading.value || !prompt.value || prompt.value.trim() === ''
 })
 
-const wrapClass = computed(() => {
-  if (isMobile.value)
-    return ['pt-14']
-  return []
-})
-
 const footerClass = computed(() => {
   let classes = ['p-4']
   if (isMobile.value)
-    classes = ['sticky', 'left-0', 'bottom-0', 'right-0', 'p-2', 'overflow-hidden']
+    classes = ['sticky', 'left-0', 'bottom-0', 'right-0', 'p-2', 'pr-3', 'overflow-hidden']
   return classes
 })
 
@@ -444,7 +428,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col w-full h-full" :class="wrapClass">
+  <div class="flex flex-col w-full h-full">
+    <HeaderComponent
+      v-if="isMobile"
+      :using-context="usingContext"
+      @export="handleExport"
+      @toggle-using-context="toggleUsingContext"
+    />
     <main class="flex-1 overflow-hidden">
       <div
         id="scrollRef"
@@ -491,30 +481,26 @@ onUnmounted(() => {
     <footer :class="footerClass">
       <div class="w-full max-w-screen-xl m-auto">
         <div class="flex items-center justify-between space-x-2">
-          <div v-if="actionVisible" class="flex items-center space-x-2">
-            <HoverButton @click="handleClear">
-              <span class="text-xl text-[#4f555e] dark:text-white">
-                <SvgIcon icon="ri:delete-bin-line" />
-              </span>
-            </HoverButton>
-            <HoverButton @click="handleExport">
-              <span class="text-xl text-[#4f555e] dark:text-white">
-                <SvgIcon icon="ri:download-2-line" />
-              </span>
-            </HoverButton>
-            <HoverButton @click="toggleUsingContext">
-              <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
-                <SvgIcon icon="ri:chat-history-line" />
-              </span>
-            </HoverButton>
-          </div>
+          <HoverButton @click="handleClear">
+            <span class="text-xl text-[#4f555e] dark:text-white">
+              <SvgIcon icon="ri:delete-bin-line" />
+            </span>
+          </HoverButton>
+          <HoverButton v-if="!isMobile" @click="handleExport">
+            <span class="text-xl text-[#4f555e] dark:text-white">
+              <SvgIcon icon="ri:download-2-line" />
+            </span>
+          </HoverButton>
+          <HoverButton v-if="!isMobile" @click="toggleUsingContext">
+            <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
+              <SvgIcon icon="ri:chat-history-line" />
+            </span>
+          </HoverButton>
           <NInput
             v-model:value="prompt"
             type="textarea"
             :autosize="{ minRows: 1, maxRows: 2 }"
             :placeholder="placeholder"
-            @focus="onInputFocus"
-            @blur="onInputBlur"
             @keypress="handleEnter"
           />
           <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
