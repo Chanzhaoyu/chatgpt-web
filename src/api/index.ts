@@ -15,7 +15,7 @@ export function fetchChatAPI<T = any>(
 
 export function fetchChatConfig<T = any>() {
   return post<T>({
-    url: '/web/config',
+    url: '/config',
   })
 }
 
@@ -27,22 +27,23 @@ export function fetchChatAPIProcess<T = any>(
     onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
 ) {
   return post<T>({
-    url: '/web/chat-process',
+    url: '/chat-process',
     data: { prompt: params.prompt, options: params.options },
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
   })
 }
 
-export function fetchSession<T>() {
+export function fetchUser<T>(token: string) {
   return post<T>({
-    url: '/web/session',
+    url: '/auth',
+    data: { token },
   })
 }
 
-export function fetchVerify<T>(token: string) {
+export function login<T>(mobile: string, password: string) {
   return post<T>({
-    url: '/web/verify',
-    data: { token },
+    url: '/login',
+    data: { mobile, password },
   })
 }

@@ -1,24 +1,26 @@
 import { defineStore } from 'pinia'
 import { getToken, removeToken, setToken } from './helper'
 import { store } from '@/store'
-import { fetchSession } from '@/api'
+import { fetchUser } from '@/api'
 
 export interface AuthState {
   token: string | undefined
-  session: { auth: boolean } | null
+  user: UserInfo | null
 }
 
 export const useAuthStore = defineStore('auth-store', {
   state: (): AuthState => ({
     token: getToken(),
-    session: null,
+    user: null,
   }),
 
   actions: {
-    async getSession() {
+    async getUserInfo() {
       try {
-        const { data } = await fetchSession<{ auth: boolean }>()
-        this.session = { ...data }
+        if (!this.token)
+          return Promise.reject(new Error('请先登录'))
+        const { data } = await fetchUser<UserInfo>(this.token)
+        this.user = { ...data }
         return Promise.resolve(data)
       }
       catch (error) {
@@ -32,6 +34,7 @@ export const useAuthStore = defineStore('auth-store', {
     },
 
     removeToken() {
+      this.user = null
       this.token = undefined
       removeToken()
     },

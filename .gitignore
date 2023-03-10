@@ -33,3 +33,7 @@ test
 # Environment variables files
 /service/.env
 /.env
+
+
+gruntfile.js
+server.json

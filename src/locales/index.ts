@@ -3,10 +3,9 @@ import { createI18n } from 'vue-i18n'
 import enUS from './en-US'
 import zhCN from './zh-CN'
 import zhTW from './zh-TW'
-import { useAppStoreWithOut } from '@/store/modules/app'
 import type { Language } from '@/store/modules/app/helper'
-
-const appStore = useAppStoreWithOut()
+import { getLocalSetting } from '@/store/modules/app/helper'
+const appStore = getLocalSetting()
 
 const defaultLocale = appStore.language || 'zh-CN'
 

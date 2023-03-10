@@ -13,7 +13,7 @@ export default {
     success: '操作成功',
     failed: '操作失敗',
     verify: '驗證',
-    unauthorizedTips: '未經授權，請先進行驗證。',
+    unauthorizedTips: '請使用企友通賬號密碼登錄',
   },
   chat: {
     placeholder: '來說點什麼...（Shift + Enter = 換行）',

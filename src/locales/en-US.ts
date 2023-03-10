@@ -13,7 +13,7 @@ export default {
     success: 'Success',
     failed: 'Failed',
     verify: 'Verify',
-    unauthorizedTips: 'Unauthorized, please verify first.',
+    unauthorizedTips: 'Please log in with the password of the QYT account',
   },
   chat: {
     placeholder: 'Ask me anything...(Shift + Enter = line break)',
