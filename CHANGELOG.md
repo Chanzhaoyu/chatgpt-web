@@ -1,3 +1,25 @@
+## v2.10.3
+
+`2023-03-10`
+
+> 声明：除 `ChatGPTUnofficialProxyAPI` 使用的非官方代理外，本项目代码包括上游引用包均开源在 `GitHub`，如果你觉得本项目有监控后门或有问题导致你的账号、API被封，那我很抱歉。我可能`BUG`写的多，但我不缺德。此次主要为前端界面调整，周末愉快。
+
+## Feature
+- 支持长回复 [[yi-ge](https://github.com/Chanzhaoyu/chatgpt-web/pull/450)][[详情](https://github.com/Chanzhaoyu/chatgpt-web/pull/450)]
+- 支持 `PWA` [[chenxch](https://github.com/Chanzhaoyu/chatgpt-web/pull/452)]
+
+## Enhancement
+- 调整移动端按钮和优化布局
+- 调整 `iOS` 上安全距离
+- 简化 `docker-compose` 部署 [[cloudGrin](https://github.com/Chanzhaoyu/chatgpt-web/pull/466)]
+
+## BugFix
+- 修复清空会话侧边栏标题不会重置的问题 [[RyanXinOne](https://github.com/Chanzhaoyu/chatgpt-web/pull/453)]
+- 修复设置文字过长时导致的设置按钮消失的问题
+
+## Other
+- 更新依赖
+
 ## v2.10.2
 
 `2023-03-09`
