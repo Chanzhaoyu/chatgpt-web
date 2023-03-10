@@ -7,6 +7,7 @@ import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import { useCopyCode } from './hooks/useCopyCode'
+import { useUsingContext } from './hooks/useUsingContext'
 import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -25,9 +26,11 @@ const ms = useMessage()
 const chatStore = useChatStore()
 
 useCopyCode()
+
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 const { scrollRef, scrollToBottom } = useScroll()
+const { usingContext, toggleUsingContext } = useUsingContext()
 
 const { uuid } = route.params as { uuid: string }
 
@@ -36,7 +39,6 @@ const conversationList = computed(() => dataSources.value.filter(item => (!item.
 
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
-const usingContext = ref<boolean>(true)
 
 function handleSubmit() {
   onConversation()
@@ -390,14 +392,6 @@ function handleStop() {
     controller.abort()
     loading.value = false
   }
-}
-
-function toggleUsingContext() {
-  usingContext.value = !usingContext.value
-  if (usingContext.value)
-    ms.success(t('chat.turnOnContext'))
-  else
-    ms.warning(t('chat.turnOffContext'))
 }
 
 const placeholder = computed(() => {
