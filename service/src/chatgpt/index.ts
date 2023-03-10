@@ -2,7 +2,8 @@ import * as dotenv from 'dotenv'
 import 'isomorphic-fetch'
 import type { ChatGPTAPIOptions, ChatMessage, SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
-import { SocksProxyAgent } from 'socks-proxy-agent'
+import type { HttpsProxyAgent } from 'https-proxy-agent'
+import proxy from 'https-proxy-agent'
 import fetch from 'node-fetch'
 import { sendResponse } from '../utils'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
@@ -26,6 +27,9 @@ if (!process.env.OPENAI_API_KEY && !process.env.OPENAI_ACCESS_TOKEN)
   throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
 
 let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
+let agent: HttpsProxyAgent | undefined
+if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
+  agent = proxy(`http://${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`);
 
 (async () => {
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
@@ -45,11 +49,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     if (process.env.OPENAI_API_BASE_URL && process.env.OPENAI_API_BASE_URL.trim().length > 0)
       options.apiBaseUrl = process.env.OPENAI_API_BASE_URL
 
-    if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) {
-      const agent = new SocksProxyAgent({
-        hostname: process.env.SOCKS_PROXY_HOST,
-        port: process.env.SOCKS_PROXY_PORT,
-      })
+    if (agent) {
       options.fetch = (url, options) => {
         return fetch(url, { agent, ...options })
       }
@@ -64,11 +64,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
       debug: false,
     }
 
-    if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) {
-      const agent = new SocksProxyAgent({
-        hostname: process.env.SOCKS_PROXY_HOST,
-        port: process.env.SOCKS_PROXY_PORT,
-      })
+    if (agent) {
       options.fetch = (url, options) => {
         return fetch(url, { agent, ...options })
       }
