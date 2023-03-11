@@ -55,7 +55,7 @@ Comparison:
 [Details](https://github.com/Chanzhaoyu/chatgpt-web/issues/138)
 
 Switching Methods:
-1. Go to the `service/.env` file.
+1. Go to the `service/.env.example` file and copy the contents to the `service/.env` file.
 2. For `OpenAI API Key`, fill in the `OPENAI_API_KEY` field [(Get apiKey)](https://platform.openai.com/overview).
 3. For `Web API`, fill in the `OPENAI_ACCESS_TOKEN` field [(Get accessToken)](https://chat.openai.com/api/auth/session).
 4. When both are present, `OpenAI API Key` takes precedence.
@@ -168,6 +168,7 @@ pnpm dev
 - `OPENAI_API_KEY` one of two
 - `OPENAI_ACCESS_TOKEN` one of two, `OPENAI_API_KEY` takes precedence when both are present
 - `OPENAI_API_BASE_URL` optional, available when `OPENAI_API_KEY` is set
+- `OPENAI_API_MODEL` optional, available when `OPENAI_API_KEY` is set
 - `API_REVERSE_PROXY` optional, available when `OPENAI_ACCESS_TOKEN` is set [Reference](#introduction)
 - `AUTH_SECRET_KEY` Access Password，optional
 - `TIMEOUT_MS` timeout, in milliseconds, optional
@@ -210,6 +211,8 @@ services:
       OPENAI_ACCESS_TOKEN: xxxxxx
       # api interface url, optional, available when OPENAI_API_KEY is set
       OPENAI_API_BASE_URL: xxxx
+      # api model, optional, available when OPENAI_API_KEY is set
+      OPENAI_API_MODEL: xxxx
       # reverse proxy, optional
       API_REVERSE_PROXY: xxx
       # access password，optional
@@ -222,6 +225,7 @@ services:
       SOCKS_PROXY_PORT: xxxx
 ```
 The `OPENAI_API_BASE_URL` is optional and only used when setting the `OPENAI_API_KEY`.
+The `OPENAI_API_MODEL` is optional and only used when setting the `OPENAI_API_KEY`.
 
 ### Deployment with Railway
 
@@ -237,6 +241,7 @@ The `OPENAI_API_BASE_URL` is optional and only used when setting the `OPENAI_API
 | `OPENAI_API_KEY`     | Optional | Required for `OpenAI API`. `apiKey` can be obtained from [here](https://platform.openai.com/overview). |
 | `OPENAI_ACCESS_TOKEN`| Optional | Required for `Web API`. `accessToken` can be obtained from [here](https://chat.openai.com/api/auth/session).|
 | `OPENAI_API_BASE_URL`  | Optional, only for `OpenAI API` |  API endpoint.                                                        |
+| `OPENAI_API_MODEL`  | Optional, only for `OpenAI API` |  API model.                                                        |
 | `API_REVERSE_PROXY`  | Optional, only for `Web API` | Reverse proxy address for `Web API`. [Details](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy) |
 | `SOCKS_PROXY_HOST`   | Optional, effective with `SOCKS_PROXY_PORT` | Socks proxy.                      |
 | `SOCKS_PROXY_PORT`   | Optional, effective with `SOCKS_PROXY_HOST` | Socks proxy port.                 |
@@ -266,7 +271,7 @@ PS: You can also run `pnpm start` directly on the server without packaging.
 
 #### Frontend webpage
 
-1. Modify `VITE_APP_API_BASE_URL` in `.env` at the root directory to your actual backend interface address.
+1. Refer to the root directory `.env.example` file content to create `.env` file, modify `VITE_APP_API_BASE_URL` in `.env` at the root directory to your actual backend interface address.
 2. Run the following command in the root directory and then copy the files in the `dist` folder to the root directory of your website service.
 
 [Reference information](https://cn.vitejs.dev/guide/static-deploy.html#building-the-app)
