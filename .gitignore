@@ -28,3 +28,6 @@ coverage
 *.sln
 *.sw?
 package-lock.json
+
+# Environment variables files
+/service/.env
