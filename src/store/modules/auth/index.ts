@@ -17,9 +17,7 @@ export const useAuthStore = defineStore('auth-store', {
   actions: {
     async getUserInfo() {
       try {
-        if (!this.token)
-          return Promise.reject(new Error('请先登录'))
-        const { data } = await fetchUser<UserInfo>(this.token)
+        const { data } = await fetchUser<UserInfo>()
         this.user = { ...data }
         return Promise.resolve(data)
       }

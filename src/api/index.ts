@@ -34,10 +34,9 @@ export function fetchChatAPIProcess<T = any>(
   })
 }
 
-export function fetchUser<T>(token: string) {
+export function fetchUser<T>() {
   return post<T>({
     url: '/auth',
-    data: { token },
   })
 }
 
