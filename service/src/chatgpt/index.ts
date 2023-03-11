@@ -87,8 +87,8 @@ async function chatReplyProcess(
   lastContext?: { conversationId?: string; parentMessageId?: string },
   process?: (chat: ChatMessage) => void,
 ) {
-  if (!message)
-    return sendResponse({ type: 'Fail', message: 'Message is empty' })
+  // if (!message)
+  //   return sendResponse({ type: 'Fail', message: 'Message is empty' })
 
   try {
     let options: SendMessageOptions = { timeoutMs }
@@ -111,6 +111,7 @@ async function chatReplyProcess(
   }
   catch (error: any) {
     const code = error.statusCode
+    global.console.log(error)
     if (Reflect.has(ErrorCodeMessage, code))
       return sendResponse({ type: 'Fail', message: ErrorCodeMessage[code] })
     return sendResponse({ type: 'Fail', message: error.message ?? 'Please check the back-end console' })

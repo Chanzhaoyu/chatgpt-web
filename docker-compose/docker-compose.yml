@@ -25,13 +25,13 @@ services:
       # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
       SOCKS_PROXY_PORT: xxxx
   nginx:
-    build: nginx
-    image: chatgpt/nginx
+    image: nginx:alpine
     ports:
       - '80:80'
     expose:
       - '80'
     volumes:
-      - ./nginx/html/:/etc/nginx/html/
+      - ./nginx/html:/usr/share/nginx/html
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     links:
       - app
