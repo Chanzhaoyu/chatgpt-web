@@ -51,7 +51,13 @@
 1. `ChatGPTAPI` 使用 `gpt-3.5-turbo-0301` 通过官方`OpenAI`补全`API`模拟`ChatGPT`（最稳健的方法，但它不是免费的，并且没有使用针对聊天进行微调的模型）
 2. `ChatGPTUnofficialProxyAPI` 使用非官方代理服务器访问 `ChatGPT` 的后端`API`，绕过`Cloudflare`（使用真实的的`ChatGPT`，非常轻量级，但依赖于第三方服务器，并且有速率限制）
 
-[查看详情](https://github.com/Chanzhaoyu/chatgpt-web/issues/138)
+警告：
+1. 你应该使用 `API` 方式并自建代理使你使用的风险降到最低。
+2. 使用 `accessToken` 方式时反向代理将向第三方暴露您的访问令牌。这样做应该不会产生任何不良影响，但在使用这种方法之前请考虑风险，修改代理地址时也请使用公开的[社区方案](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)，不要不要不要使用来源不明的地址！
+2. 因为国内 `API` 被墙，如果服务器不在国外，则需要代理才能请求到官方接口，也非常不建议使用别人发出来的代理地址，请自己搭建。
+3. 人性是丑陋的，你永远不知道你相信的某些乐于分享的`好人`在用你的账号做什么！！！
+
+注：强烈建议使用`ChatGPTAPI`，因为它使用 `OpenAI` 官方支持的`API`。并且可能会在将来的版本中删除对`ChatGPTUnofficialProxyAPI`的支持。
 
 切换方式：
 1. 进入 `service/.env.example` 文件，复制内容到 `service/.env` 文件
