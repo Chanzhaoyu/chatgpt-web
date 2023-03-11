@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { NDropdown } from 'naive-ui'
 import AvatarComponent from './Avatar.vue'
 import TextComponent from './Text.vue'
@@ -17,6 +17,8 @@ interface Props {
 }
 
 interface Emit {
+  (e: 'update:text', text: string): void
+  (e: 'editSubmit', text: string): void
   (ev: 'regenerate'): void
   (ev: 'delete'): void
 }
@@ -29,7 +31,24 @@ const { iconRender } = useIconRender()
 
 const textRef = ref<HTMLElement>()
 
+const edit = ref<boolean>(false)
+
+const childValue = computed<string>({
+  get() {
+    return props.text || ''
+  },
+  set(value) {
+    emit('update:text', value)
+  },
+})
+
 const options = [
+  {
+    label: t('chat.edit'),
+    key: 'editText',
+    icon: iconRender({ icon: 'material-symbols:edit-outline' }),
+    disabled: !props.inversion,
+  },
   {
     label: t('chat.copy'),
     key: 'copyText',
@@ -42,8 +61,11 @@ const options = [
   },
 ]
 
-function handleSelect(key: 'copyRaw' | 'copyText' | 'delete') {
+function handleSelect(key: 'editText' | 'copyRaw' | 'copyText' | 'delete') {
   switch (key) {
+    case 'editText':
+      edit.value = true
+      break
     case 'copyText':
       copyText({ text: props.text ?? '' })
       return
@@ -54,6 +76,15 @@ function handleSelect(key: 'copyRaw' | 'copyText' | 'delete') {
 
 function handleRegenerate() {
   emit('regenerate')
+}
+
+function handleEditSubmit(text: string) {
+  emit('editSubmit', text)
+  edit.value = false
+}
+
+function handleEditCancel() {
+  edit.value = false
 }
 </script>
 
@@ -75,10 +106,13 @@ function handleRegenerate() {
       >
         <TextComponent
           ref="textRef"
+          v-model:text="childValue"
           :inversion="inversion"
           :error="error"
-          :text="text"
           :loading="loading"
+          :edit="edit"
+          @edit-cancel="handleEditCancel"
+          @edit-submit="handleEditSubmit"
         />
         <div class="flex flex-col">
           <button

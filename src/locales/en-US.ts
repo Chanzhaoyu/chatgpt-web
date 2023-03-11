@@ -19,6 +19,7 @@ export default {
     placeholder: 'Ask me anything...(Shift + Enter = line break)',
     placeholderMobile: 'Ask me anything...',
     copy: 'Copy',
+    edit: 'Edit',
     copied: 'Copied',
     copyCode: 'Copy Code',
     clearChat: 'Clear Chat',
@@ -34,6 +35,8 @@ export default {
     deleteMessageConfirm: 'Are you sure to delete this message?',
     deleteHistoryConfirm: 'Are you sure to clear this history?',
     clearHistoryConfirm: 'Are you sure to clear chat history?',
+    saveAndSubmit: 'Save & Submit',
+    cancel: 'Cancel',
   },
   setting: {
     setting: 'Setting',
