@@ -209,6 +209,7 @@ const downloadPromptTemplate = async () => {
       }).then(() => {
         importPromptTemplate()
       })
+    downloadURL.value = ''
   }
   catch {
     message.error('网络导入出现问题，请检查网络状态与 JSON 文件有效性')
