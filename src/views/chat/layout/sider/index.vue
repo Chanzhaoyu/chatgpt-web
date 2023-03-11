@@ -32,6 +32,15 @@ const getMobileClass = computed<CSSProperties>(() => {
   return {}
 })
 
+const mobileSafeArea = computed(() => {
+  if (isMobile.value) {
+    return {
+      paddingBottom: 'env(safe-area-inset-bottom)',
+    }
+  }
+  return {}
+})
+
 watch(
   isMobile,
   (val) => {
@@ -56,7 +65,7 @@ watch(
     :style="getMobileClass"
     @update-collapsed="handleUpdateCollapsed"
   >
-    <div class="flex flex-col h-full">
+    <div class="flex flex-col h-full" :style="mobileSafeArea">
       <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
           <NButton dashed block @click="handleAdd">

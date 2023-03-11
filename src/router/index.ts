@@ -1,6 +1,7 @@
 import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { setupPageGuard } from './permission'
 import { ChatLayout } from '@/views/chat/layout'
 
 const routes: RouteRecordRaw[] = [
@@ -17,6 +18,24 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('@/views/exception/404/index.vue'),
+  },
+
+  {
+    path: '/500',
+    name: '500',
+    component: () => import('@/views/exception/500/index.vue'),
+  },
+
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'notFound',
+    redirect: '/404',
+  },
 ]
 
 export const router = createRouter({
@@ -24,6 +43,8 @@ export const router = createRouter({
   routes,
   scrollBehavior: () => ({ left: 0, top: 0 }),
 })
+
+setupPageGuard(router)
 
 export async function setupRouter(app: App) {
   app.use(router)

@@ -1,9 +1,15 @@
 # ChatGPT Web
 
-> 使用 `express` 和 `vue3` 搭建的支持 `ChatGPT` 双模型演示网页
+<div style="font-size: 1.5rem;">
+  <a href="./README.md">中文</a> |
+  <a href="./README.en.md">English</a>
+</div>
+</br>
 
-![cover](./docs/c1-2.8.0.png)
-![cover2](./docs/c2-2.8.0.png)
+> 声明：此项目只发布于 Github，基于 MIT 协议，免费且作为开源学习使用。并且不会有任何形式的卖号、付费服务、讨论群、讨论组等行为。谨防受骗。
+
+![cover](./docs/c1.png)
+![cover2](./docs/c2.png)
 
 - [ChatGPT Web](#chatgpt-web)
 	- [介绍](#介绍)
@@ -36,30 +42,44 @@
 
 支持双模型，提供了两种非官方 `ChatGPT API` 方法
 
-|  方式   | 免费？  | 可靠性  | 质量 |
-|  ----  | ----  | ----  | ----  |
-| `ChatGPTAPI(GPT-3)`  | 否 | 	可靠 | 较笨 |
-| `ChatGPTUnofficialProxyAPI(网页 accessToken)`  | 	是 |  相对不可靠 | 聪明 |
+| 方式                                          | 免费？ | 可靠性     | 质量 |
+| --------------------------------------------- | ------ | ---------- | ---- |
+| `ChatGPTAPI(gpt-3.5-turbo-0301)`                           | 否     | 可靠       | 相对较笨 |
+| `ChatGPTUnofficialProxyAPI(网页 accessToken)` | 是     | 相对不可靠 | 聪明 |
 
 对比：
-1. `ChatGPTAPI` 使用 `text-davinci-003` 通过官方`OpenAI`补全`API`模拟`ChatGPT`（最稳健的方法，但它不是免费的，并且没有使用针对聊天进行微调的模型）
+1. `ChatGPTAPI` 使用 `gpt-3.5-turbo-0301` 通过官方`OpenAI`补全`API`模拟`ChatGPT`（最稳健的方法，但它不是免费的，并且没有使用针对聊天进行微调的模型）
 2. `ChatGPTUnofficialProxyAPI` 使用非官方代理服务器访问 `ChatGPT` 的后端`API`，绕过`Cloudflare`（使用真实的的`ChatGPT`，非常轻量级，但依赖于第三方服务器，并且有速率限制）
 
-[查看详情](https://github.com/Chanzhaoyu/chatgpt-web/issues/138)
+警告：
+1. 你应该使用 `API` 方式并自建代理使你使用的风险降到最低。
+2. 使用 `accessToken` 方式时反向代理将向第三方暴露您的访问令牌。这样做应该不会产生任何不良影响，但在使用这种方法之前请考虑风险，修改代理地址时也请使用公开的[社区方案](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)，不要不要不要使用来源不明的地址！
+2. 因为国内 `API` 被墙，如果服务器不在国外，则需要代理才能请求到官方接口，也非常不建议使用别人发出来的代理地址，请自己搭建。
+3. 人性是丑陋的，你永远不知道你相信的某些乐于分享的`好人`在用你的账号做什么！！！
+
+注：强烈建议使用`ChatGPTAPI`，因为它使用 `OpenAI` 官方支持的`API`。并且可能会在将来的版本中删除对`ChatGPTUnofficialProxyAPI`的支持。
 
 切换方式：
-1. 进入 `service/.env` 文件
+1. 进入 `service/.env.example` 文件，复制内容到 `service/.env` 文件
 2. 使用 `OpenAI API Key` 请填写 `OPENAI_API_KEY` 字段 [(获取 apiKey)](https://platform.openai.com/overview)
 3. 使用 `Web API` 请填写 `OPENAI_ACCESS_TOKEN` 字段 [(获取 accessToken)](https://chat.openai.com/api/auth/session)
 4. 同时存在时以 `OpenAI API Key` 优先
 
 反向代理：
 
-`ChatGPTUnofficialProxyAPI`时可用 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)
+`ChatGPTUnofficialProxyAPI`时可用，[详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)
 
 ```shell
 # service/.env
 API_REVERSE_PROXY=
+```
+
+环境变量：
+
+全部参数变量请查看或[这里](#docker-参数示例)
+
+```
+/service/.env
 ```
 
 ## 待实现路线
@@ -69,9 +89,15 @@ API_REVERSE_PROXY=
 
 [✓] 对代码等消息类型的格式化美化处理
 
-[✗] 界面多语言
+[✓] 访问权限控制
 
-[✗] 界面主题
+[✓] 数据导入、导出
+
+[✓] 保存消息到本地图片
+
+[✓] 界面多语言
+
+[✓] 界面主题
 
 [✗] More...
 
@@ -145,8 +171,13 @@ pnpm dev
 
 - `OPENAI_API_KEY` 二选一
 - `OPENAI_ACCESS_TOKEN`  二选一，同时存在时，`OPENAI_API_KEY` 优先
+- `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
+- `OPENAI_API_MODEL`  可选，设置 `OPENAI_API_KEY` 时可用
 - `API_REVERSE_PROXY` 可选，设置 `OPENAI_ACCESS_TOKEN` 时可用 [参考](#介绍)
+- `AUTH_SECRET_KEY` 访问权限密钥，可选
 - `TIMEOUT_MS` 超时，单位毫秒，可选
+- `SOCKS_PROXY_HOST` 可选，和 SOCKS_PROXY_PORT 一起时生效
+- `SOCKS_PROXY_PORT` 可选，和 SOCKS_PROXY_HOST 一起时生效
 
 ![docker](./docs/docker.png)
 
@@ -174,7 +205,7 @@ version: '3'
 
 services:
   app:
-    image: chenzhaoyu94/chatgpt-web # 总是使用latest,更新时重新pull该tag镜像即可
+    image: chenzhaoyu94/chatgpt-web # 总是使用 latest ,更新时重新 pull 该 tag 镜像即可
     ports:
       - 3002:3002
     environment:
@@ -182,25 +213,41 @@ services:
       OPENAI_API_KEY: xxxxxx
       # 二选一
       OPENAI_ACCESS_TOKEN: xxxxxx
+      # API接口地址，可选，设置 OPENAI_API_KEY 时可用
+      OPENAI_API_BASE_URL: xxxx
+      # API模型，可选，设置 OPENAI_API_KEY 时可用
+      OPENAI_API_MODEL: xxxx
       # 反向代理，可选
       API_REVERSE_PROXY: xxx
+      # 访问权限密钥，可选
+      AUTH_SECRET_KEY: xxx
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
+      # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
+      SOCKS_PROXY_HOST: xxxx
+      # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
+      SOCKS_PROXY_PORT: xxxx
 ```
-
+- `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
+- `OPENAI_API_MODEL`  可选，设置 `OPENAI_API_KEY` 时可用
 ###  使用 Railway 部署
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/yytmgc)
 
 #### Railway 环境变量
 
-| 环境变量名称                | 必填 | 备注                    |
-| --------------------------- | ---- | ----------------------- |
-| `PORT` | 必填    | 默认 `3002`  |
-| `TIMEOUT_MS` | 可选    | 超时时间，单位毫秒，   |
-| `OPENAI_API_KEY` | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)   |
-| `OPENAI_ACCESS_TOKEN` | `Web API` 二选一   | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session)   |
-| `API_REVERSE_PROXY` | 可选，`Web API` 时可用    | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)   |
+| 环境变量名称          | 必填                   | 备注                                                                                               |
+| --------------------- | ---------------------- | -------------------------------------------------------------------------------------------------- |
+| `PORT`                | 必填                   | 默认 `3002`
+| `AUTH_SECRET_KEY`          | 可选                   | 访问权限密钥                                        |
+| `TIMEOUT_MS`          | 可选                   | 超时时间，单位毫秒                                                                             |
+| `OPENAI_API_KEY`      | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)            |
+| `OPENAI_ACCESS_TOKEN` | `Web API` 二选一       | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session) |
+| `OPENAI_API_BASE_URL`   | 可选，`OpenAI API` 时可用 |  `API`接口地址  |
+| `OPENAI_API_MODEL`   | 可选，`OpenAI API` 时可用 |  `API`模型  |
+| `API_REVERSE_PROXY`   | 可选，`Web API` 时可用 | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)    |
+| `SOCKS_PROXY_HOST`   | 可选，和 `SOCKS_PROXY_PORT` 一起时生效 | Socks代理    |
+| `SOCKS_PROXY_PORT`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理端口    |
 
 > 注意: `Railway` 修改环境变量会重新 `Deploy`
 
@@ -225,7 +272,7 @@ PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 
 #### 前端网页
 
-1、修改根目录下 `.env` 内 `VITE_APP_API_BASE_URL` 为你的实际后端接口地址
+1、修改根目录下 `.env` 文件中的 `VITE_APP_API_BASE_URL` 为你的实际后端接口地址
 
 2、根目录下运行以下命令，然后将 `dist` 文件夹内的文件复制到你网站服务的根目录下
 
@@ -247,6 +294,10 @@ A: 根目录下 `.env` 文件中的 `VITE_GLOB_API_URL` 字段。
 Q: 文件保存时全部爆红?
 
 A: `vscode` 请安装项目推荐插件，或手动安装 `Eslint` 插件。
+
+Q: 前端没有打字机效果？
+
+A: 一种可能原因是经过 Nginx 反向代理，开启了 buffer，则 Nginx 会尝试从后端缓冲一定大小的数据再发送给浏览器。请尝试在反代参数后添加 `proxy_buffering off;`，然后重载 Nginx。其他 web server 配置同理。
 
 ## 参与贡献
 

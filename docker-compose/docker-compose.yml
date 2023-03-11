@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  app:
+    image: chenzhaoyu94/chatgpt-web # 总是使用latest,更新时重新pull该tag镜像即可
+    ports:
+      - 3002:3002
+    environment:
+      # 二选一
+      OPENAI_API_KEY: xxxx
+      # 二选一
+      OPENAI_ACCESS_TOKEN: xxxxxx
+      # API接口地址，可选，设置 OPENAI_API_KEY 时可用
+      OPENAI_API_BASE_URL: xxxx
+      # API模型，可选，设置 OPENAI_API_KEY 时可用
+      OPENAI_API_MODEL: xxxx
+      # 反向代理，可选
+      API_REVERSE_PROXY: xxx
+      # 访问权限密钥，可选
+      AUTH_SECRET_KEY: xxx
+      # 超时，单位毫秒，可选
+      TIMEOUT_MS: 60000
+      # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
+      SOCKS_PROXY_HOST: xxxx
+      # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
+      SOCKS_PROXY_PORT: xxxx
+  nginx:
+    image: nginx:alpine
+    ports:
+      - '80:80'
+    expose:
+      - '80'
+    volumes:
+      - ./nginx/html:/usr/share/nginx/html
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - app

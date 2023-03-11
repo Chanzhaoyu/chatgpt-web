@@ -13,11 +13,11 @@
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
     "paths": {
       "@/*": ["./src/*"]
     },
-    // @vueuse/core 不能通过 vue-tsc 检查，所以这里需要忽略，以后将移除
-    "types": ["vite/client", "node", "naive-ui/volar", "web-bluetooth"]
+    "types": ["vite/client", "node", "naive-ui/volar"]
   },
   "exclude": ["node_modules", "dist", "service"]
 }

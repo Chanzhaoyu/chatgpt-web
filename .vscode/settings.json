@@ -29,9 +29,14 @@
     "dockerhub",
     "esno",
     "GPTAPI",
+    "highlightjs",
     "hljs",
     "iconify",
+    "katex",
+    "katexmath",
+    "linkify",
     "logprobs",
+    "mdhljs",
     "nodata",
     "OPENAI",
     "pinia",
@@ -39,11 +44,21 @@
     "rushstack",
     "Sider",
     "tailwindcss",
+    "traptitech",
     "tsup",
     "Typecheck",
     "unplugin",
     "VITE",
     "vueuse",
     "Zhao"
-  ]
+  ],
+  "i18n-ally.enabledParsers": [
+    "ts"
+  ],
+  "i18n-ally.sortKeys": true,
+  "i18n-ally.keepFulfilled": true,
+  "i18n-ally.localesPaths": [
+    "src/locales"
+  ],
+  "i18n-ally.keystyle": "nested"
 }

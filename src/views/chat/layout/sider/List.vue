@@ -16,6 +16,8 @@ async function handleSelect({ uuid }: Chat.History) {
   if (isActive(uuid))
     return
 
+  if (chatStore.active)
+    chatStore.updateHistory(chatStore.active, { isEdit: false })
   await chatStore.setActive(uuid)
 
   if (isMobile.value)
@@ -49,7 +51,7 @@ function isActive(uuid: number) {
       <template v-if="!dataSources.length">
         <div class="flex flex-col items-center mt-4 text-center text-neutral-300">
           <SvgIcon icon="ri:inbox-line" class="mb-2 text-3xl" />
-          <span>No history</span>
+          <span>{{ $t('common.noData') }}</span>
         </div>
       </template>
       <template v-else>
@@ -87,7 +89,7 @@ function isActive(uuid: number) {
                       <SvgIcon icon="ri:delete-bin-line" />
                     </button>
                   </template>
-                  Are you sure to clear this history?
+                  {{ $t('chat.deleteHistoryConfirm') }}
                 </NPopconfirm>
               </template>
             </div>

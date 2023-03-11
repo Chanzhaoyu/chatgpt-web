@@ -1,9 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import { setupDirectives } from './directives'
-import { setupAssets } from '@/plugins'
-import { setupStore } from '@/store'
-import { setupRouter } from '@/router'
+import { setupI18n } from './locales'
+import { setupAssets } from './plugins'
+import { setupStore } from './store'
+import { setupRouter } from './router'
 
 async function bootstrap() {
   const app = createApp(App)
@@ -11,7 +11,7 @@ async function bootstrap() {
 
   setupStore(app)
 
-  setupDirectives(app)
+  setupI18n(app)
 
   await setupRouter(app)
 
