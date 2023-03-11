@@ -53,12 +53,7 @@ function handleSubmit() {
 }
 
 async function onConversation() {
-<<<<<<< HEAD
-
-  const message = prompt.value
-=======
   let message = prompt.value
->>>>>>> github/main
 
   if (loading.value)
     return
@@ -84,11 +79,11 @@ async function onConversation() {
   loading.value = true
   prompt.value = ''
 
-  let options: Chat.ConversationRequest = {}
-  const lastContext = conversationList.value[conversationList.value.length - 1]?.conversationOptions
+  let options: Chat.ConversationRequest = { conversationId: usingContext.value ? window.location.hash : Math.random().toString() }
+  // const lastContext = conversationList.value[conversationList.value.length - 1]?.conversationOptions
 
-  if (lastContext && usingContext.value)
-    options = { ...lastContext }
+  // if (lastContext && usingContext.value)
+  //   options = { ...lastContext }
 
   addChat(
     +uuid,
@@ -503,34 +498,18 @@ onUnmounted(() => {
     </main>
     <footer :class="footerClass">
       <div class="flex items-center justify-between space-x-2">
-        <HoverButton tooltip="点击关闭或开启联网功能，开启后会自动从互联网获得信息来回答您，关闭联网能极大加快响应速度">
+          <HoverButton tooltip="点击关闭或开启联网功能，开启后会自动从互联网获得信息来回答您，关闭联网能极大加快响应速度">
             <span class="text-xl text-[#4f555e]" @click="handleClear">
               <!-- <SvgIcon icon="ri:delete-bin-line" /> -->
               <span style="color: #2979ff; width: 56px; display: inline-block;" v-if="getEnabledNetwork">联网开启</span>
               <span style="color: red; width: 56px; display: inline-block;" v-if="!getEnabledNetwork">联网关闭</span>
             </span>
           </HoverButton>
-<<<<<<< HEAD
-          <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
-            <template #default="{ handleInput, handleBlur, handleFocus }">
-              <NInput
-                v-model:value="prompt" type="textarea" :placeholder="placeholder"
-                :autosize="{ minRows: 1, maxRows: 2 }" @input="handleInput" @focus="handleFocus" @blur="handleBlur" @keypress="handleEnter"
-              />
-            </template>
-          </NAutoComplete>
-          <HoverButton @click="handleExport">
-=======
           <HoverButton v-if="!isMobile" @click="handleExport">
->>>>>>> github/main
             <span class="text-xl text-[#4f555e] dark:text-white">
               <SvgIcon icon="ri:download-2-line" />
             </span>
           </HoverButton>
-<<<<<<< HEAD
-        
-          
-=======
           <HoverButton v-if="!isMobile" @click="toggleUsingContext">
             <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
               <SvgIcon icon="ri:chat-history-line" />
@@ -543,7 +522,6 @@ onUnmounted(() => {
             :placeholder="placeholder"
             @keypress="handleEnter"
           />
->>>>>>> github/main
           <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
             <template #icon>
               <span class="dark:text-black">
