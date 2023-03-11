@@ -221,8 +221,9 @@ services:
       SOCKS_PROXY_HOST: xxxx
       # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
       SOCKS_PROXY_PORT: xxxx
-			# 长回复支持, 避免了回复代码或其他格式时由于长度超限再次手工“继续”后导致格式错乱。开启此功能可能导致API费用过高。
-      VITE_GLOB_OPEN_LONG_REPLY=false
+			# 长回复支持, 避免了回复代码或其他格式时由于长度超限再次手工“继续”后导致格式错乱。开启此功能可能导致API费用过高, 默认不开启.
+			# "true" or "false"
+			VITE_GLOB_OPEN_LONG_REPLY: "false"
 
 ```
 - `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
