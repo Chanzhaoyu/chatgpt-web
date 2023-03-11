@@ -493,7 +493,7 @@ onUnmounted(() => {
           <NInput
             v-model:value="prompt"
             type="textarea"
-            :autosize="{ minRows: 1, maxRows: 2 }"
+            :autosize="{ minRows: 1, maxRows: 8 }"
             :placeholder="placeholder"
             @keypress="handleEnter"
           />
