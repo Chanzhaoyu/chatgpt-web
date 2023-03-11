@@ -1,3 +1,17 @@
+## v2.10.4
+
+`2023-03-11`
+
+## Feature
+- 感谢 [Nothing1024](https://github.com/Chanzhaoyu/chatgpt-web/pull/268) 添加 `Prompt` 模板和 `Prompt` 商店支持
+
+## Enhancement
+- 设置添加关闭按钮[#495]
+
+## Demo
+
+![Prompt](https://camo.githubusercontent.com/6a51af751eb29238cb7ef4f8fbd89f63db837562f97f33273095424e62dc9194/68747470733a2f2f73312e6c6f63696d672e636f6d2f323032332f30332f30342f333036326665633163613562632e676966)
+
 ## v2.10.3
 
 `2023-03-10`
