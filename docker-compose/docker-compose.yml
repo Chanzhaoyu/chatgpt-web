@@ -24,6 +24,8 @@ services:
       SOCKS_PROXY_HOST: xxxx
       # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
       SOCKS_PROXY_PORT: xxxx
+      # HTTPS_PROXY 代理，可选
+      HTTPS_PROXY: http://xxxx:7890
   nginx:
     image: nginx:alpine
     ports:

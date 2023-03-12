@@ -3,6 +3,7 @@ import 'isomorphic-fetch'
 import type { ChatGPTAPIOptions, ChatMessage, SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
+import { HttpsProxyAgent } from 'https-proxy-agent'
 import fetch from 'node-fetch'
 import { sendResponse } from '../utils'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
@@ -55,6 +56,14 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
       }
     }
 
+    const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
+    if (httpsProxy) {
+      const agent = new HttpsProxyAgent(httpsProxy)
+      options.fetch = (url, options) => {
+        return fetch(url, { agent, ...options })
+      }
+    }
+
     api = new ChatGPTAPI({ ...options })
     apiModel = 'ChatGPTAPI'
   }
@@ -69,6 +78,14 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
         hostname: process.env.SOCKS_PROXY_HOST,
         port: process.env.SOCKS_PROXY_PORT,
       })
+      options.fetch = (url, options) => {
+        return fetch(url, { agent, ...options })
+      }
+    }
+
+    const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
+    if (httpsProxy) {
+      const agent = new HttpsProxyAgent(httpsProxy)
       options.fetch = (url, options) => {
         return fetch(url, { agent, ...options })
       }
@@ -119,6 +136,8 @@ async function chatReplyProcess(
 }
 
 async function chatConfig() {
+  const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
+
   return sendResponse({
     type: 'Success',
     data: {
@@ -126,6 +145,7 @@ async function chatConfig() {
       reverseProxy: process.env.API_REVERSE_PROXY,
       timeoutMs,
       socksProxy: (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`) : '-',
+      httpsProxy,
     } as ModelConfig,
   })
 }

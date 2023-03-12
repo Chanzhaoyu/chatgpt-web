@@ -178,6 +178,8 @@ pnpm dev
 - `TIMEOUT_MS` 超时，单位毫秒，可选
 - `SOCKS_PROXY_HOST` 可选，和 SOCKS_PROXY_PORT 一起时生效
 - `SOCKS_PROXY_PORT` 可选，和 SOCKS_PROXY_HOST 一起时生效
+- `HTTPS_PROXY` 可选，支持 http，https, socks5
+- `ALL_PROXY` 可选，支持 http，https, socks5
 
 ![docker](./docs/docker.png)
 
@@ -227,6 +229,8 @@ services:
       SOCKS_PROXY_HOST: xxxx
       # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
       SOCKS_PROXY_PORT: xxxx
+      # HTTPS 代理，可选，支持 http，https，socks5
+      HTTPS_PROXY: http://xxxx:7890
 ```
 - `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 - `OPENAI_API_MODEL`  可选，设置 `OPENAI_API_KEY` 时可用
@@ -248,6 +252,8 @@ services:
 | `API_REVERSE_PROXY`   | 可选，`Web API` 时可用 | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)    |
 | `SOCKS_PROXY_HOST`   | 可选，和 `SOCKS_PROXY_PORT` 一起时生效 | Socks代理    |
 | `SOCKS_PROXY_PORT`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理端口    |
+| `HTTPS_PROXY`   | 可选 | HTTPS 代理，支持 http，https, socks5    |
+| `ALL_PROXY`   | 可选 | 所有代理 代理，支持 http，https, socks5    |
 
 > 注意: `Railway` 修改环境变量会重新 `Deploy`
 
