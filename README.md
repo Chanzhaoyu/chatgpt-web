@@ -178,6 +178,8 @@ pnpm dev
 - `TIMEOUT_MS` 超时，单位毫秒，可选
 - `SOCKS_PROXY_HOST` 可选，和 SOCKS_PROXY_PORT 一起时生效
 - `SOCKS_PROXY_PORT` 可选，和 SOCKS_PROXY_HOST 一起时生效
+- `SOCKS_PROXY_USERNAME` 可选，和 SOCKS_PROXY_PASSWORD 一起时生效
+- `SOCKS_PROXY_PASSWORD` 可选，和 SOCKS_PROXY_USERNAME 一起时生效
 
 ![docker](./docs/docker.png)
 
@@ -223,10 +225,14 @@ services:
       AUTH_SECRET_KEY: xxx
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
-      # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
+      # Socks 代理，可选，和 SOCKS_PROXY_PORT 一起时生效
       SOCKS_PROXY_HOST: xxxx
-      # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
+      # Socks 代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
       SOCKS_PROXY_PORT: xxxx
+      # Socks 代理用户名，可选，和 SOCKS_PROXY_PASSWORD 一起时生效
+      SOCKS_PROXY_USERNAME: xxxx
+      # Socks 代理密码，可选，和 SOCKS_PROXY_USERNAME 一起时生效
+      SOCKS_PROXY_PASSWORD: xxxx
 ```
 - `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 - `OPENAI_API_MODEL`  可选，设置 `OPENAI_API_KEY` 时可用
@@ -246,8 +252,10 @@ services:
 | `OPENAI_API_BASE_URL`   | 可选，`OpenAI API` 时可用 |  `API`接口地址  |
 | `OPENAI_API_MODEL`   | 可选，`OpenAI API` 时可用 |  `API`模型  |
 | `API_REVERSE_PROXY`   | 可选，`Web API` 时可用 | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)    |
-| `SOCKS_PROXY_HOST`   | 可选，和 `SOCKS_PROXY_PORT` 一起时生效 | Socks代理    |
-| `SOCKS_PROXY_PORT`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理端口    |
+| `SOCKS_PROXY_HOST`   | 可选，和 `SOCKS_PROXY_PORT` 一起时生效 | Socks 代理    |
+| `SOCKS_PROXY_PORT`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks 代理端口    |
+| `SOCKS_PROXY_USERNAME` | 可选，和 `SOCKS_PROXY_PASSWORD` 一起时生效 | Socks 代理用户名 |
+| `SOCKS_PROXY_PASSWORD` | 可选，和 `SOCKS_PROXY_USERNAME` 一起时生效 | Socks 代理密码 |
 
 > 注意: `Railway` 修改环境变量会重新 `Deploy`
 

@@ -174,6 +174,8 @@ pnpm dev
 - `TIMEOUT_MS` timeout, in milliseconds, optional
 - `SOCKS_PROXY_HOST` optional, effective with SOCKS_PROXY_PORT
 - `SOCKS_PROXY_PORT` optional, effective with SOCKS_PROXY_HOST
+- `SOCKS_PROXY_USERNAME` optional, effective with SOCKS_PROXY_PASSWORD
+- `SOCKS_PROXY_PASSWORD` optional, effective with SOCKS_PROXY_USERNAME
 
 ![docker](./docs/docker.png)
 
@@ -223,6 +225,10 @@ services:
       SOCKS_PROXY_HOST: xxxx
       # socks proxy port, optional, effective with SOCKS_PROXY_HOST
       SOCKS_PROXY_PORT: xxxx
+      # optional, effective with SOCKS_PROXY_PASSWORD
+      SOCKS_PROXY_USERNAME: xxxx
+      # optional, effective with SOCKS_PROXY_USERNAME
+      SOCKS_PROXY_PASSWORD: xxxx
 ```
 The `OPENAI_API_BASE_URL` is optional and only used when setting the `OPENAI_API_KEY`.
 The `OPENAI_API_MODEL` is optional and only used when setting the `OPENAI_API_KEY`.
@@ -245,6 +251,8 @@ The `OPENAI_API_MODEL` is optional and only used when setting the `OPENAI_API_KE
 | `API_REVERSE_PROXY`  | Optional, only for `Web API` | Reverse proxy address for `Web API`. [Details](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy) |
 | `SOCKS_PROXY_HOST`   | Optional, effective with `SOCKS_PROXY_PORT` | Socks proxy.                      |
 | `SOCKS_PROXY_PORT`   | Optional, effective with `SOCKS_PROXY_HOST` | Socks proxy port.                 |
+| `SOCKS_PROXY_USERNAME` | Optional, effective with `SOCKS_PROXY_PASSWORD` | Socks proxy username. |
+| `SOCKS_PROXY_PASSWORD` | Optional, effective with `SOCKS_PROXY_USERNAME` | Socks proxy password. |
 
 > Note: Changing environment variables in Railway will cause re-deployment.
 
