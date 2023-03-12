@@ -145,6 +145,8 @@ const importPromptTemplate = () => {
   try {
     const jsonData = JSON.parse(tempPromptValue.value)
     for (const i of jsonData) {
+      if (!('key' in i) || !('value' in i))
+        throw new Error('键值不匹配')
       let safe = true
       for (const j of promptList.value) {
         if (j.key === i.key) {
