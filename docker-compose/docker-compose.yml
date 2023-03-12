@@ -20,10 +20,14 @@ services:
       AUTH_SECRET_KEY: xxx
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
-      # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
+      # Socks 代理，可选，和 SOCKS_PROXY_PORT 一起时生效
       SOCKS_PROXY_HOST: xxxx
-      # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
+      # Socks 代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
       SOCKS_PROXY_PORT: xxxx
+      # Socks 代理用户名，可选，和 SOCKS_PROXY_PASSWORD 一起时生效
+      SOCKS_PROXY_USERNAME: xxxx
+      # Socks 代理密码，可选，和 SOCKS_PROXY_USERNAME 一起时生效
+      SOCKS_PROXY_PASSWORD: xxxx
   nginx:
     image: nginx:alpine
     ports:
