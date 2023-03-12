@@ -18,6 +18,8 @@ export default {
     clearSuccess: '清除成功',
     yes: '是',
     no: '否',
+    confirm: '確定',
+    download: '下載',
     noData: '暫無資料',
     wrong: '好像出錯了，請稍後再試。',
     success: '操作成功',
@@ -43,6 +45,7 @@ export default {
     deleteMessage: '刪除訊息',
     deleteMessageConfirm: '是否刪除此訊息?',
     deleteHistoryConfirm: '確定刪除此紀錄?',
+    clearHistoryConfirm: '確定清除紀錄?',
   },
   setting: {
     setting: '設定',
