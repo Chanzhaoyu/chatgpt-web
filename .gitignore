@@ -30,4 +30,3 @@ coverage
 
 # Environment variables files
 /service/.env
-/.env
