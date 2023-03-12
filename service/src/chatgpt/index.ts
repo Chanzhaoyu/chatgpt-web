@@ -49,6 +49,8 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
       const agent = new SocksProxyAgent({
         hostname: process.env.SOCKS_PROXY_HOST,
         port: process.env.SOCKS_PROXY_PORT,
+        username: process.env.SOCKS_PROXY_USERNAME || null,
+        password: process.env.SOCKS_PROXY_PASSWORD || null,
       })
       options.fetch = (url, options) => {
         return fetch(url, { agent, ...options })
@@ -68,6 +70,8 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
       const agent = new SocksProxyAgent({
         hostname: process.env.SOCKS_PROXY_HOST,
         port: process.env.SOCKS_PROXY_PORT,
+        username: process.env.SOCKS_PROXY_USERNAME || null,
+        password: process.env.SOCKS_PROXY_PASSWORD || null,
       })
       options.fetch = (url, options) => {
         return fetch(url, { agent, ...options })
