@@ -3,7 +3,6 @@ import 'isomorphic-fetch'
 import type { ChatGPTAPIOptions, ChatMessage, SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
-import { HttpsProxyAgent } from 'https-proxy-agent'
 import fetch from 'node-fetch'
 import { sendResponse } from '../utils'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
@@ -56,14 +55,6 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
       }
     }
 
-    const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
-    if (httpsProxy) {
-      const agent = new HttpsProxyAgent(httpsProxy)
-      options.fetch = (url, options) => {
-        return fetch(url, { agent, ...options })
-      }
-    }
-
     api = new ChatGPTAPI({ ...options })
     apiModel = 'ChatGPTAPI'
   }
@@ -83,14 +74,6 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
       }
     }
 
-    const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
-    if (httpsProxy) {
-      const agent = new HttpsProxyAgent(httpsProxy)
-      options.fetch = (url, options) => {
-        return fetch(url, { agent, ...options })
-      }
-    }
-
     if (process.env.API_REVERSE_PROXY)
       options.apiReverseProxyUrl = process.env.API_REVERSE_PROXY
 
@@ -104,8 +87,8 @@ async function chatReplyProcess(
   lastContext?: { conversationId?: string; parentMessageId?: string },
   process?: (chat: ChatMessage) => void,
 ) {
-  // if (!message)
-  //   return sendResponse({ type: 'Fail', message: 'Message is empty' })
+  if (!message)
+    return sendResponse({ type: 'Fail', message: 'Message is empty' })
 
   try {
     let options: SendMessageOptions = { timeoutMs }
@@ -128,7 +111,6 @@ async function chatReplyProcess(
   }
   catch (error: any) {
     const code = error.statusCode
-    global.console.log(error)
     if (Reflect.has(ErrorCodeMessage, code))
       return sendResponse({ type: 'Fail', message: ErrorCodeMessage[code] })
     return sendResponse({ type: 'Fail', message: error.message ?? 'Please check the back-end console' })
@@ -136,8 +118,6 @@ async function chatReplyProcess(
 }
 
 async function chatConfig() {
-  const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
-
   return sendResponse({
     type: 'Success',
     data: {
@@ -145,7 +125,6 @@ async function chatConfig() {
       reverseProxy: process.env.API_REVERSE_PROXY,
       timeoutMs,
       socksProxy: (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`) : '-',
-      httpsProxy,
     } as ModelConfig,
   })
 }

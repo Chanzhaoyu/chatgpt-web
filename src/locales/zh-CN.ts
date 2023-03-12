@@ -50,7 +50,6 @@ export default {
     reverseProxy: '反向代理',
     timeout: '超时',
     socks: 'Socks',
-    httpsProxy: 'HTTPS Proxy',
   },
 
 }
