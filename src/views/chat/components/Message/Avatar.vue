@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { NAvatar } from 'naive-ui'
-import { useUserStore } from '@/store'
+import { useAuthStore } from '@/store'
 import { isString } from '@/utils/is'
 import defaultAvatar from '@/assets/avatar.jpg'
 
@@ -10,9 +10,9 @@ interface Props {
 }
 defineProps<Props>()
 
-const userStore = useUserStore()
+const userStore = useAuthStore()
 
-const avatar = computed(() => userStore.userInfo.avatar)
+const avatar = computed(() => `https://skydrive-qyt.oss-cn-hangzhou.aliyuncs.com/pics/${userStore.user?.avatar}?x-oss-process=image/resize,m_lfit,h_144,w_144`)
 </script>
 
 <template>

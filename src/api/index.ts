@@ -34,15 +34,15 @@ export function fetchChatAPIProcess<T = any>(
   })
 }
 
-export function fetchSession<T>() {
+export function fetchUser<T>() {
   return post<T>({
-    url: '/session',
+    url: '/auth',
   })
 }
 
-export function fetchVerify<T>(token: string) {
+export function login<T>(mobile: string, password: string) {
   return post<T>({
-    url: '/verify',
-    data: { token },
+    url: '/login',
+    data: { mobile, password },
   })
 }

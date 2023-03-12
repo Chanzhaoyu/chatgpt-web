@@ -26,7 +26,14 @@ coverage
 *.ntvs*
 *.njsproj
 *.sln
+.history
+test
 *.sw?
 
 # Environment variables files
 /service/.env
+/.env
+
+
+gruntfile.js
+server.json
