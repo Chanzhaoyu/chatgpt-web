@@ -39,18 +39,18 @@ onMounted(() => {
       </h2>
       <div class="p-2 space-y-2 rounded-md bg-neutral-100 dark:bg-neutral-700">
         <p>
-          此项目开源于
+          我是
           <a
             class="text-blue-600 dark:text-blue-500"
-            href="https://github.com/Chanzhaoyu/chatgpt-web"
+            href="https://chat.openai.com"
             target="_blank"
           >
-            Github
+            ChatGPT
           </a>
-          ，免费且基于 MIT 协议，没有任何形式的付费行为！
+          ，一名由OpenAI训练的大型语言模型。我的任务是尝试回答各种问题和完成各种任务，无论是关于学术、生活、技术还是娱乐的问题，我都会尽力给出最准确和合理的答案。
         </p>
         <p>
-          如果你觉得此项目对你有帮助，请在 Github 帮我点个 Star 或者给予一点赞助，谢谢！
+          我基于大量的数据和机器学习算法进行训练，可以使用多种自然语言处理技术来理解和生成人类语言。
         </p>
       </div>
       <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
