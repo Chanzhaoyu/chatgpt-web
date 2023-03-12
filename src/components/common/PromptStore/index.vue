@@ -39,6 +39,8 @@ const showModal = ref(false)
 const importLoading = ref(false)
 const exportLoading = ref(false)
 
+const searchValue = ref<string>('')
+
 // 移动端自适应相关
 const { isMobile } = useBasicLayout()
 
@@ -303,6 +305,17 @@ watch(
   },
   { deep: true },
 )
+
+const dataSource = computed(() => {
+  const data = renderTemplate()
+  const value = searchValue.value
+  if (value && value !== '') {
+    return data.filter((item: DataProps) => {
+      return item.renderKey.includes(value) || item.renderValue.includes(value)
+    })
+  }
+  return data
+})
 </script>
 
 <template>
@@ -312,41 +325,46 @@ watch(
         <div class="space-y-4">
           <NTabs type="segment">
             <NTabPane name="local" :tab="$t('store.local')">
-              <div class="flex items-center justify-end space-x-4">
-                <NButton
-                  type="primary"
-                  size="small"
-                  @click="changeShowModal('add')"
-                >
-                  {{ $t('common.add') }}
-                </NButton>
-                <NButton
-                  size="small"
-                  @click="changeShowModal('local_import')"
-                >
-                  {{ $t('common.import') }}
-                </NButton>
-                <NButton
-                  size="small"
-                  :loading="exportLoading"
-                  @click="exportPromptTemplate()"
-                >
-                  {{ $t('common.export') }}
-                </NButton>
-                <NPopconfirm @positive-click="clearPromptTemplate">
-                  <template #trigger>
-                    <NButton size="small">
-                      {{ $t('common.clear') }}
-                    </NButton>
-                  </template>
-                  {{ $t('store.clearStoreConfirm') }}
-                </NPopconfirm>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center justify-end space-x-4">
+                  <NButton
+                    type="primary"
+                    size="small"
+                    @click="changeShowModal('add')"
+                  >
+                    {{ $t('common.add') }}
+                  </NButton>
+                  <NButton
+                    size="small"
+                    @click="changeShowModal('local_import')"
+                  >
+                    {{ $t('common.import') }}
+                  </NButton>
+                  <NButton
+                    size="small"
+                    :loading="exportLoading"
+                    @click="exportPromptTemplate()"
+                  >
+                    {{ $t('common.export') }}
+                  </NButton>
+                  <NPopconfirm @positive-click="clearPromptTemplate">
+                    <template #trigger>
+                      <NButton size="small">
+                        {{ $t('common.clear') }}
+                      </NButton>
+                    </template>
+                    {{ $t('store.clearStoreConfirm') }}
+                  </NPopconfirm>
+                </div>
+                <div class="flex items-center space-x-4">
+                  <NInput v-model:value="searchValue" />
+                </div>
               </div>
               <br>
               <NDataTable
                 :max-height="400"
                 :columns="columns"
-                :data="renderTemplate()"
+                :data="dataSource"
                 :pagination="pagination"
                 :bordered="false"
               />
