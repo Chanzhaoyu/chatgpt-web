@@ -325,10 +325,10 @@ const dataSource = computed(() => {
         <NTabs type="segment">
           <NTabPane name="local" :tab="$t('store.local')">
             <div
-              class="flex items-center justify-between"
-              :class="isMobile ? 'flex-col gap-2' : 'flex-row'"
+              class="flex gap-3"
+              :class="[isMobile ? 'flex-col' : 'flex-row justify-between']"
             >
-              <div class="flex items-center justify-end space-x-4">
+              <div class="flex items-center space-x-4">
                 <NButton
                   type="primary"
                   size="small"
@@ -358,7 +358,7 @@ const dataSource = computed(() => {
                   {{ $t('store.clearStoreConfirm') }}
                 </NPopconfirm>
               </div>
-              <div class="flex items-center space-x-4">
+              <div class="flex items-center">
                 <NInput v-model:value="searchValue" style="width: 100%" />
               </div>
             </div>
