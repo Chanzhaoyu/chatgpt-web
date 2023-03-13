@@ -185,6 +185,13 @@ const importPromptTemplate = () => {
         promptList.value.unshift({ key: i[key], value: i[value] } as never)
     }
     message.success(t('common.importSuccess'))
+    // TODO：
+    // 从原始版本开始导入在线模板就会有黑色蒙版出现，其实是弹出（一个看不见的）对话框
+    // 在大佬改进界面后，弹出的不再是黑色蒙版，无内容的对话框也会出现了
+    // 对话框会出现是因为下面"changeShowModal"会改变"showModal"值为true
+    // 故这里使用简单粗暴的方法先改"showModal"为false，再调用"changeShowModal"就不会出现对话框
+    // 因避免改动原始代码逻辑，这个修复比较保险，后期应根据原作意图把这些重构
+    showModal.value = true
     changeShowModal('')
   }
   catch {
