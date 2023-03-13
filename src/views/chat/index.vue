@@ -19,7 +19,7 @@ import { t } from '@/locales'
 
 let controller = new AbortController()
 
-const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
+// const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
 
 const route = useRoute()
 const dialog = useDialog()
@@ -38,7 +38,7 @@ const { uuid } = route.params as { uuid: string }
 
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const getEnabledNetwork = computed(() => chatStore.getEnabledNetwork)
-const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !item.error)))
+// const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !item.error)))
 
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
@@ -106,7 +106,7 @@ async function onConversation() {
       signal: controller.signal,
       network: !!chatStore.getEnabledNetwork,
       onDownloadProgress: ({ event }) => {
-
+        debugger;
         const xhr = event.target
         const { responseText } = xhr
         // Always process the final line
@@ -116,7 +116,7 @@ async function onConversation() {
         //   chunk = responseText.substring(lastIndex)
         try {
           // const data = JSON.parse(chunk)
-
+          debugger;
           updateChat(
             +uuid,
             dataSources.value.length - 1,
@@ -189,7 +189,7 @@ async function onConversation() {
 }
 
 async function onRegenerate(index: number) {
-
+  debugger;
   if (loading.value)
     return
 
@@ -349,19 +349,7 @@ function handleDelete(index: number) {
 }
 
 function handleClear() {
-
-  if (loading.value)
-    return
-
-  dialog.warning({
-    title: t('chat.clearChat'),
-    content: t('chat.clearChatConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
-    onPositiveClick: () => {
-      chatStore.clearChatByUuid(+uuid)
-    },
-  })
+  chatStore.toggleNetwork();
 }
 
 function handleEnter(event: KeyboardEvent) {
@@ -498,30 +486,33 @@ onUnmounted(() => {
     </main>
     <footer :class="footerClass">
       <div class="flex items-center justify-between space-x-2">
-          <HoverButton tooltip="点击关闭或开启联网功能，开启后会自动从互联网获得信息来回答您，关闭联网能极大加快响应速度">
+        <HoverButton tooltip="点击关闭或开启联网功能，开启后会自动从互联网获得信息来回答您，关闭联网能极大加快响应速度">
             <span class="text-xl text-[#4f555e]" @click="handleClear">
               <!-- <SvgIcon icon="ri:delete-bin-line" /> -->
               <span style="color: #2979ff; width: 56px; display: inline-block;" v-if="getEnabledNetwork">联网开启</span>
               <span style="color: red; width: 56px; display: inline-block;" v-if="!getEnabledNetwork">联网关闭</span>
             </span>
           </HoverButton>
+          <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
+            <template #default="{ handleInput, handleBlur, handleFocus }">
+              <NInput
+                v-model:value="prompt" type="textarea" :placeholder="placeholder"
+                :autosize="{ minRows: 1, maxRows: 2 }" @input="handleInput" @focus="handleFocus" @blur="handleBlur" @keypress="handleEnter"
+              />
+            </template>
+          </NAutoComplete>
           <HoverButton v-if="!isMobile" @click="handleExport">
             <span class="text-xl text-[#4f555e] dark:text-white">
               <SvgIcon icon="ri:download-2-line" />
             </span>
           </HoverButton>
+        
+          
           <HoverButton v-if="!isMobile" @click="toggleUsingContext">
             <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
               <SvgIcon icon="ri:chat-history-line" />
             </span>
           </HoverButton>
-          <NInput
-            v-model:value="prompt"
-            type="textarea"
-            :autosize="{ minRows: 1, maxRows: 2 }"
-            :placeholder="placeholder"
-            @keypress="handleEnter"
-          />
           <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
             <template #icon>
               <span class="dark:text-black">

@@ -15,7 +15,38 @@
 		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover" />
 	<title>仅用于开发学习交流</title>
 
-
+	<script>
+		(function (h, o, u, n, d) {
+		   h = h[d] = h[d] || {
+			 q: [],
+			 onReady: function (c) {
+			   h.q.push(c)
+			 }
+		   }
+		   d = o.createElement(u)
+		   d.async = 1
+		   d.src = n
+		   n = o.getElementsByTagName(u)[0]
+		   n.parentNode.insertBefore(d, n)
+		 })(
+		   window,
+		   document,
+		   'script',
+		   'https://static.guance.com/browser-sdk/v2/dataflux-rum.js',
+		   'DATAFLUX_RUM'
+		 )
+		 DATAFLUX_RUM.onReady(function () {
+		   DATAFLUX_RUM.init({
+			 applicationId: 'cbjtest',
+			 datakitOrigin: 'https://trace.apps.yqcloud.com', // 协议（包括：//），域名（或IP地址）[和端口号]
+			 env: 'production',
+			 version: '1.0.0',
+			 trackInteractions: true,
+			 traceType: 'ddtrace', // 非必填，默认为ddtrace，目前支持 ddtrace、zipkin、skywalking_v3、jaeger、zipkin_single_header、w3c_traceparent 6种类型
+			 allowedTracingOrigins: ['*'],  // 非必填，允许注入trace采集器所需header头部的所有请求列表。可以是请求的origin，也可以是是正则
+		   })
+		 })
+	   </script>
 <script>
 	var _hmt = _hmt || [];
 	(function() {
