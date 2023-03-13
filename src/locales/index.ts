@@ -3,6 +3,10 @@ import { createI18n } from 'vue-i18n'
 import enUS from './en-US'
 import zhCN from './zh-CN'
 import zhTW from './zh-TW'
+import deDE from './de-DE'
+import frFR from './fr-FR'
+import ruRU from './ru-RU'
+import jaJP from './ja-JP'
 import { useAppStoreWithOut } from '@/store/modules/app'
 import type { Language } from '@/store/modules/app/helper'
 
@@ -18,6 +22,10 @@ const i18n = createI18n({
     'en-US': enUS,
     'zh-CN': zhCN,
     'zh-TW': zhTW,
+    'de-DE': deDE,
+    'fr-FR': frFR,
+    'ru-RU': ruRU,
+    'ja-JP': jaJP,
   },
 })
 
