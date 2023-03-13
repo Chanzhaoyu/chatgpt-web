@@ -20,7 +20,9 @@
     "lint:fix": "eslint . --fix",
     "bootstrap": "pnpm install && pnpm run common:prepare",
     "common:cleanup": "rimraf node_modules && rimraf pnpm-lock.yaml",
-    "common:prepare": "husky install"
+    "common:prepare": "husky install",
+    "commit": "git-cz --disable-emoji",
+    "release": "git fetch --tags && standard-version --no-verify -a -t ''"
   },
   "dependencies": {
     "@traptitech/markdown-it-katex": "^3.6.0",
@@ -49,6 +51,7 @@
     "axios": "^1.3.4",
     "crypto-js": "^4.1.1",
     "eslint": "^8.35.0",
+    "git-cz": "^4.9.0",
     "husky": "^8.0.3",
     "less": "^4.1.3",
     "lint-staged": "^13.1.2",
@@ -65,5 +68,10 @@
     "*.{ts,tsx,vue}": [
       "pnpm lint:fix"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "git-cz"
+    }
   }
 }
