@@ -25,7 +25,7 @@ export default {
     success: 'Успех',
     failed: 'Неудача',
     verify: 'Проверить',
-    unauthorizedTips: 'Не авторизован, сначала необходимо пройти проверку подлинности',
+    unauthorizedTips: 'Не авторизован, сначала необходимо пройти проверку',
   },
   chat: {
     placeholder: 'Введите что-нибудь... (Shift + Enter = перенос строки)',
