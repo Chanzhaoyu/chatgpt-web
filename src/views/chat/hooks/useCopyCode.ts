@@ -1,4 +1,5 @@
 import { onMounted, onUpdated } from 'vue'
+import { copyText } from '@/utils/format'
 
 export function useCopyCode() {
   function copyCodeBlock() {
@@ -8,7 +9,10 @@ export function useCopyCode() {
       const codeBlock = wrapper.querySelector('.code-block-body')
       if (copyBtn && codeBlock) {
         copyBtn.addEventListener('click', () => {
-          navigator.clipboard.writeText(codeBlock.textContent ?? '')
+          if (navigator.clipboard?.writeText)
+            navigator.clipboard.writeText(codeBlock.textContent ?? '')
+          else
+            copyText({ text: codeBlock.textContent ?? '', origin: true })
         })
       }
     })
