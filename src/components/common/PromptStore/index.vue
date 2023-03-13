@@ -168,8 +168,6 @@ const importPromptTemplate = () => {
     }
 
     for (const i of jsonData) {
-      if (!('key' in i) || !('value' in i))
-        throw new Error(t('store.importError'))
       let safe = true
       for (const j of promptList.value) {
         if (j.key === i[key]) {
