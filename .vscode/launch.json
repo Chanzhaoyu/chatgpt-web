@@ -1,0 +1,25 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Web App",
+      "url": "http://localhost:1002",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Service Server",
+      "runtimeExecutable": "${workspaceFolder}/service/node_modules/.bin/esno",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/service/src/index.ts",
+      "outFiles": ["${workspaceFolder}/service/**/*.js"],
+      "envFile": "${workspaceFolder}/service/.env"
+    }
+  ]
+}
