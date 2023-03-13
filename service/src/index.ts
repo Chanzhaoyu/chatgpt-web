@@ -7,9 +7,9 @@ import { auth } from './middleware/auth'
 const app = express()
 const router = express.Router()
 
+app.use(compression())
 app.use(express.static('public'))
 app.use(express.json())
-app.use(compression())
 
 app.all('*', (_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
