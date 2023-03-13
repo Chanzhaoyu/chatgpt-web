@@ -176,6 +176,11 @@ export const useChatStore = defineStore('chat-store', {
         this.recordState()
       }
     },
+      
+    swapHistoryOrder(from: number, to: number) {
+      this.history.splice(to, 0, this.history.splice(from, 1)[0])
+      this.recordState()
+    },
 
     async reloadRoute(uuid?: number) {
       this.recordState()
