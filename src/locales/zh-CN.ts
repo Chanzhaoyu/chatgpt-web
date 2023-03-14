@@ -16,8 +16,8 @@ export default {
     unauthorizedTips: '请使用企友通账号密码登录',
   },
   chat: {
-    placeholder: '来说点什么吧...（Shift + Enter = 换行）',
-    placeholderMobile: '来说点什么...',
+    placeholder: '来说点什么吧...（或者输入"/" 启用Prompt指令）',
+    placeholderMobile: '来说点什么...（或者输入"/" 启用Prompt指令）',
     copy: '复制',
     copied: '复制成功',
     copyCode: '复制代码',

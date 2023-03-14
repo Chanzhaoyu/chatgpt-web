@@ -163,7 +163,7 @@ async function onConversation() {
 
     const currentChat = getChatByUuidAndIndex(+uuid, dataSources.value.length - 1)
 
-    if (currentChat?.text && currentChat.text !== '') {
+    if (currentChat?.text && currentChat.text !== '' && currentChat.text !== 'undefined') {
       updateChatSome(
         +uuid,
         dataSources.value.length - 1,

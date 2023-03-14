@@ -8,10 +8,16 @@ const service = axios.create({
 })
 
 service.interceptors.request.use(
-  (config) => {
-    const token = useAuthStore().token
-    if (token)
+  async (config) => {
+    const { token, getUsertoken } = useAuthStore()
+    if (token) {
       config.headers['Access-Token'] = `${token}`
+    }
+    else {
+      const headers = await getUsertoken()
+      if (headers)
+        config.headers.authorization = `${headers.authorization}`
+    }
     return config
   },
   (error) => {

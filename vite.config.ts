@@ -2,6 +2,7 @@ import path from 'path'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
+// import legacy from '@vitejs/plugin-legacy'
 
 export default defineConfig((env) => {
   const viteEnv = loadEnv(env.mode, process.cwd()) as unknown as ImportMetaEnv
@@ -13,6 +14,9 @@ export default defineConfig((env) => {
       },
     },
     plugins: [
+      // legacy({
+      //   targets: ['defaults', 'last 2 UCAndroid version'],
+      // }),
       vue(),
       VitePWA({
         injectRegister: 'auto',
@@ -40,6 +44,7 @@ export default defineConfig((env) => {
       },
     },
     build: {
+      target: 'es2015',
       reportCompressedSize: false,
       sourcemap: false,
       commonjsOptions: {

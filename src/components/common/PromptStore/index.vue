@@ -382,6 +382,9 @@ watch(
           </NTabs>
         </div>
       </NCard>
+      <template #footer>
+        说明：您可以添加Prompt让AI进入各种领域角色，添加后请在输入框输入"/"来使用
+      </template>
     </NModal>
     <NModal v-model:show="showModal">
       <NCard

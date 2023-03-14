@@ -7,7 +7,9 @@ export interface AuthState {
   token: string | undefined
   user: UserInfo | null
 }
-
+interface IHeader {
+  authorization: string
+}
 export const useAuthStore = defineStore('auth-store', {
   state: (): AuthState => ({
     token: getToken(),
@@ -25,7 +27,23 @@ export const useAuthStore = defineStore('auth-store', {
         return Promise.reject(error)
       }
     },
-
+    getUsertoken() {
+      return new Promise<IHeader | null>((resolve, reject) => {
+        // eslint-disable-next-line no-console
+        console.log('window.mingle:', window.mingle)
+        if (window.mingle) {
+          window.mingle.invoke('buildHeaders', null, (secret: string) => {
+            try {
+              resolve(JSON.parse(secret))
+            }
+            catch (error) {
+              resolve(null)
+            }
+          })
+        }
+        else { resolve(null) }
+      })
+    },
     setToken(token: string) {
       this.token = token
       setToken(token)
