@@ -7,6 +7,7 @@ import { HttpsProxyAgent } from 'https-proxy-agent'
 import fetch from 'node-fetch'
 import { sendResponse } from '../utils'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
+import axios from 'axios'
 
 const ErrorCodeMessage: Record<string, string> = {
   401: '[OpenAI] 提供错误的API密钥 | Incorrect API key provided',
@@ -22,6 +23,7 @@ dotenv.config()
 const timeoutMs: number = !isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 30 * 1000
 
 let apiModel: ApiModel
+let balance
 
 if (!process.env.OPENAI_API_KEY && !process.env.OPENAI_ACCESS_TOKEN)
   throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
@@ -137,7 +139,12 @@ async function chatReplyProcess(
 
 async function chatConfig() {
   const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
-
+  const headers = {
+   'Content-Type': 'application/json',
+   'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+    };
+  const response = await axios.get('https://api.openai.com/dashboard/billing/credit_grants', {headers:headers});
+  balance = response.data.total_available;
   return sendResponse({
     type: 'Success',
     data: {
@@ -146,6 +153,7 @@ async function chatConfig() {
       timeoutMs,
       socksProxy: (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`) : '-',
       httpsProxy,
+      balance,
     } as ModelConfig,
   })
 }
