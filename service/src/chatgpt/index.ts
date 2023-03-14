@@ -139,12 +139,14 @@ async function chatReplyProcess(
 
 async function chatConfig() {
   const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
-  const headers = {
-   'Content-Type': 'application/json',
-   'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-    };
-  const response = await axios.get('https://api.openai.com/dashboard/billing/credit_grants', {headers:headers});
-  balance = response.data.total_available;
+  if (process.env.OPENAI_API_KEY) {
+      const headers = {
+       'Content-Type': 'application/json',
+       'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+        };
+      const response = await axios.get('https://api.openai.com/dashboard/billing/credit_grants', {headers:headers});
+      balance = response.data.total_available;
+    }
   return sendResponse({
     type: 'Success',
     data: {
