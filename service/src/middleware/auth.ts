@@ -1,10 +1,12 @@
+import jwt from 'jsonwebtoken'
+
 const auth = async (req, res, next) => {
   const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
   if (typeof AUTH_SECRET_KEY === 'string' && AUTH_SECRET_KEY.length > 0) {
     try {
-      const Authorization = req.header('Authorization')
-      if (!Authorization || Authorization.replace('Bearer ', '').trim() !== AUTH_SECRET_KEY.trim())
-        throw new Error('Error: 无访问权限 | No access rights')
+      const token = req.header('Authorization').replace('Bearer ', '')
+      const info = jwt.verify(token, AUTH_SECRET_KEY.trim())
+      req.headers.userId = info.userId
       next()
     }
     catch (error) {
@@ -12,6 +14,8 @@ const auth = async (req, res, next) => {
     }
   }
   else {
+    // fake userid
+    req.headers.userId = '6406d8c50aedd633885fa16f'
     next()
   }
 }

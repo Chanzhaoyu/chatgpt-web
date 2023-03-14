@@ -24,7 +24,10 @@ export default {
     wrong: '好像出错了，请稍后再试。',
     success: '操作成功',
     failed: '操作失败',
-    verify: '验证',
+    register: '注册',
+    login: '登录',
+    notLoggedIn: '登录 / 注册',
+    logOut: '退出登录',
     unauthorizedTips: '未经授权，请先进行验证。',
   },
   chat: {

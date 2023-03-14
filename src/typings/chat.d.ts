@@ -1,6 +1,7 @@
 declare namespace Chat {
 
 	interface Chat {
+		uuid?: number
 		dateTime: string
 		text: string
 		inversion?: boolean

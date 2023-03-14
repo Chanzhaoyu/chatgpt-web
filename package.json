@@ -27,6 +27,7 @@
     "@vueuse/core": "^9.13.0",
     "highlight.js": "^11.7.0",
     "html2canvas": "^1.4.1",
+    "jwt-decode": "^3.1.2",
     "katex": "^0.16.4",
     "markdown-it": "^13.0.1",
     "naive-ui": "^2.34.3",

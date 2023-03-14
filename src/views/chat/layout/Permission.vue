@@ -1,7 +1,8 @@
 <script setup lang='ts'>
-import { computed, ref } from 'vue'
-import { NButton, NInput, NModal, useMessage } from 'naive-ui'
-import { fetchVerify } from '@/api'
+import { computed, onMounted, ref } from 'vue'
+import { NButton, NInput, NModal, NSpace, useMessage } from 'naive-ui'
+import { useRoute, useRouter } from 'vue-router'
+import { fetchLogin, fetchRegister, fetchVerify } from '@/api'
 import { useAuthStore } from '@/store'
 import Icon403 from '@/icons/403.vue'
 
@@ -11,32 +12,37 @@ interface Props {
 
 defineProps<Props>()
 
+const route = useRoute()
+const router = useRouter()
 const authStore = useAuthStore()
 
 const ms = useMessage()
 
 const loading = ref(false)
-const token = ref('')
+const username = ref('')
+const password = ref('')
 
-const disabled = computed(() => !token.value.trim() || loading.value)
+const disabled = computed(() => !username.value.trim() || !password.value.trim() || loading.value)
 
-async function handleVerify() {
-  const secretKey = token.value.trim()
+onMounted(async () => {
+  const verifytoken = route.query.verifytoken as string
+  await handleVerify(verifytoken)
+})
 
-  if (!secretKey)
+async function handleVerify(verifytoken: string) {
+  if (!verifytoken)
     return
+  const secretKey = verifytoken.trim()
 
   try {
     loading.value = true
     await fetchVerify(secretKey)
-    authStore.setToken(secretKey)
-    ms.success('success')
-    window.location.reload()
+    ms.success('Verify success')
+    router.replace('/')
   }
   catch (error: any) {
     ms.error(error.message ?? 'error')
     authStore.removeToken()
-    token.value = ''
   }
   finally {
     loading.value = false
@@ -46,7 +52,51 @@ async function handleVerify() {
 function handlePress(event: KeyboardEvent) {
   if (event.key === 'Enter' && !event.shiftKey) {
     event.preventDefault()
-    handleVerify()
+    handleLogin()
+  }
+}
+
+async function handleLogin() {
+  const name = username.value.trim()
+  const pwd = password.value.trim()
+
+  if (!name || !pwd)
+    return
+
+  try {
+    loading.value = true
+    const result = await fetchLogin(name, pwd)
+    authStore.setToken(result.data.token)
+    ms.success('success')
+    router.go(0)
+  }
+  catch (error: any) {
+    ms.error(error.message ?? 'error')
+    authStore.removeToken()
+    password.value = ''
+  }
+  finally {
+    loading.value = false
+  }
+}
+
+async function handleRegister() {
+  const name = username.value.trim()
+  const pwd = password.value.trim()
+
+  if (!name || !pwd)
+    return
+
+  try {
+    loading.value = true
+    const result = await fetchRegister(name, pwd)
+    ms.success(result.message as string)
+  }
+  catch (error: any) {
+    ms.error(error.message ?? 'error')
+  }
+  finally {
+    loading.value = false
   }
 }
 </script>
@@ -64,15 +114,38 @@ function handlePress(event: KeyboardEvent) {
           </p>
           <Icon403 class="w-[200px] m-auto" />
         </header>
-        <NInput v-model:value="token" type="password" placeholder="" @keypress="handlePress" />
+        <NInput v-model:value="username" type="text" placeholder="Email" />
+        <NInput v-model:value="password" type="password" placeholder="Password" @keypress="handlePress" />
+
+        <NSpace v-if="authStore.session && authStore.session.allowRegister" justify="space-around">
+          <NButton
+            block
+            type="primary"
+            :disabled="disabled"
+            :loading="loading"
+            @click="handleRegister"
+          >
+            {{ $t('common.register') }}
+          </NButton>
+          <NButton
+            block
+            type="primary"
+            :disabled="disabled"
+            :loading="loading"
+            @click="handleLogin"
+          >
+            {{ $t('common.login') }}
+          </NButton>
+        </NSpace>
         <NButton
+          v-if="!(authStore.session && authStore.session.allowRegister)"
           block
           type="primary"
           :disabled="disabled"
           :loading="loading"
-          @click="handleVerify"
+          @click="handleLogin"
         >
-          {{ $t('common.verify') }}
+          {{ $t('common.login') }}
         </NButton>
       </div>
     </div>

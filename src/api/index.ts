@@ -1,5 +1,5 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
-import { post } from '@/utils/request'
+import { get, post } from '@/utils/request'
 
 export function fetchChatAPI<T = any>(
   prompt: string,
@@ -21,6 +21,9 @@ export function fetchChatConfig<T = any>() {
 
 export function fetchChatAPIProcess<T = any>(
   params: {
+    roomId: number
+    uuid: number
+    regenerate?: boolean
     prompt: string
     options?: { conversationId?: string; parentMessageId?: string }
     signal?: GenericAbortSignal
@@ -28,7 +31,7 @@ export function fetchChatAPIProcess<T = any>(
 ) {
   return post<T>({
     url: '/chat-process',
-    data: { prompt: params.prompt, options: params.options },
+    data: { roomId: params.roomId, uuid: params.uuid, regenerate: params.regenerate || false, prompt: params.prompt, options: params.options },
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
   })
@@ -44,5 +47,66 @@ export function fetchVerify<T>(token: string) {
   return post<T>({
     url: '/verify',
     data: { token },
+  })
+}
+
+export function fetchLogin<T = any>(username: string, password: string) {
+  return post<T>({
+    url: '/user-login',
+    data: { username, password },
+  })
+}
+
+export function fetchRegister<T = any>(username: string, password: string) {
+  return post<T>({
+    url: '/user-register',
+    data: { username, password },
+  })
+}
+
+export function fetchGetChatRooms<T = any>() {
+  return get<T>({
+    url: '/chatrooms',
+  })
+}
+
+export function fetchCreateChatRoom<T = any>(title: string, roomId: number) {
+  return post<T>({
+    url: '/room-create',
+    data: { title, roomId },
+  })
+}
+
+export function fetchRenameChatRoom<T = any>(title: string, roomId: number) {
+  return post<T>({
+    url: '/room-rename',
+    data: { title, roomId },
+  })
+}
+
+export function fetchDeleteChatRoom<T = any>(roomId: number) {
+  return post<T>({
+    url: '/room-delete',
+    data: { roomId },
+  })
+}
+
+export function fetchGetChatHistory<T = any>(roomId: number) {
+  return get<T>({
+    url: `/chat-hisroty?roomid=${roomId}`,
+  })
+}
+
+export function fetchClearChat<T = any>(roomId: number) {
+  return post<T>({
+    url: '/chat-clear',
+    data: { roomId },
+  })
+}
+
+export function fetchDeleteChat<T = any>(roomId: number, uuid: number, inversion?: boolean) {
+  return post<T>({
+    url: '/chat-delete',
+    data: { roomId, uuid, inversion },
   })
 }
