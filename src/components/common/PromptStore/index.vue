@@ -61,7 +61,7 @@ const modalMode = ref('')
 const tempModifiedItem = ref<any>({})
 
 // 添加修改导入都使用一个Modal, 临时修改内容占用tempPromptKey,切换状态前先将内容都清楚
-const changeShowModal = (mode: string, selected = { key: '', value: '' }) => {
+const changeShowModal = (mode: 'add' | 'modify' | 'local_import', selected = { key: '', value: '' }) => {
   if (mode === 'add') {
     tempPromptKey.value = ''
     tempPromptValue.value = ''
@@ -103,7 +103,7 @@ const addPromptTemplate = () => {
   }
   promptList.value.unshift({ key: tempPromptKey.value, value: tempPromptValue.value } as never)
   message.success(t('common.addSuccess'))
-  changeShowModal('')
+  changeShowModal('add')
 }
 
 const modifyPromptTemplate = () => {
@@ -132,7 +132,7 @@ const modifyPromptTemplate = () => {
 
   promptList.value = [{ key: tempPromptKey.value, value: tempPromptValue.value }, ...tempList] as never
   message.success(t('common.editSuccess'))
-  changeShowModal('')
+  changeShowModal('modify')
 }
 
 const deletePromptTemplate = (row: { key: string; value: string }) => {
@@ -187,11 +187,9 @@ const importPromptTemplate = () => {
         promptList.value.unshift({ key: i[key], value: i[value] } as never)
     }
     message.success(t('common.importSuccess'))
-    changeShowModal('')
   }
   catch {
     message.error('JSON 格式错误，请检查 JSON 格式')
-    changeShowModal('')
   }
 }
 
@@ -213,17 +211,25 @@ const exportPromptTemplate = () => {
 const downloadPromptTemplate = async () => {
   try {
     importLoading.value = true
-    await fetch(downloadURL.value)
-      .then(response => response.json())
-      .then((jsonData) => {
-        tempPromptValue.value = JSON.stringify(jsonData)
-      }).then(() => {
-        importPromptTemplate()
+    const response = await fetch(downloadURL.value)
+    const jsonData = await response.json()
+    if ('key' in jsonData[0] && 'value' in jsonData[0])
+      tempPromptValue.value = JSON.stringify(jsonData)
+    if ('act' in jsonData[0] && 'prompt' in jsonData[0]) {
+      const newJsonData = jsonData.map((item: { act: string; prompt: string }) => {
+        return {
+          key: item.act,
+          value: item.prompt,
+        }
       })
+      tempPromptValue.value = JSON.stringify(newJsonData)
+    }
+    importPromptTemplate()
     downloadURL.value = ''
   }
   catch {
     message.error(t('store.downloadError'))
+    downloadURL.value = ''
   }
   finally {
     importLoading.value = false
