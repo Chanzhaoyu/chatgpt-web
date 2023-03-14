@@ -1,4 +1,5 @@
 import express from 'express'
+import compression from 'compression'
 import type { ChatContext, ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess } from './chatgpt'
 import { auth } from './middleware/auth'
@@ -6,6 +7,7 @@ import { auth } from './middleware/auth'
 const app = express()
 const router = express.Router()
 
+app.use(compression())
 app.use(express.static('public'))
 app.use(express.json())
 
