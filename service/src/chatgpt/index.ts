@@ -146,6 +146,7 @@ async function chatConfig() {
         };
       const response = await axios.get('https://api.openai.com/dashboard/billing/credit_grants', {headers:headers});
       balance = response.data.total_available;
+      balance = balance.toFixed(5)
     }
   return sendResponse({
     type: 'Success',
