@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import type { DataTableColumns } from 'naive-ui'
 import { computed, h, ref, watch } from 'vue'
-import { NButton, NCard, NDataTable, NDivider, NInput, NLayoutContent, NMessageProvider, NModal, NPopconfirm, NSpace, NTabPane, NTabs, useMessage } from 'naive-ui'
+import { NButton, NCard, NDataTable, NDivider, NInput, NLayoutContent, NList, NListItem, NMessageProvider, NModal, NPopconfirm, NSpace, NTabPane, NTabs, NThing, useMessage } from 'naive-ui'
 import PromptRecommend from '../../../assets/recommend.json'
 import { SvgIcon } from '..'
 import { usePromptStore } from '@/store'
@@ -238,7 +238,7 @@ const downloadPromptTemplate = async () => {
 
 // 移动端自适应相关
 const renderTemplate = () => {
-  const [keyLimit, valueLimit] = isMobile.value ? [6, 9] : [15, 50]
+  const [keyLimit, valueLimit] = isMobile.value ? [10, 30] : [15, 50]
 
   return promptList.value.map((item: { key: string; value: string }) => {
     return {
@@ -370,12 +370,26 @@ const dataSource = computed(() => {
             </div>
             <br>
             <NDataTable
+              v-if="!isMobile"
               :max-height="400"
               :columns="columns"
               :data="dataSource"
               :pagination="pagination"
               :bordered="false"
             />
+            <NList v-if="isMobile" style="max-height: 400px;overflow-y: auto;">
+              <NListItem v-for="(item, index) of dataSource" :key="index">
+                <NThing :title="item.renderKey" :description="item.renderValue" />
+                <template #suffix>
+                  <NButton tertiary size="small" type="info" @click="changeShowModal('modify', item)">
+                    {{ t('common.edit') }}
+                  </NButton>
+                  <NButton tertiary size="small" type="error" @click="deletePromptTemplate(item)">
+                    {{ t('common.delete') }}
+                  </NButton>
+                </template>
+              </NListItem>
+            </NList>
           </NTabPane>
           <NTabPane name="download" :tab="$t('store.online')">
             <p class="mb-4">
