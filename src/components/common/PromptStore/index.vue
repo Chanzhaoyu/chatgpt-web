@@ -381,12 +381,14 @@ const dataSource = computed(() => {
               <NListItem v-for="(item, index) of dataSource" :key="index">
                 <NThing :title="item.renderKey" :description="item.renderValue" />
                 <template #suffix>
-                  <NButton tertiary size="small" type="info" @click="changeShowModal('modify', item)">
-                    {{ t('common.edit') }}
-                  </NButton>
-                  <NButton tertiary size="small" type="error" @click="deletePromptTemplate(item)">
-                    {{ t('common.delete') }}
-                  </NButton>
+                  <div class="flex items-center flex-col gap-2">
+                    <NButton tertiary size="small" type="info" @click="changeShowModal('modify', item)">
+                      {{ t('common.edit') }}
+                    </NButton>
+                    <NButton tertiary size="small" type="error" @click="deletePromptTemplate(item)">
+                      {{ t('common.delete') }}
+                    </NButton>
+                  </div>
                 </template>
               </NListItem>
             </NList>
