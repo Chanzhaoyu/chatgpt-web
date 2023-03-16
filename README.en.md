@@ -277,7 +277,7 @@ PS: You can also run `pnpm start` directly on the server without packaging.
 
 #### Frontend webpage
 
-1. Refer to the root directory `.env.example` file content to create `.env` file, modify `VITE_APP_API_BASE_URL` in `.env` at the root directory to your actual backend interface address.
+1. Refer to the root directory `.env.example` file content to create `.env` file, modify `VITE_GLOB_API_URL` in `.env` at the root directory to your actual backend interface address.
 2. Run the following command in the root directory and then copy the files in the `dist` folder to the root directory of your website service.
 
 [Reference information](https://cn.vitejs.dev/guide/static-deploy.html#building-the-app)
