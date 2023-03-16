@@ -68,11 +68,13 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     apiModel = 'ChatGPTAPI'
   }
   else {
+    const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
     const options: ChatGPTUnofficialProxyAPIOptions = {
       accessToken: process.env.OPENAI_ACCESS_TOKEN,
       debug: false,
     }
-
+    if (OPENAI_API_MODEL && typeof OPENAI_API_MODEL === 'string')
+      options.model = OPENAI_API_MODEL
     if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) {
       const agent = new SocksProxyAgent({
         hostname: process.env.SOCKS_PROXY_HOST,
