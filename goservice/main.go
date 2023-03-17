@@ -2,18 +2,26 @@ package main
 
 import (
 	"context"
+
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+
+	"io/ioutil"
+
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
 
+	"github.com/google/uuid"
+
 	"github.com/gorilla/mux"
 	openai "github.com/sashabaranov/go-openai"
 
 	"github.com/skrashevich/chatgpt-web/goservice/chatgpt"
+	"github.com/skrashevich/chatgpt-web/goservice/html"
 )
 
 type ChatRequest struct {
@@ -28,71 +36,212 @@ type VerifyRequest struct {
 	Token string `json:"token"`
 }
 
+type ChatResponse struct {
+	Role            string                              `json:"role"`
+	Id              string                              `json:"id"`
+	ParentMessageId string                              `json:"parentMessageId"`
+	Delta           string                              `json:"delta"`
+	Text            string                              `json:"text"`
+	Detail          openai.ChatCompletionStreamResponse `json:"detail"`
+}
+
+type ModelConfig struct {
+	APIModel     string `json:"apiModel"`
+	ReverseProxy string `json:"reverseProxy"`
+	TimeoutMs    int    `json:"timeoutMs"`
+	SocksProxy   string `json:"socksProxy"`
+	HttpsProxy   string `json:"httpsProxy"`
+	Balance      string `json:"balance"`
+}
+
 var openAIKey string
 
-func chatProcessHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/octet-stream")
+func chatProcessHandler(chatStorage *chatgpt.ChatStorage) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/octet-stream")
 
-	var req ChatRequest
-	err := json.NewDecoder(r.Body).Decode(&req)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		var req ChatRequest
+		err := json.NewDecoder(r.Body).Decode(&req)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		if openAIKey == "" {
+			panic(errors.New("Missing OPENAI_API_KEY environment variable"))
+		}
+
+		config := openai.DefaultConfig(openAIKey)
+		socksHost := os.Getenv("SOCKS_PROXY_HOST")
+		socksPort := os.Getenv("SOCKS_PROXY_PORT")
+		httpsProxy := os.Getenv("HTTPS_PROXY")
+
+		if socksHost != "" && socksPort != "" {
+			proxyUrl, err := url.Parse("socks5://" + socksHost + ":" + socksPort)
+			if err != nil {
+				panic(err)
+			}
+			transport := &http.Transport{
+				Proxy: http.ProxyURL(proxyUrl),
+			}
+			config.HTTPClient = &http.Client{
+				Transport: transport,
+			}
+		} else if httpsProxy != "" {
+			proxyUrl, err := url.Parse("https://" + httpsProxy)
+			if err != nil {
+				panic(err)
+			}
+			transport := &http.Transport{
+				Proxy: http.ProxyURL(proxyUrl),
+			}
+			config.HTTPClient = &http.Client{
+				Transport: transport,
+			}
+		}
+
+		client := openai.NewClientWithConfig(config)
+		ctx := context.Background()
+
+		if req.Options.ParentMessageId == "" {
+			req.Options.ParentMessageId = uuid.NewString()
+		}
+		newMessageId := uuid.NewString()
+		chatStorage.AddMessage(newMessageId, req.Options.ParentMessageId, openai.ChatCompletionMessage{
+			Role:    openai.ChatMessageRoleUser,
+			Content: req.Prompt,
+		})
+		messages, err := chatStorage.GetMessages(newMessageId)
+		reqData := openai.ChatCompletionRequest{
+			Model:    openai.GPT3Dot5Turbo,
+			Messages: messages,
+			Stream:   true,
+		}
+		fmt.Printf("Request data: %v\n", reqData)
+		stream, err := client.CreateChatCompletionStream(ctx, reqData)
+		if err != nil {
+			fmt.Printf("CompletionStream error: %v\n", err)
+			return
+		}
+		defer stream.Close()
+
+		text := ""
+		messageId := ""
+		for {
+			response, err := stream.Recv()
+
+			if errors.Is(err, io.EOF) {
+				if messageId != "" {
+					chatStorage.AddMessage(messageId, newMessageId, openai.ChatCompletionMessage{
+						Role:    openai.ChatMessageRoleAssistant,
+						Content: text,
+					})
+				}
+				fmt.Println("Stream finished")
+				return
+			}
+
+			if err != nil {
+				fmt.Printf("Stream error: %v\n", err)
+				return
+			}
+
+			fmt.Printf("Stream response: %v\n", response)
+			messageId = response.ID
+			text = text + response.Choices[0].Delta.Content
+			resp, _ := json.Marshal(ChatResponse{
+				Role:            openai.ChatMessageRoleAssistant,
+				Id:              response.ID,
+				ParentMessageId: newMessageId,
+				Text:            text,
+				Delta:           response.Choices[0].Delta.Content,
+				Detail:          response,
+			})
+			if response.Choices[0].FinishReason == "" {
+				resp = append(resp, []byte("\n")...)
+			}
+			w.Write(resp)
+		}
+
 	}
+}
+
+func fetchBalance() (string, error) {
+	openAPIBaseURL := os.Getenv("OPENAI_API_BASE_URL")
 
 	if openAIKey == "" {
-		panic(errors.New("Missing OPENAI_API_KEY environment variable"))
+		return "-", nil
 	}
 
-	config := openai.DefaultConfig(openAIKey)
-	socksHost := os.Getenv("SOCKS_PROXY_HOST")
-	socksPort := os.Getenv("SOCKS_PROXY_PORT")
+	apiBaseURL := "https://api.openai.com"
+	if openAPIBaseURL != "" {
+		apiBaseURL = openAPIBaseURL
+	}
+
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/dashboard/billing/credit_grants", apiBaseURL), nil)
+	if err != nil {
+		return "-", err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", openAIKey))
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return "-", err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "-", err
+	}
+
+	var data struct {
+		TotalAvailable float64 `json:"total_available"`
+	}
+	if err := json.Unmarshal(body, &data); err != nil {
+		return "-", err
+	}
+
+	return fmt.Sprintf("%.3f", data.TotalAvailable), nil
+}
+
+func chatConfig() (ModelConfig, error) {
+	balance, err := fetchBalance()
+	if err != nil {
+		balance = "error"
+	}
+
+	reverseProxy := os.Getenv("API_REVERSE_PROXY")
+	if reverseProxy == "" {
+		reverseProxy = "-"
+	}
+
 	httpsProxy := os.Getenv("HTTPS_PROXY")
 
+	if httpsProxy == "" {
+		httpsProxy = "-"
+	}
+
+	socksProxy := "-"
+	socksHost := os.Getenv("SOCKS_PROXY_HOST")
+	socksPort := os.Getenv("SOCKS_PROXY_PORT")
 	if socksHost != "" && socksPort != "" {
-		proxyUrl, err := url.Parse("socks5://" + socksHost + ":" + socksPort)
-		if err != nil {
-			panic(err)
-		}
-		transport := &http.Transport{
-			Proxy: http.ProxyURL(proxyUrl),
-		}
-		config.HTTPClient = &http.Client{
-			Transport: transport,
-		}
-	} else if httpsProxy != "" {
-		proxyUrl, err := url.Parse("https://" + httpsProxy)
-		if err != nil {
-			panic(err)
-		}
-		transport := &http.Transport{
-			Proxy: http.ProxyURL(proxyUrl),
-		}
-		config.HTTPClient = &http.Client{
-			Transport: transport,
-		}
+		socksProxy = fmt.Sprintf("%s:%s", socksHost, socksPort)
 	}
 
-	chatgpt := openai.NewClientWithConfig(config)
-
-	resp, err := chatgpt.CreateChatCompletion(
-		context.Background(),
-		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
-			Messages: []openai.ChatCompletionMessage{
-				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: "Hello!",
-				},
-			},
-		},
-	)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	config := ModelConfig{
+		APIModel:     openai.GPT3Dot5Turbo,
+		ReverseProxy: reverseProxy,
+		TimeoutMs:    0,
+		SocksProxy:   socksProxy,
+		HttpsProxy:   httpsProxy,
+		Balance:      balance,
 	}
 
+	return config, nil
 }
 
 func configHandler(w http.ResponseWriter, r *http.Request) {
@@ -124,7 +273,7 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 			Model string `json:"model"`
 		}{
 			Auth:  hasAuth,
-			Model: currentModel(),
+			Model: openai.GPT3Dot5Turbo,
 		},
 	}
 
@@ -188,15 +337,23 @@ func authMiddleware(next http.Handler) http.Handler {
 
 func main() {
 	openAIKey = os.Getenv("OPENAI_API_KEY")
+	chatStorage, err := chatgpt.NewChatStorage()
+	if err != nil {
+		panic(err)
+	}
+	defer chatStorage.Close()
+
+	// Get the subdirectory containing the static files
+	staticFiles := http.FS(html.Static)
 
 	r := mux.NewRouter()
 
-	r.HandleFunc("/chat-process", chatProcessHandler).Methods("POST")
+	r.HandleFunc("/chat-process", chatProcessHandler(chatStorage)).Methods("POST")
 	r.HandleFunc("/config", configHandler).Methods("POST")
 	r.HandleFunc("/session", sessionHandler).Methods("POST")
 	r.HandleFunc("/verify", verifyHandler).Methods("POST")
 
-	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public")))
+	r.PathPrefix("/").Handler(http.FileServer(staticFiles))
 
 	http.Handle("/", r)
 	http.Handle("/api", r)
