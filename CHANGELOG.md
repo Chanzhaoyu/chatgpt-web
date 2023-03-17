@@ -1,3 +1,36 @@
+## v2.10.7
+
+`2023-03-17`
+
+## BugFix
+- 回退 `chatgpt` 版本，原因：导致 `OPENAI_API_BASE_URL` 代理失效
+- 修复缺省状态的 `usingContext` 默认值
+
+## v2.10.6
+
+`2023-03-17`
+
+## Feature
+- 显示 `API` 余额 [[pzcn](https://github.com/Chanzhaoyu/chatgpt-web/pull/582)]
+
+## Enhancement
+- 美化滚动条样式和 `UI` 保持一致 [[haydenull](https://github.com/Chanzhaoyu/chatgpt-web/pull/617)]
+- 优化移动端 `Prompt` 样式 [[CornerSkyless](https://github.com/Chanzhaoyu/chatgpt-web/pull/608)]
+- 上下文开关改为全局开关，现在记录在本地缓存中
+- 配置信息按接口类型显示
+
+## Perf
+- 优化函数方法 [[kirklin](https://github.com/Chanzhaoyu/chatgpt-web/pull/583)]
+- 字符错误 [[pdsuwwz](https://github.com/Chanzhaoyu/chatgpt-web/pull/585)]
+- 文档描述错误 [[lizhongyuan3](https://github.com/Chanzhaoyu/chatgpt-web/pull/636)]
+
+## BugFix
+- 修复 `Prompt` 导入、导出兼容性错误
+- 修复 `highlight.js` 控制台兼容性警告
+
+## Other
+- 依赖更新
+
 ## v2.10.5
 
 `2023-03-13`
