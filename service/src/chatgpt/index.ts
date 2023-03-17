@@ -27,6 +27,25 @@ if (!process.env.OPENAI_API_KEY && !process.env.OPENAI_ACCESS_TOKEN)
   throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
 
 let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
+function setupProxy(options) {
+  if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) {
+    const agent = new SocksProxyAgent({
+      hostname: process.env.SOCKS_PROXY_HOST,
+      port: process.env.SOCKS_PROXY_PORT,
+    })
+    options.fetch = (url, options) => {
+      return fetch(url, { agent, ...options })
+    }
+  }
+
+  const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
+  if (httpsProxy) {
+    const agent = new HttpsProxyAgent(httpsProxy)
+    options.fetch = (url, options) => {
+      return fetch(url, { agent, ...options })
+    }
+  }
+}
 
 (async () => {
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
@@ -46,23 +65,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     if (process.env.OPENAI_API_BASE_URL && process.env.OPENAI_API_BASE_URL.trim().length > 0)
       options.apiBaseUrl = process.env.OPENAI_API_BASE_URL
 
-    if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) {
-      const agent = new SocksProxyAgent({
-        hostname: process.env.SOCKS_PROXY_HOST,
-        port: process.env.SOCKS_PROXY_PORT,
-      })
-      options.fetch = (url, options) => {
-        return fetch(url, { agent, ...options })
-      }
-    }
-
-    const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
-    if (httpsProxy) {
-      const agent = new HttpsProxyAgent(httpsProxy)
-      options.fetch = (url, options) => {
-        return fetch(url, { agent, ...options })
-      }
-    }
+    setupProxy(options)
 
     api = new ChatGPTAPI({ ...options })
     apiModel = 'ChatGPTAPI'
@@ -73,23 +76,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
       debug: false,
     }
 
-    if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) {
-      const agent = new SocksProxyAgent({
-        hostname: process.env.SOCKS_PROXY_HOST,
-        port: process.env.SOCKS_PROXY_PORT,
-      })
-      options.fetch = (url, options) => {
-        return fetch(url, { agent, ...options })
-      }
-    }
-
-    const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
-    if (httpsProxy) {
-      const agent = new HttpsProxyAgent(httpsProxy)
-      options.fetch = (url, options) => {
-        return fetch(url, { agent, ...options })
-      }
-    }
+    setupProxy(options)
 
     if (process.env.API_REVERSE_PROXY)
       options.apiReverseProxyUrl = process.env.API_REVERSE_PROXY
