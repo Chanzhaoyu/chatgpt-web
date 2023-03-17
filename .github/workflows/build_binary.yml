@@ -3,7 +3,7 @@ name: Build and Release Binaries
 on:
   push:
     branches:
-      - goservice
+      - go-backend
   workflow_dispatch:
 
 jobs:
@@ -43,29 +43,28 @@ jobs:
           cp -rp dist/* goservice/html/
           cd goservice
 
-          export CGO_ENABLED=0
           mkdir -p artifacts
-          export LD_FLAGS="-s -w -trimpath"
 
           build_go() {
             local goos=$1 goarch=$2 filename=$3
             export GOOS=$goos
             export GOARCH=$goarch
+            export LD_FLAGS="-s -w"
+            export CGO_ENABLED=0
 
             if [[ "$goos" == "windows" ]]; then
               export GOARM=7
             fi
 
             if [[ "$goos" == "windows" ]]; then
-              go build -ldflags "$LD_FLAGS" -o chatgpt-web.exe
+              go build -ldflags "$LD_FLAGS" -trimpath -o chatgpt-web.exe
               7z a -mx9 -sdel "$filename" chatgpt-web.exe
             else
-              go build -ldflags "$LD_FLAGS" -o "$filename"
+              go build -ldflags "$LD_FLAGS" -trimpath -o "$filename"
             fi
           }
 
           build_go windows amd64 artifacts/chatgpt-web_win64.zip
-          build_go windows 386 artifacts/chatgpt-web_win32.zip
           build_go windows arm64 artifacts/chatgpt-web_win_arm64.zip
 
           build_go linux amd64 artifacts/chatgpt-web_linux_amd64
@@ -74,7 +73,7 @@ jobs:
 
           build_go linux arm artifacts/chatgpt-web_linux_arm
 
-          build_go linux mipsle artifacts/chatgpt-web_linux_mipsel
+          build_go linux ppc64le artifacts/chatgpt-web_linux_ppc64le
 
           build_go darwin amd64 chatgpt-web.amd64
           build_go darwin arm64 chatgpt-web.arm64
@@ -82,17 +81,18 @@ jobs:
           lipo -output artifacts/chatgpt-web-macos -create chatgpt-web.arm64 chatgpt-web.amd64
 
           parallel --jobs $(nproc) "upx {}" ::: artifacts/chatgpt-web_linux_*
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ failure() }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: chatgpt-web
+          path: goservice/artifacts/*
       - name: Update Nightly Release
         uses: andelf/nightly-release@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: goservice-nightly
-          name: chatgpt-web goservice nightly
+          tag_name: ${{ github.head_ref || github.ref_name }}-nightly
+          name: chatgpt-web ${{ github.head_ref || github.ref_name }} nightly
           prerelease: true
           body: ${{ env.CHANGELOG }}
           files: |
-            artifacts/*
+            goservice/artifacts/*
