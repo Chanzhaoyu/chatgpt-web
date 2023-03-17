@@ -1,6 +1,8 @@
+import { isNotEmptyString } from '../utils/is'
+
 const auth = async (req, res, next) => {
   const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
-  if (typeof AUTH_SECRET_KEY === 'string' && AUTH_SECRET_KEY.length > 0) {
+  if (isNotEmptyString(AUTH_SECRET_KEY)) {
     try {
       const Authorization = req.header('Authorization')
       if (!Authorization || Authorization.replace('Bearer ', '').trim() !== AUTH_SECRET_KEY.trim())

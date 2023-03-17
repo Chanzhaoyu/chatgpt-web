@@ -25,7 +25,7 @@ const mdi = new MarkdownIt({
     const validLang = !!(language && hljs.getLanguage(language))
     if (validLang) {
       const lang = language ?? ''
-      return highlightBlock(hljs.highlight(lang, code, true).value, lang)
+      return highlightBlock(hljs.highlight(code, { language: lang }).value, lang)
     }
     return highlightBlock(hljs.highlightAuto(code).value, '')
   },
