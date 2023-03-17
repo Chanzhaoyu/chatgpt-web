@@ -5,10 +5,10 @@ import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import fetch from 'node-fetch'
+import axios from 'axios'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
-import axios from 'axios'
 
 const ErrorCodeMessage: Record<string, string> = {
   401: '[OpenAI] 提供错误的API密钥 | Incorrect API key provided',
@@ -24,7 +24,6 @@ dotenv.config()
 const timeoutMs: number = !isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 30 * 1000
 
 let apiModel: ApiModel
-let balance
 
 if (!process.env.OPENAI_API_KEY && !process.env.OPENAI_ACCESS_TOKEN)
   throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
@@ -101,22 +100,32 @@ async function chatReplyProcess(
   }
 }
 
-async function chatConfig() {
-  const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
-  if (process.env.OPENAI_API_KEY) {
-      const headers = {
-       'Content-Type': 'application/json',
-       'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-        };
-      const response = await axios.get('https://api.openai.com/dashboard/billing/credit_grants', {headers:headers});
-      balance = response.data.total_available;
-      balance = balance.toFixed(5)
+async function fetchBalance() {
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+  if (!isNotEmptyString(OPENAI_API_KEY))
+    return Promise.resolve('-')
+
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${OPENAI_API_KEY}`,
+    }
+    const response = await axios.get('https://api.openai.com/dashboard/billing/credit_grants', { headers })
+    const balance = response.data.total_available ?? 0
+    return Promise.resolve(balance.toFixed(3))
   }
+  catch {
+    return Promise.resolve('-')
+  }
+}
 
+async function chatConfig() {
+  const balance = await fetchBalance()
   const reverseProxy = process.env.API_REVERSE_PROXY ?? '-'
-  const socksProxy = (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`) : '-'
   const httpsProxy = (process.env.HTTPS_PROXY || process.env.ALL_PROXY) ?? '-'
-
+  const socksProxy = (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
+    ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`)
+    : '-'
   return sendResponse<ModelConfig>({
     type: 'Success',
     data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, balance },
@@ -146,6 +155,10 @@ function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPIOption
   }
 }
 
+function currentModel(): ApiModel {
+  return apiModel
+}
+
 export type { ChatContext, ChatMessage }
 
-export { chatReplyProcess, chatConfig }
+export { chatReplyProcess, chatConfig, currentModel }
