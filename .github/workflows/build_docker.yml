@@ -39,3 +39,15 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/chatgpt-web:${{ github.ref_name }}
             ${{ secrets.DOCKERHUB_USERNAME }}/chatgpt-web:latest
+      - name: Build and push Go service
+        id: docker_build
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          labels: ${{ steps.meta.outputs.labels }}
+          target: goservice
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/chatgpt-web:go-${{ github.ref_name }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/chatgpt-web:go-latest
