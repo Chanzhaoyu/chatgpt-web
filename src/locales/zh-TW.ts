@@ -63,6 +63,7 @@ export default {
     timeout: '逾時',
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
+    balance: 'API余額',
   },
   store: {
     local: '本機',
