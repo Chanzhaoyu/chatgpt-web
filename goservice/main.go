@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"context"
 
 	"encoding/json"
@@ -22,6 +23,7 @@ import (
 
 	"github.com/skrashevich/chatgpt-web/goservice/chatgpt"
 	"github.com/skrashevich/chatgpt-web/goservice/html"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 type ChatRequest struct {
@@ -337,6 +339,23 @@ func authMiddleware(next http.Handler) http.Handler {
 
 func main() {
 	openAIKey = os.Getenv("OPENAI_API_KEY")
+
+	if openAIKey == "" {
+		if terminal.IsTerminal(int(os.Stdin.Fd())) {
+			reader := bufio.NewReader(os.Stdin)
+			fmt.Print("Enter your OpenAI API Key: ")
+			var err error
+			openAIKey, err = reader.ReadString('\n')
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Error reading input: %v\n", err)
+				os.Exit(1)
+			}
+		} else {
+			fmt.Println("OPENAI_API_KEY is not provided and terminal non-interactive. Exiting.")
+			os.Exit(1)
+		}
+	}
+
 	chatStorage, err := chatgpt.NewChatStorage()
 	if err != nil {
 		panic(err)
