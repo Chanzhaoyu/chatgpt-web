@@ -1,0 +1,51 @@
+#默认位置 /etc/nginx/nginx.conf
+
+user  nginx;
+worker_processes  auto;
+
+error_log  /var/log/nginx/error.log notice;
+pid        /var/run/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+
+    include /etc/nginx/conf.d/*.conf;
+    server {
+        #假设监听10000端口
+        listen 10000;
+        #只能通过www.test.com才能访问，如果允许所有都可以访问，这里是0.0.0.0
+        server_name www.test.com,0.0.0.0;
+        location / {
+        # 添加需要账号面膜才能访问，这个可能同学不会用，这里只是注释
+        #auth_basic "Please input password";
+        #auth_basic_user_file /etc/nginx/chatgpt_web_password;
+           root html;
+           index index.html index.html;
+           #反向代理指向本机的1002
+           proxy_pass http://127.0.0.1:1002;
+           proxy_http_version 1.1;
+           proxy_set_header Upgrade $http_upgrade;
+           proxy_set_header Connection "Upgrade";
+        }
+     }
+}
