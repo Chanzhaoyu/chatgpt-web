@@ -10,6 +10,7 @@ interface ConfigState {
   apiModel?: string
   socksProxy?: string
   httpsProxy?: string
+  balance?: string
 }
 
 const loading = ref(false)
@@ -55,6 +56,7 @@ onMounted(() => {
         </p>
       </div>
       <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
+      <p>{{ $t("setting.balance") }}：{{ config?.balance ?? '-' }}</p>
       <p>{{ $t("setting.reverseProxy") }}：{{ config?.reverseProxy ?? '-' }}</p>
       <p>{{ $t("setting.timeout") }}：{{ config?.timeoutMs ?? '-' }}</p>
       <p>{{ $t("setting.socks") }}：{{ config?.socksProxy ?? '-' }}</p>

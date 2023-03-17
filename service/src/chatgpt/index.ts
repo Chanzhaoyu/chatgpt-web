@@ -5,6 +5,7 @@ import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import fetch from 'node-fetch'
+import axios from 'axios'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
@@ -99,14 +100,35 @@ async function chatReplyProcess(
   }
 }
 
-async function chatConfig() {
-  const reverseProxy = process.env.API_REVERSE_PROXY ?? '-'
-  const socksProxy = (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`) : '-'
-  const httpsProxy = (process.env.HTTPS_PROXY || process.env.ALL_PROXY) ?? '-'
+async function fetchBalance() {
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+  if (!isNotEmptyString(OPENAI_API_KEY))
+    return Promise.resolve('-')
 
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${OPENAI_API_KEY}`,
+    }
+    const response = await axios.get('https://api.openai.com/dashboard/billing/credit_grants', { headers })
+    const balance = response.data.total_available ?? 0
+    return Promise.resolve(balance.toFixed(3))
+  }
+  catch {
+    return Promise.resolve('-')
+  }
+}
+
+async function chatConfig() {
+  const balance = await fetchBalance()
+  const reverseProxy = process.env.API_REVERSE_PROXY ?? '-'
+  const httpsProxy = (process.env.HTTPS_PROXY || process.env.ALL_PROXY) ?? '-'
+  const socksProxy = (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
+    ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`)
+    : '-'
   return sendResponse<ModelConfig>({
     type: 'Success',
-    data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy },
+    data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, balance },
   })
 }
 
@@ -133,6 +155,10 @@ function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPIOption
   }
 }
 
+function currentModel(): ApiModel {
+  return apiModel
+}
+
 export type { ChatContext, ChatMessage }
 
-export { chatReplyProcess, chatConfig }
+export { chatReplyProcess, chatConfig, currentModel }
