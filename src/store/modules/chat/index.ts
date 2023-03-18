@@ -26,26 +26,33 @@ export const useChatStore = defineStore('chat-store', {
   actions: {
     async syncHistory() {
       const rooms = (await fetchGetChatRooms()).data
-      // if (rooms.length <= 0)
-      //   return
-
-      let uuid = null
+      let uuid = this.active
       this.history = []
       this.chat = []
-      await rooms.forEach(async (r: Chat.History) => {
+      for (const r of rooms) {
         this.history.unshift(r)
-        uuid = r.uuid
-        const chatData = (await fetchGetChatHistory(r.uuid)).data
-        this.chat.unshift({ uuid: r.uuid, data: chatData })
-      })
+        if (uuid == null)
+          uuid = r.uuid
+        this.chat.unshift({ uuid: r.uuid, data: [] })
+        if (uuid === r.uuid)
+          await this.syncChat(r)
+      }
       if (uuid == null) {
         uuid = Date.now()
         this.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
       }
-
       this.active = uuid
       this.reloadRoute(uuid)
     },
+
+    async syncChat(h: Chat.History) {
+      const chatIndex = this.chat.findIndex(item => item.uuid === h.uuid)
+      if (chatIndex <= -1 || this.chat[chatIndex].data.length <= 0) {
+        const chatData = (await fetchGetChatHistory(h.uuid)).data
+        this.chat.unshift({ uuid: h.uuid, data: chatData })
+      }
+    },
+
     setUsingContext(context: boolean) {
       this.usingContext = context
       this.recordState()
@@ -64,7 +71,8 @@ export const useChatStore = defineStore('chat-store', {
       if (index !== -1) {
         this.history[index] = { ...this.history[index], ...edit }
         this.recordState()
-        fetchRenameChatRoom(this.history[index].title, this.history[index].uuid)
+        if (!edit.isEdit)
+          fetchRenameChatRoom(this.history[index].title, this.history[index].uuid)
       }
     },
 
