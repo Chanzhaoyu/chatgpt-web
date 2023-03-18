@@ -49,11 +49,18 @@ onMounted(() => {
           此项目开源于
           <a
             class="text-blue-600 dark:text-blue-500"
+            href="https://github.com/kerwin1202/chatgpt-web"
+            target="_blank"
+          >
+            kerwin1202/chatgpt-web
+          </a>是基于
+          <a
+            class="text-blue-600 dark:text-blue-500"
             href="https://github.com/Chanzhaoyu/chatgpt-web"
             target="_blank"
           >
-            Github
-          </a>
+            Chanzhaoyu/chatgpt-web
+          </a> 分支而来
           ，免费且基于 MIT 协议，没有任何形式的付费行为！
         </p>
         <p>

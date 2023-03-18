@@ -196,16 +196,18 @@ http://localhost:3002/
 
 #### Docker Compose
 
-[Hub Address](https://hub.docker.com/repository/docker/chenzhaoyu94/chatgpt-web/general)
+[Hub Address](https://hub.docker.com/repository/docker/kerwin1202/chatgpt-web/general)
 
 ```yml
 version: '3'
 
 services:
   app:
-    image: chenzhaoyu94/chatgpt-web # always use latest, pull the tag image again when updating
+    image: kerwin1202/chatgpt-web # always use latest, pull the tag image again when updating
     ports:
       - 3002:3002
+    depends_on:
+      - database
     environment:
       # one of two
       OPENAI_API_KEY: xxxxxx
@@ -217,8 +219,6 @@ services:
       OPENAI_API_MODEL: xxxx
       # reverse proxy, optional
       API_REVERSE_PROXY: xxx
-      # access password，optional
-      AUTH_SECRET_KEY: xxx
       # timeout, in milliseconds, optional
       TIMEOUT_MS: 60000
       # socks proxy, optional, effective with SOCKS_PROXY_PORT
@@ -227,6 +227,45 @@ services:
       SOCKS_PROXY_PORT: xxxx
       # HTTPS Proxy，optional, support http, https, socks5
       HTTPS_PROXY: http://xxx:7890
+      # access salt，optional Allow login if not empty.
+      AUTH_SECRET_KEY: xxx
+      # mongodb's connection string
+      MONGODB_URL: 'mongodb://chatgpt:xxxx@database:27017'
+      # Register enabled
+      REGISTER_ENABLED: true
+      # After register enabled, Allowed mailbox suffixes for website registration. If empty, any suffix is allowed
+      REGISTER_MAILS: '@qq.com,@sina.com,@163.com'
+      # After register enabled, Salt for password encryption
+      PASSWORD_MD5_SALT: xxx
+      # After register enabled, super administrator
+      ROOT_USER: me@example.com
+      # After register enabled, The website's domain ending without /
+      SITE_DOMAIN: http://127.0.0.1:3002
+      # After register enabled, The smtp settings
+      SMTP_HOST: smtp.exmail.qq.com
+      SMTP_PORT: 465
+      SMTP_TSL: true
+      SMTP_USERNAME: noreply@examile.com
+      SMTP_PASSWORD: xxx
+    links:
+      - database
+
+  database:
+    image: mongo
+    container_name: chatgptweb-database
+    ports:
+      - '27017:27017'
+    expose:
+      - '27017'
+    volumes:
+      - mongodb:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: chatgpt
+      MONGO_INITDB_ROOT_PASSWORD: xxxx
+      MONGO_INITDB_DATABASE: chatgpt
+
+volumes:
+  mongodb: {}
 ```
 The `OPENAI_API_BASE_URL` is optional and only used when setting the `OPENAI_API_KEY`.
 The `OPENAI_API_MODEL` is optional and only used when setting the `OPENAI_API_KEY`.
@@ -316,18 +355,7 @@ Thanks to all the contributors!
 
 ## Sponsorship
 
-If you find this project helpful and circumstances permit, you can give me a little support. Thank you very much for your support~
-
-<div style="display: flex; gap: 20px;">
-	<div style="text-align: center">
-		<img style="max-width: 100%" src="./docs/wechat.png" alt="WeChat" />
-		<p>WeChat Pay</p>
-	</div>
-	<div style="text-align: center">
-		<img style="max-width: 100%" src="./docs/alipay.png" alt="Alipay" />
-		<p>Alipay</p>
-	</div>
-</div>
+If you find this project helpful, please give me a star.
 
 ## License
-MIT © [ChenZhaoYu](./license)
+MIT © [Kerwin1202](./license)

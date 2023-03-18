@@ -201,16 +201,19 @@ http://localhost:3002/
 
 #### Docker compose
 
-[Hub 地址](https://hub.docker.com/repository/docker/chenzhaoyu94/chatgpt-web/general)
+[Hub 地址](https://hub.docker.com/repository/docker/kerwin1202/chatgpt-web/general)
 
 ```yml
 version: '3'
 
 services:
   app:
-    image: chenzhaoyu94/chatgpt-web # 总是使用 latest ,更新时重新 pull 该 tag 镜像即可
+    image: kerwin1202/chatgpt-web # 总是使用latest,更新时重新pull该tag镜像即可
+    container_name: chatgptweb
     ports:
       - 3002:3002
+    depends_on:
+      - database
     environment:
       # 二选一
       OPENAI_API_KEY: sk-xxx
@@ -222,8 +225,6 @@ services:
       OPENAI_API_MODEL: xxx
       # 反向代理，可选
       API_REVERSE_PROXY: xxx
-      # 访问权限密钥，可选
-      AUTH_SECRET_KEY: xxx
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
       # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
@@ -232,6 +233,45 @@ services:
       SOCKS_PROXY_PORT: xxx
       # HTTPS 代理，可选，支持 http，https，socks5
       HTTPS_PROXY: http://xxx:7890
+      # 访问jwt加密参数，可选 不为空则允许登录 同时需要设置 MONGODB_URL
+      AUTH_SECRET_KEY: xxx
+      # mongodb 的连接字符串
+      MONGODB_URL: 'mongodb://chatgpt:xxxx@database:27017'
+      # 网站是否开启注册
+      REGISTER_ENABLED: true
+      # 开启注册之后 网站注册允许的邮箱后缀 如果空 则允许任意后缀
+      REGISTER_MAILS: '@qq.com,@sina.com,@163.com'
+      # 开启注册之后 密码加密的盐
+      PASSWORD_MD5_SALT: xxx
+      # 开启注册之后 超级管理邮箱
+      ROOT_USER: me@example.com
+      # 开启注册之后 网站域名 不含 / 注册的时候发送验证邮箱使用
+      SITE_DOMAIN: http://127.0.0.1:3002
+      # 开启注册之后 发送验证邮箱配置
+      SMTP_HOST: smtp.exmail.qq.com
+      SMTP_PORT: 465
+      SMTP_TSL: true
+      SMTP_USERNAME: noreply@examile.com
+      SMTP_PASSWORD: xxx
+    links:
+      - database
+
+  database:
+    image: mongo
+    container_name: chatgptweb-database
+    ports:
+      - '27017:27017'
+    expose:
+      - '27017'
+    volumes:
+      - mongodb:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: chatgpt
+      MONGO_INITDB_ROOT_PASSWORD: xxxx
+      MONGO_INITDB_DATABASE: chatgpt
+
+volumes:
+  mongodb: {}
 ```
 - `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 - `OPENAI_API_MODEL`  可选，设置 `OPENAI_API_KEY` 时可用
@@ -317,19 +357,7 @@ A: 一种可能原因是经过 Nginx 反向代理，开启了 buffer，则 Nginx
 </a>
 
 ## 赞助
-
-如果你觉得这个项目对你有帮助，并且情况允许的话，可以给我一点点支持，总之非常感谢支持～
-
-<div style="display: flex; gap: 20px;">
-	<div style="text-align: center">
-		<img style="max-width: 100%" src="./docs/wechat.png" alt="微信" />
-		<p>WeChat Pay</p>
-	</div>
-	<div style="text-align: center">
-		<img style="max-width: 100%" src="./docs/alipay.png" alt="支付宝" />
-		<p>Alipay</p>
-	</div>
-</div>
+如果你觉得这个项目对你有帮助，请给我点个Star。
 
 ## License
-MIT © [ChenZhaoYu](./license)
+MIT © [Kerwin1202](./license)
