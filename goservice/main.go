@@ -47,7 +47,12 @@ type ChatResponse struct {
 	Detail          openai.ChatCompletionStreamResponse `json:"detail"`
 }
 
-type ModelConfig struct {
+type ChatConfig struct {
+	Message string         `json:"message"`
+	Data    ChatConfigData `json:"data"`
+	Status  string         `json:"status"`
+}
+type ChatConfigData struct {
 	APIModel     string `json:"apiModel"`
 	ReverseProxy string `json:"reverseProxy"`
 	TimeoutMs    int    `json:"timeoutMs"`
@@ -210,7 +215,7 @@ func fetchBalance() (string, error) {
 	return fmt.Sprintf("%.3f", data.TotalAvailable), nil
 }
 
-func chatConfig() (ModelConfig, error) {
+func chatConfig() (ChatConfig, error) {
 	balance, err := fetchBalance()
 	if err != nil {
 		balance = "error"
@@ -234,13 +239,17 @@ func chatConfig() (ModelConfig, error) {
 		socksProxy = fmt.Sprintf("%s:%s", socksHost, socksPort)
 	}
 
-	config := ModelConfig{
-		APIModel:     openai.GPT3Dot5Turbo,
-		ReverseProxy: reverseProxy,
-		TimeoutMs:    0,
-		SocksProxy:   socksProxy,
-		HttpsProxy:   httpsProxy,
-		Balance:      balance,
+	config := ChatConfig{
+		Message: "",
+		Data: ChatConfigData{
+			APIModel:     "ChatGPTAPI",
+			ReverseProxy: reverseProxy,
+			TimeoutMs:    60000,
+			SocksProxy:   socksProxy,
+			HttpsProxy:   httpsProxy,
+			Balance:      balance,
+		},
+		Status: "Success",
 	}
 
 	return config, nil
@@ -275,7 +284,7 @@ func sessionHandler(w http.ResponseWriter, r *http.Request) {
 			Model string `json:"model"`
 		}{
 			Auth:  hasAuth,
-			Model: openai.GPT3Dot5Turbo,
+			Model: "ChatGPTAPI",
 		},
 	}
 
