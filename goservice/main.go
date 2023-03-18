@@ -378,6 +378,6 @@ func main() {
 	http.Handle("/api", r)
 
 	port := 3002
-	fmt.Printf("Server is running on port %d\n", port)
+	fmt.Printf("Server is running on http://localhost:%d\n", port)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }

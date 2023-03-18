@@ -37,6 +37,9 @@ COPY --link --from=frontend /app/dist ./html
 ADD --link goservice/html/html.go ./html/html.go
 RUN --mount=type=cache,target=/root/.cache/go-build CGO_ENABLED=0 go build -ldflags "-s -w" -trimpath
 
+RUN apk add upx
+RUN upx /build/goservice
+
 FROM gcr.io/distroless/static-debian11 as goservice
 COPY --from=goservice-builder /build/goservice /
 CMD ["/goservice"]
