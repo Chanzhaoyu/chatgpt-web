@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile-upstream:master-labs
 ARG GO_VERSION="1.20"
 # build front-end
-FROM node:lts-alpine AS frontend
+FROM --platform=$BUILDPLATFORM node:lts-alpine AS frontend
 
 RUN npm install pnpm -g
 
