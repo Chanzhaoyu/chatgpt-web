@@ -102,15 +102,18 @@ async function chatReplyProcess(
 
 async function fetchBalance() {
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+  const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
+
   if (!isNotEmptyString(OPENAI_API_KEY))
     return Promise.resolve('-')
 
+  const API_BASE_URL = isNotEmptyString(OPENAI_API_BASE_URL)
+    ? OPENAI_API_BASE_URL
+    : 'https://api.openai.com'
+
   try {
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${OPENAI_API_KEY}`,
-    }
-    const response = await axios.get('https://api.openai.com/dashboard/billing/credit_grants', { headers })
+    const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENAI_API_KEY}` }
+    const response = await axios.get(`${API_BASE_URL}/dashboard/billing/credit_grants`, { headers })
     const balance = response.data.total_available ?? 0
     return Promise.resolve(balance.toFixed(3))
   }
