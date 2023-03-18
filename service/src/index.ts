@@ -19,6 +19,10 @@ app.all('*', (_, res, next) => {
   next()
 })
 
+router.get('/get-test', async (req, res) => {
+	res.send({ status: 'Success', message: 'get-test', data: null })
+})
+
 router.post('/chat-process', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 

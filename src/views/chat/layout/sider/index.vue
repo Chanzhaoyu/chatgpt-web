@@ -3,7 +3,7 @@ import type { CSSProperties } from 'vue'
 import { computed, ref, watch } from 'vue'
 import { NButton, NLayoutSider } from 'naive-ui'
 import List from './List.vue'
-import Footer from './Footer.vue'
+// import Footer from './Footer.vue'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { PromptStore } from '@/components/common'
@@ -85,7 +85,7 @@ watch(
           </NButton>
         </div>
       </main>
-      <Footer />
+<!--      <Footer />-->
     </div>
   </NLayoutSider>
   <template v-if="isMobile">
