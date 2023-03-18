@@ -1,3 +1,11 @@
+## v2.10.7
+
+`2023-03-17`
+
+## BugFix
+- 回退 `chatgpt` 版本，原因：导致 `OPENAI_API_BASE_URL` 代理失效
+- 修复缺省状态的 `usingContext` 默认值
+
 ## v2.10.6
 
 `2023-03-17`
