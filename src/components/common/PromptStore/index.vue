@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import type { DataTableColumns } from 'naive-ui'
 import { computed, h, ref, watch } from 'vue'
-import { NButton, NCard, NDataTable, NDivider, NInput, NLayoutContent, NMessageProvider, NModal, NPopconfirm, NSpace, NTabPane, NTabs, useMessage } from 'naive-ui'
+import { NButton, NCard, NDataTable, NDivider, NInput, NLayoutContent, NList, NListItem, NModal, NPopconfirm, NSpace, NTabPane, NTabs, NThing, useMessage } from 'naive-ui'
 import PromptRecommend from '../../../assets/recommend.json'
 import { SvgIcon } from '..'
 import { usePromptStore } from '@/store'
@@ -238,7 +238,7 @@ const downloadPromptTemplate = async () => {
 
 // 移动端自适应相关
 const renderTemplate = () => {
-  const [keyLimit, valueLimit] = isMobile.value ? [6, 9] : [15, 50]
+  const [keyLimit, valueLimit] = isMobile.value ? [10, 30] : [15, 50]
 
   return promptList.value.map((item: { key: string; value: string }) => {
     return {
@@ -325,145 +325,159 @@ const dataSource = computed(() => {
 </script>
 
 <template>
-  <NMessageProvider>
-    <NModal v-model:show="show" style="width: 90%; max-width: 900px;" preset="card">
-      <div class="space-y-4">
-        <NTabs type="segment">
-          <NTabPane name="local" :tab="$t('store.local')">
-            <div
-              class="flex gap-3"
-              :class="[isMobile ? 'flex-col' : 'flex-row justify-between']"
-            >
-              <div class="flex items-center space-x-4">
-                <NButton
-                  type="primary"
-                  size="small"
-                  @click="changeShowModal('add')"
-                >
-                  {{ $t('common.add') }}
-                </NButton>
-                <NButton
-                  size="small"
-                  @click="changeShowModal('local_import')"
-                >
-                  {{ $t('common.import') }}
-                </NButton>
-                <NButton
-                  size="small"
-                  :loading="exportLoading"
-                  @click="exportPromptTemplate()"
-                >
-                  {{ $t('common.export') }}
-                </NButton>
-                <NPopconfirm @positive-click="clearPromptTemplate">
-                  <template #trigger>
-                    <NButton size="small">
-                      {{ $t('common.clear') }}
-                    </NButton>
-                  </template>
-                  {{ $t('store.clearStoreConfirm') }}
-                </NPopconfirm>
-              </div>
-              <div class="flex items-center">
-                <NInput v-model:value="searchValue" style="width: 100%" />
-              </div>
-            </div>
-            <br>
-            <NDataTable
-              :max-height="400"
-              :columns="columns"
-              :data="dataSource"
-              :pagination="pagination"
-              :bordered="false"
-            />
-          </NTabPane>
-          <NTabPane name="download" :tab="$t('store.online')">
-            <p class="mb-4">
-              {{ $t('store.onlineImportWarning') }}
-            </p>
-            <div class="flex items-center gap-4">
-              <NInput v-model:value="downloadURL" placeholder="" />
+  <NModal v-model:show="show" style="width: 90%; max-width: 900px;" preset="card">
+    <div class="space-y-4">
+      <NTabs type="segment">
+        <NTabPane name="local" :tab="$t('store.local')">
+          <div
+            class="flex gap-3 mb-4"
+            :class="[isMobile ? 'flex-col' : 'flex-row justify-between']"
+          >
+            <div class="flex items-center space-x-4">
               <NButton
-                strong
-                secondary
-                :disabled="downloadDisabled"
-                :loading="importLoading"
-                @click="downloadPromptTemplate()"
+                type="primary"
+                size="small"
+                @click="changeShowModal('add')"
               >
-                {{ $t('common.download') }}
+                {{ $t('common.add') }}
               </NButton>
-            </div>
-            <NDivider />
-            <NLayoutContent
-              style="height: 360px"
-              content-style="background: none;"
-              :native-scrollbar="false"
-            >
-              <NCard
-                v-for="info in promptRecommendList"
-                :key="info.key" :title="info.key"
-                style="margin: 5px;"
-                embedded
-                :bordered="true"
+              <NButton
+                size="small"
+                @click="changeShowModal('local_import')"
               >
-                <p
-                  class="overflow-hidden text-ellipsis whitespace-nowrap"
-                  :title="info.desc"
-                >
-                  {{ info.desc }}
-                </p>
-                <template #footer>
-                  <div class="flex items-center justify-end space-x-4">
-                    <NButton text>
-                      <a
-                        :href="info.url"
-                        target="_blank"
-                      >
-                        <SvgIcon class="text-xl" icon="ri:link" />
-                      </a>
-                    </NButton>
-                    <NButton text @click="setDownloadURL(info.downloadUrl) ">
-                      <SvgIcon class="text-xl" icon="ri:add-fill" />
-                    </NButton>
-                  </div>
+                {{ $t('common.import') }}
+              </NButton>
+              <NButton
+                size="small"
+                :loading="exportLoading"
+                @click="exportPromptTemplate()"
+              >
+                {{ $t('common.export') }}
+              </NButton>
+              <NPopconfirm @positive-click="clearPromptTemplate">
+                <template #trigger>
+                  <NButton size="small">
+                    {{ $t('common.clear') }}
+                  </NButton>
                 </template>
-              </NCard>
-            </NLayoutContent>
-          </NTabPane>
-        </NTabs>
-      </div>
-    </NModal>
-    <NModal v-model:show="showModal" style="width: 90%; max-width: 600px;" preset="card">
-      <NSpace v-if="modalMode === 'add' || modalMode === 'modify'" vertical>
-        {{ t('store.title') }}
-        <NInput v-model:value="tempPromptKey" />
-        {{ t('store.description') }}
-        <NInput v-model:value="tempPromptValue" type="textarea" />
-        <NButton
-          block
-          type="primary"
-          :disabled="inputStatus"
-          @click="() => { modalMode === 'add' ? addPromptTemplate() : modifyPromptTemplate() }"
-        >
-          {{ t('common.confirm') }}
-        </NButton>
-      </NSpace>
-      <NSpace v-if="modalMode === 'local_import'" vertical>
-        <NInput
-          v-model:value="tempPromptValue"
-          :placeholder="t('store.importPlaceholder')"
-          :autosize="{ minRows: 3, maxRows: 15 }"
-          type="textarea"
-        />
-        <NButton
-          block
-          type="primary"
-          :disabled="inputStatus"
-          @click="() => { importPromptTemplate() }"
-        >
-          {{ t('common.import') }}
-        </NButton>
-      </NSpace>
-    </NModal>
-  </NMessageProvider>
+                {{ $t('store.clearStoreConfirm') }}
+              </NPopconfirm>
+            </div>
+            <div class="flex items-center">
+              <NInput v-model:value="searchValue" style="width: 100%" />
+            </div>
+          </div>
+          <NDataTable
+            v-if="!isMobile"
+            :max-height="400"
+            :columns="columns"
+            :data="dataSource"
+            :pagination="pagination"
+            :bordered="false"
+          />
+          <NList v-if="isMobile" style="max-height: 400px; overflow-y: auto;">
+            <NListItem v-for="(item, index) of dataSource" :key="index">
+              <NThing :title="item.renderKey" :description="item.renderValue" />
+              <template #suffix>
+                <div class="flex flex-col items-center gap-2">
+                  <NButton tertiary size="small" type="info" @click="changeShowModal('modify', item)">
+                    {{ t('common.edit') }}
+                  </NButton>
+                  <NButton tertiary size="small" type="error" @click="deletePromptTemplate(item)">
+                    {{ t('common.delete') }}
+                  </NButton>
+                </div>
+              </template>
+            </NListItem>
+          </NList>
+        </NTabPane>
+        <NTabPane name="download" :tab="$t('store.online')">
+          <p class="mb-4">
+            {{ $t('store.onlineImportWarning') }}
+          </p>
+          <div class="flex items-center gap-4">
+            <NInput v-model:value="downloadURL" placeholder="" />
+            <NButton
+              strong
+              secondary
+              :disabled="downloadDisabled"
+              :loading="importLoading"
+              @click="downloadPromptTemplate()"
+            >
+              {{ $t('common.download') }}
+            </NButton>
+          </div>
+          <NDivider />
+          <NLayoutContent
+            style="height: 360px"
+            content-style="background: none;"
+            :native-scrollbar="false"
+          >
+            <NCard
+              v-for="info in promptRecommendList"
+              :key="info.key" :title="info.key"
+              style="margin: 5px;"
+              embedded
+              :bordered="true"
+            >
+              <p
+                class="overflow-hidden text-ellipsis whitespace-nowrap"
+                :title="info.desc"
+              >
+                {{ info.desc }}
+              </p>
+              <template #footer>
+                <div class="flex items-center justify-end space-x-4">
+                  <NButton text>
+                    <a
+                      :href="info.url"
+                      target="_blank"
+                    >
+                      <SvgIcon class="text-xl" icon="ri:link" />
+                    </a>
+                  </NButton>
+                  <NButton text @click="setDownloadURL(info.downloadUrl) ">
+                    <SvgIcon class="text-xl" icon="ri:add-fill" />
+                  </NButton>
+                </div>
+              </template>
+            </NCard>
+          </NLayoutContent>
+        </NTabPane>
+      </NTabs>
+    </div>
+  </NModal>
+
+  <NModal v-model:show="showModal" style="width: 90%; max-width: 600px;" preset="card">
+    <NSpace v-if="modalMode === 'add' || modalMode === 'modify'" vertical>
+      {{ t('store.title') }}
+      <NInput v-model:value="tempPromptKey" />
+      {{ t('store.description') }}
+      <NInput v-model:value="tempPromptValue" type="textarea" />
+      <NButton
+        block
+        type="primary"
+        :disabled="inputStatus"
+        @click="() => { modalMode === 'add' ? addPromptTemplate() : modifyPromptTemplate() }"
+      >
+        {{ t('common.confirm') }}
+      </NButton>
+    </NSpace>
+    <NSpace v-if="modalMode === 'local_import'" vertical>
+      <NInput
+        v-model:value="tempPromptValue"
+        :placeholder="t('store.importPlaceholder')"
+        :autosize="{ minRows: 3, maxRows: 15 }"
+        type="textarea"
+      />
+      <NButton
+        block
+        type="primary"
+        :disabled="inputStatus"
+        @click="() => { importPromptTemplate() }"
+      >
+        {{ t('common.import') }}
+      </NButton>
+    </NSpace>
+  </NModal>
 </template>

@@ -66,6 +66,7 @@ export default {
     timeout: 'Timeout',
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
+    balance: 'API Balance',
   },
   store: {
     local: 'Local',

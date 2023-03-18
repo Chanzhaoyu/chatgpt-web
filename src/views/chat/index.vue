@@ -424,6 +424,7 @@ const searchOptions = computed(() => {
     return []
   }
 })
+
 // value反渲染key
 const renderOption = (option: { label: string }) => {
   for (const i of promptTemplate.value) {
