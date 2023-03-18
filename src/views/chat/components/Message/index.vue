@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { NDropdown } from 'naive-ui'
 import AvatarComponent from './Avatar.vue'
 import TextComponent from './Text.vue'
@@ -29,7 +29,14 @@ const { iconRender } = useIconRender()
 
 const textRef = ref<HTMLElement>()
 
-const options = [
+const asRawText = ref(props.inversion)
+
+const options = computed(() => [
+  {
+    label: asRawText.value ? t('chat.preview') : t('chat.showRawText'),
+    key: 'toggleRenderType',
+    icon: iconRender({ icon: asRawText.value ? 'ic:outline-code-off' : 'ic:outline-code' }),
+  },
   {
     label: t('chat.copy'),
     key: 'copyText',
@@ -40,12 +47,15 @@ const options = [
     key: 'delete',
     icon: iconRender({ icon: 'ri:delete-bin-line' }),
   },
-]
+])
 
-function handleSelect(key: 'copyRaw' | 'copyText' | 'delete') {
+function handleSelect(key: 'copyRaw' | 'copyText' | 'delete' | 'toggleRenderType') {
   switch (key) {
     case 'copyText':
       copyText({ text: props.text ?? '' })
+      return
+    case 'toggleRenderType':
+      asRawText.value = !asRawText.value
       return
     case 'delete':
       emit('delete')
@@ -79,6 +89,7 @@ function handleRegenerate() {
           :error="error"
           :text="text"
           :loading="loading"
+          :as-raw-text="asRawText"
         />
         <div class="flex flex-col">
           <button
