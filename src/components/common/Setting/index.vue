@@ -4,8 +4,10 @@ import { NModal, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
 import Advanced from './Advanced.vue'
 import About from './About.vue'
+import SpeechSetting from './speech-setting.vue'
 import { useAuthStore } from '@/store'
 import { SvgIcon } from '@/components/common'
+import { useSpeechStore } from '@/store/modules/speech'
 
 interface Props {
   visible: boolean
@@ -20,6 +22,7 @@ const props = defineProps<Props>()
 const emit = defineEmits<Emit>()
 
 const authStore = useAuthStore()
+const speechStore = useSpeechStore()
 
 const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
 
@@ -47,6 +50,13 @@ const show = computed({
           <div class="min-h-[100px]">
             <General />
           </div>
+        </NTabPane>
+        <NTabPane v-if="speechStore.enable" name="Speech" tab="Speech">
+          <template #tab>
+            <SvgIcon class="text-lg" icon="ic:round-settings-voice" />
+            <span class="ml-2">{{ $t('setting.speechSetting') }}</span>
+          </template>
+          <SpeechSetting />
         </NTabPane>
         <NTabPane v-if="isChatGPTAPI" name="Advanced" tab="Advanced">
           <template #tab>

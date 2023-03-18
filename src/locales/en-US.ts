@@ -71,7 +71,12 @@ export default {
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
     balance: 'API Balance',
-    monthlyUsage: 'Monthly Usage',
+		monthlyUsage: 'Monthly Usage',
+    speechSetting: 'Voice settings',
+    speakLang: 'Language',
+    speakSound: 'Sound',
+    pitch: 'Tone',
+    rate: 'Speech speed',
   },
   store: {
     siderButton: 'Prompt Store',
