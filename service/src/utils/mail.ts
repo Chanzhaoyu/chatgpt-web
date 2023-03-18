@@ -164,7 +164,7 @@ export function sendMail(toMail: string, verifyUrl: string) {
         line-height: 17px;
         margin-top: 6px;
         text-decoration: none;
-      " href="https://github.com/Kerwin1202/chatgpt-web">邮箱注册作者</a>
+      " href="https://github.com/Kerwin1202/chatgpt-web">邮箱注册功能作者</a>
       </div>
     </div>
   </div>
