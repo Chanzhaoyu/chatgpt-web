@@ -377,9 +377,13 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/chat-process", chatProcessHandler(chatStorage)).Methods("POST")
+	r.HandleFunc("/api/chat-process", chatProcessHandler(chatStorage)).Methods("POST")
 	r.HandleFunc("/config", configHandler).Methods("POST")
+	r.HandleFunc("/api/config", configHandler).Methods("POST")
 	r.HandleFunc("/session", sessionHandler).Methods("POST")
+	r.HandleFunc("/api/session", sessionHandler).Methods("POST")
 	r.HandleFunc("/verify", verifyHandler).Methods("POST")
+	r.HandleFunc("/api/verify", verifyHandler).Methods("POST")
 
 	r.PathPrefix("/").Handler(http.FileServer(staticFiles))
 
