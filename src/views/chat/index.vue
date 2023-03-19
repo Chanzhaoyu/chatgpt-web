@@ -16,6 +16,7 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
+import VoiceInput from '@/components/voice-input/index.vue'
 
 let controller = new AbortController()
 
@@ -454,6 +455,17 @@ const footerClass = computed(() => {
   return classes
 })
 
+const handleVoiceChange = (v: string[]) => {
+  prompt.value = v.filter(item => !!item).join('')
+}
+const handleReset = () => chatStore.clearChatByUuid(+uuid)
+
+const handleVoiceSubmit = () => {
+	if (!loading.value) {
+		handleSubmit()
+	}
+}
+
 onMounted(() => {
   scrollToBottom()
   if (inputRef.value && !isMobile.value)
@@ -471,10 +483,10 @@ onUnmounted(() => {
     <HeaderComponent
       v-if="true"
       :using-context="usingContext"
+      :loading="loading"
       @export="handleExport"
       @toggle-using-context="toggleUsingContext"
-			@clean="() => chatStore.clearChatByUuid(+uuid)"
-			:loading="loading"
+      @clean="handleReset"
     />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto">
@@ -533,6 +545,7 @@ onUnmounted(() => {
               <SvgIcon icon="ri:chat-history-line" />
             </span>
           </HoverButton>
+          <VoiceInput :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
           <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
             <template #default="{ handleInput, handleBlur, handleFocus }">
               <NInput
