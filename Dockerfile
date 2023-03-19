@@ -1,8 +1,6 @@
 # build front-end
 FROM node:lts-alpine AS frontend
 
-ARG SITE_TITLE="ChatGpt Web"
-
 RUN npm install pnpm -g
 
 WORKDIR /app
@@ -15,8 +13,7 @@ RUN pnpm install
 
 COPY . /app
 
-RUN sed -i "s/\${TITLE}/${SITE_TITLE}/g" /app/public/index.html && \
-    pnpm run build
+RUN pnpm run build
 
 # build backend
 FROM node:lts-alpine as backend
@@ -50,10 +47,14 @@ RUN pnpm install --production && rm -rf /root/.npm /root/.pnpm-store /usr/local/
 
 COPY /service /app
 
+COPY --from=frontend /app/replace-title.sh /app
+
+RUN chmod +x /app/replace-title.sh
+
 COPY --from=frontend /app/dist /app/public
 
 COPY --from=backend /app/build /app/build
 
 EXPOSE 3002
 
-CMD ["pnpm", "run", "prod"]
+CMD ["sh", "-c", "./replace-title.sh && pnpm run prod"]
