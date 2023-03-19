@@ -36,7 +36,7 @@ router.post('/chat-process', auth, async (req, res) => {
   }
 })
 
-router.post('/config', async (req, res) => {
+router.post('/config', auth, async (req, res) => {
   try {
     const response = await chatConfig()
     res.send(response)
