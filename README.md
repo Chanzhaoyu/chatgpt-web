@@ -6,6 +6,11 @@
 </div>
 </br>
 
+## 说明
+> **此项目 Fork 自 [Chanzhaoyu/chatgpt-web](https://github.com/Chanzhaoyu/chatgpt-web), 除了定时合并该分支, 新增了部分特色功能, 注册&登录, 前端页面设置apikey 等**
+</br>
+
+## 截图
 > 声明：此项目只发布于 Github，基于 MIT 协议，免费且作为开源学习使用。并且不会有任何形式的卖号、付费服务、讨论群、讨论组等行为。谨防受骗。
 
 ![cover](./docs/c1.png)
@@ -80,7 +85,7 @@
 
 [✓] 对代码等消息类型的格式化美化处理
 
-[✓] 访问权限控制
+[✓] 支持用户登录注册
 
 [✓] 数据导入、导出
 
@@ -235,6 +240,8 @@ services:
       HTTPS_PROXY: http://xxx:7890
       # 访问jwt加密参数，可选 不为空则允许登录 同时需要设置 MONGODB_URL
       AUTH_SECRET_KEY: xxx
+      # 网站名称
+      SITE_TITLE: ChatGpt Web
       # mongodb 的连接字符串
       MONGODB_URL: 'mongodb://chatgpt:xxxx@database:27017'
       # 网站是否开启注册

@@ -1,6 +1,8 @@
 # build front-end
 FROM node:lts-alpine AS frontend
 
+ARG SITE_TITLE="ChatGpt Web"
+
 RUN npm install pnpm -g
 
 WORKDIR /app
@@ -13,7 +15,8 @@ RUN pnpm install
 
 COPY . /app
 
-RUN pnpm run build
+RUN sed -i "s/\${TITLE}/${SITE_TITLE}/g" /app/public/index.html && \
+    pnpm run build
 
 # build backend
 FROM node:lts-alpine as backend

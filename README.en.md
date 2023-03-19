@@ -6,6 +6,11 @@
 </div>
 </br>
 
+## Introduction
+> **This project is forked from [Chanzhaoyu/chatgpt-web](https://github.com/Chanzhaoyu/chatgpt-web). In addition to regularly merging this branch, some unique features have been added such as registration and login, setting API key on the front-end page.**
+</br>
+
+## Screenshots
 > Disclaimer: This project is only released on GitHub, under the MIT License, free and for open-source learning purposes. There will be no account selling, paid services, discussion groups, or forums. Beware of fraud.
 
 ![cover](./docs/c1.png)
@@ -84,7 +89,7 @@ For all parameter variables, check [here](#docker-parameter-example) or see:
 
 [✓] Formatting and beautifying code-like message types
 
-[✓] Access rights control
+[✓] Login or Register
 
 [✓] Data import and export
 
@@ -227,6 +232,8 @@ services:
       SOCKS_PROXY_PORT: xxxx
       # HTTPS Proxy，optional, support http, https, socks5
       HTTPS_PROXY: http://xxx:7890
+      # Title for site
+      SITE_TITLE: ChatGpt Web
       # access salt，optional Allow login if not empty.
       AUTH_SECRET_KEY: xxx
       # mongodb's connection string
