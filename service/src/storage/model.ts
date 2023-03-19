@@ -16,6 +16,8 @@ class UserInfo {
   status: Status
   createTime: string
   verifyTime?: string
+  avatar?: string
+  description?: string
   constructor(email: string, password: string) {
     this.name = email
     this.email = email

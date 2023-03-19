@@ -1,11 +1,12 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
+import { ObjectId } from 'mongodb'
 import type { ChatContext, ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
 import { auth } from './middleware/auth'
-import type { ChatOptions } from './storage/model'
+import type { ChatOptions, UserInfo } from './storage/model'
 import { Status } from './storage/model'
-import { clearChat, createChatRoom, createUser, deleteChat, deleteChatRoom, existsChatRoom, getChat, getChatRooms, getChats, getUser, insertChat, renameChatRoom, updateChat, verifyUser } from './storage/mongo'
+import { clearChat, createChatRoom, createUser, deleteChat, deleteChatRoom, existsChatRoom, getChat, getChatRooms, getChats, getUser, getUserById, insertChat, renameChatRoom, updateChat, updateUserInfo, verifyUser } from './storage/mongo'
 import { sendMail } from './utils/mail'
 import { checkUserVerify, getUserVerifyUrl, md5 } from './utils/security'
 
@@ -248,8 +249,30 @@ router.post('/user-login', async (req, res) => {
       throw new Error('用户不存在或密码错误 | User does not exist or incorrect password.')
     }
 
-    const token = jwt.sign({ email: username, userId: user._id }, process.env.AUTH_SECRET_KEY)
+    const token = jwt.sign({
+      name: user.name ? user.name : user.email,
+      avatar: user.avatar,
+      description: user.description,
+      userId: user._id,
+      root: username.toLowerCase() === process.env.ROOT_USER,
+    }, process.env.AUTH_SECRET_KEY)
     res.send({ status: 'Success', message: '登录成功 | Login successfully', data: { token } })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/user-info', auth, async (req, res) => {
+  try {
+    const { name, avatar, description } = req.body as UserInfo
+    const userId = new ObjectId(req.headers.userId.toString())
+
+    const user = await getUserById(userId)
+    if (user == null || user.status !== Status.Normal)
+      throw new Error('用户不存在 | User does not exist.')
+    await updateUserInfo(userId, { name, avatar, description } as UserInfo)
+    res.send({ status: 'Success', message: '更新成功 | Update successfully' })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

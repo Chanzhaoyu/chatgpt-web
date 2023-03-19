@@ -64,6 +64,13 @@ export function fetchRegister<T = any>(username: string, password: string) {
   })
 }
 
+export function fetchUpdateUserInfo<T = any>(name: string, avatar: string, description: string) {
+  return post<T>({
+    url: '/user-info',
+    data: { name, avatar, description },
+  })
+}
+
 export function fetchGetChatRooms<T = any>() {
   return get<T>({
     url: '/chatrooms',

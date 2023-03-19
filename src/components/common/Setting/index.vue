@@ -4,10 +4,13 @@ import { NModal, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
 import About from './About.vue'
 import { SvgIcon } from '@/components/common'
+import { useUserStore } from '@/store'
 
 const props = defineProps<Props>()
 
 const emit = defineEmits<Emit>()
+
+const userStore = useUserStore()
 
 interface Props {
   visible: boolean
@@ -42,7 +45,7 @@ const show = computed({
             <General />
           </div>
         </NTabPane>
-        <NTabPane name="Config" tab="Config">
+        <NTabPane v-if="userStore.userInfo.root" name="Config" tab="Config">
           <template #tab>
             <SvgIcon class="text-lg" icon="ri:list-settings-line" />
             <span class="ml-2">{{ $t('setting.config') }}</span>

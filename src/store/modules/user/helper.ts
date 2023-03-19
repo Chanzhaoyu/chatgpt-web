@@ -6,6 +6,7 @@ export interface UserInfo {
   avatar: string
   name: string
   description: string
+  root: boolean
 }
 
 export interface UserState {
@@ -18,6 +19,7 @@ export function defaultSetting(): UserState {
       avatar: '',
       name: '',
       description: '',
+      root: false,
     },
   }
 }

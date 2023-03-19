@@ -117,7 +117,7 @@ export async function deleteChat(roomId: number, uuid: number, inversion: boolea
   chatCol.updateOne(query, update)
 }
 
-export async function createUser(email: string, password: string) {
+export async function createUser(email: string, password: string): Promise<UserInfo> {
   email = email.toLowerCase()
   const userInfo = new UserInfo(email, password)
   if (email === process.env.ROOT_USER)
@@ -127,14 +127,19 @@ export async function createUser(email: string, password: string) {
   return userInfo
 }
 
-export async function updateUserName(userId: ObjectId, name: string) {
-  const result = userCol.updateOne({ _id: userId }, { name: { $set: name } })
+export async function updateUserInfo(userId: ObjectId, user: UserInfo) {
+  const result = userCol.updateOne({ _id: userId }
+    , { $set: { name: user.name, description: user.description, avatar: user.avatar } })
   return result
 }
 
-export async function getUser(email: string) {
+export async function getUser(email: string): Promise<UserInfo> {
   email = email.toLowerCase()
-  return await userCol.findOne({ email })
+  return await userCol.findOne({ email }) as UserInfo
+}
+
+export async function getUserById(userId: ObjectId): Promise<UserInfo> {
+  return await userCol.findOne({ _id: userId }) as UserInfo
 }
 
 export async function verifyUser(email: string) {

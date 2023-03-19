@@ -59,15 +59,9 @@ const languageOptions: { label: string; key: Language; value: Language }[] = [
   { label: 'English', key: 'en-US', value: 'en-US' },
 ]
 
-function updateUserInfo(options: Partial<UserInfo>) {
-  userStore.updateUserInfo(options)
+async function updateUserInfo(options: Partial<UserInfo>) {
+  await userStore.updateUserInfo(true, options)
   ms.success(t('common.success'))
-}
-
-function handleReset() {
-  userStore.resetUserInfo()
-  ms.success(t('common.success'))
-  window.location.reload()
 }
 
 function exportData(): void {
@@ -124,31 +118,22 @@ function handleImportButtonClick(): void {
   <div class="p-4 space-y-5 min-h-[200px]">
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
-        <div class="flex-1">
-          <NInput v-model:value="avatar" placeholder="" />
-        </div>
-        <NButton size="tiny" text type="primary" @click="updateUserInfo({ avatar })">
-          {{ $t('common.save') }}
-        </NButton>
-      </div>
-      <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
         <div class="w-[200px]">
           <NInput v-model:value="name" placeholder="" />
         </div>
-        <NButton size="tiny" text type="primary" @click="updateUserInfo({ name })">
-          {{ $t('common.save') }}
-        </NButton>
       </div>
       <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.description') }}</span>
         <div class="flex-1">
           <NInput v-model:value="description" placeholder="" />
         </div>
-        <NButton size="tiny" text type="primary" @click="updateUserInfo({ description })">
-          {{ $t('common.save') }}
-        </NButton>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
+        <div class="flex-1">
+          <NInput v-model:value="avatar" placeholder="" />
+        </div>
       </div>
 
       <div
@@ -214,9 +199,9 @@ function handleImportButtonClick(): void {
         </div>
       </div>
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.resetUserInfo') }}</span>
-        <NButton size="small" @click="handleReset">
-          {{ $t('common.reset') }}
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.saveUserInfo') }}</span>
+        <NButton size="small" type="primary" @click="updateUserInfo({ avatar, name, description })">
+          {{ $t('common.save') }}
         </NButton>
       </div>
     </div>
