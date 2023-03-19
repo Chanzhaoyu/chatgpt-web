@@ -4,6 +4,7 @@ import MarkdownIt from 'markdown-it'
 import mdKatex from '@traptitech/markdown-it-katex'
 import mila from 'markdown-it-link-attributes'
 import hljs from 'highlight.js'
+import { NButton, NInput } from 'naive-ui'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
 
@@ -12,9 +13,17 @@ interface Props {
   error?: boolean
   text?: string
   loading?: boolean
+  edit?: boolean
+}
+
+interface Emit {
+  (e: 'update:text', text: string): void
+  (e: 'editSubmit', text: string): void
+  (ev: 'editCancel'): void
 }
 
 const props = defineProps<Props>()
+const emit = defineEmits<Emit>()
 
 const { isMobile } = useBasicLayout()
 
@@ -54,6 +63,18 @@ const text = computed(() => {
   return value
 })
 
+function handleSubmit() {
+  emit('editSubmit', text.value)
+}
+
+function handleCancel() {
+  emit('editCancel')
+}
+
+function handleInput(v: string) {
+  emit('update:text', v)
+}
+
 function highlightBlock(str: string, lang?: string) {
   return `<pre class="code-block-wrapper"><div class="code-block-header"><span class="code-block-header__lang">${lang}</span><span class="code-block-header__copy">${t('chat.copyCode')}</span></div><code class="hljs code-block-body ${lang}">${str}</code></pre>`
 }
@@ -68,8 +89,28 @@ defineExpose({ textRef })
     </template>
     <template v-else>
       <div ref="textRef" class="leading-relaxed break-words">
-        <div v-if="!inversion" class="markdown-body" v-html="text" />
-        <div v-else class="whitespace-pre-wrap" v-text="text" />
+        <template v-if="edit">
+          <div class="whitespace-pre-wrap">
+            <NInput
+              :value="text"
+              type="textarea"
+              :autosize="{ minRows: 5 }"
+              @input="handleInput"
+            />
+            <div class="chat-edit-buttons">
+              <NButton type="primary" @click="handleSubmit">
+                {{ t('chat.saveAndSubmit') }}
+              </NButton>
+              <NButton @click="handleCancel">
+                {{ t('chat.cancel') }}
+              </NButton>
+            </div>
+          </div>
+        </template>
+        <template v-else>
+          <div v-if="!inversion" class="markdown-body" v-html="text" />
+          <div v-else class="whitespace-pre-wrap" v-text="text" />
+        </template>
       </div>
     </template>
   </div>
