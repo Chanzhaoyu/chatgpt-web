@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getSysMsg, setSysMsg } from './helper'
+import { defaultSystemMessage, getSysMsg, setSysMsg } from './helper'
 import type { SystemMessage } from './helper'
 
 export const useSysMsgStore = defineStore('sysmsg-store', {
@@ -22,6 +22,7 @@ export const useSysMsgStore = defineStore('sysmsg-store', {
 
     restoreDefaultSystemMessage() {
       this.current = ''
+      this.default = defaultSystemMessage
       this.recordState()
     },
 

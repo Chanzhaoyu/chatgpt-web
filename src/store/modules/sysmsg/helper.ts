@@ -4,9 +4,11 @@ const LOCAL_NAME = 'systemMessage'
 
 // system message config
 const currentDate = (new Date()).toISOString().split('T')[0]
-const defaultSystemMessage = `You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.
+
+const originalSystemMessage = `You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.
 Knowledge cutoff: 2021-09-01
 Current date: ${currentDate}`
+export const defaultSystemMessage = import.meta.env.VITE_DEFAULT_SYSTEM_MESSAGE || originalSystemMessage
 
 export interface SystemMessage {
   default: string
