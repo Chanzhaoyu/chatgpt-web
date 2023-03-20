@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  app:
+    image: chatgpt-web # 总是使用latest,更新时重新pull该tag镜像即可
+    restart: always
+    network_mode: host
+    ports:
+      - 3002:3002
+    environment:
+      # 二选一
+      OPENAI_API_KEY:
+      # 二选一
+      # OPENAI_ACCESS_TOKEN: xxx
+      # API接口地址，可选，设置 OPENAI_API_KEY 时可用
+      # OPENAI_API_BASE_URL: xxx
+      # API模型，可选，设置 OPENAI_API_KEY 时可用
+      OPENAI_API_MODEL: gpt-3.5-turbo
+      # 反向代理，可选
+      # API_REVERSE_PROXY: xxx
+      # 访问权限密钥，可选
+      # AUTH_SECRET_KEY: xxx
+      # 超时，单位毫秒，可选
+      TIMEOUT_MS: 60000
+      # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
+      # SOCKS_PROXY_HOST: xxx
+      # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
+      # SOCKS_PROXY_PORT: xxx
+      # HTTPS_PROXY 代理，可选
+      HTTPS_PROXY: http://127.0.0.1:7890
+      VITE_GLOB_API_URL: /chatgpt/api
