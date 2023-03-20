@@ -175,6 +175,7 @@ pnpm dev
 - `SOCKS_PROXY_PORT` 和 `SOCKS_PROXY_HOST` 一起时生效，可选
 - `HTTPS_PROXY` 支持 `http`，`https`, `socks5`，可选
 - `ALL_PROXY` 支持 `http`，`https`, `socks5`，可选
+- `MAX_REQUEST_PERHOUR` 每小时最大请求次数，可选，不填时默认36000次
 
 ## 打包
 
