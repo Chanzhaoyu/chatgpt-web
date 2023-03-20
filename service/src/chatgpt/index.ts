@@ -28,10 +28,20 @@ let apiModel: ApiModel
 if (!process.env.OPENAI_API_KEY && !process.env.OPENAI_ACCESS_TOKEN)
   throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
 
+// system message config
+const systemPrefix = '%system%'
+const currentDate = (new Date()).toISOString().split('T')[0]
+const defaultSystemMessage = `You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.
+Knowledge cutoff: 2021-09-01
+Current date: ${currentDate}`
+
+let systemMessage: string
 let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 
 (async () => {
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
+
+  systemMessage = process.env.SYSTEM_MESSAGE || defaultSystemMessage
 
   if (process.env.OPENAI_API_KEY) {
     const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
@@ -40,6 +50,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     const options: ChatGPTAPIOptions = {
       apiKey: process.env.OPENAI_API_KEY,
       completionParams: { model },
+      systemMessage,
       debug: true,
     }
 
@@ -81,6 +92,14 @@ async function chatReplyProcess(
       else
         options = { ...lastContext }
     }
+
+    // system message setting
+    if (message.startsWith(systemPrefix)) {
+      systemMessage = message.substring(systemPrefix.length).trim() || defaultSystemMessage
+      // global.console.log(systemMessage)
+      return sendResponse({ type: 'Fail', message: 'system message set.' })
+    }
+    options.systemMessage = systemMessage
 
     const response = await api.sendMessage(message, {
       ...options,
