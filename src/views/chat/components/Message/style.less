@@ -1,3 +1,5 @@
+@import url('/src/styles/lib/github-markdown.less');
+
 .markdown-body {
 	background-color: transparent;
 	font-size: 14px;
@@ -55,9 +57,26 @@
 			}
 		}
 	}
+
+}
+
+html .markdown-body {
+
+	h1,h2,h3,h4 {
+		border: none;
+	}
 }
 
 html.dark {
+
+	/* 用户的输入始终使用亮色主题的 Markdown */
+   	.request .markdown-body:extend(html .markdown-body) {
+		--color-canvas-default: #0d1117;
+    }
+
+	.reply .whitespace-pre-wrap {
+		color: var(--n-text-color);
+	}
 
 	.highlight pre,
 	pre {
