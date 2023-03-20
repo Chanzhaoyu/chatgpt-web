@@ -3,6 +3,7 @@ import type { FetchFn } from 'chatgpt'
 export interface ChatContext {
   conversationId?: string
   parentMessageId?: string
+  systemMessage?: string
 }
 
 export interface ChatGPTUnofficialProxyAPIOptions {

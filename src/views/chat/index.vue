@@ -9,6 +9,7 @@ import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import { useCopyCode } from './hooks/useCopyCode'
 import { useUsingContext } from './hooks/useUsingContext'
+import { useSystemMessage } from './hooks/useSystemMessage'
 import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -32,6 +33,7 @@ const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 const { scrollRef, scrollToBottom } = useScroll()
 const { usingContext, toggleUsingContext } = useUsingContext()
+const { systemMessageSetUpPrefix, systemMessageQueryPrefix, setSystemMessage, getSystemMessage } = useSystemMessage()
 
 const { uuid } = route.params as { uuid: string }
 
@@ -66,6 +68,21 @@ async function onConversation() {
   if (!message || message.trim() === '')
     return
 
+  // handle system message modification
+  // set up a new system message
+  if (message.startsWith(systemMessageSetUpPrefix)) {
+    prompt.value = ''
+    setSystemMessage(message)
+    return
+  }
+  // query current system message
+  if (message.startsWith(systemMessageQueryPrefix)) {
+    prompt.value = ''
+    const systemMessage = getSystemMessage()
+    ms.info(`Current System Message: ${systemMessage}`)
+    return
+  }
+
   controller = new AbortController()
 
   addChat(
@@ -89,6 +106,9 @@ async function onConversation() {
 
   if (lastContext && usingContext.value)
     options = { ...lastContext }
+
+  // always add system message: either default or customized
+  options = { ...options, systemMessage: getSystemMessage() }
 
   addChat(
     +uuid,
@@ -217,6 +237,9 @@ async function onRegenerate(index: number) {
 
   if (requestOptions.options)
     options = { ...requestOptions.options }
+
+  // always add system message: either default or customized
+  options = { ...options, systemMessage: getSystemMessage() }
 
   loading.value = true
 

@@ -29,7 +29,6 @@ if (!process.env.OPENAI_API_KEY && !process.env.OPENAI_ACCESS_TOKEN)
   throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
 
 // system message config
-const systemPrefix = '%system%'
 const currentDate = (new Date()).toISOString().split('T')[0]
 const defaultSystemMessage = `You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible.
 Knowledge cutoff: 2021-09-01
@@ -80,7 +79,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 
 async function chatReplyProcess(
   message: string,
-  lastContext?: { conversationId?: string; parentMessageId?: string },
+  lastContext?: { conversationId?: string; parentMessageId?: string; systemMessage?: string },
   process?: (chat: ChatMessage) => void,
 ) {
   try {
@@ -88,18 +87,11 @@ async function chatReplyProcess(
 
     if (lastContext) {
       if (apiModel === 'ChatGPTAPI')
-        options = { parentMessageId: lastContext.parentMessageId }
+        // system message setting
+        options = { parentMessageId: lastContext.parentMessageId, systemMessage: lastContext.systemMessage }
       else
         options = { ...lastContext }
     }
-
-    // system message setting
-    if (message.startsWith(systemPrefix)) {
-      systemMessage = message.substring(systemPrefix.length).trim() || defaultSystemMessage
-      // global.console.log(systemMessage)
-      return sendResponse({ type: 'Fail', message: 'system message set.' })
-    }
-    options.systemMessage = systemMessage
 
     const response = await api.sendMessage(message, {
       ...options,
