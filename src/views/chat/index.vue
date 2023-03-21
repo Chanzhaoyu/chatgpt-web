@@ -72,13 +72,13 @@ async function onConversation() {
   // set up a new system message
   if (message.startsWith(systemMessageSetUpPrefix)) {
     prompt.value = ''
-    setSystemMessage(message)
+    setSystemMessage(+uuid, message)
     return
   }
   // query current system message
   if (message.startsWith(systemMessageQueryPrefix)) {
     prompt.value = ''
-    const systemMessage = getSystemMessage()
+    const systemMessage = getSystemMessage(+uuid)
     ms.info(`Current System Message: ${systemMessage}`)
     return
   }
@@ -108,7 +108,7 @@ async function onConversation() {
     options = { ...lastContext }
 
   // always add system message: either default or customized
-  options = { ...options, systemMessage: getSystemMessage() }
+  options = { ...options, systemMessage: getSystemMessage(+uuid) }
 
   addChat(
     +uuid,
@@ -239,7 +239,7 @@ async function onRegenerate(index: number) {
     options = { ...requestOptions.options }
 
   // always add system message: either default or customized
-  options = { ...options, systemMessage: getSystemMessage() }
+  options = { ...options, systemMessage: getSystemMessage(+uuid) }
 
   loading.value = true
 

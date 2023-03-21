@@ -10,13 +10,18 @@ Knowledge cutoff: 2021-09-01
 Current date: ${currentDate}`
 export const defaultSystemMessage = import.meta.env.VITE_DEFAULT_SYSTEM_MESSAGE || originalSystemMessage
 
+interface ChatSystemMessage {
+  uuid: number
+  message: string
+}
+
 export interface SystemMessage {
   default: string
-  current: string
+  chatSystemMessage: ChatSystemMessage[]
 }
 
 export function defaultSysMsg(): SystemMessage {
-  return { default: defaultSystemMessage, current: '' }
+  return { default: defaultSystemMessage, chatSystemMessage: [] }
 }
 
 export function getSysMsg(): SystemMessage {
@@ -26,4 +31,9 @@ export function getSysMsg(): SystemMessage {
 
 export function setSysMsg(sysMsg: SystemMessage): void {
   ss.set(LOCAL_NAME, sysMsg)
+}
+
+export function resetLocalStorage() {
+  const systemMessage = defaultSysMsg()
+  setSysMsg(systemMessage)
 }
