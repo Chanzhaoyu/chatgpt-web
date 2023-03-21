@@ -1,12 +1,13 @@
 import { MongoClient, ObjectId } from 'mongodb'
 import { ChatInfo, ChatRoom, Status, UserInfo } from './model'
-import type { ChatOptions } from './model'
+import type { ChatOptions, Config } from './model'
 
 const url = process.env.MONGODB_URL
 const client = new MongoClient(url)
 const chatCol = client.db('chatgpt').collection('chat')
 const roomCol = client.db('chatgpt').collection('chat_room')
 const userCol = client.db('chatgpt').collection('user')
+const configCol = client.db('chatgpt').collection('config')
 
 /**
  * 插入聊天信息
@@ -145,4 +146,15 @@ export async function getUserById(userId: ObjectId): Promise<UserInfo> {
 export async function verifyUser(email: string) {
   email = email.toLowerCase()
   return await userCol.updateOne({ email }, { $set: { status: Status.Normal, verifyTime: new Date().toLocaleString() } })
+}
+
+export async function getConfig(): Promise<Config> {
+  return await configCol.findOne() as Config
+}
+
+export async function updateConfig(config: Config): Promise<Config> {
+  const result = await configCol.replaceOne({ _id: config._id }, config, { upsert: true })
+  if (result.modifiedCount > 0 || result.upsertedCount > 0)
+    return config
+  return null
 }

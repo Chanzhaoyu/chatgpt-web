@@ -1,21 +1,12 @@
 import nodemailer from 'nodemailer'
+import { getCacheConfig } from '../storage/config'
 
-// create reusable transporter object using SMTP transport
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  secure: process.env.SMTP_TSL,
-  auth: {
-    user: process.env.SMTP_USERNAME,
-    pass: process.env.SMTP_PASSWORD,
-  },
-})
-
-export function sendMail(toMail: string, verifyUrl: string) {
+export async function sendMail(toMail: string, verifyUrl: string) {
+  const config = (await getCacheConfig())
   const mailOptions = {
-    from: process.env.SMTP_USERNAME, // sender address
+    from: config.mailConfig.smtpUserName, // sender address
     to: toMail, // list of receivers
-    subject: `${process.env.SITE_TITLE} 账号验证`, // Subject line
+    subject: `${config.siteConfig.siteTitle} 账号验证`, // Subject line
     html: `
     <div class="page flex-col">
     <div class="box_3 flex-col" style="
@@ -57,7 +48,7 @@ export function sendMail(toMail: string, verifyUrl: string) {
     color: #000000;
     line-height: 37px;
     text-align: center;
-    "><target="_blank" style="text-decoration: none; color: #0088cc;">${process.env.SITE_TITLE}</a> 账号验证</span>
+    "><target="_blank" style="text-decoration: none; color: #0088cc;">${config.siteConfig.siteTitle}</a> 账号验证</span>
     
       <div class="box_2 flex-row" style="
     margin: 0 20px;
@@ -83,7 +74,7 @@ export function sendMail(toMail: string, verifyUrl: string) {
   <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
   <h1 style="color: #0088cc;">
     感谢您使用 
-    <target="_blank" style="text-decoration: none; color: #0088cc;">${process.env.SITE_TITLE}</a>，
+    <target="_blank" style="text-decoration: none; color: #0088cc;">${config.siteConfig.siteTitle}</a>，
     您的邮箱验证链接为（12小时内有效）：
   </span>
         </div><hr style="
@@ -151,7 +142,15 @@ export function sendMail(toMail: string, verifyUrl: string) {
     `, // html body
   }
 
-  // send mail with defined transport object
+  const transporter = nodemailer.createTransport({
+    host: config.mailConfig.smtpHost,
+    port: config.mailConfig.smtpPort,
+    secure: config.mailConfig.smtpTsl,
+    auth: {
+      user: config.mailConfig.smtpUserName,
+      pass: config.mailConfig.smtpPassword,
+    },
+  })
   transporter.sendMail(mailOptions, (error, info) => {
     if (error)
       throw error

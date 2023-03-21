@@ -1,6 +1,6 @@
 import type { ObjectId } from 'mongodb'
 
-enum Status {
+export enum Status {
   Normal = 0,
   Deleted = 1,
   InversionDeleted = 2,
@@ -8,7 +8,7 @@ enum Status {
   PreVerify = 4,
 }
 
-class UserInfo {
+export class UserInfo {
   _id: ObjectId
   name: string
   email: string
@@ -28,7 +28,7 @@ class UserInfo {
   }
 }
 
-class UserOauth {
+export class UserOauth {
   userId: number
   oauthType: OauthType
   oauthId: string
@@ -40,7 +40,7 @@ class UserOauth {
   }
 }
 
-class ChatRoom {
+export class ChatRoom {
   _id: ObjectId
   roomId: number
   userId: number
@@ -53,7 +53,7 @@ class ChatRoom {
   }
 }
 
-class ChatOptions {
+export class ChatOptions {
   parentMessageId?: string
   messageId?: string
   constructor(parentMessageId?: string, messageId?: string) {
@@ -62,7 +62,7 @@ class ChatOptions {
   }
 }
 
-class ChatInfo {
+export class ChatInfo {
   _id: ObjectId
   roomId: number
   uuid: number
@@ -80,4 +80,37 @@ class ChatInfo {
   }
 }
 
-export { UserInfo, UserOauth, ChatRoom, ChatInfo, ChatOptions, Status }
+export class Config {
+  constructor(
+    public _id: ObjectId,
+    public timeoutMs: number,
+    public apiKey?: string,
+    public accessToken?: string,
+    public apiBaseUrl?: string,
+    public apiModel?: string,
+    public reverseProxy?: string,
+    public socksProxy?: string,
+    public httpsProxy?: string,
+    public siteConfig?: SiteConfig,
+    public mailConfig?: MailConfig,
+  ) { }
+}
+
+export class SiteConfig {
+  constructor(
+    public siteTitle?: string,
+    public registerEnabled?: boolean,
+    public registerMails?: string,
+    public siteDomain?: string,
+  ) { }
+}
+
+export class MailConfig {
+  constructor(
+    public smtpHost: string,
+    public smtpPort: number,
+    public smtpTsl: boolean,
+    public smtpUserName: string,
+    public smtpPassword: string,
+  ) { }
+}

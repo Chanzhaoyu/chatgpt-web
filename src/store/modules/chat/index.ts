@@ -29,6 +29,9 @@ export const useChatStore = defineStore('chat-store', {
       let uuid = this.active
       this.history = []
       this.chat = []
+      if (rooms.findIndex((item: { uuid: number | null }) => item.uuid === uuid) <= -1 && rooms.length > 0)
+        uuid = null
+
       for (const r of rooms) {
         this.history.unshift(r)
         if (uuid == null)

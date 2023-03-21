@@ -3,6 +3,8 @@ import { computed, ref } from 'vue'
 import { NModal, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
 import About from './About.vue'
+import Site from './Site.vue'
+import Mail from './Mail.vue'
 import { SvgIcon } from '@/components/common'
 import { useUserStore } from '@/store'
 
@@ -51,6 +53,20 @@ const show = computed({
             <span class="ml-2">{{ $t('setting.config') }}</span>
           </template>
           <About />
+        </NTabPane>
+        <NTabPane v-if="userStore.userInfo.root" name="SiteConfig" tab="SiteConfig">
+          <template #tab>
+            <SvgIcon class="text-lg" icon="ri:list-settings-line" />
+            <span class="ml-2">{{ $t('setting.siteConfig') }}</span>
+          </template>
+          <Site />
+        </NTabPane>
+        <NTabPane v-if="userStore.userInfo.root" name="MailConfig" tab="MailConfig">
+          <template #tab>
+            <SvgIcon class="text-lg" icon="ri:list-settings-line" />
+            <span class="ml-2">{{ $t('setting.mailConfig') }}</span>
+          </template>
+          <Mail />
         </NTabPane>
       </NTabs>
     </div>

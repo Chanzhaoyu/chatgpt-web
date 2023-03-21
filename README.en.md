@@ -91,6 +91,8 @@ For all parameter variables, check [here](#docker-parameter-example) or see:
 
 [✓] Login or Register
 
+[✓] Set API key and other information on the front-end page.
+
 [✓] Data import and export
 
 [✓] Save message to local image

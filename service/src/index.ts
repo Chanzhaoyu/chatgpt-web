@@ -2,11 +2,13 @@ import express from 'express'
 import jwt from 'jsonwebtoken'
 import { ObjectId } from 'mongodb'
 import type { ChatContext, ChatMessage } from './chatgpt'
-import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
+import { chatConfig, chatReplyProcess, currentModel, initApi } from './chatgpt'
 import { auth } from './middleware/auth'
-import type { ChatOptions, UserInfo } from './storage/model'
+import { clearConfigCache, getCacheConfig, getOriginConfig } from './storage/config'
+import type { ChatOptions, Config, MailConfig, SiteConfig, UserInfo } from './storage/model'
 import { Status } from './storage/model'
-import { clearChat, createChatRoom, createUser, deleteChat, deleteChatRoom, existsChatRoom, getChat, getChatRooms, getChats, getUser, getUserById, insertChat, renameChatRoom, updateChat, updateUserInfo, verifyUser } from './storage/mongo'
+import { clearChat, createChatRoom, createUser, deleteChat, deleteChatRoom, existsChatRoom, getChat, getChatRooms, getChats, getUser, getUserById, insertChat, renameChatRoom, updateChat, updateConfig, updateUserInfo, verifyUser } from './storage/mongo'
+import { isNotEmptyString } from './utils/is'
 import { sendMail } from './utils/mail'
 import { checkUserVerify, getUserVerifyUrl, md5 } from './utils/security'
 
@@ -175,14 +177,14 @@ router.post('/chat-process', auth, async (req, res) => {
 
 router.post('/user-register', async (req, res) => {
   const { username, password } = req.body as { username: string; password: string }
-
-  if (process.env.REGISTER_ENABLED !== 'true') {
+  const config = await getCacheConfig()
+  if (config.siteConfig.registerEnabled) {
     res.send({ status: 'Fail', message: '注册账号功能未启用 | Register account is disabled!', data: null })
     return
   }
-  if (typeof process.env.REGISTER_MAILS === 'string' && process.env.REGISTER_MAILS.length > 0) {
+  if (isNotEmptyString(config.siteConfig.registerMails)) {
     let allowSuffix = false
-    const emailSuffixs = process.env.REGISTER_MAILS.split(',')
+    const emailSuffixs = config.siteConfig.registerMails.split(',')
     for (let index = 0; index < emailSuffixs.length; index++) {
       const element = emailSuffixs[index]
       allowSuffix = username.toLowerCase().endsWith(element)
@@ -207,13 +209,19 @@ router.post('/user-register', async (req, res) => {
     res.send({ status: 'Success', message: '注册成功 | Register success', data: null })
   }
   else {
-    sendMail(username, getUserVerifyUrl(username))
+    await sendMail(username, await getUserVerifyUrl(username))
     res.send({ status: 'Success', message: '注册成功, 去邮箱中验证吧 | Registration is successful, you need to go to email verification', data: null })
   }
 })
 
-router.post('/config', async (req, res) => {
+router.post('/config', auth, async (req, res) => {
   try {
+    const userId = new ObjectId(req.headers.userId.toString())
+
+    const user = await getUserById(userId)
+    if (user == null || user.status !== Status.Normal || user.email.toLowerCase() !== process.env.ROOT_USER)
+      throw new Error('无权限 | No permission.')
+
     const response = await chatConfig()
     res.send(response)
   }
@@ -226,7 +234,7 @@ router.post('/session', async (req, res) => {
   try {
     const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
     const hasAuth = typeof AUTH_SECRET_KEY === 'string' && AUTH_SECRET_KEY.length > 0
-    const allowRegister = process.env.REGISTER_ENABLED === 'true'
+    const allowRegister = (await getCacheConfig()).siteConfig.registerEnabled
     res.send({ status: 'Success', message: '', data: { auth: hasAuth, allowRegister, model: currentModel() } })
   }
   catch (error) {
@@ -287,6 +295,77 @@ router.post('/verify', async (req, res) => {
     const username = await checkUserVerify(token)
     await verifyUser(username)
     res.send({ status: 'Success', message: '验证成功 | Verify successfully', data: null })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/setting-base', auth, async (req, res) => {
+  try {
+    const { apiKey, apiModel, apiBaseUrl, accessToken, timeoutMs, socksProxy, httpsProxy } = req.body as Config
+    const userId = new ObjectId(req.headers.userId.toString())
+
+    if (apiKey == null && accessToken == null)
+      throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable.')
+
+    const user = await getUserById(userId)
+    if (user == null || user.status !== Status.Normal || user.email.toLowerCase() !== process.env.ROOT_USER)
+      throw new Error('无权限 | No permission.')
+
+    const thisConfig = await getOriginConfig()
+    thisConfig.apiKey = apiKey
+    thisConfig.apiModel = apiModel
+    thisConfig.apiBaseUrl = apiBaseUrl
+    thisConfig.accessToken = accessToken
+    thisConfig.timeoutMs = timeoutMs
+    thisConfig.socksProxy = socksProxy
+    thisConfig.httpsProxy = httpsProxy
+    await updateConfig(thisConfig)
+    clearConfigCache()
+    initApi()
+    const response = await chatConfig()
+    res.send({ status: 'Success', message: '操作成功 | Successfully', data: response.data })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/setting-site', auth, async (req, res) => {
+  try {
+    const config = req.body as SiteConfig
+    const userId = new ObjectId(req.headers.userId.toString())
+
+    const user = await getUserById(userId)
+    if (user == null || user.status !== Status.Normal || user.email.toLowerCase() !== process.env.ROOT_USER)
+      throw new Error('无权限 | No permission.')
+
+    const thisConfig = await getOriginConfig()
+    thisConfig.siteConfig = config
+    const result = await updateConfig(thisConfig)
+    clearConfigCache()
+    res.send({ status: 'Success', message: '操作成功 | Successfully', data: result.siteConfig })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/setting-mail', auth, async (req, res) => {
+  try {
+    const config = req.body as MailConfig
+    const userId = new ObjectId(req.headers.userId.toString())
+
+    const user = await getUserById(userId)
+    if (user == null || user.status !== Status.Normal || user.email.toLowerCase() !== process.env.ROOT_USER)
+      throw new Error('无权限 | No permission.')
+
+    const thisConfig = await getOriginConfig()
+    thisConfig.mailConfig = config
+    const result = await updateConfig(thisConfig)
+    clearConfigCache()
+    res.send({ status: 'Success', message: '操作成功 | Successfully', data: result.mailConfig })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

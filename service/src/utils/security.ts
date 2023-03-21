@@ -1,4 +1,5 @@
 import { createHash } from 'crypto'
+import { getCacheConfig } from '../storage/config'
 
 export function md5(input: string) {
   input = input + process.env.PASSWORD_MD5_SALT
@@ -8,9 +9,10 @@ export function md5(input: string) {
 }
 
 // 可以换 aes 等方式
-export function getUserVerifyUrl(username: string) {
+export async function getUserVerifyUrl(username: string) {
   const sign = getUserVerify(username)
-  return `${process.env.SITE_DOMAIN}/#/chat/?verifytoken=${sign}`
+  const config = await getCacheConfig()
+  return `${config.siteConfig.siteDomain}/#/chat/?verifytoken=${sign}`
 }
 
 function getUserVerify(username: string) {

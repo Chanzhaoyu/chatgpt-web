@@ -1,5 +1,6 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
 import { get, post } from '@/utils/request'
+import type { ConfigState, MailConfig, SiteConfig } from '@/components/common/Setting/model'
 
 export function fetchChatAPI<T = any>(
   prompt: string,
@@ -115,5 +116,26 @@ export function fetchDeleteChat<T = any>(roomId: number, uuid: number, inversion
   return post<T>({
     url: '/chat-delete',
     data: { roomId, uuid, inversion },
+  })
+}
+
+export function fetchUpdateMail<T = any>(mail: MailConfig) {
+  return post<T>({
+    url: '/setting-mail',
+    data: mail,
+  })
+}
+
+export function fetchUpdateSite<T = any>(config: SiteConfig) {
+  return post<T>({
+    url: '/setting-site',
+    data: config,
+  })
+}
+
+export function fetchUpdateBaseSetting<T = any>(config: ConfigState) {
+  return post<T>({
+    url: '/setting-base',
+    data: config,
   })
 }
