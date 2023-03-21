@@ -18,9 +18,7 @@ app.all('*', (_, res, next) => {
   next()
 })
 
-router.use('/chat-process', limiter)
-
-router.post('/chat-process', auth, async (req, res) => {
+router.post('/chat-process', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
   try {
