@@ -13,8 +13,10 @@
 ## Screenshots
 > Disclaimer: This project is only released on GitHub, under the MIT License, free and for open-source learning purposes. There will be no account selling, paid services, discussion groups, or forums. Beware of fraud.
 
+![cover3](./docs/login.jpg)
 ![cover](./docs/c1.png)
 ![cover2](./docs/c2.png)
+![cover3](./docs/basesettings.jpg)
 
 - [ChatGPT Web](#chatgpt-web)
 	- [Introduction](#introduction)
