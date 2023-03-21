@@ -1,5 +1,3 @@
-@import url('/src/styles/lib/github-markdown.less');
-
 .markdown-body {
 	background-color: transparent;
 	font-size: 14px;
@@ -47,10 +45,11 @@
 			align-items: center;
 			color: #b3b3b3;
 
-			&__copy{
+			&__copy {
 				cursor: pointer;
 				margin-left: 0.5rem;
 				user-select: none;
+
 				&:hover {
 					color: #65a665;
 				}
@@ -60,22 +59,13 @@
 
 }
 
-html .markdown-body {
-
-	h1,h2,h3,h4 {
-		border: none;
-	}
-}
-
 html.dark {
 
-	/* 用户的输入始终使用亮色主题的 Markdown */
-   	.request .markdown-body:extend(html .markdown-body) {
-		--color-canvas-default: #0d1117;
-    }
-
-	.reply .whitespace-pre-wrap {
-		color: var(--n-text-color);
+	.message-reply {
+		.raw-text {
+			white-space: pre-wrap;
+			color: var(--n-text-color);
+		}
 	}
 
 	.highlight pre,
