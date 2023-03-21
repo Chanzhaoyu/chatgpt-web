@@ -36,11 +36,14 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
   if (process.env.OPENAI_API_KEY) {
     const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
     const model = isNotEmptyString(OPENAI_API_MODEL) ? OPENAI_API_MODEL : 'gpt-3.5-turbo'
+    const { OPENAI_API_TEMPERATURE, OPENAI_API_TOP_P, OPENAI_API_DEBUG } = process.env
+    const temperature = isNotEmptyString(OPENAI_API_TEMPERATURE) ? parseFloat(OPENAI_API_TEMPERATURE) : null
+    const top_p = isNotEmptyString(OPENAI_API_TOP_P) ? parseFloat(OPENAI_API_TOP_P) : null
 
     const options: ChatGPTAPIOptions = {
       apiKey: process.env.OPENAI_API_KEY,
-      completionParams: { model },
-      debug: true,
+      completionParams: { model, temperature, top_p },
+      debug: OPENAI_API_DEBUG === 'true',
     }
 
     if (isNotEmptyString(process.env.OPENAI_API_BASE_URL))
