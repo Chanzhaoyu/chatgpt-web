@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "start": "concurrently \"pnpm run dev\" \"cd service && pnpm run dev\"",
+    "serve": "cd service && pnpm run dev",
     "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview",

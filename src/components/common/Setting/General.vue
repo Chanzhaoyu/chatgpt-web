@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
-import { NButton, NInput, NPopconfirm, NSelect, useMessage } from 'naive-ui'
+import { computed } from 'vue'
+import { NButton, NPopconfirm, NSelect, useMessage } from 'naive-ui'
 import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useUserStore } from '@/store'
-import type { UserInfo } from '@/store/modules/user/helper'
 import { getCurrentDate } from '@/utils/functions'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
@@ -17,14 +16,6 @@ const { isMobile } = useBasicLayout()
 const ms = useMessage()
 
 const theme = computed(() => appStore.theme)
-
-const userInfo = computed(() => userStore.userInfo)
-
-const avatar = ref(userInfo.value.avatar ?? '')
-
-const name = ref(userInfo.value.name ?? '')
-
-const description = ref(userInfo.value.description ?? '')
 
 const language = computed({
   get() {
@@ -58,11 +49,6 @@ const languageOptions: { label: string; key: Language; value: Language }[] = [
   { label: '繁體中文', key: 'zh-TW', value: 'zh-TW' },
   { label: 'English', key: 'en-US', value: 'en-US' },
 ]
-
-function updateUserInfo(options: Partial<UserInfo>) {
-  userStore.updateUserInfo(options)
-  ms.success(t('common.success'))
-}
 
 function handleReset() {
   userStore.resetUserInfo()
@@ -123,34 +109,6 @@ function handleImportButtonClick(): void {
 <template>
   <div class="p-4 space-y-5 min-h-[200px]">
     <div class="space-y-6">
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
-        <div class="flex-1">
-          <NInput v-model:value="avatar" placeholder="" />
-        </div>
-        <NButton size="tiny" text type="primary" @click="updateUserInfo({ avatar })">
-          {{ $t('common.save') }}
-        </NButton>
-      </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
-        <div class="w-[200px]">
-          <NInput v-model:value="name" placeholder="" />
-        </div>
-        <NButton size="tiny" text type="primary" @click="updateUserInfo({ name })">
-          {{ $t('common.save') }}
-        </NButton>
-      </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.description') }}</span>
-        <div class="flex-1">
-          <NInput v-model:value="description" placeholder="" />
-        </div>
-        <NButton size="tiny" text type="primary" @click="updateUserInfo({ description })">
-          {{ $t('common.save') }}
-        </NButton>
-      </div>
-
       <div
         class="flex items-center space-x-4"
         :class="isMobile && 'items-start'"
