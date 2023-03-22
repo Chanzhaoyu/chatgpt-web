@@ -26,6 +26,8 @@ const name = ref(userInfo.value.name ?? '')
 
 const description = ref(userInfo.value.description ?? '')
 
+const systemMessage = ref(userInfo.value.systemMessage ?? '')
+
 const language = computed({
   get() {
     return appStore.language
@@ -150,6 +152,15 @@ function handleImportButtonClick(): void {
           {{ $t('common.save') }}
         </NButton>
       </div>
+			<div class="flex items-center space-x-4">
+				<span class="flex-shrink-0 w-[100px]">{{ $t('setting.systemMessage') }}</span>
+				<div class="flex-1">
+					<NInput v-model:value="systemMessage" placeholder="" />
+				</div>
+				<NButton size="tiny" text type="primary" @click="updateUserInfo({ systemMessage })">
+					{{ $t('common.save') }}
+				</NButton>
+			</div>
 
       <div
         class="flex items-center space-x-4"

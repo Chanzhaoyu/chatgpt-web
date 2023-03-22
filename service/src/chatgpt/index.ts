@@ -71,13 +71,20 @@ async function chatReplyProcess(
   message: string,
   lastContext?: { conversationId?: string; parentMessageId?: string },
   process?: (chat: ChatMessage) => void,
+  systemMessage?: string,
 ) {
   try {
     let options: SendMessageOptions = { timeoutMs }
 
-    if (lastContext) {
+		if (apiModel === 'ChatGPTAPI'){
+			if (systemMessage != null && systemMessage.length > 0){
+				options.systemMessage = systemMessage
+			}
+		}
+
+    if (lastContext != null) {
       if (apiModel === 'ChatGPTAPI')
-        options = { parentMessageId: lastContext.parentMessageId }
+        options.parentMessageId = lastContext.parentMessageId
       else
         options = { ...lastContext }
     }
