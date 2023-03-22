@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import type { Ref } from "vue";
+import type { Ref } from 'vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
@@ -81,7 +81,7 @@ async function onConversation() {
       requestOptions: { prompt: message, options: null },
     },
   )
-  scrollToBottom(true);
+  scrollToBottom(true)
 
   loading.value = true
   prompt.value = ''
@@ -104,7 +104,7 @@ async function onConversation() {
       requestOptions: { prompt: message, options: { ...options } },
     },
   )
-  scrollToBottom(true);
+  scrollToBottom(true)
 
   try {
     let lastText = ''
@@ -454,7 +454,8 @@ const footerClass = computed(() => {
 
 onMounted(() => {
   scrollToBottom(true)
-	if (inputRef.value) inputRef.value.focus();
+  if (inputRef.value)
+    inputRef.value.focus()
 })
 
 onUnmounted(() => {
@@ -535,7 +536,7 @@ onUnmounted(() => {
           <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
             <template #default="{ handleInput, handleBlur, handleFocus }">
               <NInput
-								ref="inputRef"
+                ref="inputRef"
                 v-model:value="prompt"
                 type="textarea"
                 :placeholder="placeholder"
