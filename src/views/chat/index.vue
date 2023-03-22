@@ -9,11 +9,11 @@ import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import { useCopyCode } from './hooks/useCopyCode'
 import { useUsingContext } from './hooks/useUsingContext'
-import { useSystemMessage } from './hooks/useSystemMessage'
 import HeaderComponent from './components/Header/index.vue'
+import SysMsgPopUp from './layout/SysMsgPopUp.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useChatStore, usePromptStore } from '@/store'
+import { useChatStore, usePromptStore, useSysMsgStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
 
@@ -26,6 +26,7 @@ const dialog = useDialog()
 const ms = useMessage()
 
 const chatStore = useChatStore()
+const sysMsgStore = useSysMsgStore()
 
 useCopyCode()
 
@@ -33,7 +34,6 @@ const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 const { scrollRef, scrollToBottom } = useScroll()
 const { usingContext, toggleUsingContext } = useUsingContext()
-const { systemMessageSetUpPrefix, systemMessageQueryPrefix, setSystemMessage, getSystemMessage } = useSystemMessage()
 
 const { uuid } = route.params as { uuid: string }
 
@@ -42,6 +42,7 @@ const conversationList = computed(() => dataSources.value.filter(item => (!item.
 
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
+const showSysMsgPopUp = ref<boolean>(false)
 
 // 添加PromptStore
 const promptStore = usePromptStore()
@@ -67,21 +68,6 @@ async function onConversation() {
 
   if (!message || message.trim() === '')
     return
-
-  // handle system message modification
-  // set up a new system message
-  if (message.startsWith(systemMessageSetUpPrefix)) {
-    prompt.value = ''
-    setSystemMessage(+uuid, message)
-    return
-  }
-  // query current system message
-  if (message.startsWith(systemMessageQueryPrefix)) {
-    prompt.value = ''
-    const systemMessage = getSystemMessage(+uuid)
-    ms.info(`Current System Message: ${systemMessage}`)
-    return
-  }
 
   controller = new AbortController()
 
@@ -336,6 +322,14 @@ async function onRegenerate(index: number) {
   }
 }
 
+function getSystemMessage(uuid: number): string {
+  return sysMsgStore.currentSystemMessage(uuid)
+}
+
+function handleSetSysMsg() {
+  showSysMsgPopUp.value = true
+}
+
 function handleExport() {
   if (loading.value)
     return
@@ -552,6 +546,11 @@ onUnmounted(() => {
               <SvgIcon icon="ri:chat-history-line" />
             </span>
           </HoverButton>
+          <HoverButton @click="handleSetSysMsg">
+            <span class="text-xl text-[#4f555e] dark:text-white">
+              <SvgIcon icon="ri:command-line" />
+            </span>
+          </HoverButton>
           <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
             <template #default="{ handleInput, handleBlur, handleFocus }">
               <NInput
@@ -577,4 +576,5 @@ onUnmounted(() => {
       </div>
     </footer>
   </div>
+  <SysMsgPopUp v-model:visible="showSysMsgPopUp" v-model:uuid="uuid" />
 </template>
