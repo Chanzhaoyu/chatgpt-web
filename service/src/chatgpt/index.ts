@@ -12,7 +12,6 @@ dotenv.config()
 const timeoutMs: number = !isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 30 * 1000
 
 let apiModel: ApiModel
-
 if (!process.env.OPENAI_API_KEY && !process.env.OPENAI_ACCESS_TOKEN)
   throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
 
@@ -79,7 +78,6 @@ async function chatReply(
 
     if (lastContext)
       options = { ...lastContext }
-
     const response = await api.sendMessage(message, { ...options })
 
     return sendResponse({ type: 'Success', data: response })
@@ -98,18 +96,18 @@ async function chatReplyProcess(
     return sendResponse({ type: 'Fail', message: 'Message is empty' })
 
   try {
+		console.log('try')
     let options: SendMessageOptions = { timeoutMs }
 
     if (lastContext)
       options = { ...lastContext }
-
-    const response = await api.sendMessage(message, {
+		console.log('options', options)
+		const response = await api.sendMessage(message, {
       ...options,
       onProgress: (partialResponse) => {
         process?.(partialResponse)
       },
     })
-
     return sendResponse({ type: 'Success', data: response })
   }
   catch (error: any) {
