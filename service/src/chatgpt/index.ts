@@ -57,7 +57,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
       accessToken: process.env.OPENAI_ACCESS_TOKEN,
       debug: true,
     }
-    if (OPENAI_API_MODEL && typeof OPENAI_API_MODEL === 'string')
+    if (isNotEmptyString(OPENAI_API_MODEL))
       options.model = OPENAI_API_MODEL
 
     if (isNotEmptyString(process.env.API_REVERSE_PROXY))
