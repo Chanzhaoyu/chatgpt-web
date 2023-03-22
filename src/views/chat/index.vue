@@ -81,7 +81,7 @@ async function onConversation() {
       requestOptions: { prompt: message, options: null },
     },
   )
-  scrollToBottom(true)
+  scrollToBottom()
 
   loading.value = true
   prompt.value = ''
@@ -104,7 +104,7 @@ async function onConversation() {
       requestOptions: { prompt: message, options: { ...options } },
     },
   )
-  scrollToBottom(true)
+  scrollToBottom()
 
   try {
     let lastText = ''
@@ -453,9 +453,9 @@ const footerClass = computed(() => {
 })
 
 onMounted(() => {
-  scrollToBottom(true)
+  scrollToBottom()
   if (inputRef.value)
-    inputRef.value.focus()
+    inputRef.value?.focus()
 })
 
 onUnmounted(() => {

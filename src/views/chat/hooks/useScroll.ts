@@ -5,26 +5,17 @@ type ScrollElement = HTMLDivElement | null
 
 interface ScrollReturn {
   scrollRef: Ref<ScrollElement>
-  scrollToBottom: (hasScroll?: boolean) => Promise<void>
+  scrollToBottom: () => Promise<void>
   scrollToTop: () => Promise<void>
+  scrollToBottomIfAtBottom: () => Promise<void>
 }
 
 export function useScroll(): ScrollReturn {
   const scrollRef = ref<ScrollElement>(null)
-  const isScroll = ref<boolean>(false)
 
-  const scrollToBottom = async (hasScroll?: boolean) => {
-    if (
-      scrollRef.value
-      && (scrollRef.value.scrollTop + scrollRef.value.clientHeight
-          === scrollRef.value.scrollHeight
-        || !!hasScroll)
-    )
-      isScroll.value = true
-    else isScroll.value = false
-
+  const scrollToBottom = async () => {
     await nextTick()
-    if (scrollRef.value && isScroll.value)
+    if (scrollRef.value)
       scrollRef.value.scrollTop = scrollRef.value.scrollHeight
   }
 
@@ -48,5 +39,6 @@ export function useScroll(): ScrollReturn {
     scrollRef,
     scrollToBottom,
     scrollToTop,
+    scrollToBottomIfAtBottom,
   }
 }
