@@ -86,4 +86,10 @@ export default {
     onlineImportWarning: '注意：请检查 JSON 文件来源！',
     downloadError: '请检查网络状态与 JSON 文件有效性',
   },
+  systemMessage: {
+    defaultRole: '默认角色',
+    chatRole: '会话角色',
+    reset: '已重置到默认角色',
+    inputPrompt: '此处留白恢复到默认角色',
+  },
 }

@@ -86,4 +86,10 @@ export default {
     onlineImportWarning: 'Note: Please check the JSON file source!',
     downloadError: 'Please check the network status and JSON file validity',
   },
+  systemMessage: {
+    defaultRole: 'Default Role',
+    chatRole: 'Chat Role',
+    reset: 'Reset to default role',
+    inputPrompt: 'Leave empty to use the default role',
+  },
 }
