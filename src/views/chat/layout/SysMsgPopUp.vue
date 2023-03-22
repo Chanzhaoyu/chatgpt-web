@@ -19,7 +19,7 @@ const promptStore = usePromptStore()
 const settingStore = useSettingStore()
 const ms = useMessage()
 const tempSystemMessage = ref(settingStore.currentSystemMessage(+props.uuid))
-const defaultSystemMessage = settingStore.defaultSystemMessage
+const defaultSystemMessage = computed(() => settingStore.defaultSystemMessage)
 const minMessageLength = 3
 const loading = ref(false)
 const disabled = computed (() => loading.value)
