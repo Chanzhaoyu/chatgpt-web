@@ -67,10 +67,13 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     apiModel = 'ChatGPTAPI'
   }
   else {
+    const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
     const options: ChatGPTUnofficialProxyAPIOptions = {
       accessToken: process.env.OPENAI_ACCESS_TOKEN,
       debug: true,
     }
+    if (isNotEmptyString(OPENAI_API_MODEL))
+      options.model = OPENAI_API_MODEL
 
     if (isNotEmptyString(process.env.API_REVERSE_PROXY))
       options.apiReverseProxyUrl = process.env.API_REVERSE_PROXY
