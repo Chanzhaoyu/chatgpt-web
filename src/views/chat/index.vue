@@ -95,7 +95,7 @@ async function onConversation() {
   if (lastContext && usingContext.value)
     options = { ...lastContext }
 
-  // always add system message: either default or customized
+  // always add system message to options: either default or customized
   options.systemMessage = settingStore.currentSystemMessage(+uuid)
 
   addChat(
@@ -226,7 +226,7 @@ async function onRegenerate(index: number) {
   if (requestOptions.options)
     options = { ...requestOptions.options }
 
-  // always add system message: either default or customized
+  // always add system message to options: either default or customized
   options.systemMessage = settingStore.currentSystemMessage(+uuid)
 
   loading.value = true

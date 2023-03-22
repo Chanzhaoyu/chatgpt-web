@@ -8,6 +8,11 @@ interface Props {
   uuid: string
 }
 
+interface PromptItem {
+  key: string
+  value: string
+}
+
 interface Emit {
   (e: 'update:visible', visible: boolean): void
 }
@@ -44,7 +49,7 @@ function setSystemMessage() {
     }
     else {
       settingStore.restoreDefaultSystemMessage(+props.uuid)
-      tempSystemMessage.value = defaultSystemMessage
+      tempSystemMessage.value = defaultSystemMessage.value
       ms.success('Reset system message to default.')
       show.value = false
     }
@@ -82,7 +87,7 @@ const searchOptions = computed(() => {
 // value反渲染key
 const renderOption = (option: { label: string }) => {
   const { promptList: promptTemplate } = promptStore.getPromptList()
-  for (const i of promptTemplate) {
+  for (const i of promptTemplate as PromptItem[]) {
     if (i.value === option.label)
       return [i.key]
   }
