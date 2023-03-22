@@ -178,7 +178,7 @@ router.post('/chat-process', auth, async (req, res) => {
 router.post('/user-register', async (req, res) => {
   const { username, password } = req.body as { username: string; password: string }
   const config = await getCacheConfig()
-  if (config.siteConfig.registerEnabled) {
+  if (!config.siteConfig.registerEnabled) {
     res.send({ status: 'Fail', message: '注册账号功能未启用 | Register account is disabled!', data: null })
     return
   }

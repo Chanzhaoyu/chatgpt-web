@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { enUS, zhCN, zhTW, koKR } from 'naive-ui'
+import { enUS, koKR, zhCN, zhTW } from 'naive-ui'
 import { useAppStore } from '@/store'
 import { setLocale } from '@/locales'
 
@@ -18,8 +18,8 @@ export function useLanguage() {
         setLocale('zh-TW')
         return zhTW
       case 'ko-KR':
-          setLocale('ko-KR')
-          return koKR
+        setLocale('ko-KR')
+        return koKR
       default:
         setLocale('zh-CN')
         return enUS
