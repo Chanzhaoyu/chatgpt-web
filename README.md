@@ -154,6 +154,12 @@ pnpm start
 pnpm dev
 ```
 
+### 客户端运行（mac已测试）
+
+```shell
+pnpm tauri dev
+```
+
 ## 环境变量
 
 `API` 可用：
@@ -291,6 +297,13 @@ PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 
 ```shell
 pnpm build
+```
+
+#### 客户端
+```shell
+pnpm tauri build
+# or
+pnpm tauri build --debug
 ```
 
 ## 常见问题
