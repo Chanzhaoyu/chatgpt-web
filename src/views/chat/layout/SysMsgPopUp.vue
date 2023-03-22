@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { NAutoComplete, NButton, NInput, NModal, NSpace, useMessage } from 'naive-ui'
 import { computed, ref } from 'vue'
-import { usePromptStore, useSysMsgStore } from '@/store'
+import { usePromptStore, useSettingStore } from '@/store'
 
 interface Props {
   visible: boolean
@@ -16,11 +16,11 @@ const props = defineProps<Props>()
 const emit = defineEmits<Emit>()
 
 const promptStore = usePromptStore()
-const sysMsgStore = useSysMsgStore()
+const settingStore = useSettingStore()
 const ms = useMessage()
-const tempSystemMessage = ref(sysMsgStore.currentSystemMessage(+props.uuid))
-const defaultSystemMessage = sysMsgStore.defaultSystemMessage
-const minMessageLength = 15
+const tempSystemMessage = ref(settingStore.currentSystemMessage(+props.uuid))
+const defaultSystemMessage = settingStore.defaultSystemMessage
+const minMessageLength = 3
 const loading = ref(false)
 const disabled = computed (() => loading.value)
 const show = computed({
@@ -34,7 +34,7 @@ function setSystemMessage() {
     loading.value = true
     if (message.length > 1) {
       if (message.length > minMessageLength) {
-        sysMsgStore.setCurrentSystemMessage(+props.uuid, message)
+        settingStore.setCurrentSystemMessage(+props.uuid, message)
         ms.success(`New system message has been set to: ${message}`)
         show.value = false
       }
@@ -43,7 +43,7 @@ function setSystemMessage() {
       }
     }
     else {
-      sysMsgStore.restoreDefaultSystemMessage(+props.uuid)
+      settingStore.restoreDefaultSystemMessage(+props.uuid)
       tempSystemMessage.value = defaultSystemMessage
       ms.success('Reset system message to default.')
       show.value = false

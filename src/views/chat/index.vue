@@ -14,7 +14,7 @@ import HeaderComponent from './components/Header/index.vue'
 import SysMsgPopUp from './layout/SysMsgPopUp.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useChatStore, usePromptStore, useSysMsgStore } from '@/store'
+import { useChatStore, usePromptStore, useSettingStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
 
@@ -27,7 +27,7 @@ const dialog = useDialog()
 const ms = useMessage()
 
 const chatStore = useChatStore()
-const sysMsgStore = useSysMsgStore()
+const settingStore = useSettingStore()
 
 useCopyCode()
 
@@ -96,7 +96,7 @@ async function onConversation() {
     options = { ...lastContext }
 
   // always add system message: either default or customized
-  options = { ...options, systemMessage: getSystemMessage(+uuid) }
+  options.systemMessage = settingStore.currentSystemMessage(+uuid)
 
   addChat(
     +uuid,
@@ -227,7 +227,7 @@ async function onRegenerate(index: number) {
     options = { ...requestOptions.options }
 
   // always add system message: either default or customized
-  options = { ...options, systemMessage: getSystemMessage(+uuid) }
+  options.systemMessage = settingStore.currentSystemMessage(+uuid)
 
   loading.value = true
 
@@ -322,10 +322,6 @@ async function onRegenerate(index: number) {
   finally {
     loading.value = false
   }
-}
-
-function getSystemMessage(uuid: number): string {
-  return sysMsgStore.currentSystemMessage(uuid)
 }
 
 function handleSetSysMsg() {
