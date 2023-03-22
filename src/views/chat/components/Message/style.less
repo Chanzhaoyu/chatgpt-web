@@ -45,19 +45,28 @@
 			align-items: center;
 			color: #b3b3b3;
 
-			&__copy{
+			&__copy {
 				cursor: pointer;
 				margin-left: 0.5rem;
 				user-select: none;
+
 				&:hover {
 					color: #65a665;
 				}
 			}
 		}
 	}
+
 }
 
 html.dark {
+
+	.message-reply {
+		.raw-text {
+			white-space: pre-wrap;
+			color: var(--n-text-color);
+		}
+	}
 
 	.highlight pre,
 	pre {

@@ -2,7 +2,7 @@ import type { Router } from 'vue-router'
 import { useAuthStoreWithout } from '@/store/modules/auth'
 
 export function setupPageGuard(router: Router) {
-  router.beforeEach(async (from, to, next) => {
+  router.beforeEach(async (to, from, next) => {
     const authStore = useAuthStoreWithout()
     if (!authStore.session) {
       try {
@@ -12,7 +12,7 @@ export function setupPageGuard(router: Router) {
         next()
       }
       catch (error) {
-        if (from.path !== '/500')
+        if (to.path !== '/500')
           next({ name: '500' })
         else
           next()

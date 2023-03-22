@@ -46,6 +46,8 @@ export default {
     deleteMessageConfirm: '是否刪除此訊息?',
     deleteHistoryConfirm: '確定刪除此紀錄?',
     clearHistoryConfirm: '確定清除紀錄?',
+    preview: '預覽',
+    showRawText: '顯示原文',
   },
   setting: {
     setting: '設定',
@@ -63,6 +65,7 @@ export default {
     timeout: '逾時',
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
+    balance: 'API余額',
   },
   store: {
     local: '本機',

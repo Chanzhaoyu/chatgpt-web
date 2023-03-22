@@ -46,6 +46,8 @@ export default {
     deleteMessageConfirm: '是否删除此消息?',
     deleteHistoryConfirm: '确定删除此记录?',
     clearHistoryConfirm: '确定清空聊天记录?',
+    preview: '预览',
+    showRawText: '显示原文',
   },
   setting: {
     setting: '设置',
@@ -63,6 +65,7 @@ export default {
     timeout: '超时',
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
+    balance: 'API余额',
   },
   store: {
     local: '本地',

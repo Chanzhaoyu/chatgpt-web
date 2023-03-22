@@ -170,6 +170,7 @@ pnpm dev
 通用：
 
 - `AUTH_SECRET_KEY` 访问权限密钥，可选
+- `MAX_REQUEST_PER_HOUR` 每小时最大请求次数，可选，默认无限
 - `TIMEOUT_MS` 超时，单位毫秒，可选
 - `SOCKS_PROXY_HOST` 和 `SOCKS_PROXY_PORT` 一起时生效，可选
 - `SOCKS_PROXY_PORT` 和 `SOCKS_PROXY_HOST` 一起时生效，可选
@@ -213,25 +214,27 @@ services:
       - 3002:3002
     environment:
       # 二选一
-      OPENAI_API_KEY: xxxxxx
+      OPENAI_API_KEY: sk-xxx
       # 二选一
-      OPENAI_ACCESS_TOKEN: xxxxxx
+      OPENAI_ACCESS_TOKEN: xxx
       # API接口地址，可选，设置 OPENAI_API_KEY 时可用
-      OPENAI_API_BASE_URL: xxxx
+      OPENAI_API_BASE_URL: xxx
       # API模型，可选，设置 OPENAI_API_KEY 时可用
-      OPENAI_API_MODEL: xxxx
+      OPENAI_API_MODEL: xxx
       # 反向代理，可选
       API_REVERSE_PROXY: xxx
       # 访问权限密钥，可选
       AUTH_SECRET_KEY: xxx
+      # 每小时最大请求次数，可选，默认无限
+      MAX_REQUEST_PER_HOUR: 0
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
       # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
-      SOCKS_PROXY_HOST: xxxx
+      SOCKS_PROXY_HOST: xxx
       # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
-      SOCKS_PROXY_PORT: xxxx
+      SOCKS_PROXY_PORT: xxx
       # HTTPS 代理，可选，支持 http，https，socks5
-      HTTPS_PROXY: http://xxxx:7890
+      HTTPS_PROXY: http://xxx:7890
 ```
 - `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 - `OPENAI_API_MODEL`  可选，设置 `OPENAI_API_KEY` 时可用
@@ -245,6 +248,7 @@ services:
 | --------------------- | ---------------------- | -------------------------------------------------------------------------------------------------- |
 | `PORT`                | 必填                   | 默认 `3002`
 | `AUTH_SECRET_KEY`          | 可选                   | 访问权限密钥                                        |
+| `MAX_REQUEST_PER_HOUR`          | 可选                   | 每小时最大请求次数，可选，默认无限                                        |
 | `TIMEOUT_MS`          | 可选                   | 超时时间，单位毫秒                                                                             |
 | `OPENAI_API_KEY`      | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)            |
 | `OPENAI_ACCESS_TOKEN` | `Web API` 二选一       | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session) |
@@ -279,7 +283,7 @@ PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 
 #### 前端网页
 
-1、修改根目录下 `.env` 文件中的 `VITE_APP_API_BASE_URL` 为你的实际后端接口地址
+1、修改根目录下 `.env` 文件中的 `VITE_GLOB_API_URL` 为你的实际后端接口地址
 
 2、根目录下运行以下命令，然后将 `dist` 文件夹内的文件复制到你网站服务的根目录下
 

@@ -46,6 +46,8 @@ export default {
     deleteMessageConfirm: 'Are you sure to delete this message?',
     deleteHistoryConfirm: 'Are you sure to clear this history?',
     clearHistoryConfirm: 'Are you sure to clear chat history?',
+    preview: 'Preview',
+    showRawText: 'Show as raw text',
   },
   setting: {
     setting: 'Setting',
@@ -63,6 +65,7 @@ export default {
     timeout: 'Timeout',
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
+    balance: 'API Balance',
   },
   store: {
     local: 'Local',
