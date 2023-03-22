@@ -8,7 +8,7 @@ on:
   pull_request:
     branches:
       - main
-
+        docker pull chenzhaoyu94/chatgpt-web:latest
 jobs:
   lint:
     runs-on: ubuntu-latest
