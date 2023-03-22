@@ -14,6 +14,8 @@ export class ConfigState {
 
 export class SiteConfig {
   siteTitle?: string
+  loginEnabled?: boolean
+  loginSalt?: string
   registerEnabled?: boolean
   registerMails?: string
   siteDomain?: string

@@ -80,6 +80,8 @@ export default {
     apiBaseUrl: 'Api Base Url',
     apiModel: 'Api Model',
     accessToken: 'Access Token',
+    loginEnabled: 'Login Enabled',
+    loginSalt: 'Login Salt',
   },
   store: {
     local: 'Local',

@@ -62,10 +62,10 @@ onMounted(() => {
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.smtpTsl') }}</span>
           <div class="flex-1">
-            <NInput
-              :value="config && config.smtpTsl !== undefined ? String(config.smtpTsl) : undefined"
-              placeholder=""
-              @input="(val) => { if (config) config.smtpTsl = typeof val === 'string' ? Boolean(val) : undefined }"
+            <NSwitch
+              :round="false"
+              :value="config && config.smtpTsl"
+              @update:value="(val) => { if (config) config.smtpTsl = val }"
             />
           </div>
         </div>

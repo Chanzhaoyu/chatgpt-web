@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken'
-import { isNotEmptyString } from '../utils/is'
+import { getCacheConfig } from '../storage/config'
 
 const auth = async (req, res, next) => {
-  const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
-  if (isNotEmptyString(AUTH_SECRET_KEY)) {
+  const config = await getCacheConfig()
+  if (config.siteConfig.loginEnabled) {
     try {
       const token = req.header('Authorization').replace('Bearer ', '')
-      const info = jwt.verify(token, AUTH_SECRET_KEY.trim())
+      const info = jwt.verify(token, config.siteConfig.loginSalt.trim())
       req.headers.userId = info.userId
       next()
     }

@@ -232,8 +232,8 @@ router.post('/config', auth, async (req, res) => {
 
 router.post('/session', async (req, res) => {
   try {
-    const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
-    const hasAuth = typeof AUTH_SECRET_KEY === 'string' && AUTH_SECRET_KEY.length > 0
+    const config = await getCacheConfig()
+    const hasAuth = config.siteConfig.loginEnabled
     const allowRegister = (await getCacheConfig()).siteConfig.registerEnabled
     res.send({ status: 'Success', message: '', data: { auth: hasAuth, allowRegister, model: currentModel() } })
   }
@@ -256,14 +256,14 @@ router.post('/user-login', async (req, res) => {
         throw new Error('请去邮箱中验证 | Please verify in the mailbox')
       throw new Error('用户不存在或密码错误 | User does not exist or incorrect password.')
     }
-
+    const config = await getCacheConfig()
     const token = jwt.sign({
       name: user.name ? user.name : user.email,
       avatar: user.avatar,
       description: user.description,
       userId: user._id,
       root: username.toLowerCase() === process.env.ROOT_USER,
-    }, process.env.AUTH_SECRET_KEY)
+    }, config.siteConfig.loginSalt.trim())
     res.send({ status: 'Success', message: '登录成功 | Login successfully', data: { token } })
   }
   catch (error) {

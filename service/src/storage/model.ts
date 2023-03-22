@@ -99,6 +99,8 @@ export class Config {
 export class SiteConfig {
   constructor(
     public siteTitle?: string,
+    public loginEnabled?: boolean,
+    public loginSalt?: string,
     public registerEnabled?: boolean,
     public registerMails?: string,
     public siteDomain?: string,

@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb'
+import { isNotEmptyString } from '../utils/is'
 import { Config, MailConfig, SiteConfig } from './model'
 import { getConfig } from './mongo'
 
@@ -34,6 +35,8 @@ export async function getOriginConfig() {
       process.env.HTTPS_PROXY,
       new SiteConfig(
         process.env.SITE_TITLE || 'ChatGpt Web',
+        isNotEmptyString(process.env.AUTH_SECRET_KEY),
+        process.env.AUTH_SECRET_KEY,
         process.env.REGISTER_ENABLED === 'true',
         process.env.REGISTER_MAILS,
         process.env.SITE_DOMAIN),
@@ -42,6 +45,12 @@ export async function getOriginConfig() {
         process.env.SMTP_TSL === 'true',
         process.env.SMTP_USERNAME,
         process.env.SMTP_PASSWORD))
+  }
+  else {
+    if (config.siteConfig.loginEnabled === undefined)
+      config.siteConfig.loginEnabled = isNotEmptyString(process.env.AUTH_SECRET_KEY)
+    if (config.siteConfig.loginSalt === undefined)
+      config.siteConfig.loginSalt = process.env.AUTH_SECRET_KEY
   }
   return config
 }

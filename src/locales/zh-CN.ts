@@ -80,6 +80,8 @@ export default {
     apiBaseUrl: '接口地址',
     apiModel: 'Api 模型',
     accessToken: 'Access Token',
+    loginEnabled: '注册登录',
+    loginSalt: '登录混淆盐',
   },
   store: {
     local: '本地',

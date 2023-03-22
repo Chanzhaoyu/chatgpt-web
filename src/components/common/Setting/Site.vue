@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
-import { NButton, NInput, NSpin, useMessage } from 'naive-ui'
+import { NButton, NInput, NSpin, NSwitch, useMessage } from 'naive-ui'
 import type { ConfigState } from './model'
 import { SiteConfig } from './model'
 import { fetchChatConfig, fetchUpdateSite } from '@/api'
@@ -61,12 +61,34 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.registerEnabled') }}</span>
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.loginEnabled') }}</span>
+          <div class="flex-1">
+            <NSwitch
+              :round="false"
+              :value="config && config.loginEnabled"
+              @update:value="(val) => { if (config) config.loginEnabled = val }"
+            />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.loginSalt') }}</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.registerEnabled !== undefined ? String(config.registerEnabled) : undefined"
-              placeholder=""
-              @input="(val) => { if (config) config.registerEnabled = typeof val === 'string' ? Boolean(val) : undefined }"
+              :value="config && config.loginSalt" placeholder=""
+              @input="(val) => { if (config) config.loginSalt = val }"
+            />
+          </div>
+          <p>
+            变更后会导致旧的登录失效
+          </p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.registerEnabled') }}</span>
+          <div class="flex-1">
+            <NSwitch
+              :round="false"
+              :value="config && config.registerEnabled"
+              @update:value="(val) => { if (config) config.registerEnabled = val }"
             />
           </div>
         </div>
