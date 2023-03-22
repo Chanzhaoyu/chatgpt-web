@@ -35,12 +35,6 @@ const userInfo = computed(() => userStore.userInfo)
           v-html="userInfo.description"
         />
       </p>
-			<p class="overflow-hidden text-xs text-gray-500 text-ellipsis whitespace-nowrap">
-        <span
-					v-if="isString(userInfo.systemMessage) && userInfo.systemMessage !== ''"
-					v-html="userInfo.systemMessage"
-				/>
-			</p>
     </div>
   </div>
 </template>
