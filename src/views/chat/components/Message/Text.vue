@@ -72,7 +72,7 @@ defineExpose({ textRef })
       <div ref="textRef" class="leading-relaxed break-words">
         <div v-if="!inversion">
           <div v-if="!asRawText" class="markdown-body" v-html="text" />
-          <div v-else class="raw-text" v-text="text" />
+          <div v-else class="whitespace-pre-wrap" v-text="text" />
         </div>
         <div v-else class="whitespace-pre-wrap" v-text="text" />
       </div>

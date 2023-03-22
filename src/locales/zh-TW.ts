@@ -52,10 +52,12 @@ export default {
   setting: {
     setting: '設定',
     general: '總覽',
+    advanced: '高級',
     config: '設定',
     avatarLink: '頭貼連結',
     name: '名稱',
     description: '描述',
+    role: '角色設定',
     resetUserInfo: '重設使用者資訊',
     chatHistory: '紀錄',
     theme: '主題',
