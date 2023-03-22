@@ -40,6 +40,7 @@
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
     "@iconify/vue": "^4.1.0",
+    "@tauri-apps/cli": "^1.2.3",
     "@types/crypto-js": "^4.1.1",
     "@types/katex": "^0.16.0",
     "@types/markdown-it": "^12.2.3",
