@@ -61,7 +61,6 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     if (isNotEmptyString(OPENAI_API_BASE_URL))
       options.apiBaseUrl = `${OPENAI_API_BASE_URL}/v1`
 
-
     setupProxy(options)
 
     api = new ChatGPTAPI({ ...options })
