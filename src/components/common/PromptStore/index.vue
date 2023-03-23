@@ -1,8 +1,9 @@
 <script setup lang='ts'>
 import type { DataTableColumns } from 'naive-ui'
-import { computed, h, ref, watch } from 'vue'
+import { computed, h, ref, watch, onMounted } from 'vue'
 import { NButton, NCard, NDataTable, NDivider, NInput, NList, NListItem, NModal, NPopconfirm, NSpace, NTabPane, NTabs, NThing, useMessage } from 'naive-ui'
 import PromptRecommend from '../../../assets/recommend.json'
+import defaultRole from '../../../assets/defaultRole.json'
 import { SvgIcon } from '..'
 import { usePromptStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -310,6 +311,31 @@ watch(
     promptStore.updatePromptList(promptList.value)
   },
   { deep: true },
+)
+
+onMounted(
+  ()=>{
+    const jsonData = JSON.parse(JSON.stringify(defaultRole))
+    let key = 'key'
+    let value = 'value'
+    for (const i of jsonData) {
+      if (!('key' in i) || !('value' in i))
+        continue
+      let safe = true
+      for (const j of promptList.value) {
+        if (j.key === i[key]) {
+          safe = false
+          break
+        }
+        if (j.value === i[value]) {
+          safe = false
+          break
+        }
+      }
+      if (safe)
+        promptList.value.unshift({ key: i[key], value: i[value] } as never)
+    }
+  }
 )
 
 const dataSource = computed(() => {
