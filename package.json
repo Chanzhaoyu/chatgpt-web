@@ -11,6 +11,7 @@
     "vue"
   ],
   "scripts": {
+    "start": "node scripts/launch/index.js",
     "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
