@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { SettingsState } from './helper'
-import { defaultSetting, getLocalState, setLocalState } from './helper'
+import { defaultSetting, getLocalState, removeLocalState, setLocalState } from './helper'
 
 export const useSettingStore = defineStore('setting-store', {
   state: (): SettingsState => getLocalState(),
@@ -12,7 +12,7 @@ export const useSettingStore = defineStore('setting-store', {
 
     resetSetting() {
       this.$state = defaultSetting()
-      this.recordState()
+      removeLocalState()
     },
 
     recordState() {
