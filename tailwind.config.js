@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'light-img': 'url(\'/src/assets/bg-light.jpg\')',
+        'dark-img': 'url(\'/src/assets/bg-dark.jpg\')',
+      },
       animation: {
         blink: 'blink 1.2s infinite steps(1, start)',
       },

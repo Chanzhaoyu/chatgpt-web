@@ -13,7 +13,7 @@ export interface AppState {
 }
 
 export function defaultSetting(): AppState {
-  return { siderCollapsed: false, theme: 'light', language: 'zh-CN' }
+  return { siderCollapsed: false, theme: 'auto', language: 'zh-CN' }
 }
 
 export function getLocalSetting(): AppState {
