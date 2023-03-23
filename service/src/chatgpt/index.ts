@@ -3,13 +3,15 @@ import 'isomorphic-fetch'
 import type { ChatGPTAPIOptions, ChatMessage, SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
-import { HttpsProxyAgent } from 'https-proxy-agent'
+import httpsProxyAgent from 'https-proxy-agent'
 import fetch from 'node-fetch'
 import axios from 'axios'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
 import type { RequestOptions } from './types'
+
+const { HttpsProxyAgent } = httpsProxyAgent
 
 dotenv.config()
 
