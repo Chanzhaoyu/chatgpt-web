@@ -454,7 +454,7 @@ const footerClass = computed(() => {
 
 onMounted(() => {
   scrollToBottom()
-  if (inputRef.value)
+  if (inputRef.value && !isMobile.value)
     inputRef.value?.focus()
 })
 
