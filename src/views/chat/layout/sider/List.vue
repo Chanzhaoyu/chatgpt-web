@@ -32,6 +32,8 @@ function handleEdit({ uuid }: Chat.History, isEdit: boolean, event?: MouseEvent)
 function handleDelete(index: number, event?: MouseEvent | TouchEvent) {
   event?.stopPropagation()
   chatStore.deleteHistory(index)
+  if (isMobile.value)
+    appStore.setSiderCollapsed(true)
 }
 
 function handleEnter({ uuid }: Chat.History, isEdit: boolean, event: KeyboardEvent) {

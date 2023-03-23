@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { NDropdown } from 'naive-ui'
 import AvatarComponent from './Avatar.vue'
 import TextComponent from './Text.vue'
@@ -29,23 +29,42 @@ const { iconRender } = useIconRender()
 
 const textRef = ref<HTMLElement>()
 
-const options = [
-  {
-    label: t('chat.copy'),
-    key: 'copyText',
-    icon: iconRender({ icon: 'ri:file-copy-2-line' }),
-  },
-  {
-    label: t('common.delete'),
-    key: 'delete',
-    icon: iconRender({ icon: 'ri:delete-bin-line' }),
-  },
-]
+const asRawText = ref(props.inversion)
 
-function handleSelect(key: 'copyRaw' | 'copyText' | 'delete') {
+const messageRef = ref<HTMLElement>()
+
+const options = computed(() => {
+  const common = [
+    {
+      label: t('chat.copy'),
+      key: 'copyText',
+      icon: iconRender({ icon: 'ri:file-copy-2-line' }),
+    },
+    {
+      label: t('common.delete'),
+      key: 'delete',
+      icon: iconRender({ icon: 'ri:delete-bin-line' }),
+    },
+  ]
+
+  if (!props.inversion) {
+    common.unshift({
+      label: asRawText.value ? t('chat.preview') : t('chat.showRawText'),
+      key: 'toggleRenderType',
+      icon: iconRender({ icon: asRawText.value ? 'ic:outline-code-off' : 'ic:outline-code' }),
+    })
+  }
+
+  return common
+})
+
+function handleSelect(key: 'copyText' | 'delete' | 'toggleRenderType') {
   switch (key) {
     case 'copyText':
       copyText({ text: props.text ?? '' })
+      return
+    case 'toggleRenderType':
+      asRawText.value = !asRawText.value
       return
     case 'delete':
       emit('delete')
@@ -53,12 +72,17 @@ function handleSelect(key: 'copyRaw' | 'copyText' | 'delete') {
 }
 
 function handleRegenerate() {
+  messageRef.value?.scrollIntoView()
   emit('regenerate')
 }
 </script>
 
 <template>
-  <div class="flex w-full mb-6 overflow-hidden" :class="[{ 'flex-row-reverse': inversion }]">
+  <div
+    ref="messageRef"
+    class="flex w-full mb-6 overflow-hidden"
+    :class="[{ 'flex-row-reverse': inversion }]"
+  >
     <div
       class="flex items-center justify-center flex-shrink-0 h-8 overflow-hidden rounded-full basis-8"
       :class="[inversion ? 'ml-2' : 'mr-2']"
@@ -79,6 +103,7 @@ function handleRegenerate() {
           :error="error"
           :text="text"
           :loading="loading"
+          :as-raw-text="asRawText"
         />
         <div class="flex flex-col">
           <button
