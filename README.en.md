@@ -185,10 +185,10 @@ pnpm dev
 docker build -t chatgpt-web .
 
 # foreground operation
-docker run --name chatgpt-web --rm -it -p 3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
+docker run --name chatgpt-web --rm -it -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
 
 # background operation
-docker run --name chatgpt-web -d -p 3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
+docker run --name chatgpt-web -d -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
 
 # running address
 http://localhost:3002/
@@ -205,7 +205,7 @@ services:
   app:
     image: chenzhaoyu94/chatgpt-web # always use latest, pull the tag image again when updating
     ports:
-      - 3002:3002
+      - 127.0.0.1:3002:3002
     environment:
       # one of two
       OPENAI_API_KEY: xxxxxx
