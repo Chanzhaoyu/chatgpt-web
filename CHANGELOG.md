@@ -1,3 +1,39 @@
+## v2.10.8
+
+`2023-03-23`
+
+如遇问题，请删除 `node_modules` 重新安装依赖。
+
+## Feature
+- 显示回复消息原文的选项 [[yilozt](https://github.com/Chanzhaoyu/chatgpt-web/pull/672)]
+- 添加单 `IP` 每小时请求限制。环境变量： `MAX_REQUEST_PER_HOUR` [[zhuxindong ](https://github.com/Chanzhaoyu/chatgpt-web/pull/718)]
+- 前端添加角色设定，仅 `API` 方式可见 [[quzard](https://github.com/Chanzhaoyu/chatgpt-web/pull/768)]
+- `OPENAI_API_MODEL` 变量现在对 `ChatGPTUnofficialProxyAPI` 也生效，注意：`Token` 和 `API` 的模型命名不一致，不能直接填入 `gpt-3.5` 或者 `gpt-4` [[hncboy](https://github.com/Chanzhaoyu/chatgpt-web/pull/632)]
+- 添加繁体中文 `Prompts` [[PeterDaveHello](https://github.com/Chanzhaoyu/chatgpt-web/pull/796)]
+
+## Enhancement
+- 重置回答时滚动定位至该回答 [[shunyue1320](https://github.com/Chanzhaoyu/chatgpt-web/pull/781)]
+- 当 `API` 是 `gpt-4` 时增加可用的 `Max Tokens` [[simonwu53](https://github.com/Chanzhaoyu/chatgpt-web/pull/729)]
+- 判断和忽略回复字符 [[liut](https://github.com/Chanzhaoyu/chatgpt-web/pull/474)]
+- 切换会话时，自动聚焦输入框 [[JS-an](https://github.com/Chanzhaoyu/chatgpt-web/pull/735)]
+- 渲染的链接新窗口打开
+- 查询余额可选 `API_BASE_URL` 代理地址
+- `config` 接口添加验证防止被无限制调用
+- `PWA` 默认不开启，现在需手动修改 `.env` 文件 `VITE_GLOB_APP_PWA` 变量
+- 当网络连接时，刷新页面，`500` 错误页自动跳转到主页
+
+## BugFix
+- `scrollToBottom` 调回 `scrollToBottomIfAtBottom` [[shunyue1320](https://github.com/Chanzhaoyu/chatgpt-web/pull/771)]
+- 重置异常的 `loading` 会话
+
+## Common
+- 创建 `start.cmd` 在 `windows` 下也可以运行 [vulgatecnn](https://github.com/Chanzhaoyu/chatgpt-web/pull/656)]
+- 添加 `visual-studio-code` 中调试配置 [[ChandlerVer5](https://github.com/Chanzhaoyu/chatgpt-web/pull/296)]
+- 修复文档中 `docker` 端口为本地 [[kilvn](https://github.com/Chanzhaoyu/chatgpt-web/pull/802)]
+## Other
+- 依赖更新
+
+
 ## v2.10.7
 
 `2023-03-17`
