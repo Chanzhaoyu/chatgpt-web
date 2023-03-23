@@ -5,10 +5,9 @@ import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 
 function setupPlugins(env: ImportMetaEnv): PluginOption[] {
-  const plugins = [vue()]
-
-  if (env.VITE_GLOB_APP_PWA === 'true') {
-    VitePWA({
+  return [
+    vue(),
+    env.VITE_GLOB_APP_PWA === 'true' && VitePWA({
       injectRegister: 'auto',
       manifest: {
         name: 'chatGPT',
@@ -18,9 +17,8 @@ function setupPlugins(env: ImportMetaEnv): PluginOption[] {
           { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
         ],
       },
-    })
-  }
-  return plugins
+    }),
+  ]
 }
 
 export default defineConfig((env) => {
