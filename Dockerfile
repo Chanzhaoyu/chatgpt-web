@@ -1,6 +1,12 @@
 # build front-end
 FROM node:lts-alpine AS frontend
 
+ARG USE_CHINA_NPM_REGISTRY=1
+RUN \
+    if [ "$USE_CHINA_NPM_REGISTRY" = 1 ]; then \
+    		echo "setting registry" && \
+        npm config set registry https://registry.npm.taobao.org; \
+    fi;
 RUN npm install pnpm -g
 
 WORKDIR /app
@@ -18,6 +24,12 @@ RUN pnpm run build
 # build backend
 FROM node:lts-alpine as backend
 
+ARG USE_CHINA_NPM_REGISTRY=1
+RUN \
+    if [ "$USE_CHINA_NPM_REGISTRY" = 1 ]; then \
+    		echo "setting registry" && \
+        npm config set registry https://registry.npm.taobao.org; \
+    fi;
 RUN npm install pnpm -g
 
 WORKDIR /app
@@ -35,6 +47,12 @@ RUN pnpm build
 # service
 FROM node:lts-alpine
 
+ARG USE_CHINA_NPM_REGISTRY=1
+RUN \
+    if [ "$USE_CHINA_NPM_REGISTRY" = 1 ]; then \
+    		echo "setting registry" && \
+        npm config set registry https://registry.npm.taobao.org; \
+    fi;
 RUN npm install pnpm -g
 
 WORKDIR /app
