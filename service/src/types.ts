@@ -1,5 +1,14 @@
 import type { FetchFn } from 'chatgpt'
 
+export interface RequestProps {
+  roomId: number
+  uuid: number
+  regenerate: boolean
+  prompt: string
+  options?: ChatContext
+  systemMessage: string
+}
+
 export interface ChatContext {
   conversationId?: string
   parentMessageId?: string

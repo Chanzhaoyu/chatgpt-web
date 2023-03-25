@@ -20,6 +20,8 @@ services:
       API_REVERSE_PROXY: xxx
       # 访问jwt加密参数，可选 不为空则允许登录 同时需要设置 MONGODB_URL
       AUTH_SECRET_KEY: xxx
+      # 每小时最大请求次数，可选，默认无限
+      MAX_REQUEST_PER_HOUR: 0
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
       # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效

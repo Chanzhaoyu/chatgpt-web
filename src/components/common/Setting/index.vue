@@ -2,17 +2,21 @@
 import { computed, ref } from 'vue'
 import { NModal, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
+import Advanced from './Advanced.vue'
 import About from './About.vue'
 import Site from './Site.vue'
 import Mail from './Mail.vue'
 import { SvgIcon } from '@/components/common'
-import { useUserStore } from '@/store'
+import { useAuthStore, useUserStore } from '@/store'
 
 const props = defineProps<Props>()
 
 const emit = defineEmits<Emit>()
 
 const userStore = useUserStore()
+const authStore = useAuthStore()
+
+const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
 
 interface Props {
   visible: boolean
@@ -45,6 +49,15 @@ const show = computed({
           </template>
           <div class="min-h-[100px]">
             <General />
+          </div>
+        </NTabPane>
+        <NTabPane v-if="isChatGPTAPI" name="Advanced" tab="Advanced">
+          <template #tab>
+            <SvgIcon class="text-lg" icon="ri:equalizer-line" />
+            <span class="ml-2">{{ $t('setting.advanced') }}</span>
+          </template>
+          <div class="min-h-[100px]">
+            <Advanced />
           </div>
         </NTabPane>
         <NTabPane v-if="userStore.userInfo.root" name="Config" tab="Config">

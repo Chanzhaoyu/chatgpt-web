@@ -1,6 +1,7 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import { ObjectId } from 'mongodb'
+import type { RequestProps } from './types'
 import type { ChatContext, ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, currentModel, initApi } from './chatgpt'
 import { auth } from './middleware/auth'
@@ -8,6 +9,7 @@ import { clearConfigCache, getCacheConfig, getOriginConfig } from './storage/con
 import type { ChatOptions, Config, MailConfig, SiteConfig, UserInfo } from './storage/model'
 import { Status } from './storage/model'
 import { clearChat, createChatRoom, createUser, deleteChat, deleteChatRoom, existsChatRoom, getChat, getChatRooms, getChats, getUser, getUserById, insertChat, renameChatRoom, updateChat, updateConfig, updateUserInfo, verifyUser } from './storage/mongo'
+import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
 import { sendMail } from './utils/mail'
 import { checkUserVerify, getUserVerifyUrl, md5 } from './utils/security'
@@ -150,19 +152,23 @@ router.post('/chat', auth, async (req, res) => {
   }
 })
 
-router.post('/chat-process', auth, async (req, res) => {
+router.post('/chat-process', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
   try {
-    const { roomId, uuid, regenerate, prompt, options = {} } = req.body as
-      { roomId: number; uuid: number; regenerate: boolean; prompt: string; options?: ChatContext }
+    const { roomId, uuid, regenerate, prompt, options = {}, systemMessage } = req.body as RequestProps
     const message = regenerate
       ? await getChat(roomId, uuid)
       : await insertChat(uuid, prompt, roomId, options as ChatOptions)
     let firstChunk = true
-    const result = await chatReplyProcess(prompt, options, (chat: ChatMessage) => {
-      res.write(firstChunk ? JSON.stringify(chat) : `\n${JSON.stringify(chat)}`)
-      firstChunk = false
+    const result = await chatReplyProcess({
+      message: prompt,
+      lastContext: options,
+      process: (chat: ChatMessage) => {
+        res.write(firstChunk ? JSON.stringify(chat) : `\n${JSON.stringify(chat)}`)
+        firstChunk = false
+      },
+      systemMessage,
     })
     if (result.status === 'Success')
       await updateChat(message._id, result.data.text, result.data.id)

@@ -136,7 +136,6 @@ function handleImportButtonClick(): void {
           <NInput v-model:value="avatar" placeholder="" />
         </div>
       </div>
-
       <div
         class="flex items-center space-x-4"
         :class="isMobile && 'items-start'"
