@@ -38,7 +38,7 @@ export const useChatStore = defineStore('chat-store', {
           uuid = r.uuid
         this.chat.unshift({ uuid: r.uuid, data: [] })
         if (uuid === r.uuid)
-          await this.syncChat(r, null)
+          await this.syncChat(r, () => {})
       }
       if (uuid == null) {
         uuid = Date.now()
