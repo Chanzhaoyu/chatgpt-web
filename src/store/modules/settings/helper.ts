@@ -21,3 +21,7 @@ export function getLocalState(): SettingsState {
 export function setLocalState(setting: SettingsState): void {
   ss.set(LOCAL_NAME, setting)
 }
+
+export function removeLocalState() {
+  ss.remove(LOCAL_NAME)
+}
