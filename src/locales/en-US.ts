@@ -7,6 +7,7 @@ export default {
     delete: 'Delete',
     deleteSuccess: 'Delete Success',
     save: 'Save',
+    test: 'Test',
     saveSuccess: 'Save Success',
     reset: 'Reset',
     action: 'Action',
@@ -87,6 +88,7 @@ export default {
     accessToken: 'Access Token',
     loginEnabled: 'Login Enabled',
     loginSalt: 'Login Salt',
+    loginSaltTip: 'Changes will invalidate all logged in',
   },
   store: {
     local: 'Local',

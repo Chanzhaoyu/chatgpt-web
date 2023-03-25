@@ -129,6 +129,13 @@ export function fetchUpdateMail<T = any>(mail: MailConfig) {
   })
 }
 
+export function fetchTestMail<T = any>(mail: MailConfig) {
+  return post<T>({
+    url: '/mail-test',
+    data: mail,
+  })
+}
+
 export function fetchUpdateSite<T = any>(config: SiteConfig) {
   return post<T>({
     url: '/setting-site',

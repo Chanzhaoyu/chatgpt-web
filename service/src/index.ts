@@ -11,8 +11,9 @@ import { Status } from './storage/model'
 import { clearChat, createChatRoom, createUser, deleteChat, deleteChatRoom, existsChatRoom, getChat, getChatRooms, getChats, getUser, getUserById, insertChat, renameChatRoom, updateChat, updateConfig, updateUserInfo, verifyUser } from './storage/mongo'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
-import { sendMail } from './utils/mail'
+import { sendTestMail, sendVerifyMail } from './utils/mail'
 import { checkUserVerify, getUserVerifyUrl, md5 } from './utils/security'
+import { rootAuth } from './middleware/rootAuth'
 
 const app = express()
 const router = express.Router()
@@ -182,41 +183,46 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
 })
 
 router.post('/user-register', async (req, res) => {
-  const { username, password } = req.body as { username: string; password: string }
-  const config = await getCacheConfig()
-  if (!config.siteConfig.registerEnabled) {
-    res.send({ status: 'Fail', message: '注册账号功能未启用 | Register account is disabled!', data: null })
-    return
-  }
-  if (isNotEmptyString(config.siteConfig.registerMails)) {
-    let allowSuffix = false
-    const emailSuffixs = config.siteConfig.registerMails.split(',')
-    for (let index = 0; index < emailSuffixs.length; index++) {
-      const element = emailSuffixs[index]
-      allowSuffix = username.toLowerCase().endsWith(element)
-      if (allowSuffix)
-        break
-    }
-    if (!allowSuffix) {
-      res.send({ status: 'Fail', message: '该邮箱后缀不支持 | The email service provider is not allowed', data: null })
+  try {
+    const { username, password } = req.body as { username: string; password: string }
+    const config = await getCacheConfig()
+    if (!config.siteConfig.registerEnabled) {
+      res.send({ status: 'Fail', message: '注册账号功能未启用 | Register account is disabled!', data: null })
       return
     }
-  }
+    if (isNotEmptyString(config.siteConfig.registerMails)) {
+      let allowSuffix = false
+      const emailSuffixs = config.siteConfig.registerMails.split(',')
+      for (let index = 0; index < emailSuffixs.length; index++) {
+        const element = emailSuffixs[index]
+        allowSuffix = username.toLowerCase().endsWith(element)
+        if (allowSuffix)
+          break
+      }
+      if (!allowSuffix) {
+        res.send({ status: 'Fail', message: '该邮箱后缀不支持 | The email service provider is not allowed', data: null })
+        return
+      }
+    }
 
-  const user = await getUser(username)
-  if (user != null) {
-    res.send({ status: 'Fail', message: '邮箱已存在 | The email exists', data: null })
-    return
-  }
-  const newPassword = md5(password)
-  await createUser(username, newPassword)
+    const user = await getUser(username)
+    if (user != null) {
+      res.send({ status: 'Fail', message: '邮箱已存在 | The email exists', data: null })
+      return
+    }
+    const newPassword = md5(password)
+    await createUser(username, newPassword)
 
-  if (username.toLowerCase() === process.env.ROOT_USER) {
-    res.send({ status: 'Success', message: '注册成功 | Register success', data: null })
+    if (username.toLowerCase() === process.env.ROOT_USER) {
+      res.send({ status: 'Success', message: '注册成功 | Register success', data: null })
+    }
+    else {
+      await sendVerifyMail(username, await getUserVerifyUrl(username))
+      res.send({ status: 'Success', message: '注册成功, 去邮箱中验证吧 | Registration is successful, you need to go to email verification', data: null })
+    }
   }
-  else {
-    await sendMail(username, await getUserVerifyUrl(username))
-    res.send({ status: 'Success', message: '注册成功, 去邮箱中验证吧 | Registration is successful, you need to go to email verification', data: null })
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
   }
 })
 
@@ -307,17 +313,12 @@ router.post('/verify', async (req, res) => {
   }
 })
 
-router.post('/setting-base', auth, async (req, res) => {
+router.post('/setting-base', rootAuth, async (req, res) => {
   try {
     const { apiKey, apiModel, apiBaseUrl, accessToken, timeoutMs, socksProxy, httpsProxy } = req.body as Config
-    const userId = new ObjectId(req.headers.userId.toString())
 
     if (apiKey == null && accessToken == null)
       throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable.')
-
-    const user = await getUserById(userId)
-    if (user == null || user.status !== Status.Normal || user.email.toLowerCase() !== process.env.ROOT_USER)
-      throw new Error('无权限 | No permission.')
 
     const thisConfig = await getOriginConfig()
     thisConfig.apiKey = apiKey
@@ -338,14 +339,9 @@ router.post('/setting-base', auth, async (req, res) => {
   }
 })
 
-router.post('/setting-site', auth, async (req, res) => {
+router.post('/setting-site', rootAuth, async (req, res) => {
   try {
     const config = req.body as SiteConfig
-    const userId = new ObjectId(req.headers.userId.toString())
-
-    const user = await getUserById(userId)
-    if (user == null || user.status !== Status.Normal || user.email.toLowerCase() !== process.env.ROOT_USER)
-      throw new Error('无权限 | No permission.')
 
     const thisConfig = await getOriginConfig()
     thisConfig.siteConfig = config
@@ -358,20 +354,28 @@ router.post('/setting-site', auth, async (req, res) => {
   }
 })
 
-router.post('/setting-mail', auth, async (req, res) => {
+router.post('/setting-mail', rootAuth, async (req, res) => {
   try {
     const config = req.body as MailConfig
-    const userId = new ObjectId(req.headers.userId.toString())
-
-    const user = await getUserById(userId)
-    if (user == null || user.status !== Status.Normal || user.email.toLowerCase() !== process.env.ROOT_USER)
-      throw new Error('无权限 | No permission.')
 
     const thisConfig = await getOriginConfig()
     thisConfig.mailConfig = config
     const result = await updateConfig(thisConfig)
     clearConfigCache()
     res.send({ status: 'Success', message: '操作成功 | Successfully', data: result.mailConfig })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/mail-test', rootAuth, async (req, res) => {
+  try {
+    const config = req.body as MailConfig
+    const userId = new ObjectId(req.headers.userId as string)
+    const user = await getUserById(userId)
+    await sendTestMail(user.email, config)
+    res.send({ status: 'Success', message: '发送成功 | Successfully', data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

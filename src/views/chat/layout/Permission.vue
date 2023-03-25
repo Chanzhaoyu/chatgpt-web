@@ -37,7 +37,7 @@ async function handleVerify(verifytoken: string) {
   try {
     loading.value = true
     await fetchVerify(secretKey)
-    ms.success('Verify success')
+    ms.success('验证成功 | Verify successfully')
     router.replace('/')
   }
   catch (error: any) {
