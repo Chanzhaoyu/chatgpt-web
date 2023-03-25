@@ -13,6 +13,8 @@ RUN pnpm install
 
 COPY . /app
 
+ENV VITE_GLOB_APP_PWA=true
+
 RUN pnpm run build
 
 # build backend
