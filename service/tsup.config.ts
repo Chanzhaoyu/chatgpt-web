@@ -10,4 +10,5 @@ export default defineConfig({
   minify: false,
   shims: true,
   dts: false,
+  noExternal: ['chatgpt', 'socks-proxy-agent', 'express', 'https-proxy-agent', 'node-fetch'],
 })

@@ -10,12 +10,15 @@ function setupPlugins(env: ImportMetaEnv): PluginOption[] {
     env.VITE_GLOB_APP_PWA === 'true' && VitePWA({
       injectRegister: 'auto',
       manifest: {
-        name: 'chatGPT',
-        short_name: 'chatGPT',
+        name: 'ChatGPT Web',
+        short_name: 'ChatGPT',
         icons: [
           { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
           { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
         ],
+      },
+      workbox: {
+        skipWaiting: true,
       },
     }),
   ]
