@@ -33,7 +33,7 @@ COPY /service /app
 RUN pnpm build
 
 # TODO: dynamic copy here
-RUN cp /app/node_modules/.pnpm/@dqbd+tiktoken@1.0.2/node_modules/@dqbd/tiktoken/tiktoken_bg.wasm /app/build/_tiktoken_bg.wasm
+RUN cp /app/node_modules/.pnpm/@dqbd+tiktoken@1.0.2/node_modules/@dqbd/tiktoken/tiktoken_bg.wasm /app/build/tiktoken_bg.wasm
 
 # service
 FROM node:lts-alpine
