@@ -174,6 +174,8 @@ pnpm dev
 - `TIMEOUT_MS` timeout, in milliseconds, optional
 - `SOCKS_PROXY_HOST` optional, effective with SOCKS_PROXY_PORT
 - `SOCKS_PROXY_PORT` optional, effective with SOCKS_PROXY_HOST
+- `SOCKS_PROXY_USERNAME` optional, effective with SOCKS_PROXY_HOST and SOCKS_PROXY_PORT
+- `SOCKS_PROXY_PASSWORD` optional, effective with SOCKS_PROXY_HOST and SOCKS_PROXY_PORT
 - `HTTPS_PROXY` optional, support http，https, socks5
 - `ALL_PROXY` optional, support http，https, socks5
 
@@ -225,6 +227,10 @@ services:
       SOCKS_PROXY_HOST: xxxx
       # socks proxy port, optional, effective with SOCKS_PROXY_HOST
       SOCKS_PROXY_PORT: xxxx
+      # socks proxy, optional, effective with SOCKS_PROXY_HOST and SOCKS_PROXY_PORT
+      SOCKS_PROXY_USERNAME: xxxx
+      # socks proxy port, optional, effective with SOCKS_PROXY_HOST and SOCKS_PROXY_PORT
+      SOCKS_PROXY_PASSWORD: xxxx
       # HTTPS Proxy，optional, support http, https, socks5
       HTTPS_PROXY: http://xxx:7890
 ```
@@ -237,20 +243,22 @@ The `OPENAI_API_MODEL` is optional and only used when setting the `OPENAI_API_KE
 
 #### Railway Environment Variables
 
-| Environment Variable | Required | Description                                                                                       |
-| -------------------- | -------- | ------------------------------------------------------------------------------------------------- |
-| `PORT`               | Required | Default: `3002`                                                                                   |
-| `AUTH_SECRET_KEY`         | Optional | access password                                                                          |
-| `TIMEOUT_MS`         | Optional | Timeout in milliseconds                                                                      |
-| `OPENAI_API_KEY`     | Optional | Required for `OpenAI API`. `apiKey` can be obtained from [here](https://platform.openai.com/overview). |
-| `OPENAI_ACCESS_TOKEN`| Optional | Required for `Web API`. `accessToken` can be obtained from [here](https://chat.openai.com/api/auth/session).|
-| `OPENAI_API_BASE_URL`  | Optional, only for `OpenAI API` |  API endpoint.                                                        |
-| `OPENAI_API_MODEL`  | Optional, only for `OpenAI API` |  API model.                                                        |
-| `API_REVERSE_PROXY`  | Optional, only for `Web API` | Reverse proxy address for `Web API`. [Details](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy) |
-| `SOCKS_PROXY_HOST`   | Optional, effective with `SOCKS_PROXY_PORT` | Socks proxy.                      |
-| `SOCKS_PROXY_PORT`   | Optional, effective with `SOCKS_PROXY_HOST` | Socks proxy port.                 |
-| `HTTPS_PROXY`   | Optional | HTTPS Proxy.                 |
-| `ALL_PROXY`   | Optional | ALL Proxy.                 |
+| Environment Variable   | Required                                                          | Description                                                                                                      |
+|------------------------|-------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| `PORT`                 | Required                                                          | Default: `3002`                                                                                                  |
+| `AUTH_SECRET_KEY`      | Optional                                                          | access password                                                                                                  |
+| `TIMEOUT_MS`           | Optional                                                          | Timeout in milliseconds                                                                                          |
+| `OPENAI_API_KEY`       | Optional                                                          | Required for `OpenAI API`. `apiKey` can be obtained from [here](https://platform.openai.com/overview).           |
+| `OPENAI_ACCESS_TOKEN`  | Optional                                                          | Required for `Web API`. `accessToken` can be obtained from [here](https://chat.openai.com/api/auth/session).     |
+| `OPENAI_API_BASE_URL`  | Optional, only for `OpenAI API`                                   | API endpoint.                                                                                                    |
+| `OPENAI_API_MODEL`     | Optional, only for `OpenAI API`                                   | API model.                                                                                                       |
+| `API_REVERSE_PROXY`    | Optional, only for `Web API`                                      | Reverse proxy address for `Web API`. [Details](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy) |
+| `SOCKS_PROXY_HOST`     | Optional, effective with `SOCKS_PROXY_PORT`                       | Socks proxy.                                                                                                     |
+| `SOCKS_PROXY_PORT`     | Optional, effective with `SOCKS_PROXY_HOST`                       | Socks proxy port.                                                                                                |
+| `SOCKS_PROXY_USERNAME` | Optional, effective with `SOCKS_PROXY_HOST` & `SOCKS_PROXY_PORT`  | Socks proxy username.                                                                                            |
+| `SOCKS_PROXY_PASSWORD` | Optional, effective with `SOCKS_PROXY_HOST` & `SOCKS_PROXY_PORT`  | Socks proxy password.                                                                                            |
+| `HTTPS_PROXY`          | Optional                                                          | HTTPS Proxy.                                                                                                     |
+| `ALL_PROXY`            | Optional                                                          | ALL Proxy.                                                                                                       |
 
 > Note: Changing environment variables in Railway will cause re-deployment.
 

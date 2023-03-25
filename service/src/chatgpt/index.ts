@@ -162,6 +162,8 @@ function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPIOption
     const agent = new SocksProxyAgent({
       hostname: process.env.SOCKS_PROXY_HOST,
       port: process.env.SOCKS_PROXY_PORT,
+      userId: process.env.SOCKS_PROXY_USERNAME,
+      password: process.env.SOCKS_PROXY_PASSWORD,
     })
     options.fetch = (url, options) => {
       return fetch(url, { agent, ...options })
