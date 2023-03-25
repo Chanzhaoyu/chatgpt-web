@@ -38,7 +38,7 @@ export const useChatStore = defineStore('chat-store', {
           uuid = r.uuid
         this.chat.unshift({ uuid: r.uuid, data: [] })
         if (uuid === r.uuid)
-          await this.syncChat(r, () => {})
+          this.syncChat(r, callback)
       }
       if (uuid == null) {
         uuid = Date.now()
@@ -46,7 +46,6 @@ export const useChatStore = defineStore('chat-store', {
       }
       this.active = uuid
       this.reloadRoute(uuid)
-      callback && callback()
     },
 
     async syncChat(h: Chat.History, callback: () => void) {

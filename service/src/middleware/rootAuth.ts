@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import { ObjectId } from 'mongodb'
 import { Status } from '../storage/model'
 import { getUserById } from '../storage/mongo'
 import { getCacheConfig } from '../storage/config'
@@ -11,7 +10,7 @@ const rootAuth = async (req, res, next) => {
       const token = req.header('Authorization').replace('Bearer ', '')
       const info = jwt.verify(token, config.siteConfig.loginSalt.trim())
       req.headers.userId = info.userId
-      const user = await getUserById(new ObjectId(info.userId))
+      const user = await getUserById(info.userId)
       if (user == null || user.status !== Status.Normal || user.email.toLowerCase() !== process.env.ROOT_USER)
         res.send({ status: 'Fail', message: '无权限 | No permission.', data: null })
       else

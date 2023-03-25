@@ -1,6 +1,5 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
-import { ObjectId } from 'mongodb'
 import type { RequestProps } from './types'
 import type { ChatContext, ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, currentModel, initApi } from './chatgpt'
@@ -282,7 +281,7 @@ router.post('/user-register', async (req, res) => {
 
 router.post('/config', auth, async (req, res) => {
   try {
-    const userId = new ObjectId(req.headers.userId.toString())
+    const userId = req.headers.userId.toString()
 
     const user = await getUserById(userId)
     if (user == null || user.status !== Status.Normal || user.email.toLowerCase() !== process.env.ROOT_USER)
@@ -340,7 +339,7 @@ router.post('/user-login', async (req, res) => {
 router.post('/user-info', auth, async (req, res) => {
   try {
     const { name, avatar, description } = req.body as UserInfo
-    const userId = new ObjectId(req.headers.userId.toString())
+    const userId = req.headers.userId.toString()
 
     const user = await getUserById(userId)
     if (user == null || user.status !== Status.Normal)
