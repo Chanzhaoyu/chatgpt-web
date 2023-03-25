@@ -28,25 +28,13 @@ export class UserInfo {
   }
 }
 
-export class UserOauth {
-  userId: number
-  oauthType: OauthType
-  oauthId: string
-
-  constructor(userId: number, oauthType: OauthType, oauthId: string) {
-    this.userId = userId
-    this.oauthType = oauthType
-    this.oauthId = oauthId
-  }
-}
-
 export class ChatRoom {
   _id: ObjectId
   roomId: number
-  userId: number
+  userId: string
   title: string
   status: Status = Status.Normal
-  constructor(userId: number, title: string, roomId: number) {
+  constructor(userId: string, title: string, roomId: number) {
     this.userId = userId
     this.title = title
     this.roomId = roomId

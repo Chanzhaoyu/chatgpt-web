@@ -34,12 +34,12 @@ export async function updateChat(chatId: string, response: string, messageId: st
   await chatCol.updateOne(query, update)
 }
 
-export async function createChatRoom(userId: ObjectId, title: string, roomId: number) {
+export async function createChatRoom(userId: string, title: string, roomId: number) {
   const room = new ChatRoom(userId, title, roomId)
   await roomCol.insertOne(room)
   return room
 }
-export async function renameChatRoom(userId: ObjectId, title: string, roomId: number) {
+export async function renameChatRoom(userId: string, title: string, roomId: number) {
   const query = { userId, roomId }
   const update = {
     $set: {
@@ -50,25 +50,25 @@ export async function renameChatRoom(userId: ObjectId, title: string, roomId: nu
   return result
 }
 
-export async function deleteChatRoom(userId: ObjectId, roomId: number) {
+export async function deleteChatRoom(userId: string, roomId: number) {
   const result = await roomCol.updateOne({ roomId, userId }, { $set: { status: Status.Deleted } })
   await clearChat(roomId)
   return result
 }
 
-export async function getChatRooms(userId: ObjectId) {
+export async function getChatRooms(userId: string) {
   const cursor = await roomCol.find({ userId, status: { $ne: Status.Deleted } })
   const rooms = []
   await cursor.forEach(doc => rooms.push(doc))
   return rooms
 }
 
-export async function existsChatRoom(userId: ObjectId, roomId: number) {
+export async function existsChatRoom(userId: string, roomId: number) {
   const room = await roomCol.findOne({ roomId, userId })
   return !!room
 }
 
-export async function deleteAllChatRooms(userId: ObjectId) {
+export async function deleteAllChatRooms(userId: string) {
   await roomCol.updateMany({ userId, status: Status.Normal }, { $set: { status: Status.Deleted } })
   await chatCol.updateMany({ userId, status: Status.Normal }, { $set: { status: Status.Deleted } })
 }
@@ -133,8 +133,8 @@ export async function createUser(email: string, password: string): Promise<UserI
   return userInfo
 }
 
-export async function updateUserInfo(userId: ObjectId, user: UserInfo) {
-  const result = userCol.updateOne({ _id: userId }
+export async function updateUserInfo(userId: string, user: UserInfo) {
+  const result = userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { name: user.name, description: user.description, avatar: user.avatar } })
   return result
 }
@@ -144,8 +144,8 @@ export async function getUser(email: string): Promise<UserInfo> {
   return await userCol.findOne({ email }) as UserInfo
 }
 
-export async function getUserById(userId: ObjectId): Promise<UserInfo> {
-  return await userCol.findOne({ _id: userId }) as UserInfo
+export async function getUserById(userId: string): Promise<UserInfo> {
+  return await userCol.findOne({ _id: new ObjectId(userId) }) as UserInfo
 }
 
 export async function verifyUser(email: string) {

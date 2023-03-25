@@ -30,7 +30,7 @@ app.all('*', (_, res, next) => {
 
 router.get('/chatrooms', auth, async (req, res) => {
   try {
-    const userId = new ObjectId(req.headers.userId as string)
+    const userId = req.headers.userId as string
     const rooms = await getChatRooms(userId)
     const result = []
     rooms.forEach((r) => {
@@ -50,7 +50,7 @@ router.get('/chatrooms', auth, async (req, res) => {
 
 router.post('/room-create', auth, async (req, res) => {
   try {
-    const userId = new ObjectId(req.headers.userId as string)
+    const userId = req.headers.userId as string
     const { title, roomId } = req.body as { title: string; roomId: number }
     const room = await createChatRoom(userId, title, roomId)
     res.send({ status: 'Success', message: null, data: room })
@@ -63,7 +63,7 @@ router.post('/room-create', auth, async (req, res) => {
 
 router.post('/room-rename', auth, async (req, res) => {
   try {
-    const userId = new ObjectId(req.headers.userId as string)
+    const userId = req.headers.userId as string
     const { title, roomId } = req.body as { title: string; roomId: number }
     const room = await renameChatRoom(userId, title, roomId)
     res.send({ status: 'Success', message: null, data: room })
@@ -76,7 +76,7 @@ router.post('/room-rename', auth, async (req, res) => {
 
 router.post('/room-delete', auth, async (req, res) => {
   try {
-    const userId = new ObjectId(req.headers.userId as string)
+    const userId = req.headers.userId as string
     const { roomId } = req.body as { roomId: number }
     if (!roomId || !await existsChatRoom(userId, roomId)) {
       res.send({ status: 'Fail', message: 'Unknow room', data: null })
@@ -93,7 +93,7 @@ router.post('/room-delete', auth, async (req, res) => {
 
 router.get('/chat-hisroty', auth, async (req, res) => {
   try {
-    const userId = new ObjectId(req.headers.userId as string)
+    const userId = req.headers.userId as string
     const roomId = +req.query.roomid
     const lastTime = req.query.lasttime as string
     if (!roomId || !await existsChatRoom(userId, roomId)) {
@@ -146,7 +146,7 @@ router.get('/chat-hisroty', auth, async (req, res) => {
 
 router.post('/chat-delete', auth, async (req, res) => {
   try {
-    const userId = new ObjectId(req.headers.userId as string)
+    const userId = req.headers.userId as string
     const { roomId, uuid, inversion } = req.body as { roomId: number; uuid: number; inversion: boolean }
     if (!roomId || !await existsChatRoom(userId, roomId)) {
       res.send({ status: 'Fail', message: 'Unknow room', data: null })
@@ -163,7 +163,7 @@ router.post('/chat-delete', auth, async (req, res) => {
 
 router.post('/chat-clear-all', auth, async (req, res) => {
   try {
-    const userId = new ObjectId(req.headers.userId as string)
+    const userId = req.headers.userId as string
     await deleteAllChatRooms(userId)
     res.send({ status: 'Success', message: null, data: null })
   }
@@ -175,7 +175,7 @@ router.post('/chat-clear-all', auth, async (req, res) => {
 
 router.post('/chat-clear', auth, async (req, res) => {
   try {
-    const userId = new ObjectId(req.headers.userId as string)
+    const userId = req.headers.userId as string
     const { roomId } = req.body as { roomId: number }
     if (!roomId || !await existsChatRoom(userId, roomId)) {
       res.send({ status: 'Fail', message: 'Unknow room', data: null })
@@ -426,7 +426,7 @@ router.post('/setting-mail', rootAuth, async (req, res) => {
 router.post('/mail-test', rootAuth, async (req, res) => {
   try {
     const config = req.body as MailConfig
-    const userId = new ObjectId(req.headers.userId as string)
+    const userId = req.headers.userId as string
     const user = await getUserById(userId)
     await sendTestMail(user.email, config)
     res.send({ status: 'Success', message: '发送成功 | Successfully', data: null })
