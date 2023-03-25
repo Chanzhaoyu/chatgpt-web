@@ -220,6 +220,7 @@ services:
     depends_on:
       - database
     environment:
+      TZ: Asia/Shanghai
       # one of two
       OPENAI_API_KEY: xxxxxx
       # one of two

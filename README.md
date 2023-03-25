@@ -226,6 +226,7 @@ services:
     depends_on:
       - database
     environment:
+      TZ: Asia/Shanghai
       # 二选一
       OPENAI_API_KEY: sk-xxx
       # 二选一
