@@ -106,6 +106,7 @@ router.get('/chat-hisroty', auth, async (req, res) => {
     chats.forEach((c) => {
       if (c.status !== Status.InversionDeleted) {
         result.push({
+          uuid: c.uuid,
           dateTime: new Date(c.dateTime).toLocaleString(),
           text: c.prompt,
           inversion: true,
@@ -119,6 +120,7 @@ router.get('/chat-hisroty', auth, async (req, res) => {
       }
       if (c.status !== Status.ResponseDeleted) {
         result.push({
+          uuid: c.uuid,
           dateTime: new Date(c.dateTime).toLocaleString(),
           text: c.response,
           inversion: false,
