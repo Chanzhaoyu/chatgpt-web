@@ -9,6 +9,7 @@ import { t } from '@/locales'
 const ms = useMessage()
 
 const loading = ref(false)
+const saving = ref(false)
 
 const config = ref<SiteConfig>()
 config.value = new SiteConfig()
@@ -28,9 +29,16 @@ async function updateSiteInfo(site?: SiteConfig) {
   if (!site)
     return
 
-  const { data } = await fetchUpdateSite(site)
-  config.value = data
-  ms.success(t('common.success'))
+  saving.value = true
+  try {
+    const { data } = await fetchUpdateSite(site)
+    config.value = data
+    ms.success(t('common.success'))
+  }
+  catch (error: any) {
+    ms.error(error.message)
+  }
+  saving.value = false
 }
 
 onMounted(() => {
@@ -79,7 +87,7 @@ onMounted(() => {
             />
           </div>
           <p>
-            变更后会导致旧的登录失效
+            {{ $t('common.loginSaltTip') }}
           </p>
         </div>
         <div class="flex items-center space-x-4">
@@ -103,7 +111,7 @@ onMounted(() => {
         </div>
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]" />
-          <NButton type="primary" @click="updateSiteInfo(config)">
+          <NButton :loading="saving" type="primary" @click="updateSiteInfo(config)">
             {{ $t('common.save') }}
           </NButton>
         </div>

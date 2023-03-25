@@ -2,12 +2,14 @@
 import { onMounted, ref } from 'vue'
 import { NButton, NInput, NSpin, NSwitch, useMessage } from 'naive-ui'
 import type { ConfigState, MailConfig } from './model'
-import { fetchChatConfig, fetchUpdateMail } from '@/api'
+import { fetchChatConfig, fetchTestMail, fetchUpdateMail } from '@/api'
 import { t } from '@/locales'
 
 const ms = useMessage()
 
 const loading = ref(false)
+const saving = ref(false)
+const testing = ref(false)
 
 const config = ref<MailConfig>()
 
@@ -25,10 +27,30 @@ async function fetchConfig() {
 async function updateMailInfo(mail?: MailConfig) {
   if (!mail)
     return
+  saving.value = true
+  try {
+    const { data } = await fetchUpdateMail(mail)
+    config.value = data
+    ms.success(t('common.success'))
+  }
+  catch (error: any) {
+    ms.error(error.message)
+  }
+  saving.value = false
+}
 
-  const { data } = await fetchUpdateMail(mail)
-  config.value = data
-  ms.success(t('common.success'))
+async function testMail(mail?: MailConfig) {
+  if (!mail)
+    return
+  testing.value = true
+  try {
+    const { message } = await fetchTestMail(mail) as { status: string; message: string }
+    ms.success(message)
+  }
+  catch (error: any) {
+    ms.error(error.message)
+  }
+  testing.value = false
 }
 
 onMounted(() => {
@@ -89,9 +111,14 @@ onMounted(() => {
         </div>
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]" />
-          <NButton type="primary" @click="updateMailInfo(config)">
-            {{ $t('common.save') }}
-          </NButton>
+          <div class="flex flex-wrap items-center gap-4">
+            <NButton :loading="saving" type="primary" @click="updateMailInfo(config)">
+              {{ $t('common.save') }}
+            </NButton>
+            <NButton :loading="testing" type="info" @click="testMail(config)">
+              {{ $t('common.test') }}
+            </NButton>
+          </div>
         </div>
       </div>
     </div>

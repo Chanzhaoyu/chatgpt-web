@@ -24,7 +24,7 @@ export const useChatStore = defineStore('chat-store', {
   },
 
   actions: {
-    async syncHistory() {
+    async syncHistory(callback: () => void) {
       const rooms = (await fetchGetChatRooms()).data
       let uuid = this.active
       this.history = []
@@ -38,7 +38,7 @@ export const useChatStore = defineStore('chat-store', {
           uuid = r.uuid
         this.chat.unshift({ uuid: r.uuid, data: [] })
         if (uuid === r.uuid)
-          await this.syncChat(r)
+          this.syncChat(r, callback)
       }
       if (uuid == null) {
         uuid = Date.now()
@@ -48,11 +48,12 @@ export const useChatStore = defineStore('chat-store', {
       this.reloadRoute(uuid)
     },
 
-    async syncChat(h: Chat.History) {
+    async syncChat(h: Chat.History, callback: () => void) {
       const chatIndex = this.chat.findIndex(item => item.uuid === h.uuid)
       if (chatIndex <= -1 || this.chat[chatIndex].data.length <= 0) {
         const chatData = (await fetchGetChatHistory(h.uuid)).data
         this.chat.unshift({ uuid: h.uuid, data: chatData })
+        callback && callback()
       }
     },
 

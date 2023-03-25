@@ -7,6 +7,7 @@ export default {
     delete: '删除',
     deleteSuccess: '删除成功',
     save: '保存',
+    test: '测试',
     saveSuccess: '保存成功',
     reset: '重置',
     action: '操作',
@@ -87,6 +88,7 @@ export default {
     accessToken: 'Access Token',
     loginEnabled: '注册登录',
     loginSalt: '登录混淆盐',
+    loginSaltTip: '变更会导致所有已登录失效',
   },
   store: {
     local: '本地',

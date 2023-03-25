@@ -69,14 +69,14 @@ const show = computed({
         </NTabPane>
         <NTabPane v-if="userStore.userInfo.root" name="SiteConfig" tab="SiteConfig">
           <template #tab>
-            <SvgIcon class="text-lg" icon="ri:list-settings-line" />
+            <SvgIcon class="text-lg" icon="ri:settings-line" />
             <span class="ml-2">{{ $t('setting.siteConfig') }}</span>
           </template>
           <Site />
         </NTabPane>
         <NTabPane v-if="userStore.userInfo.root" name="MailConfig" tab="MailConfig">
           <template #tab>
-            <SvgIcon class="text-lg" icon="ri:list-settings-line" />
+            <SvgIcon class="text-lg" icon="ri:mail-line" />
             <span class="ml-2">{{ $t('setting.mailConfig') }}</span>
           </template>
           <Mail />

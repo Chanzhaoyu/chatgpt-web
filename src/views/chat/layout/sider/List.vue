@@ -16,16 +16,17 @@ const dataSources = computed(() => chatStore.history)
 
 onMounted(async () => {
   if (authStore.session == null || !authStore.session.auth || authStore.token)
-    await handleSyncChat()
+    await handleSyncChatRoom()
 })
 
-async function handleSyncChat() {
+async function handleSyncChatRoom() {
   // if (chatStore.history.length == 1 && chatStore.history[0].title == 'New Chat'
   //   && chatStore.chat[0].data.length <= 0)
-  await chatStore.syncHistory()
-  const scrollRef = document.querySelector('#scrollRef')
-  if (scrollRef)
-    nextTick(() => scrollRef.scrollTop = scrollRef.scrollHeight)
+  chatStore.syncHistory(() => {
+    const scrollRef = document.querySelector('#scrollRef')
+    if (scrollRef)
+      nextTick(() => scrollRef.scrollTop = scrollRef.scrollHeight)
+  })
 }
 
 async function handleSelect({ uuid }: Chat.History) {
@@ -35,7 +36,11 @@ async function handleSelect({ uuid }: Chat.History) {
   // 这里不需要 不然每次切换都rename
   // if (chatStore.active)
   //   chatStore.updateHistory(chatStore.active, { isEdit: false })
-  await chatStore.syncChat({ uuid } as Chat.History)
+  chatStore.syncChat({ uuid } as Chat.History, () => {
+    const scrollRef = document.querySelector('#scrollRef')
+    if (scrollRef)
+      nextTick(() => scrollRef.scrollTop = scrollRef.scrollHeight)
+  })
   await chatStore.setActive(uuid)
 
   if (isMobile.value)

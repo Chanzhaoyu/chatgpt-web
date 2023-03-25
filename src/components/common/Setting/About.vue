@@ -11,6 +11,7 @@ const ms = useMessage()
 const authStore = useAuthStore()
 
 const loading = ref(false)
+const saving = ref(false)
 
 const config = ref<ConfigState>()
 config.value = new ConfigState()
@@ -31,10 +32,16 @@ async function fetchConfig() {
 async function updateBaseSetting(baseConfig?: Partial<ConfigState>) {
   if (!baseConfig)
     return
-
-  const { data } = await fetchUpdateBaseSetting(baseConfig)
-  config.value = data
-  ms.success(t('common.success'))
+  saving.value = true
+  try {
+    const { data } = await fetchUpdateBaseSetting(baseConfig)
+    config.value = data
+    ms.success(t('common.success'))
+  }
+  catch (error: any) {
+    ms.error(error.message)
+  }
+  saving.value = false
 }
 
 onMounted(() => {
@@ -99,7 +106,7 @@ onMounted(() => {
         </div>
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]" />
-          <NButton type="primary" @click="updateBaseSetting(config)">
+          <NButton :loading="saving" type="primary" @click="updateBaseSetting(config)">
             {{ $t('common.save') }}
           </NButton>
         </div>
