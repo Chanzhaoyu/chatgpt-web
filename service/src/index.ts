@@ -7,11 +7,31 @@ import { auth } from './middleware/auth'
 import { clearConfigCache, getCacheConfig, getOriginConfig } from './storage/config'
 import type { ChatOptions, Config, MailConfig, SiteConfig, UserInfo } from './storage/model'
 import { Status } from './storage/model'
-import { clearChat, createChatRoom, createUser, deleteAllChatRooms, deleteChat, deleteChatRoom, existsChatRoom, getChat, getChatRooms, getChats, getUser, getUserById, insertChat, renameChatRoom, updateChat, updateConfig, updateUserInfo, verifyUser } from './storage/mongo'
+import {
+  clearChat,
+  createChatRoom,
+  createUser,
+  deleteAllChatRooms,
+  deleteChat,
+  deleteChatRoom,
+  existsChatRoom,
+  getChat,
+  getChatRooms,
+  getChats,
+  getUser,
+  getUserById,
+  insertChat,
+  renameChatRoom,
+  updateChat,
+  updateConfig,
+  updateUserInfo,
+  verifyUser,
+  verifyUserAdmin,
+} from './storage/mongo'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
-import { sendTestMail, sendVerifyMail } from './utils/mail'
-import { checkUserVerify, getUserVerifyUrl, md5 } from './utils/security'
+import { sendNoticeMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
+import { checkUserVerify, checkUserVerifyAdmin, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
 import { rootAuth } from './middleware/rootAuth'
 
 const app = express()
@@ -321,6 +341,8 @@ router.post('/user-login', async (req, res) => {
       || user.password !== md5(password)) {
       if (user != null && user.status === Status.PreVerify)
         throw new Error('请去邮箱中验证 | Please verify in the mailbox')
+      if (user != null && user.status === Status.AdminVerify)
+        throw new Error('请等待管理员开通 | Please wait for the admin to activate')
       throw new Error('用户不存在或密码错误 | User does not exist or incorrect password.')
     }
     const config = await getCacheConfig()
@@ -360,8 +382,34 @@ router.post('/verify', async (req, res) => {
     if (!token)
       throw new Error('Secret key is empty')
     const username = await checkUserVerify(token)
+    const user = await getUser(username)
+    if (user != null && user.status === Status.Normal) {
+      res.send({ status: 'Fail', message: '邮箱已存在 | The email exists', data: null })
+      return
+    }
     await verifyUser(username)
-    res.send({ status: 'Success', message: '验证成功 | Verify successfully', data: null })
+    await sendVerifyMailAdmin(username, await getUserVerifyUrlAdmin(username))
+    res.send({ status: 'Success', message: '验证成功, 请等待管理员开通 | Verify successfully, Please wait for the admin to activate', data: null })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/verifyadmin', async (req, res) => {
+  try {
+    const { token } = req.body as { token: string }
+    if (!token)
+      throw new Error('Secret key is empty')
+    const username = await checkUserVerifyAdmin(token)
+    const user = await getUser(username)
+    if (user != null && user.status === Status.Normal) {
+      res.send({ status: 'Fail', message: '邮箱已存在 | The email exists', data: null })
+      return
+    }
+    await verifyUserAdmin(username)
+    await sendNoticeMail(username)
+    res.send({ status: 'Success', message: '开通成功 | Activate successfully', data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
