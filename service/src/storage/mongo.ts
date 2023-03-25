@@ -1,7 +1,9 @@
+import * as dotenv from 'dotenv'
 import { MongoClient, ObjectId } from 'mongodb'
 import { ChatInfo, ChatRoom, Status, UserInfo } from './model'
 import type { ChatOptions, Config } from './model'
 
+dotenv.config()
 const url = process.env.MONGODB_URL
 const client = new MongoClient(url)
 const chatCol = client.db('chatgpt').collection('chat')
@@ -149,6 +151,11 @@ export async function getUserById(userId: string): Promise<UserInfo> {
 }
 
 export async function verifyUser(email: string) {
+  email = email.toLowerCase()
+  return await userCol.updateOne({ email }, { $set: { status: Status.AdminVerify, verifyTime: new Date().toLocaleString() } })
+}
+
+export async function verifyUserAdmin(email: string) {
   email = email.toLowerCase()
   return await userCol.updateOne({ email }, { $set: { status: Status.Normal, verifyTime: new Date().toLocaleString() } })
 }
