@@ -13,6 +13,7 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
+    "vercel-build": "sh ./build_vercel.sh",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",

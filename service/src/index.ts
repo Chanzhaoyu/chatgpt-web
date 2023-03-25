@@ -9,10 +9,9 @@ import { isNotEmptyString } from './utils/is'
 const app = express()
 const router = express.Router()
 
-app.use(express.static('public'))
 app.use(express.json())
 
-app.all('*', (_, res, next) => {
+app.all('*', (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'authorization, Content-Type')
   res.header('Access-Control-Allow-Methods', '*')
@@ -84,4 +83,4 @@ app.use('', router)
 app.use('/api', router)
 app.set('trust proxy', 1)
 
-app.listen(3002, () => globalThis.console.log('Server is running on port 3002'))
+export default app
