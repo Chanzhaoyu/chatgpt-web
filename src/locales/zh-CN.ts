@@ -30,6 +30,9 @@ export default {
     notLoggedIn: '登录 / 注册',
     logOut: '退出登录',
     unauthorizedTips: '未经授权，请先进行验证。',
+    email: '邮箱',
+    password: '密码',
+    passwordConfirm: '确认密码',
   },
   chat: {
     placeholder: '来说点什么吧...（Shift + Enter = 换行）',

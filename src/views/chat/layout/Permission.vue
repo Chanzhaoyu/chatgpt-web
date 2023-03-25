@@ -101,7 +101,7 @@ async function handleRegister() {
   const confirmPwd = confirmPassword.value.trim()
 
   if (!name || !pwd || !confirmPwd || pwd !== confirmPwd) {
-    ms.error('Passwords don\'t match')
+    ms.error('两次输入的密码不一致 | Passwords don\'t match')
     return
   }
 
@@ -135,23 +135,23 @@ async function handleRegister() {
 
         <!-- Add Tabs -->
         <NTabs v-model:value="activeTab" type="line">
-          <NTabPane name="login" label="Login">
-            <NInput v-model:value="username" type="text" placeholder="Email" class="mb-2" />
-            <NInput v-model:value="password" type="password" placeholder="Password" class="mb-2" @keypress="handlePress" />
+          <NTabPane name="login" :label="$t('common.login')">
+            <NInput v-model:value="username" type="text" :placeholder="$t('common.email')" class="mb-2" />
+            <NInput v-model:value="password" type="password" :placeholder="$t('common.password')" class="mb-2" @keypress="handlePress" />
 
             <NButton block type="primary" :disabled="disabled" :loading="loading" @click="handleLogin">
               {{ $t('common.login') }}
             </NButton>
           </NTabPane>
 
-          <NTabPane v-if="authStore.session && authStore.session.allowRegister" name="register" label="Register">
-            <NInput v-model:value="username" type="text" placeholder="Email" class="mb-2" />
-            <NInput v-model:value="password" type="password" placeholder="Password" class="mb-2" @input="handlePasswordInput" />
+          <NTabPane v-if="authStore.session && authStore.session.allowRegister" name="register" :label="$t('common.register')">
+            <NInput v-model:value="username" type="text" :placeholder="$t('common.email')" class="mb-2" />
+            <NInput v-model:value="password" type="password" :placeholder="$t('common.password')" class="mb-2" @input="handlePasswordInput" />
             <NInput
               v-if="showConfirmPassword"
               v-model:value="confirmPassword"
               type="password"
-              placeholder="Confirm Password"
+              :placeholder="$t('common.passwordConfirm')"
               class="mb-4"
               :status="confirmPasswordStatus"
             />
