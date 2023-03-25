@@ -8,7 +8,7 @@ import { auth } from './middleware/auth'
 import { clearConfigCache, getCacheConfig, getOriginConfig } from './storage/config'
 import type { ChatOptions, Config, MailConfig, SiteConfig, UserInfo } from './storage/model'
 import { Status } from './storage/model'
-import { clearChat, createChatRoom, createUser, deleteChat, deleteChatRoom, existsChatRoom, getChat, getChatRooms, getChats, getUser, getUserById, insertChat, renameChatRoom, updateChat, updateConfig, updateUserInfo, verifyUser } from './storage/mongo'
+import { clearChat, createChatRoom, createUser, deleteAllChatRooms, deleteChat, deleteChatRoom, existsChatRoom, getChat, getChatRooms, getChats, getUser, getUserById, insertChat, renameChatRoom, updateChat, updateConfig, updateUserInfo, verifyUser } from './storage/mongo'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
 import { sendTestMail, sendVerifyMail } from './utils/mail'
@@ -29,111 +29,165 @@ app.all('*', (_, res, next) => {
 })
 
 router.get('/chatrooms', auth, async (req, res) => {
-  const userId = req.headers.userId
-  const rooms = await getChatRooms(userId)
-  const result = []
-  rooms.forEach((r) => {
-    result.push({
-      uuid: r.roomId,
-      title: r.title,
-      isEdit: false,
+  try {
+    const userId = new ObjectId(req.headers.userId as string)
+    const rooms = await getChatRooms(userId)
+    const result = []
+    rooms.forEach((r) => {
+      result.push({
+        uuid: r.roomId,
+        title: r.title,
+        isEdit: false,
+      })
     })
-  })
-  res.send({ status: 'Success', message: null, data: result })
+    res.send({ status: 'Success', message: null, data: result })
+  }
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Load error', data: [] })
+  }
 })
 
 router.post('/room-create', auth, async (req, res) => {
-  const userId = req.headers.userId
-  const { title, roomId } = req.body as { title: string; roomId: number }
-  const room = await createChatRoom(userId, title, roomId)
-  res.send({ status: 'Success', message: null, data: room })
+  try {
+    const userId = new ObjectId(req.headers.userId as string)
+    const { title, roomId } = req.body as { title: string; roomId: number }
+    const room = await createChatRoom(userId, title, roomId)
+    res.send({ status: 'Success', message: null, data: room })
+  }
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Create error', data: null })
+  }
 })
 
 router.post('/room-rename', auth, async (req, res) => {
-  const userId = req.headers.userId
-  const { title, roomId } = req.body as { title: string; roomId: number }
-  const room = await renameChatRoom(userId, title, roomId)
-  res.send({ status: 'Success', message: null, data: room })
+  try {
+    const userId = new ObjectId(req.headers.userId as string)
+    const { title, roomId } = req.body as { title: string; roomId: number }
+    const room = await renameChatRoom(userId, title, roomId)
+    res.send({ status: 'Success', message: null, data: room })
+  }
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Rename error', data: null })
+  }
 })
 
 router.post('/room-delete', auth, async (req, res) => {
-  const userId = req.headers.userId
-  const { roomId } = req.body as { roomId: number }
-  if (!roomId || !await existsChatRoom(userId, roomId)) {
-    res.send({ status: 'Fail', message: 'Unknow room', data: null })
-    return
+  try {
+    const userId = new ObjectId(req.headers.userId as string)
+    const { roomId } = req.body as { roomId: number }
+    if (!roomId || !await existsChatRoom(userId, roomId)) {
+      res.send({ status: 'Fail', message: 'Unknow room', data: null })
+      return
+    }
+    await deleteChatRoom(userId, roomId)
+    res.send({ status: 'Success', message: null })
   }
-  await deleteChatRoom(userId, roomId)
-  res.send({ status: 'Success', message: null })
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Delete error', data: null })
+  }
 })
 
 router.get('/chat-hisroty', auth, async (req, res) => {
-  const userId = req.headers.userId
-  const roomId = +req.query.roomid
-  const lastTime = req.query.lasttime
-  if (!roomId || !await existsChatRoom(userId, roomId)) {
-    res.send({ status: 'Success', message: null, data: [] })
-    // res.send({ status: 'Fail', message: 'Unknow room', data: null })
-    return
+  try {
+    const userId = new ObjectId(req.headers.userId as string)
+    const roomId = +req.query.roomid
+    const lastTime = req.query.lasttime as string
+    if (!roomId || !await existsChatRoom(userId, roomId)) {
+      res.send({ status: 'Success', message: null, data: [] })
+      // res.send({ status: 'Fail', message: 'Unknow room', data: null })
+      return
+    }
+    const chats = await getChats(roomId, !lastTime ? null : parseInt(lastTime))
+
+    const result = []
+    chats.forEach((c) => {
+      if (c.status !== Status.InversionDeleted) {
+        result.push({
+          dateTime: new Date(c.dateTime).toLocaleString(),
+          text: c.prompt,
+          inversion: true,
+          error: false,
+          conversationOptions: null,
+          requestOptions: {
+            prompt: c.prompt,
+            options: null,
+          },
+        })
+      }
+      if (c.status !== Status.ResponseDeleted) {
+        result.push({
+          dateTime: new Date(c.dateTime).toLocaleString(),
+          text: c.response,
+          inversion: false,
+          error: false,
+          loading: false,
+          conversationOptions: {
+            parentMessageId: c.options.messageId,
+          },
+          requestOptions: {
+            prompt: c.prompt,
+            parentMessageId: c.options.parentMessageId,
+          },
+        })
+      }
+    })
+
+    res.send({ status: 'Success', message: null, data: result })
   }
-  const chats = await getChats(roomId, !lastTime ? null : parseInt(lastTime))
-
-  const result = []
-  chats.forEach((c) => {
-    if (c.status !== Status.InversionDeleted) {
-      result.push({
-        dateTime: new Date(c.dateTime).toLocaleString(),
-        text: c.prompt,
-        inversion: true,
-        error: false,
-        conversationOptions: null,
-        requestOptions: {
-          prompt: c.prompt,
-          options: null,
-        },
-      })
-    }
-    if (c.status !== Status.ResponseDeleted) {
-      result.push({
-        dateTime: new Date(c.dateTime).toLocaleString(),
-        text: c.response,
-        inversion: false,
-        error: false,
-        loading: false,
-        conversationOptions: {
-          parentMessageId: c.options.messageId,
-        },
-        requestOptions: {
-          prompt: c.prompt,
-          parentMessageId: c.options.parentMessageId,
-        },
-      })
-    }
-  })
-
-  res.send({ status: 'Success', message: null, data: result })
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Load error', data: null })
+  }
 })
 
 router.post('/chat-delete', auth, async (req, res) => {
-  const userId = req.headers.userId
-  const { roomId, uuid, inversion } = req.body as { roomId: number; uuid: number; inversion: boolean }
-  if (!roomId || !await existsChatRoom(userId, roomId)) {
-    res.send({ status: 'Fail', message: 'Unknow room', data: null })
-    return
+  try {
+    const userId = new ObjectId(req.headers.userId as string)
+    const { roomId, uuid, inversion } = req.body as { roomId: number; uuid: number; inversion: boolean }
+    if (!roomId || !await existsChatRoom(userId, roomId)) {
+      res.send({ status: 'Fail', message: 'Unknow room', data: null })
+      return
+    }
+    await deleteChat(roomId, uuid, inversion)
+    res.send({ status: 'Success', message: null, data: null })
   }
-  await deleteChat(roomId, uuid, inversion)
-  res.send({ status: 'Success', message: null, data: null })
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Delete error', data: null })
+  }
+})
+
+router.post('/chat-clear-all', auth, async (req, res) => {
+  try {
+    const userId = new ObjectId(req.headers.userId as string)
+    await deleteAllChatRooms(userId)
+    res.send({ status: 'Success', message: null, data: null })
+  }
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Delete error', data: null })
+  }
 })
 
 router.post('/chat-clear', auth, async (req, res) => {
-  const userId = req.headers.userId
-  const { roomId } = req.body as { roomId: number }
-  if (!roomId || !await existsChatRoom(userId, roomId)) {
-    res.send({ status: 'Fail', message: 'Unknow room', data: null })
-    return
+  try {
+    const userId = new ObjectId(req.headers.userId as string)
+    const { roomId } = req.body as { roomId: number }
+    if (!roomId || !await existsChatRoom(userId, roomId)) {
+      res.send({ status: 'Fail', message: 'Unknow room', data: null })
+      return
+    }
+    await clearChat(roomId)
+    res.send({ status: 'Success', message: null, data: null })
   }
-  await clearChat(roomId)
-  res.send({ status: 'Success', message: null, data: null })
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Delete error', data: null })
+  }
 })
 
 router.post('/chat', auth, async (req, res) => {

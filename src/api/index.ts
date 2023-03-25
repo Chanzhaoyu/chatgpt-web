@@ -108,6 +108,13 @@ export function fetchGetChatHistory<T = any>(roomId: number) {
   })
 }
 
+export function fetchClearAllChat<T = any>() {
+  return post<T>({
+    url: '/chat-clear-all',
+    data: { },
+  })
+}
+
 export function fetchClearChat<T = any>(roomId: number) {
   return post<T>({
     url: '/chat-clear',

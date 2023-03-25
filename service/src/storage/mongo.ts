@@ -68,6 +68,11 @@ export async function existsChatRoom(userId: ObjectId, roomId: number) {
   return !!room
 }
 
+export async function deleteAllChatRooms(userId: ObjectId) {
+  await roomCol.updateMany({ userId, status: Status.Normal }, { $set: { status: Status.Deleted } })
+  await chatCol.updateMany({ userId, status: Status.Normal }, { $set: { status: Status.Deleted } })
+}
+
 export async function getChats(roomId: number, lastTime?: number) {
   if (!lastTime)
     lastTime = new Date().getTime()

@@ -220,6 +220,7 @@ services:
   app:
     image: kerwin1202/chatgpt-web # 总是使用latest,更新时重新pull该tag镜像即可
     container_name: chatgptweb
+    restart: unless-stopped
     ports:
       - 3002:3002
     depends_on:
@@ -273,6 +274,7 @@ services:
   database:
     image: mongo
     container_name: chatgptweb-database
+    restart: unless-stopped
     ports:
       - '27017:27017'
     expose:

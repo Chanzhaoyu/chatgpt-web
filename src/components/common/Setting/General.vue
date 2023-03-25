@@ -8,6 +8,7 @@ import type { UserInfo } from '@/store/modules/user/helper'
 import { getCurrentDate } from '@/utils/functions'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
+import { fetchClearAllChat } from '@/api'
 
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -103,7 +104,8 @@ function importData(event: Event): void {
   reader.readAsText(file)
 }
 
-function clearData(): void {
+async function clearData(): Promise<void> {
+  await fetchClearAllChat()
   localStorage.removeItem('chatStorage')
   location.reload()
 }
