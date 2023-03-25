@@ -170,6 +170,7 @@ pnpm dev
 通用：
 
 - `AUTH_SECRET_KEY` 访问权限密钥，可选
+- `MAX_REQUEST_PER_HOUR` 每小时最大请求次数，可选，默认无限
 - `TIMEOUT_MS` 超时，单位毫秒，可选
 - `SOCKS_PROXY_HOST` 和 `SOCKS_PROXY_PORT` 一起时生效，可选
 - `SOCKS_PROXY_PORT` 和 `SOCKS_PROXY_HOST` 一起时生效，可选
@@ -190,10 +191,10 @@ pnpm dev
 docker build -t chatgpt-web .
 
 # 前台运行
-docker run --name chatgpt-web --rm -it -p 3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
+docker run --name chatgpt-web --rm -it -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
 
 # 后台运行
-docker run --name chatgpt-web -d -p 3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
+docker run --name chatgpt-web -d -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
 
 # 运行地址
 http://localhost:3002/
@@ -210,7 +211,7 @@ services:
   app:
     image: chenzhaoyu94/chatgpt-web # 总是使用 latest ,更新时重新 pull 该 tag 镜像即可
     ports:
-      - 3002:3002
+      - 127.0.0.1:3002:3002
     environment:
       # 二选一
       OPENAI_API_KEY: sk-xxx
@@ -224,6 +225,8 @@ services:
       API_REVERSE_PROXY: xxx
       # 访问权限密钥，可选
       AUTH_SECRET_KEY: xxx
+      # 每小时最大请求次数，可选，默认无限
+      MAX_REQUEST_PER_HOUR: 0
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
       # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
@@ -245,6 +248,7 @@ services:
 | --------------------- | ---------------------- | -------------------------------------------------------------------------------------------------- |
 | `PORT`                | 必填                   | 默认 `3002`
 | `AUTH_SECRET_KEY`          | 可选                   | 访问权限密钥                                        |
+| `MAX_REQUEST_PER_HOUR`          | 可选                   | 每小时最大请求次数，可选，默认无限                                        |
 | `TIMEOUT_MS`          | 可选                   | 超时时间，单位毫秒                                                                             |
 | `OPENAI_API_KEY`      | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)            |
 | `OPENAI_ACCESS_TOKEN` | `Web API` 二选一       | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session) |
@@ -305,6 +309,10 @@ A: `vscode` 请安装项目推荐插件，或手动安装 `Eslint` 插件。
 Q: 前端没有打字机效果？
 
 A: 一种可能原因是经过 Nginx 反向代理，开启了 buffer，则 Nginx 会尝试从后端缓冲一定大小的数据再发送给浏览器。请尝试在反代参数后添加 `proxy_buffering off;`，然后重载 Nginx。其他 web server 配置同理。
+
+Q: 内容返回不完整？
+
+A: 接口每次返回的内容是有长度限制的，可以修改根目录下`.env`文件中的`VITE_GLOB_OPEN_LONG_REPLY`字段，将其设置为`true`，重新编译前端即可开启长回复功能，即可返回全部的内容。需要注意的是，使用此功能可能带来较多的API使用费用。
 
 ## 参与贡献
 

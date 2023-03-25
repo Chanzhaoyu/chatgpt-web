@@ -185,10 +185,10 @@ pnpm dev
 docker build -t chatgpt-web .
 
 # foreground operation
-docker run --name chatgpt-web --rm -it -p 3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
+docker run --name chatgpt-web --rm -it -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
 
 # background operation
-docker run --name chatgpt-web -d -p 3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
+docker run --name chatgpt-web -d -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
 
 # running address
 http://localhost:3002/
@@ -205,7 +205,7 @@ services:
   app:
     image: chenzhaoyu94/chatgpt-web # always use latest, pull the tag image again when updating
     ports:
-      - 3002:3002
+      - 127.0.0.1:3002:3002
     environment:
       # one of two
       OPENAI_API_KEY: xxxxxx
@@ -303,6 +303,10 @@ A: For `vscode`, please install the recommended plug-in of the project or manual
 Q: Why doesn't the frontend have a typewriter effect?
 
 A: One possible reason is that after Nginx reverse proxying, buffering is turned on, and Nginx will try to buffer a certain amount of data from the backend before sending it to the browser. Please try adding `proxy_buffering off;` after the reverse proxy parameter and then reloading Nginx. Other web server configurations are similar.
+
+Q: The content returned is incomplete?
+
+A: There is a length limit for the content returned by the API each time. You can modify the `VITE_GLOB_OPEN_LONG_REPLY` field in the `.env` file under the root directory, set it to `true`, and rebuild the front-end to enable the long reply feature, which can return the full content. It should be noted that using this feature may bring more API usage fees.
 
 ## Contributing
 
