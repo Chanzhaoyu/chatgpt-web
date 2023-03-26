@@ -28,6 +28,7 @@ export default {
     unauthorizedTips: 'Unauthorized, please verify first.',
   },
   chat: {
+    newChatButton: 'New Chat',
     placeholder: 'Ask me anything...(Shift + Enter = line break)',
     placeholderMobile: 'Ask me anything...',
     copy: 'Copy',
@@ -70,6 +71,7 @@ export default {
     balance: 'API Balance',
   },
   store: {
+    siderButton: 'Prompt Store',
     local: 'Local',
     online: 'Online',
     title: 'Title',
