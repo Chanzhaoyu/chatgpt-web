@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getLocalState, setLocalState } from './helper'
+import { defaultUsingContextValue, getLocalState, setLocalState } from './helper'
 import { router } from '@/router'
 
 export const useChatStore = defineStore('chat-store', {
@@ -23,14 +23,32 @@ export const useChatStore = defineStore('chat-store', {
   },
 
   actions: {
-    setUsingContext(context: boolean) {
-      this.usingContext = context
-      this.recordState()
+    setUsingContext(uuid: number | null, context: boolean) {
+      if (!uuid)
+        return
+      const index = this.usingContext.findIndex(item => item.uuid === uuid)
+      if (index !== -1) {
+        this.usingContext[index].context = context
+        this.recordState()
+      }
+    },
+
+    getUsingContext() {
+      const active = this.active
+      // when active is null, return defaultUsingContextValue
+      if (!active)
+        return defaultUsingContextValue
+      const index = this.usingContext.findIndex(item => item.uuid === active)
+      if (index !== -1)
+        return this.usingContext[index].context
+      else
+        return defaultUsingContextValue
     },
 
     addHistory(history: Chat.History, chatData: Chat.Chat[] = []) {
       this.history.unshift(history)
       this.chat.unshift({ uuid: history.uuid, data: chatData })
+      this.usingContext.unshift({ uuid: history.uuid, context: defaultUsingContextValue })
       this.active = history.uuid
       this.reloadRoute(history.uuid)
     },
@@ -46,6 +64,7 @@ export const useChatStore = defineStore('chat-store', {
     async deleteHistory(index: number) {
       this.history.splice(index, 1)
       this.chat.splice(index, 1)
+      this.usingContext.splice(index, 1)
 
       if (this.history.length === 0) {
         this.active = null
@@ -98,6 +117,7 @@ export const useChatStore = defineStore('chat-store', {
           const uuid = Date.now()
           this.history.push({ uuid, title: chat.text, isEdit: false })
           this.chat.push({ uuid, data: [chat] })
+          this.usingContext.push({ uuid, context: defaultUsingContextValue })
           this.active = uuid
           this.recordState()
         }

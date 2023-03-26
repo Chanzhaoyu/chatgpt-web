@@ -6,10 +6,11 @@ import { useChatStore } from '@/store'
 export function useUsingContext() {
   const ms = useMessage()
   const chatStore = useChatStore()
-  const usingContext = computed<boolean>(() => chatStore.usingContext)
+  const usingContext = computed<boolean>(() => chatStore.getUsingContext())
 
   function toggleUsingContext() {
-    chatStore.setUsingContext(!usingContext.value)
+    const uuid = chatStore.active
+    chatStore.setUsingContext(uuid, !usingContext.value)
     if (usingContext.value)
       ms.success(t('chat.turnOnContext'))
     else
