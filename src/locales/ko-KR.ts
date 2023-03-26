@@ -29,6 +29,9 @@ export default {
     notLoggedIn: '로그인/등록',
     logOut: '로그아웃',
     unauthorizedTips: '승인되지 않음, 로그인 해주세요.',
+    email: '이메일',
+    password: '비밀번호',
+    passwordConfirm: '비밀번호 확인',
   },
   chat: {
     placeholder: '질문해보세요... (Shift + Enter = 줄 바꿈)',

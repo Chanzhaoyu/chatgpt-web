@@ -30,6 +30,9 @@ export default {
     notLoggedIn: '登錄 / 註冊',
     logOut: '退出登錄',
     unauthorizedTips: '未經授權，請先進行驗證。',
+    email: '電子郵件',
+    password: '密碼',
+    passwordConfirm: '確認密碼',
   },
   chat: {
     placeholder: '來說點什麼...（Shift + Enter = 換行）',

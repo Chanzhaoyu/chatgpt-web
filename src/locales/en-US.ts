@@ -30,6 +30,9 @@ export default {
     notLoggedIn: 'Login / Register',
     logOut: 'Login Out',
     unauthorizedTips: 'Unauthorized, please verify first.',
+    email: 'Email',
+    password: 'Password',
+    passwordConfirm: 'Confirm Password',
   },
   chat: {
     placeholder: 'Ask me anything...(Shift + Enter = line break)',
