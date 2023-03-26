@@ -28,6 +28,8 @@ services:
       SOCKS_PROXY_PORT: xxx
       # HTTPS_PROXY 代理，可选
       HTTPS_PROXY: http://xxx:7890
+      # AUTH_BASE_URL 认证地址
+      AUTH_BASE_URL: https://auth.server.com/?rd=
   nginx:
     image: nginx:alpine
     ports:

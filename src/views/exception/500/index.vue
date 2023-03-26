@@ -1,13 +1,24 @@
 <script lang="ts" setup>
 import { NButton } from 'naive-ui'
-import { useRouter } from 'vue-router'
 import Icon500 from '@/icons/500.vue'
+import { useRouter } from 'vue-router'
 
-const router = useRouter()
+
+
 
 function goHome() {
-  router.push('/')
+  const authBaseUrl = process.env.AUTH_BASE_URL ? process.env.AUTH_BASE_URL as string : ''
+  try {
+    new URL(authBaseUrl)
+  } catch (e) {
+    console.warn('Invalid AUTH_BASE_URL:', authBaseUrl)
+  }
+  const homeUrl = encodeURIComponent(`${authBaseUrl}${window.location.protocol}//${window.location.host}/`);
+
+  const router = useRouter()
+  router.push(homeUrl)
 }
+
 </script>
 
 <template>
