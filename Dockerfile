@@ -1,7 +1,7 @@
 # build front-end
 FROM node:lts-alpine AS frontend
 
-ARG USE_CHINA_NPM_REGISTRY=1
+ARG USE_CHINA_NPM_REGISTRY=0
 RUN \
     if [ "$USE_CHINA_NPM_REGISTRY" = 1 ]; then \
     		echo "setting registry" && \
@@ -24,7 +24,7 @@ RUN pnpm run build
 # build backend
 FROM node:lts-alpine as backend
 
-ARG USE_CHINA_NPM_REGISTRY=1
+ARG USE_CHINA_NPM_REGISTRY=0
 RUN \
     if [ "$USE_CHINA_NPM_REGISTRY" = 1 ]; then \
     		echo "setting registry" && \
@@ -47,7 +47,7 @@ RUN pnpm build
 # service
 FROM node:lts-alpine
 
-ARG USE_CHINA_NPM_REGISTRY=1
+ARG USE_CHINA_NPM_REGISTRY=0
 RUN \
     if [ "$USE_CHINA_NPM_REGISTRY" = 1 ]; then \
     		echo "setting registry" && \

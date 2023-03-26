@@ -190,6 +190,9 @@ pnpm dev
 ```bash
 docker build -t chatgpt-web .
 
+# npm使用国内源
+docker build -t chatgpt-web --build-arg=USE_CHINA_NPM_REGISTRY=1 .
+
 # 前台运行
 docker run --name chatgpt-web --rm -it -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
 
