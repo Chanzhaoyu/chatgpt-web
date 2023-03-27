@@ -6,7 +6,7 @@ import { SocksProxyAgent } from 'socks-proxy-agent'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import fetch from 'node-fetch'
 import axios from 'axios'
-import { sendResponse } from '../utils'
+import { loadBalancer, parseKeys, sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
 import type { RequestOptions } from './types'
@@ -29,6 +29,12 @@ let apiModel: ApiModel
 if (!isNotEmptyString(process.env.OPENAI_API_KEY) && !isNotEmptyString(process.env.OPENAI_ACCESS_TOKEN))
   throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
 
+const apikeys = parseKeys(process.env.OPENAI_API_KEY)
+const getApiKey = loadBalancer(apikeys)
+
+const accessTokens = parseKeys(process.env.OPENAI_ACCESS_TOKEN)
+const getAccessToken = loadBalancer(accessTokens)
+
 let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 
 (async () => {
@@ -40,7 +46,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     const model = isNotEmptyString(OPENAI_API_MODEL) ? OPENAI_API_MODEL : 'gpt-3.5-turbo'
 
     const options: ChatGPTAPIOptions = {
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: getApiKey(),
       completionParams: { model },
       debug: true,
     }
@@ -69,7 +75,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
   else {
     const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
     const options: ChatGPTUnofficialProxyAPIOptions = {
-      accessToken: process.env.OPENAI_ACCESS_TOKEN,
+      accessToken: getAccessToken(),
       debug: true,
     }
     if (isNotEmptyString(OPENAI_API_MODEL))
@@ -102,6 +108,11 @@ async function chatReplyProcess(options: RequestOptions) {
         options = { ...lastContext }
     }
 
+    if (api instanceof ChatGPTAPI)
+      api.apiKey = getApiKey()
+    else
+      api.accessToken = getAccessToken()
+
     const response = await api.sendMessage(message, {
       ...options,
       onProgress: (partialResponse) => {
@@ -121,6 +132,8 @@ async function chatReplyProcess(options: RequestOptions) {
 }
 
 async function fetchBalance() {
+  if (apikeys.length > 1)
+    return '-'
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY
   const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
 
