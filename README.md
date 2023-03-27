@@ -218,24 +218,24 @@ services:
       # 二选一
       OPENAI_ACCESS_TOKEN: xxx
       # API接口地址，可选，设置 OPENAI_API_KEY 时可用
-      # OPENAI_API_BASE_URL: xxx
+      OPENAI_API_BASE_URL: xxx
       # API模型，可选，设置 OPENAI_API_KEY 时可用，https://platform.openai.com/docs/models
       # gpt-4, gpt-4-0314, gpt-4-32k, gpt-4-32k-0314, gpt-3.5-turbo, gpt-3.5-turbo-0301, text-davinci-003, text-davinci-002, code-davinci-002
-      # OPENAI_API_MODEL: xxx
+      OPENAI_API_MODEL: xxx
       # 反向代理，可选
-      # API_REVERSE_PROXY: xxx
+      API_REVERSE_PROXY: xxx
       # 访问权限密钥，可选
-      # AUTH_SECRET_KEY: xxx
+      AUTH_SECRET_KEY: xxx
       # 每小时最大请求次数，可选，默认无限
-      # MAX_REQUEST_PER_HOUR: 0
+      MAX_REQUEST_PER_HOUR: 0
       # 超时，单位毫秒，可选
-      # TIMEOUT_MS: 60000
+      TIMEOUT_MS: 60000
       # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
-      # SOCKS_PROXY_HOST: xxx
+      SOCKS_PROXY_HOST: xxx
       # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
-      # SOCKS_PROXY_PORT: xxx
+      SOCKS_PROXY_PORT: xxx
       # HTTPS 代理，可选，支持 http，https，socks5
-      # HTTPS_PROXY: http://xxx:7890
+      HTTPS_PROXY: http://xxx:7890
 ```
 - `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 - `OPENAI_API_MODEL`  可选，设置 `OPENAI_API_KEY` 时可用
