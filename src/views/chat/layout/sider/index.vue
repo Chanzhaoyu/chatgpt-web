@@ -73,7 +73,7 @@ watch(
       <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
           <NButton dashed block @click="handleAdd">
-            New chat
+            {{ $t('chat.newChatButton') }}
           </NButton>
         </div>
         <div class="flex-1 min-h-0 pb-4 overflow-hidden">
@@ -81,7 +81,7 @@ watch(
         </div>
         <div class="p-4">
           <NButton block @click="show = true">
-            Prompt Store
+            {{ $t('store.siderButton') }}
           </NButton>
         </div>
       </main>
