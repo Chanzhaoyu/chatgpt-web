@@ -19,14 +19,15 @@ jobs:
         with:
           node-version: 18.x
 
-      - name: Setup
-        run: npm i -g @antfu/ni
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7.29.1
 
-      - name: Install
-        run: nci
+      - name: install
+        run: pnpm i
 
       - name: Lint
-        run: nr lint:fix
+        run: pnpm run lint:fix
 
   typecheck:
     runs-on: ubuntu-latest
@@ -37,11 +38,15 @@ jobs:
         with:
           node-version: 18.x
 
-      - name: Setup
-        run: npm i -g @antfu/ni
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7.29.1
 
-      - name: Install
-        run: nci
+      - name: install
+        run: pnpm i
+
+      - name: Lint
+        run: pnpm run lint:fix
 
       - name: Typecheck
-        run: nr type-check
+        run: pnpm run type-check
