@@ -49,8 +49,12 @@ const promptStore = usePromptStore()
 // 使用storeToRefs，保证store修改后，联想部分能够重新渲染
 const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
 
+let lastOptions: Chat.ConversationRequest = {}
 // 未知原因刷新页面，loading 状态不会重置，手动重置
 dataSources.value.forEach((item, index) => {
+  if (item.conversationOptions?.conversationId != null)
+    lastOptions = item.conversationOptions
+
   if (item.loading)
     updateChatSome(+uuid, index, { loading: false })
 })
@@ -86,7 +90,7 @@ async function onConversation() {
   loading.value = true
   prompt.value = ''
 
-  let options: Chat.ConversationRequest = {}
+  let options: Chat.ConversationRequest = lastOptions
   const lastContext = conversationList.value[conversationList.value.length - 1]?.conversationOptions
 
   if (lastContext && usingContext.value)
@@ -136,6 +140,9 @@ async function onConversation() {
                 requestOptions: { prompt: message, options: { ...options } },
               },
             )
+
+            if (data != null && data.conversationId != null && data.conversationId.length !== 0)
+              lastOptions = { conversationId: data.conversationId, parentMessageId: data.id }
 
             if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
               options.parentMessageId = data.id
