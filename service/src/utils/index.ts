@@ -23,8 +23,9 @@ export function sendResponse<T>(options: SendResponseOptions<T>) {
 
 export function parseKeys(keys: string) {
   return keys
-    .split(/\s*[,\n]\s*/)
-    .filter(k => /sk-\w{48}/.test(k))
+    ? keys
+      .split(/\s*[,\n]\s*/)
+    : []
 }
 
 /**
