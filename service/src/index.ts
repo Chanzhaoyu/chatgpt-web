@@ -9,7 +9,7 @@ import type { ChatOptions, Config, MailConfig, SiteConfig, UserInfo } from './st
 import { Status } from './storage/model'
 import { clearChat, createChatRoom, createUser, deleteAllChatRooms, deleteChat, deleteChatRoom, existsChatRoom, getChat, getChatRooms, getChats, getUser, getUserById, insertChat, renameChatRoom, updateChat, updateConfig, updateUserInfo, verifyUser } from './storage/mongo'
 import { limiter } from './middleware/limiter'
-import { isNotEmptyString } from './utils/is'
+import { isEmail, isNotEmptyString } from './utils/is'
 import { sendTestMail, sendVerifyMail } from './utils/mail'
 import { checkUserVerify, getUserVerifyUrl, md5 } from './utils/security'
 import { rootAuth } from './middleware/rootAuth'
@@ -245,6 +245,10 @@ router.post('/user-register', async (req, res) => {
       res.send({ status: 'Fail', message: '注册账号功能未启用 | Register account is disabled!', data: null })
       return
     }
+    if (!isEmail(username)) {
+      res.send({ status: 'Fail', message: '请输入正确的邮箱 | Please enter a valid email address.', data: null })
+      return
+    }
     if (isNotEmptyString(config.siteConfig.registerMails)) {
       let allowSuffix = false
       const emailSuffixs = config.siteConfig.registerMails.split(',')
@@ -312,7 +316,7 @@ router.post('/session', async (req, res) => {
 router.post('/user-login', async (req, res) => {
   try {
     const { username, password } = req.body as { username: string; password: string }
-    if (!username || !password)
+    if (!username || !password || !isEmail(username))
       throw new Error('用户名或密码为空 | Username or password is empty')
 
     const user = await getUser(username)
