@@ -22,8 +22,8 @@ app.all('*', (_, res, next) => {
 router.post('/chat-process', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
-try{ 
-  const { prompt, options = {}, systemMessage } = req.body as RequestProps
+  try {
+    const { prompt, options = {}, systemMessage } = req.body as RequestProps
     let firstChunk = true
     await chatReplyProcess({
       message: prompt,
@@ -32,16 +32,18 @@ try{
         if (firstChunk) {
           res.write(`${JSON.stringify(chat)}t1h1i4s5i1s4a1s9i1l9l8y1s0plit`)
           firstChunk = false
-        } else {
+        }
+        else {
           let tmp = chat.delta
-          if (!(chat.delta)) { tmp = '' }
+          if (!(chat.delta))
+            tmp = ''
           res.write(tmp)
         }
       },
       systemMessage,
     })
   }
- catch (error) {
+  catch (error) {
     res.write(JSON.stringify(error))
   }
   finally {
