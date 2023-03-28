@@ -6,7 +6,7 @@ import { SocksProxyAgent } from 'socks-proxy-agent'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import fetch from 'node-fetch'
 import axios from 'axios'
-import { loadBalancer, parseKeys, sendResponse } from '../utils'
+import { loadBalancer, parseKeys, sendResponse, sleep } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
 import type { RequestOptions } from './types'
@@ -25,17 +25,28 @@ const ErrorCodeMessage: Record<string, string> = {
 const timeoutMs: number = !isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 30 * 1000
 
 let apiModel: ApiModel
+let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 
 if (!isNotEmptyString(process.env.OPENAI_API_KEY) && !isNotEmptyString(process.env.OPENAI_ACCESS_TOKEN))
   throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
 
 const apikeys = parseKeys(process.env.OPENAI_API_KEY)
-const getApiKey = loadBalancer(apikeys)
-
 const accessTokens = parseKeys(process.env.OPENAI_ACCESS_TOKEN)
-const getAccessToken = loadBalancer(accessTokens)
 
-let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
+// 为提高性能，预先计算好能预先计算好的
+// 该实现不支持中途切换 API 模型
+const nextKey = (() => {
+  if (apikeys.length) {
+    const next = loadBalancer(apikeys)
+    return () => (api as ChatGPTAPI).apiKey = next()
+  }
+  else {
+    const next = loadBalancer(accessTokens)
+    return () => (api as ChatGPTUnofficialProxyAPI).accessToken = next()
+  }
+})()
+const maxRetry: number = !isNaN(+process.env.MAX_RETRY) ? +process.env.MAX_RETRY : Math.max(apikeys.length, accessTokens.length)
+const retryIntervalMs = !isNaN(+process.env.RETRY_INTERVAL_MS) ? +process.env.RETRY_INTERVAL_MS : 1000;
 
 (async () => {
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
@@ -46,7 +57,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     const model = isNotEmptyString(OPENAI_API_MODEL) ? OPENAI_API_MODEL : 'gpt-3.5-turbo'
 
     const options: ChatGPTAPIOptions = {
-      apiKey: getApiKey(),
+      apiKey: '喵',
       completionParams: { model },
       debug: true,
     }
@@ -75,7 +86,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
   else {
     const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
     const options: ChatGPTUnofficialProxyAPIOptions = {
-      accessToken: getAccessToken(),
+      accessToken: '喵',
       debug: true,
     }
     if (isNotEmptyString(OPENAI_API_MODEL))
@@ -108,17 +119,21 @@ async function chatReplyProcess(options: RequestOptions) {
         options = { ...lastContext }
     }
 
-    if (api instanceof ChatGPTAPI)
-      api.apiKey = getApiKey()
-    else
-      api.accessToken = getAccessToken()
+    if (process)
+      options.onProgress = process
 
-    const response = await api.sendMessage(message, {
-      ...options,
-      onProgress: (partialResponse) => {
-        process?.(partialResponse)
-      },
-    })
+    let retryCount = 0
+    let response: ChatMessage | void
+
+    while (!response && retryCount++ < maxRetry) {
+      nextKey()
+      response = await api.sendMessage(message, options).catch((error: any) => {
+        // 429 Too Many Requests
+        if (error.statusCode !== 429)
+          throw error
+      })
+      await sleep(retryIntervalMs)
+    }
 
     return sendResponse({ type: 'Success', data: response })
   }
