@@ -40,6 +40,6 @@ export function loadBalancer<T>(arr: T[], strategy = 'random') {
     case 'random':
       return () => arr[Math.floor(Math.random() * arr.length)]
     case 'polling':
-      return (i => () => arr[i++ % arr.length])(0)
+      return (i => () => arr[i++ % arr.length])(Math.floor(Math.random() * arr.length))
   }
 }
