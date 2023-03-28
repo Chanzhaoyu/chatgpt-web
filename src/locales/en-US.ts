@@ -68,6 +68,7 @@ export default {
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
     balance: 'API Balance',
+    expireTime: 'membership expiration time',
   },
   store: {
     local: 'Local',

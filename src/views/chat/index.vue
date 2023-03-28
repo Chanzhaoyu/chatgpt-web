@@ -11,9 +11,9 @@ import { useChat } from './hooks/useChat'
 import { useCopyCode } from './hooks/useCopyCode'
 import { useUsingContext } from './hooks/useUsingContext'
 import HeaderComponent from './components/Header/index.vue'
+import { useAuthStore, useChatStore, usePromptStore } from '@/store'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
 
@@ -118,11 +118,19 @@ async function onConversation() {
           const { responseText } = xhr
           // Always process the final line
           const lastIndex = responseText.lastIndexOf('\n', responseText.length - 2)
+          // eslint-disable-next-line no-console
+          console.log('lastIndex', lastIndex)
           let chunk = responseText
+          console.log('chunk', chunk)
           if (lastIndex !== -1)
             chunk = responseText.substring(lastIndex)
           try {
             const data = JSON.parse(chunk)
+            if (data.status === 423) {
+              ms.error('异地登录，请重新登录~~~~~~~~~~')
+							// eslint-disable-next-line no-mixed-spaces-and-tabs,no-tabs
+            	throw new Error('异地登录，请重新登录')
+            }
             updateChat(
               +uuid,
               dataSources.value.length - 1,
@@ -143,11 +151,14 @@ async function onConversation() {
               message = ''
               return fetchChatAPIOnce()
             }
-
             scrollToBottomIfAtBottom()
           }
           catch (error) {
-          //
+            // eslint-disable-next-line no-console
+            console.log(error)
+            const useAuthStores = useAuthStore()
+            useAuthStores.removeToken()
+            // ms.error(error)
           }
         },
       })

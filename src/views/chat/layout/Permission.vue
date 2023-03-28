@@ -28,8 +28,10 @@ async function handleVerify() {
 
   try {
     loading.value = true
-    await fetchVerify(secretKey)
-    authStore.setToken(secretKey)
+    const timestamp = Date.now()
+    const tokenWithTimestamp = `${secretKey} ${timestamp}`
+    await fetchVerify(tokenWithTimestamp)
+    authStore.setToken(tokenWithTimestamp)
     ms.success('success')
     window.location.reload()
   }
