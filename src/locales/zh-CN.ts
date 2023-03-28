@@ -35,6 +35,7 @@ export default {
     passwordConfirm: '确认密码',
   },
   chat: {
+    newChatButton: '新建聊天',
     placeholder: '来说点什么吧...（Shift + Enter = 换行）',
     placeholderMobile: '来说点什么...',
     copy: '复制',
@@ -94,6 +95,7 @@ export default {
     loginSaltTip: '变更会导致所有已登录失效',
   },
   store: {
+    siderButton: '提示词商店',
     local: '本地',
     online: '在线',
     title: '标题',

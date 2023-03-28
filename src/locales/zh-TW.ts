@@ -35,6 +35,7 @@ export default {
     passwordConfirm: '確認密碼',
   },
   chat: {
+    newChatButton: '新建對話',
     placeholder: '來說點什麼...（Shift + Enter = 換行）',
     placeholderMobile: '來說點什麼...',
     copy: '複製',
@@ -94,6 +95,7 @@ export default {
     loginSaltTip: '变更会导致所有已登录失效',
   },
   store: {
+    siderButton: '提示詞商店',
     local: '本機',
     online: '線上',
     title: '標題',
