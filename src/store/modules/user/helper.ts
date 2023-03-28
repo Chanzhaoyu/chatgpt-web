@@ -17,7 +17,7 @@ export function defaultSetting(): UserState {
     userInfo: {
       avatar: 'https://raw.githubusercontent.com/pretenderlu/chatgpt-web/main/src/assets/avatar.jpg',
       name: 'LuQQ',
-      description: '聊天小机器人',
+      description: '聊天机器人',
     },
   }
 }
