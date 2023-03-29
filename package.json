@@ -31,6 +31,7 @@
     "markdown-it": "^13.0.1",
     "naive-ui": "^2.34.3",
     "pinia": "^2.0.33",
+    "tencentcloud-sdk-nodejs-nlp": "^4.0.568",
     "vue": "^3.2.47",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.1.6"
