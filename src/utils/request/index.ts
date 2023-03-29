@@ -26,9 +26,9 @@ function http<T = any>(
     const authStore = useAuthStore()
 
     if (typeof res.data === 'string') {
-      const lastIndex = res.data.lastIndexOf('\n')
+      const lastIndex = (res.data as string).lastIndexOf('\n')
       if (lastIndex !== -1)
-        res.data = JSON.parse(res.data.substring(lastIndex))
+        res.data = JSON.parse((res.data as string).substring(lastIndex))
     }
 
     if (res.data.status === 'Success' || typeof res.data === 'string')
