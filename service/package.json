@@ -34,6 +34,7 @@
     "isomorphic-fetch": "^3.0.0",
     "node-fetch": "^3.3.0",
     "socks-proxy-agent": "^7.0.0"
+		"googleapis":"^114.0.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.35.3",
