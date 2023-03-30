@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { NAutoComplete, NButton, NInput, useDialog, useMessage } from 'naive-ui'
+import { NAutoComplete, NButton, NInput, NSpin, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
@@ -16,6 +16,7 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
+import { debounce } from '@/utils/functions/debounce'
 
 let controller = new AbortController()
 
@@ -40,6 +41,7 @@ const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !item.error)))
 
 const prompt = ref<string>('')
+const firstLoading = ref<boolean>(false)
 const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
 
@@ -461,9 +463,16 @@ const footerClass = computed(() => {
 })
 
 onMounted(() => {
-  scrollToBottom()
-  if (inputRef.value && !isMobile.value)
-    inputRef.value?.focus()
+  firstLoading.value = true
+  debounce(() => {
+    // 直接刷 极小概率不请求
+    chatStore.syncChat({ uuid: Number(uuid) } as Chat.History, () => {
+      firstLoading.value = false
+      scrollToBottom()
+      if (inputRef.value && !isMobile.value)
+        inputRef.value?.focus()
+    })
+  }, 100)()
 })
 
 onUnmounted(() => {
@@ -491,35 +500,37 @@ onUnmounted(() => {
           class="w-full max-w-screen-xl m-auto dark:bg-[#101014]"
           :class="[isMobile ? 'p-2' : 'p-4']"
         >
-          <template v-if="!dataSources.length">
-            <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
-              <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
-              <span>Aha~</span>
-            </div>
-          </template>
-          <template v-else>
-            <div>
-              <Message
-                v-for="(item, index) of dataSources"
-                :key="index"
-                :date-time="item.dateTime"
-                :text="item.text"
-                :inversion="item.inversion"
-                :error="item.error"
-                :loading="item.loading"
-                @regenerate="onRegenerate(index)"
-                @delete="handleDelete(index)"
-              />
-              <div class="sticky bottom-0 left-0 flex justify-center">
-                <NButton v-if="loading" type="warning" @click="handleStop">
-                  <template #icon>
-                    <SvgIcon icon="ri:stop-circle-line" />
-                  </template>
-                  Stop Responding
-                </NButton>
+          <NSpin :show="firstLoading">
+            <template v-if="!dataSources.length">
+              <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
+                <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
+                <span>Aha~</span>
               </div>
-            </div>
-          </template>
+            </template>
+            <template v-else>
+              <div>
+                <Message
+                  v-for="(item, index) of dataSources"
+                  :key="index"
+                  :date-time="item.dateTime"
+                  :text="item.text"
+                  :inversion="item.inversion"
+                  :error="item.error"
+                  :loading="item.loading"
+                  @regenerate="onRegenerate(index)"
+                  @delete="handleDelete(index)"
+                />
+                <div class="sticky bottom-0 left-0 flex justify-center">
+                  <NButton v-if="loading" type="warning" @click="handleStop">
+                    <template #icon>
+                      <SvgIcon icon="ri:stop-circle-line" />
+                    </template>
+                    Stop Responding
+                  </NButton>
+                </div>
+              </div>
+            </template>
+          </NSpin>
         </div>
       </div>
     </main>
