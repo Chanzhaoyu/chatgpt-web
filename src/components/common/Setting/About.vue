@@ -83,13 +83,13 @@ onMounted(() => {
       </p>
       <div class="p-2 space-y-2 rounded-md bg-neutral-100 dark:bg-neutral-700">
         <p>
-          title[0]：{{ visitor.recentActiveVisitors ?? '-' }}
-          title[1]：{{ visitor.todayVisitors ?? '-' }}
-          title[2]：{{ visitor.todayPageviews ?? '-' }}
-          title[3]：{{ visitor.yesterdayVisitors ?? '-' }}
-          title[4]：{{ visitor.yesterdayPageviews ?? '-' }}
-          title[5]：{{ visitor.monthPageviews ?? '-' }}
-          title[6]：{{ visitor.totalPageviews ?? '-' }}
+          {{title[0]}}：{{ visitor.recentActiveVisitors ?? '-' }}
+          {{title[1]}}：{{ visitor.todayVisitors ?? '-' }}
+          {{title[2]}}：{{ visitor.todayPageviews ?? '-' }}
+          {{title[3]}}：{{ visitor.yesterdayVisitors ?? '-' }}
+          {{title[4]}}：{{ visitor.yesterdayPageviews ?? '-' }}
+          {{title[5]}}：{{ visitor.monthPageviews ?? '-' }}
+          {{title[6]}}：{{ visitor.totalPageviews ?? '-' }}
         </p>
       </div>
     </div>
