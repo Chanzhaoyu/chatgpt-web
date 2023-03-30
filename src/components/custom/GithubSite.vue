@@ -1,8 +1,8 @@
 <template>
   <div class="text-neutral-400">
-    <span>Star on</span>
-    <a href="https://github.com/Chanzhaoyu/chatgpt-bot" target="_blank" class="text-blue-500">
-      GitHub
+    <span></span>
+    <a href="https://blog.801100.tk" target="_blank" class="text-blue-500">
+      Lee Blog
     </a>
   </div>
 </template>
