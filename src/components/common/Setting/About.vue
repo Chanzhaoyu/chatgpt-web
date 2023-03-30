@@ -81,16 +81,17 @@ onMounted(() => {
       <p v-if="isChatGPTAPI">
         {{ $t("setting.balance") }}：{{ config?.balance ?? '-' }}
       </p>
+      <h2 class="text-xl font-bold">
+        网站访问统计
+      </h2>
       <div class="p-2 space-y-2 rounded-md bg-neutral-100 dark:bg-neutral-700">
-        <p>
-          {{title[0]}}：{{ visitor.recentActiveVisitors ?? '-' }}
-          {{title[1]}}：{{ visitor.todayVisitors ?? '-' }}
-          {{title[2]}}：{{ visitor.todayPageviews ?? '-' }}
-          {{title[3]}}：{{ visitor.yesterdayVisitors ?? '-' }}
-          {{title[4]}}：{{ visitor.yesterdayPageviews ?? '-' }}
-          {{title[5]}}：{{ visitor.monthPageviews ?? '-' }}
-          {{title[6]}}：{{ visitor.totalPageviews ?? '-' }}
-        </p>
+        <p> {{title[0]}}：{{ visitor.recentActiveVisitors ?? '-' }} </p>
+        <p> {{title[1]}}：{{ visitor.todayVisitors ?? '-' }} </p>
+        <p> {{title[2]}}：{{ visitor.todayPageviews ?? '-' }} </p>
+        <p> {{title[3]}}：{{ visitor.yesterdayVisitors ?? '-' }} </p>
+        <p> {{title[4]}}：{{ visitor.yesterdayPageviews ?? '-' }} </p>
+        <p> {{title[5]}}：{{ visitor.monthPageviews ?? '-' }} </p>
+        <p> {{title[6]}}：{{ visitor.totalPageviews ?? '-' }} </p>
       </div>
     </div>
   </NSpin>
