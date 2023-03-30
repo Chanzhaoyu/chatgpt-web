@@ -1,0 +1,33 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+- name: Docker Login
+  # You may pin to the exact commit or the version.
+  # uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+  uses: docker/login-action@v2.1.0
+  with:
+    # Server address of Docker registry. If not set then will default to Docker Hub
+    registry: # optional
+    # Username used to log against the Docker registry
+    username: # optional
+    # Password or personal access token used to log against the Docker registry
+    password: # optional
+    # Specifies whether the given registry is ECR (auto, true or false)
+    ecr: # optional, default is auto
+    # Log out from the Docker registry at the end of a job
+    logout: # optional, default is true
