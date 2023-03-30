@@ -322,16 +322,6 @@ Thanks to all the contributors!
 
 If you find this project helpful and circumstances permit, you can give me a little support. Thank you very much for your support~
 
-<div style="display: flex; gap: 20px;">
-	<div style="text-align: center">
-		<img style="max-width: 100%" src="./docs/wechat.png" alt="WeChat" />
-		<p>WeChat Pay</p>
-	</div>
-	<div style="text-align: center">
-		<img style="max-width: 100%" src="./docs/alipay.png" alt="Alipay" />
-		<p>Alipay</p>
-	</div>
-</div>
 
 ## License
 MIT © [ChenZhaoYu](./license)
