@@ -17,7 +17,7 @@ export function defaultSetting(): UserState {
     userInfo: {
       avatar: 'https://i.gsxcdn.com/1984397634_0gl847mi.png',
       name: 'Ren',
-      description: '发挥你的想象力去提问吧!',
+      description: '<a href="https://i.gsxcdn.com/1984574315_s2sma5d2.jpg" class="text-yellow-600" target="_blank" >请作者喝咖啡~</a>'
     },
   }
 }
