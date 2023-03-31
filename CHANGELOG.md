@@ -1,3 +1,114 @@
+## v2.10.8
+
+`2023-03-23`
+
+如遇问题，请删除 `node_modules` 重新安装依赖。
+
+## Feature
+- 显示回复消息原文的选项 [[yilozt](https://github.com/Chanzhaoyu/chatgpt-web/pull/672)]
+- 添加单 `IP` 每小时请求限制。环境变量： `MAX_REQUEST_PER_HOUR` [[zhuxindong ](https://github.com/Chanzhaoyu/chatgpt-web/pull/718)]
+- 前端添加角色设定，仅 `API` 方式可见 [[quzard](https://github.com/Chanzhaoyu/chatgpt-web/pull/768)]
+- `OPENAI_API_MODEL` 变量现在对 `ChatGPTUnofficialProxyAPI` 也生效，注意：`Token` 和 `API` 的模型命名不一致，不能直接填入 `gpt-3.5` 或者 `gpt-4` [[hncboy](https://github.com/Chanzhaoyu/chatgpt-web/pull/632)]
+- 添加繁体中文 `Prompts` [[PeterDaveHello](https://github.com/Chanzhaoyu/chatgpt-web/pull/796)]
+
+## Enhancement
+- 重置回答时滚动定位至该回答 [[shunyue1320](https://github.com/Chanzhaoyu/chatgpt-web/pull/781)]
+- 当 `API` 是 `gpt-4` 时增加可用的 `Max Tokens` [[simonwu53](https://github.com/Chanzhaoyu/chatgpt-web/pull/729)]
+- 判断和忽略回复字符 [[liut](https://github.com/Chanzhaoyu/chatgpt-web/pull/474)]
+- 切换会话时，自动聚焦输入框 [[JS-an](https://github.com/Chanzhaoyu/chatgpt-web/pull/735)]
+- 渲染的链接新窗口打开
+- 查询余额可选 `API_BASE_URL` 代理地址
+- `config` 接口添加验证防止被无限制调用
+- `PWA` 默认不开启，现在需手动修改 `.env` 文件 `VITE_GLOB_APP_PWA` 变量
+- 当网络连接时，刷新页面，`500` 错误页自动跳转到主页
+
+## BugFix
+- `scrollToBottom` 调回 `scrollToBottomIfAtBottom` [[shunyue1320](https://github.com/Chanzhaoyu/chatgpt-web/pull/771)]
+- 重置异常的 `loading` 会话
+
+## Common
+- 创建 `start.cmd` 在 `windows` 下也可以运行 [vulgatecnn](https://github.com/Chanzhaoyu/chatgpt-web/pull/656)]
+- 添加 `visual-studio-code` 中调试配置 [[ChandlerVer5](https://github.com/Chanzhaoyu/chatgpt-web/pull/296)]
+- 修复文档中 `docker` 端口为本地 [[kilvn](https://github.com/Chanzhaoyu/chatgpt-web/pull/802)]
+## Other
+- 依赖更新
+
+
+## v2.10.7
+
+`2023-03-17`
+
+## BugFix
+- 回退 `chatgpt` 版本，原因：导致 `OPENAI_API_BASE_URL` 代理失效
+- 修复缺省状态的 `usingContext` 默认值
+
+## v2.10.6
+
+`2023-03-17`
+
+## Feature
+- 显示 `API` 余额 [[pzcn](https://github.com/Chanzhaoyu/chatgpt-web/pull/582)]
+
+## Enhancement
+- 美化滚动条样式和 `UI` 保持一致 [[haydenull](https://github.com/Chanzhaoyu/chatgpt-web/pull/617)]
+- 优化移动端 `Prompt` 样式 [[CornerSkyless](https://github.com/Chanzhaoyu/chatgpt-web/pull/608)]
+- 上下文开关改为全局开关，现在记录在本地缓存中
+- 配置信息按接口类型显示
+
+## Perf
+- 优化函数方法 [[kirklin](https://github.com/Chanzhaoyu/chatgpt-web/pull/583)]
+- 字符错误 [[pdsuwwz](https://github.com/Chanzhaoyu/chatgpt-web/pull/585)]
+- 文档描述错误 [[lizhongyuan3](https://github.com/Chanzhaoyu/chatgpt-web/pull/636)]
+
+## BugFix
+- 修复 `Prompt` 导入、导出兼容性错误
+- 修复 `highlight.js` 控制台兼容性警告
+
+## Other
+- 依赖更新
+
+## v2.10.5
+
+`2023-03-13`
+
+更新依赖，`access_token` 默认代理为 [acheong08](https://github.com/acheong08) 的 `https://bypass.duti.tech/api/conversation`
+
+## Feature
+- `Prompt` 商店在线导入可以导入两种 `recommend.json`里提到的模板 [simonwu53](https://github.com/Chanzhaoyu/chatgpt-web/pull/521)
+- 支持 `HTTPS_PROXY` [whatwewant](https://github.com/Chanzhaoyu/chatgpt-web/pull/308)
+- `Prompt` 添加查询筛选
+
+## Enhancement
+- 调整输入框最大行数 [yi-ge](https://github.com/Chanzhaoyu/chatgpt-web/pull/502)
+- 优化 `docker` 打包 [whatwewant](https://github.com/Chanzhaoyu/chatgpt-web/pull/520)
+- `Prompt` 添加翻译和优化布局
+- 「繁体中文」补全和审阅 [PeterDaveHello](https://github.com/Chanzhaoyu/chatgpt-web/pull/542)
+- 语言选择调整为下路框形式
+- 权限输入框类型调整为密码形式
+
+## BugFix
+- `JSON` 导入检查 [Nothing1024](https://github.com/Chanzhaoyu/chatgpt-web/pull/523)
+- 修复 `AUTH_SECRET_KEY` 模式下跨域异常并添加对 `node.js 19` 版本的支持 [yi-ge](https://github.com/Chanzhaoyu/chatgpt-web/pull/499)
+- 确定清空上下文时不应该重置会话标题
+
+## Other
+- 调整文档
+- 更新依赖
+
+## v2.10.4
+
+`2023-03-11`
+
+## Feature
+- 感谢 [Nothing1024](https://github.com/Chanzhaoyu/chatgpt-web/pull/268) 添加 `Prompt` 模板和 `Prompt` 商店支持
+
+## Enhancement
+- 设置添加关闭按钮[#495]
+
+## Demo
+
+![Prompt](https://camo.githubusercontent.com/6a51af751eb29238cb7ef4f8fbd89f63db837562f97f33273095424e62dc9194/68747470733a2f2f73312e6c6f63696d672e636f6d2f323032332f30332f30342f333036326665633163613562632e676966)
+
 ## v2.10.3
 
 `2023-03-10`

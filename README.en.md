@@ -174,6 +174,10 @@ pnpm dev
 - `TIMEOUT_MS` timeout, in milliseconds, optional
 - `SOCKS_PROXY_HOST` optional, effective with SOCKS_PROXY_PORT
 - `SOCKS_PROXY_PORT` optional, effective with SOCKS_PROXY_HOST
+- `SOCKS_PROXY_USERNAME` optional, effective with SOCKS_PROXY_HOST and SOCKS_PROXY_PORT
+- `SOCKS_PROXY_PASSWORD` optional, effective with SOCKS_PROXY_HOST and SOCKS_PROXY_PORT
+- `HTTPS_PROXY` optional, support http，https, socks5
+- `ALL_PROXY` optional, support http，https, socks5
 
 ![docker](./docs/docker.png)
 
@@ -183,10 +187,10 @@ pnpm dev
 docker build -t chatgpt-web .
 
 # foreground operation
-docker run --name chatgpt-web --rm -it -p 3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
+docker run --name chatgpt-web --rm -it -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
 
 # background operation
-docker run --name chatgpt-web -d -p 3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
+docker run --name chatgpt-web -d -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
 
 # running address
 http://localhost:3002/
@@ -203,7 +207,7 @@ services:
   app:
     image: chenzhaoyu94/chatgpt-web # always use latest, pull the tag image again when updating
     ports:
-      - 3002:3002
+      - 127.0.0.1:3002:3002
     environment:
       # one of two
       OPENAI_API_KEY: xxxxxx
@@ -223,6 +227,12 @@ services:
       SOCKS_PROXY_HOST: xxxx
       # socks proxy port, optional, effective with SOCKS_PROXY_HOST
       SOCKS_PROXY_PORT: xxxx
+      # socks proxy, optional, effective with SOCKS_PROXY_HOST and SOCKS_PROXY_PORT
+      SOCKS_PROXY_USERNAME: xxxx
+      # socks proxy port, optional, effective with SOCKS_PROXY_HOST and SOCKS_PROXY_PORT
+      SOCKS_PROXY_PASSWORD: xxxx
+      # HTTPS Proxy，optional, support http, https, socks5
+      HTTPS_PROXY: http://xxx:7890
 ```
 The `OPENAI_API_BASE_URL` is optional and only used when setting the `OPENAI_API_KEY`.
 The `OPENAI_API_MODEL` is optional and only used when setting the `OPENAI_API_KEY`.
@@ -233,18 +243,22 @@ The `OPENAI_API_MODEL` is optional and only used when setting the `OPENAI_API_KE
 
 #### Railway Environment Variables
 
-| Environment Variable | Required | Description                                                                                       |
-| -------------------- | -------- | ------------------------------------------------------------------------------------------------- |
-| `PORT`               | Required | Default: `3002`                                                                                   |
-| `AUTH_SECRET_KEY`         | Optional | access password                                                                          |
-| `TIMEOUT_MS`         | Optional | Timeout in milliseconds                                                                      |
-| `OPENAI_API_KEY`     | Optional | Required for `OpenAI API`. `apiKey` can be obtained from [here](https://platform.openai.com/overview). |
-| `OPENAI_ACCESS_TOKEN`| Optional | Required for `Web API`. `accessToken` can be obtained from [here](https://chat.openai.com/api/auth/session).|
-| `OPENAI_API_BASE_URL`  | Optional, only for `OpenAI API` |  API endpoint.                                                        |
-| `OPENAI_API_MODEL`  | Optional, only for `OpenAI API` |  API model.                                                        |
-| `API_REVERSE_PROXY`  | Optional, only for `Web API` | Reverse proxy address for `Web API`. [Details](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy) |
-| `SOCKS_PROXY_HOST`   | Optional, effective with `SOCKS_PROXY_PORT` | Socks proxy.                      |
-| `SOCKS_PROXY_PORT`   | Optional, effective with `SOCKS_PROXY_HOST` | Socks proxy port.                 |
+| Environment Variable   | Required                                                          | Description                                                                                                      |
+|------------------------|-------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| `PORT`                 | Required                                                          | Default: `3002`                                                                                                  |
+| `AUTH_SECRET_KEY`      | Optional                                                          | access password                                                                                                  |
+| `TIMEOUT_MS`           | Optional                                                          | Timeout in milliseconds                                                                                          |
+| `OPENAI_API_KEY`       | Optional                                                          | Required for `OpenAI API`. `apiKey` can be obtained from [here](https://platform.openai.com/overview).           |
+| `OPENAI_ACCESS_TOKEN`  | Optional                                                          | Required for `Web API`. `accessToken` can be obtained from [here](https://chat.openai.com/api/auth/session).     |
+| `OPENAI_API_BASE_URL`  | Optional, only for `OpenAI API`                                   | API endpoint.                                                                                                    |
+| `OPENAI_API_MODEL`     | Optional, only for `OpenAI API`                                   | API model.                                                                                                       |
+| `API_REVERSE_PROXY`    | Optional, only for `Web API`                                      | Reverse proxy address for `Web API`. [Details](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy) |
+| `SOCKS_PROXY_HOST`     | Optional, effective with `SOCKS_PROXY_PORT`                       | Socks proxy.                                                                                                     |
+| `SOCKS_PROXY_PORT`     | Optional, effective with `SOCKS_PROXY_HOST`                       | Socks proxy port.                                                                                                |
+| `SOCKS_PROXY_USERNAME` | Optional, effective with `SOCKS_PROXY_HOST` & `SOCKS_PROXY_PORT`  | Socks proxy username.                                                                                            |
+| `SOCKS_PROXY_PASSWORD` | Optional, effective with `SOCKS_PROXY_HOST` & `SOCKS_PROXY_PORT`  | Socks proxy password.                                                                                            |
+| `HTTPS_PROXY`          | Optional                                                          | HTTPS Proxy.                                                                                                     |
+| `ALL_PROXY`            | Optional                                                          | ALL Proxy.                                                                                                       |
 
 > Note: Changing environment variables in Railway will cause re-deployment.
 
@@ -271,7 +285,7 @@ PS: You can also run `pnpm start` directly on the server without packaging.
 
 #### Frontend webpage
 
-1. Refer to the root directory `.env.example` file content to create `.env` file, modify `VITE_APP_API_BASE_URL` in `.env` at the root directory to your actual backend interface address.
+1. Refer to the root directory `.env.example` file content to create `.env` file, modify `VITE_GLOB_API_URL` in `.env` at the root directory to your actual backend interface address.
 2. Run the following command in the root directory and then copy the files in the `dist` folder to the root directory of your website service.
 
 [Reference information](https://cn.vitejs.dev/guide/static-deploy.html#building-the-app)
@@ -297,6 +311,10 @@ A: For `vscode`, please install the recommended plug-in of the project or manual
 Q: Why doesn't the frontend have a typewriter effect?
 
 A: One possible reason is that after Nginx reverse proxying, buffering is turned on, and Nginx will try to buffer a certain amount of data from the backend before sending it to the browser. Please try adding `proxy_buffering off;` after the reverse proxy parameter and then reloading Nginx. Other web server configurations are similar.
+
+Q: The content returned is incomplete?
+
+A: There is a length limit for the content returned by the API each time. You can modify the `VITE_GLOB_OPEN_LONG_REPLY` field in the `.env` file under the root directory, set it to `true`, and rebuild the front-end to enable the long reply feature, which can return the full content. It should be noted that using this feature may bring more API usage fees.
 
 ## Contributing
 
