@@ -16,6 +16,11 @@
 * set up different contexts/roles for each chat by setting system messages individually
 * enable one-shot conversations by turning off the usingContext button (dictionaries, translators, etc.)
 
+### Branches
+* `main`: sync with the original main, no modification
+* `feature`: mainstream with all modifications
+* `<other names>`: independent features
+
 # Original README.md below
 
 ---
