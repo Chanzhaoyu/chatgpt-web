@@ -8,6 +8,18 @@
 
 > 声明：此项目只发布于 Github，基于 MIT 协议，免费且作为开源学习使用。并且不会有任何形式的卖号、付费服务、讨论群、讨论组等行为。谨防受骗。
 
+### Modifications to the original project:
+* add system message support for each chat
+* add local usingContext button instead of a global one
+
+### What it enables
+* set up different contexts/roles for each chat by setting system messages individually
+* enable one-shot conversations by turning off the usingContext button (dictionaries, translators, etc.)
+
+# Original README.md below
+
+---
+
 ![cover](./docs/c1.png)
 ![cover2](./docs/c2.png)
 
