@@ -27,6 +27,10 @@ services:
       SOCKS_PROXY_HOST:
       # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
       SOCKS_PROXY_PORT:
+      # Socks代理用户名，可选，和 SOCKS_PROXY_HOST & SOCKS_PROXY_PORT 一起时生效
+      SOCKS_PROXY_USERNAME:
+      # Socks代理密码，可选，和 SOCKS_PROXY_HOST & SOCKS_PROXY_PORT 一起时生效
+      SOCKS_PROXY_PASSWORD:
       # HTTPS_PROXY 代理，可选
       HTTPS_PROXY:
   nginx:
