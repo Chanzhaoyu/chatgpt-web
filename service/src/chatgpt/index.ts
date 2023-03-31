@@ -159,17 +159,19 @@ async function chatConfig() {
 }
 
 function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPIOptions) {
-  if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) {
+  if (isNotEmptyString(process.env.SOCKS_PROXY_HOST) && isNotEmptyString(process.env.SOCKS_PROXY_PORT)) {
     const agent = new SocksProxyAgent({
       hostname: process.env.SOCKS_PROXY_HOST,
       port: process.env.SOCKS_PROXY_PORT,
+      userId: isNotEmptyString(process.env.SOCKS_PROXY_USERNAME) ? process.env.SOCKS_PROXY_USERNAME : undefined,
+      password: isNotEmptyString(process.env.SOCKS_PROXY_PASSWORD) ? process.env.SOCKS_PROXY_PASSWORD : undefined,
     })
     options.fetch = (url, options) => {
       return fetch(url, { agent, ...options })
     }
   }
   else {
-    if (process.env.HTTPS_PROXY || process.env.ALL_PROXY) {
+    if (isNotEmptyString(process.env.HTTPS_PROXY) || isNotEmptyString(process.env.ALL_PROXY)) {
       const httpsProxy = process.env.HTTPS_PROXY || process.env.ALL_PROXY
       if (httpsProxy) {
         const agent = new HttpsProxyAgent(httpsProxy)
