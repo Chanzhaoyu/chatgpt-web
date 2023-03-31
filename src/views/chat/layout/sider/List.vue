@@ -4,6 +4,7 @@ import { NInput, NPopconfirm, NScrollbar } from 'naive-ui'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
+import { debounce } from '@/utils/functions/debounce'
 
 const { isMobile } = useBasicLayout()
 
@@ -35,6 +36,8 @@ function handleDelete(index: number, event?: MouseEvent | TouchEvent) {
   if (isMobile.value)
     appStore.setSiderCollapsed(true)
 }
+
+const handleDeleteDebounce = debounce(handleDelete, 600)
 
 function handleEnter({ uuid }: Chat.History, isEdit: boolean, event: KeyboardEvent) {
   event?.stopPropagation()
@@ -69,8 +72,7 @@ function isActive(uuid: number) {
             <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap">
               <NInput
                 v-if="item.isEdit"
-                v-model:value="item.title"
-                size="tiny"
+                v-model:value="item.title" size="tiny"
                 @keypress="handleEnter(item, false, $event)"
               />
               <span v-else>{{ item.title }}</span>
@@ -85,7 +87,7 @@ function isActive(uuid: number) {
                 <button class="p-1">
                   <SvgIcon icon="ri:edit-line" @click="handleEdit(item, true, $event)" />
                 </button>
-                <NPopconfirm placement="bottom" @positive-click="handleDelete(index, $event)">
+                <NPopconfirm placement="bottom" @positive-click="handleDeleteDebounce(index, $event)">
                   <template #trigger>
                     <button class="p-1">
                       <SvgIcon icon="ri:delete-bin-line" />

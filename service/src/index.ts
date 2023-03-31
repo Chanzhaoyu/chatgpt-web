@@ -25,7 +25,7 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
   try {
     const { prompt, options = {}, systemMessage } = req.body as RequestProps
     let firstChunk = true
-    await chatReplyProcess({
+    const finalResponse = await chatReplyProcess({
       message: prompt,
       lastContext: options,
       process: (chat: ChatMessage) => {
@@ -34,6 +34,7 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
       },
       systemMessage,
     })
+    res.write(firstChunk ? JSON.stringify(finalResponse) : `\n${JSON.stringify(finalResponse)}`)
   }
   catch (error) {
     res.write(JSON.stringify(error))
@@ -82,5 +83,6 @@ router.post('/verify', async (req, res) => {
 
 app.use('', router)
 app.use('/api', router)
+app.set('trust proxy', 1)
 
 app.listen(3002, () => globalThis.console.log('Server is running on port 3002'))
