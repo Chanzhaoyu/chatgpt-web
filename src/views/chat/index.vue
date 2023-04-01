@@ -454,7 +454,64 @@ const footerClass = computed(() => {
   return classes
 })
 
+window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+window.SpeechRecognitionEvent = window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent
+const recognition = ref<window.SpeechRecognition | null>(null) // SpeechRecognition对象
+const speechInputVisiable = ref<boolean>(false)
+const speechInput = ref<string>('')
+const speechInputplaceholder = computed(() => {
+  return t('chat.speechInputplaceholder')
+})
+
+function speechInputStart() {
+  if (!recognition.value.startStatus)
+    recognition.value.start()
+}
+
+function handleStart() {
+  recognition.value.startStatus = true
+}
+
+function speechInputEnd() {
+  if (recognition.value.startStatus)
+    recognition.value.stop()
+}
+
+function handleEnd() {
+  recognition.value.startStatus = false
+}
+
+function handleSpeechResult(event: any) {
+  for (let i = event.resultIndex; i < event.results.length; i++) {
+    const transcript = event.results[i][0].transcript
+    if (event.results[i].isFinal) {
+      if (!prompt.value)
+        prompt.value = speechInput.value
+      else
+        prompt.value += `，${speechInput.value}`
+
+      speechInput.value = ''
+    }
+    else {
+      speechInput.value = transcript
+    }
+  }
+}
+
 onMounted(() => {
+  if ('SpeechRecognition' in window) {
+    recognition.value = new window.SpeechRecognition()
+    recognition.value.continuous = true // 是否连续识别
+    recognition.value.interimResults = true // 是否返回临时结果
+    recognition.value.lang = 'zh-CN' // 识别语言为中文
+    recognition.value.onresult = handleSpeechResult // 绑定onresult事件
+    recognition.value.onstart = handleStart
+    recognition.value.onend = handleEnd
+  }
+  else {
+    alert('当前浏览器不支持语音识别功能')
+  }
+
   scrollToBottom()
   if (inputRef.value && !isMobile.value)
     inputRef.value?.focus()
@@ -552,6 +609,21 @@ onUnmounted(() => {
                 <SvgIcon icon="ri:send-plane-fill" />
               </span>
             </template>
+          </NButton>
+          <HoverButton v-if="!isMobile" style="scale: 0.7;" :style="!speechInputVisiable ? 'color:#999999;' : 'color:#9671e3;'" @click="speechInputVisiable = !speechInputVisiable">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="11" rx="3" /><path d="M5 10a7 7 0 0 0 14 0" /><path d="M8 21h8" /><path d="M12 17v4" /></g></svg>
+          </HoverButton>
+        </div>
+        <div v-if="speechInputVisiable" style="padding: 7px 10px;" class="flex items-center justify-between space-x-2">
+          <NInput
+            v-model:value="speechInput"
+            type="textarea"
+            :placeholder="speechInputplaceholder"
+            :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
+            :readonly="true"
+          />
+          <NButton type="primary" @mousedown="speechInputStart" @mouseup="speechInputEnd" @touchstart="speechInputStart" @touchend="speechInputEnd">
+            按住进行语音输入
           </NButton>
         </div>
       </div>

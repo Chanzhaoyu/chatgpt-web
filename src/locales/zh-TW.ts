@@ -31,6 +31,7 @@ export default {
     newChatButton: '新建對話',
     placeholder: '來說點什麼...（Shift + Enter = 換行）',
     placeholderMobile: '來說點什麼...',
+    speechInputplaceholder: '這是語音輸入展示框',
     copy: '複製',
     copied: '複製成功',
     copyCode: '複製代碼',

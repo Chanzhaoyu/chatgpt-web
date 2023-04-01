@@ -31,6 +31,7 @@ export default {
     newChatButton: 'New Chat',
     placeholder: 'Ask me anything...(Shift + Enter = line break)',
     placeholderMobile: 'Ask me anything...',
+    speechInputplaceholder: 'This is a speech input display box',
     copy: 'Copy',
     copied: 'Copied',
     copyCode: 'Copy Code',
