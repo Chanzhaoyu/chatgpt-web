@@ -2,33 +2,39 @@ version: '3'
 
 services:
   app:
+    container_name: chatgpt-web
     image: chenzhaoyu94/chatgpt-web # 总是使用latest,更新时重新pull该tag镜像即可
     ports:
       - 3002:3002
     environment:
       # 二选一
-      OPENAI_API_KEY: sk-xxx
+      OPENAI_API_KEY:
       # 二选一
-      OPENAI_ACCESS_TOKEN: xxx
+      OPENAI_ACCESS_TOKEN:
       # API接口地址，可选，设置 OPENAI_API_KEY 时可用
-      OPENAI_API_BASE_URL: xxx
+      OPENAI_API_BASE_URL:
       # API模型，可选，设置 OPENAI_API_KEY 时可用
-      OPENAI_API_MODEL: xxx
+      OPENAI_API_MODEL:
       # 反向代理，可选
-      API_REVERSE_PROXY: xxx
+      API_REVERSE_PROXY:
       # 访问权限密钥，可选
-      AUTH_SECRET_KEY: xxx
+      AUTH_SECRET_KEY:
       # 每小时最大请求次数，可选，默认无限
       MAX_REQUEST_PER_HOUR: 0
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
       # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
-      SOCKS_PROXY_HOST: xxx
+      SOCKS_PROXY_HOST:
       # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
-      SOCKS_PROXY_PORT: xxx
+      SOCKS_PROXY_PORT:
+      # Socks代理用户名，可选，和 SOCKS_PROXY_HOST & SOCKS_PROXY_PORT 一起时生效
+      SOCKS_PROXY_USERNAME:
+      # Socks代理密码，可选，和 SOCKS_PROXY_HOST & SOCKS_PROXY_PORT 一起时生效
+      SOCKS_PROXY_PASSWORD:
       # HTTPS_PROXY 代理，可选
-      HTTPS_PROXY: http://xxx:7890
+      HTTPS_PROXY:
   nginx:
+    container_name: nginx
     image: nginx:alpine
     ports:
       - '80:80'
