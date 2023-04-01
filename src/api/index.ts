@@ -102,9 +102,9 @@ export function fetchDeleteChatRoom<T = any>(roomId: number) {
   })
 }
 
-export function fetchGetChatHistory<T = any>(roomId: number) {
+export function fetchGetChatHistory<T = any>(roomId: number, lastId?: number) {
   return get<T>({
-    url: `/chat-hisroty?roomid=${roomId}`,
+    url: `/chat-hisroty?roomId=${roomId}&lastId=${lastId}`,
   })
 }
 

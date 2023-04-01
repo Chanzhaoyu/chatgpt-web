@@ -48,18 +48,42 @@ export const useChatStore = defineStore('chat-store', {
       callback && callback()
     },
 
-    async syncChat(h: Chat.History, callback: () => void) {
+    async syncChat(h: Chat.History, lastId?: number, callback?: () => void,
+      callbackForStartRequest?: () => void,
+      callbackForEmptyMessage?: () => void) {
       if (!h.uuid) {
         callback && callback()
         return
       }
-
-      const chatIndex = this.chat.findIndex(item => item.uuid === h.uuid)
-      if (chatIndex <= -1 || this.chat[chatIndex].data.length <= 0) {
-        const chatData = (await fetchGetChatHistory(h.uuid)).data
-        this.chat.unshift({ uuid: h.uuid, data: chatData })
+      const hisroty = this.history.filter(item => item.uuid === h.uuid)[0]
+      if (hisroty === undefined || hisroty.loading || hisroty.all) {
+        // callback && callback()
+        if (hisroty?.all ?? false)
+          callbackForEmptyMessage && callbackForEmptyMessage()
+        return
       }
-      callback && callback()
+      try {
+        hisroty.loading = true
+        const chatIndex = this.chat.findIndex(item => item.uuid === h.uuid)
+        if (chatIndex <= -1 || this.chat[chatIndex].data.length <= 0 || lastId !== undefined) {
+          callbackForStartRequest && callbackForStartRequest()
+          const chatData = (await fetchGetChatHistory(h.uuid, lastId)).data
+          if (chatData.length <= 0)
+            hisroty.all = true
+
+          if (chatIndex <= -1)
+            this.chat.unshift({ uuid: h.uuid, data: chatData })
+          else
+            this.chat[chatIndex].data.unshift(...chatData)
+        }
+      }
+      finally {
+        hisroty.loading = false
+        if (hisroty.all)
+          callbackForEmptyMessage && callbackForEmptyMessage()
+        this.recordState()
+        callback && callback()
+      }
     },
 
     setUsingContext(context: boolean) {

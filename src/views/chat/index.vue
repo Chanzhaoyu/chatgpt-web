@@ -1,8 +1,9 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import type { MessageReactive } from 'naive-ui'
 import { NAutoComplete, NButton, NInput, NSpin, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
 import { Message } from './components'
@@ -32,7 +33,7 @@ useCopyCode()
 
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
-const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
+const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom, scrollTo } = useScroll()
 const { usingContext, toggleUsingContext } = useUsingContext()
 
 const { uuid } = route.params as { uuid: string }
@@ -44,6 +45,10 @@ const prompt = ref<string>('')
 const firstLoading = ref<boolean>(false)
 const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
+
+let loadingms: MessageReactive
+let allmsg: MessageReactive
+let prevScrollTop: number
 
 // 添加PromptStore
 const promptStore = usePromptStore()
@@ -421,6 +426,40 @@ function handleStop() {
   }
 }
 
+async function loadMoreMessage(event: any) {
+  const chatIndex = chatStore.chat.findIndex(d => d.uuid === +uuid)
+  if (chatIndex <= -1)
+    return
+
+  const scrollPosition = event.target.scrollHeight - event.target.scrollTop
+
+  const lastId = chatStore.chat[chatIndex].data[0].uuid
+  await chatStore.syncChat({ uuid: +uuid } as Chat.History, lastId, () => {
+    loadingms && loadingms.destroy()
+    nextTick(() => scrollTo(event.target.scrollHeight - scrollPosition))
+  }, () => {
+    loadingms = ms.loading(
+      '加载中...', {
+        duration: 0,
+      },
+    )
+  }, () => {
+    allmsg && allmsg.destroy()
+    allmsg = ms.warning('没有更多了', {
+      duration: 1000,
+    })
+  })
+}
+
+const handleLoadMoreMessage = debounce(loadMoreMessage, 300)
+
+async function handleScroll(event: any) {
+  const scrollTop = event.target.scrollTop
+  if (scrollTop < 50 && (scrollTop < prevScrollTop || prevScrollTop === undefined))
+    handleLoadMoreMessage(event)
+  prevScrollTop = scrollTop
+}
+
 // 可优化部分
 // 搜索选项计算，这里使用value作为索引项，所以当出现重复value时渲染异常(多项同时出现选中效果)
 // 理想状态下其实应该是key作为索引项,但官方的renderOption会出现问题，所以就需要value反renderLabel实现
@@ -468,7 +507,7 @@ onMounted(() => {
   firstLoading.value = true
   debounce(() => {
     // 直接刷 极小概率不请求
-    chatStore.syncChat({ uuid: Number(uuid) } as Chat.History, () => {
+    chatStore.syncChat({ uuid: Number(uuid) } as Chat.History, undefined, () => {
       firstLoading.value = false
       scrollToBottom()
       if (inputRef.value && !isMobile.value)
@@ -492,7 +531,7 @@ onUnmounted(() => {
       @toggle-using-context="toggleUsingContext"
     />
     <main class="flex-1 overflow-hidden">
-      <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto">
+      <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
         <div
           id="image-wrapper"
           class="w-full max-w-screen-xl m-auto dark:bg-[#101014]"

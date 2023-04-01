@@ -73,12 +73,12 @@ export async function deleteAllChatRooms(userId: string) {
   await chatCol.updateMany({ userId, status: Status.Normal }, { $set: { status: Status.Deleted } })
 }
 
-export async function getChats(roomId: number, lastTime?: number) {
-  if (!lastTime)
-    lastTime = new Date().getTime()
-  const query = { roomId, dateTime: { $lt: lastTime }, status: { $ne: Status.Deleted } }
+export async function getChats(roomId: number, lastId?: number) {
+  if (!lastId)
+    lastId = new Date().getTime()
+  const query = { roomId, uuid: { $lt: lastId }, status: { $ne: Status.Deleted } }
   const sort = { dateTime: -1 }
-  const limit = 200
+  const limit = 20
   const cursor = await chatCol.find(query).sort(sort).limit(limit)
   const chats = []
   await cursor.forEach(doc => chats.push(doc))

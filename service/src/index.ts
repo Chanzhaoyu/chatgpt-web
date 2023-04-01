@@ -93,14 +93,14 @@ router.post('/room-delete', auth, async (req, res) => {
 router.get('/chat-hisroty', auth, async (req, res) => {
   try {
     const userId = req.headers.userId as string
-    const roomId = +req.query.roomid
-    const lastTime = req.query.lasttime as string
+    const roomId = +req.query.roomId
+    const lastId = req.query.lastId as string
     if (!roomId || !await existsChatRoom(userId, roomId)) {
       res.send({ status: 'Success', message: null, data: [] })
       // res.send({ status: 'Fail', message: 'Unknow room', data: null })
       return
     }
-    const chats = await getChats(roomId, !lastTime ? null : parseInt(lastTime))
+    const chats = await getChats(roomId, !isNotEmptyString(lastId) ? null : parseInt(lastId))
 
     const result = []
     chats.forEach((c) => {

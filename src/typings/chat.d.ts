@@ -15,6 +15,8 @@ declare namespace Chat {
 		title: string
 		isEdit: boolean
 		uuid: number
+		loading?: boolean
+		all?: boolean
 	}
 
 	interface ChatState {

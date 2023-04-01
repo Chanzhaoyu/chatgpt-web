@@ -70,8 +70,8 @@ function isActive(uuid: number) {
 </script>
 
 <template>
-  <NSpin :show="loadingRoom">
-    <NScrollbar class="px-4">
+  <NScrollbar class="px-4">
+    <NSpin :show="loadingRoom">
       <div class="flex flex-col gap-2 text-sm">
         <template v-if="!dataSources.length">
           <div class="flex flex-col items-center mt-4 text-center text-neutral-300">
@@ -121,6 +121,6 @@ function isActive(uuid: number) {
           </div>
         </template>
       </div>
-    </NScrollbar>
-  </NSpin>
+    </NSpin>
+  </NScrollbar>
 </template>
