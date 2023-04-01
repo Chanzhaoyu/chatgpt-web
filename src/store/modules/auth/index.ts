@@ -53,12 +53,12 @@ export const useAuthStore = defineStore('auth-store', {
       setToken(token)
     },
 
-    removeToken() {
+    async removeToken() {
       this.token = undefined
       const userStore = useUserStore()
       userStore.resetUserInfo()
       const chatStore = useChatStore()
-      chatStore.clearLocalChat()
+      await chatStore.clearLocalChat()
       removeToken()
     },
   },

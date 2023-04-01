@@ -28,10 +28,8 @@ function http<T = any>(
     if (res.data.status === 'Success' || typeof res.data === 'string')
       return res.data
 
-    if (res.data.status === 'Unauthorized') {
+    if (res.data.status === 'Unauthorized')
       authStore.removeToken()
-      window.location.reload()
-    }
 
     return Promise.reject(res.data)
   }
