@@ -39,15 +39,21 @@ export const useChatStore = defineStore('chat-store', {
         this.chat.unshift({ uuid: r.uuid, data: [] })
       }
       if (uuid == null) {
-        uuid = Date.now()
-        this.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
+        await this.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
       }
-      this.active = uuid
-      this.reloadRoute(uuid)
+      else {
+        this.active = uuid
+        this.reloadRoute(uuid)
+      }
       callback && callback()
     },
 
     async syncChat(h: Chat.History, callback: () => void) {
+      if (!h.uuid) {
+        callback && callback()
+        return
+      }
+
       const chatIndex = this.chat.findIndex(item => item.uuid === h.uuid)
       if (chatIndex <= -1 || this.chat[chatIndex].data.length <= 0) {
         const chatData = (await fetchGetChatHistory(h.uuid)).data
@@ -61,8 +67,8 @@ export const useChatStore = defineStore('chat-store', {
       this.recordState()
     },
 
-    addHistory(history: Chat.History, chatData: Chat.Chat[] = []) {
-      fetchCreateChatRoom(history.title, history.uuid)
+    async addHistory(history: Chat.History, chatData: Chat.Chat[] = []) {
+      await fetchCreateChatRoom(history.title, history.uuid)
       this.history.unshift(history)
       this.chat.unshift({ uuid: history.uuid, data: chatData })
       this.active = history.uuid
@@ -80,13 +86,12 @@ export const useChatStore = defineStore('chat-store', {
     },
 
     async deleteHistory(index: number) {
-      fetchDeleteChatRoom(this.history[index].uuid)
+      await fetchDeleteChatRoom(this.history[index].uuid)
       this.history.splice(index, 1)
       this.chat.splice(index, 1)
 
       if (this.history.length === 0) {
-        this.active = null
-        this.reloadRoute()
+        await this.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
         return
       }
 
