@@ -6,6 +6,7 @@ export class ConfigState {
   apiModel?: string
   reverseProxy?: string
   socksProxy?: string
+  socksAuth?: string
   httpsProxy?: string
   balance?: number
   siteConfig?: SiteConfig

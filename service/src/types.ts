@@ -28,6 +28,7 @@ export interface ModelConfig {
   reverseProxy?: string
   timeoutMs?: number
   socksProxy?: string
+  socksAuth?: string
   httpsProxy?: string
   allowRegister?: boolean
   balance?: string

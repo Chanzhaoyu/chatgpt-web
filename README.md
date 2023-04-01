@@ -170,6 +170,7 @@ pnpm dev
 - `OPENAI_API_KEY` 和 `OPENAI_ACCESS_TOKEN` 二选一
 - `OPENAI_API_MODEL`  设置模型，可选，默认：`gpt-3.5-turbo`
 - `OPENAI_API_BASE_URL` 设置接口地址，可选，默认：`https://api.openai.com`
+- `OPENAI_API_DISABLE_DEBUG` 设置接口关闭 debug 日志，可选，默认：empty 不关闭
 
 `ACCESS_TOKEN` 可用：
 
@@ -312,6 +313,8 @@ volumes:
 | `API_REVERSE_PROXY`   | 可选，`Web API` 时可用 | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)    |
 | `SOCKS_PROXY_HOST`   | 可选，和 `SOCKS_PROXY_PORT` 一起时生效 | Socks代理    |
 | `SOCKS_PROXY_PORT`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理端口    |
+| `SOCKS_PROXY_USERNAME`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理用户名    |
+| `SOCKS_PROXY_PASSWORD`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理密码    |
 | `HTTPS_PROXY`   | 可选 | HTTPS 代理，支持 http，https, socks5    |
 | `ALL_PROXY`   | 可选 | 所有代理 代理，支持 http，https, socks5    |
 

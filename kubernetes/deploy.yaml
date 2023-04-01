@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatgpt-web
+  labels:
+    app: chatgpt-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chatgpt-web
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: chatgpt-web
+    spec:
+      containers:
+        - image: chenzhaoyu94/chatgpt-web
+          name: chatgpt-web
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3002
+          env:
+            - name: OPENAI_API_KEY
+              value: sk-xxx
+            - name: OPENAI_API_BASE_URL
+              value: 'https://api.openai.com'
+            - name: OPENAI_API_MODEL
+              value: gpt-3.5-turbo
+            - name: API_REVERSE_PROXY
+              value: https://bypass.duti.tech/api/conversation
+            - name: AUTH_SECRET_KEY
+              value: '123456'
+            - name: TIMEOUT_MS
+              value: '60000'
+            - name: SOCKS_PROXY_HOST
+              value: ''
+            - name: SOCKS_PROXY_PORT
+              value: ''
+            - name: HTTPS_PROXY
+              value: ''
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+            requests:
+              cpu: 300m
+              memory: 300Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: chatgpt-web
+  name: chatgpt-web
+spec:
+  ports:
+    - name: chatgpt-web
+      port: 3002
+      protocol: TCP
+      targetPort: 3002
+  selector:
+    app: chatgpt-web
+  type: ClusterIP
