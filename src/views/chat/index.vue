@@ -513,7 +513,7 @@ onMounted(() => {
       if (inputRef.value && !isMobile.value)
         inputRef.value?.focus()
     })
-  }, 100)()
+  }, 200)()
 })
 
 onUnmounted(() => {
