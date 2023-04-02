@@ -139,7 +139,7 @@ async function fetchBalance() {
 
   const API_BASE_URL = isNotEmptyString(OPENAI_API_BASE_URL)
     ? OPENAI_API_BASE_URL
-    : 'https://api.openai.com';
+    : 'https://api.openai.com'
 
   // 设置API请求URL和请求头
   const urlSubscription = `${API_BASE_URL}/v1/dashboard/billing/subscription`; // 查是否订阅
