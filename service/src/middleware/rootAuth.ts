@@ -1,7 +1,10 @@
 import jwt from 'jsonwebtoken'
+import * as dotenv from 'dotenv'
 import { Status } from '../storage/model'
 import { getUserById } from '../storage/mongo'
 import { getCacheConfig } from '../storage/config'
+
+dotenv.config()
 
 const rootAuth = async (req, res, next) => {
   const config = await getCacheConfig()

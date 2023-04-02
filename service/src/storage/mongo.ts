@@ -1,6 +1,9 @@
 import { MongoClient, ObjectId } from 'mongodb'
+import * as dotenv from 'dotenv'
 import { ChatInfo, ChatRoom, Status, UserInfo } from './model'
 import type { ChatOptions, Config } from './model'
+
+dotenv.config()
 
 const url = process.env.MONGODB_URL
 const client = new MongoClient(url)

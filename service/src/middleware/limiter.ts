@@ -1,5 +1,8 @@
 import { rateLimit } from 'express-rate-limit'
+import * as dotenv from 'dotenv'
 import { isNotEmptyString } from '../utils/is'
+
+dotenv.config()
 
 const MAX_REQUEST_PER_HOUR = process.env.MAX_REQUEST_PER_HOUR
 
