@@ -187,15 +187,6 @@ function formatDate(date) {
 }
 
 async function chatConfig() {
-  const config = await getOriginConfig() as ModelConfig
-  config.balance = await fetchBalance()
-  return sendResponse<ModelConfig>({
-    type: 'Success',
-    data: config,
-  })
-}
-
-async function chatConfig() {
   const balance = await fetchBalance()
   const reverseProxy = process.env.API_REVERSE_PROXY ?? '-'
   const httpsProxy = (process.env.HTTPS_PROXY || process.env.ALL_PROXY) ?? '-'
