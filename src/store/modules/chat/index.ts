@@ -57,7 +57,10 @@ export const useChatStore = defineStore('chat-store', {
       }
       const hisroty = this.history.filter(item => item.uuid === h.uuid)[0]
       if (hisroty === undefined || hisroty.loading || hisroty.all) {
-        // callback && callback()
+        if (lastId === undefined) {
+          // 加载更多不回调 避免加载概率消失
+          callback && callback()
+        }
         if (hisroty?.all ?? false)
           callbackForEmptyMessage && callbackForEmptyMessage()
         return
