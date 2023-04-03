@@ -75,11 +75,13 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
       accessToken: process.env.OPENAI_ACCESS_TOKEN,
       debug: !disableDebug,
     }
+
     if (isNotEmptyString(OPENAI_API_MODEL))
       options.model = OPENAI_API_MODEL
 
-    if (isNotEmptyString(process.env.API_REVERSE_PROXY))
-      options.apiReverseProxyUrl = process.env.API_REVERSE_PROXY
+    options.apiReverseProxyUrl = isNotEmptyString(process.env.API_REVERSE_PROXY)
+      ? process.env.API_REVERSE_PROXY
+      : 'https://bypass.churchless.tech/api/conversation'
 
     setupProxy(options)
 
