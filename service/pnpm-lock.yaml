@@ -5,8 +5,8 @@ dependencies:
     specifier: ^1.3.4
     version: 1.3.4
   chatgpt:
-    specifier: ^5.1.2
-    version: 5.1.2
+    specifier: ^5.2.2
+    version: 5.2.2
   dotenv:
     specifier: ^16.0.3
     version: 16.0.3
@@ -684,10 +684,8 @@ packages:
       - supports-color
     dev: false
 
-  /ajv-formats@2.1.1(ajv@8.12.0):
+  /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependencies:
-      ajv: ^8.0.0
     peerDependenciesMeta:
       ajv:
         optional: true
@@ -939,15 +937,15 @@ packages:
     resolution: {integrity: sha512-mKKUkUbhPpQlCOfIuZkvSEgktjPFIsZKRRbC6KWVEMvlzblj3i3asQv5ODsrwt0N3pHAEvjP8KTQPHkp0+6jOg==}
     dev: true
 
-  /chatgpt@5.1.2:
-    resolution: {integrity: sha512-b/NnDQHDOpouK+gmhUCKcKuvnKEh+DotwXlP6Qgw1mqmkcfVl9Wt3/3noT8jbGJpMEpFOfzexXn5Rehpea1N0w==}
+  /chatgpt@5.2.2:
+    resolution: {integrity: sha512-6HVueHj7ghJtcsBHi8CfXCC5fbCXJMc29NSGluTcg/2yLo0Jla3Wm/dlcz3cIb+7KVBKD5b6Qz5bVu8XFEF7Sg==}
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
       '@dqbd/tiktoken': 1.0.2
       cac: 6.7.14
       conf: 11.0.1
-      eventsource-parser: 0.0.5
+      eventsource-parser: 1.0.0
       keyv: 4.5.2
       p-timeout: 6.1.1
       quick-lru: 6.1.1
@@ -1022,7 +1020,7 @@ packages:
     engines: {node: '>=14.16'}
     dependencies:
       ajv: 8.12.0
-      ajv-formats: 2.1.1(ajv@8.12.0)
+      ajv-formats: 2.1.1
       atomically: 2.0.1
       debounce-fn: 5.1.2
       dot-prop: 7.2.0
@@ -1739,9 +1737,9 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
-  /eventsource-parser@0.0.5:
-    resolution: {integrity: sha512-BAq82bC3ZW9fPYYZlofXBOAfbpmDzXIOsj+GOehQwgTUYsQZ6HtHs6zuRtge7Ph8OhS6lNH1kJF8q9dj17RcmA==}
-    engines: {node: '>=12'}
+  /eventsource-parser@1.0.0:
+    resolution: {integrity: sha512-9jgfSCa3dmEme2ES3mPByGXfgZ87VbP97tng1G2nWwWx6bV2nYxm2AWCrbQjXToSe+yYlqaZNtxffR9IeQr95g==}
+    engines: {node: '>=14.18'}
     dev: false
 
   /execa@5.1.1:
