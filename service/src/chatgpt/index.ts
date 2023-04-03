@@ -44,7 +44,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 
     const options: ChatGPTAPIOptions = {
       apiKey: process.env.OPENAI_API_KEY,
-      completionParams: { model },
+      completionParams: { model, temperature: 1 },
       debug: !disableDebug,
     }
 
@@ -98,6 +98,8 @@ async function chatReplyProcess(options: RequestOptions) {
     if (apiModel === 'ChatGPTAPI') {
       if (isNotEmptyString(systemMessage))
         options.systemMessage = systemMessage
+      else
+        options.systemMessage = ' '
     }
 
     if (lastContext != null) {

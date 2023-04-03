@@ -12,6 +12,7 @@ export function useChat() {
   }
 
   const updateChat = (uuid: number, index: number, chat: Chat.Chat) => {
+    // console.log(uuid, index, chat)
     chatStore.updateChatByUuid(uuid, index, chat)
   }
 
