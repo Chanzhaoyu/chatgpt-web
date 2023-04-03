@@ -15,7 +15,7 @@ export interface UserState {
 export function defaultSetting(): UserState {
   return {
     userInfo: {
-      avatar: 'https://blog.801100.tk/upload/2022/05/favicon-bak.ico',
+      avatar: 'https://blog.801100.tk/upload/favicon-bak.ico',
       name: 'Lee Studio',
       description: ' <a href="https://blog.801100.tk" class="text-blue-500" target="_blank" >Lee Blog</a>',
     },
