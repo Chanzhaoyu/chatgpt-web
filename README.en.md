@@ -8,6 +8,18 @@
 
 > Disclaimer: This project is only released on GitHub, under the MIT License, free and for open-source learning purposes. There will be no account selling, paid services, discussion groups, or forums. Beware of fraud.
 
+### Modifications to the original project:
+* add system message support for each chat
+* add local usingContext button instead of a global one
+
+### What it enables
+* set up different contexts/roles for each chat by setting system messages individually
+* enable one-shot conversations by turning off the usingContext button (dictionaries, translators, etc.)
+
+# Original README.md below
+
+---
+
 ![cover](./docs/c1.png)
 ![cover2](./docs/c2.png)
 
