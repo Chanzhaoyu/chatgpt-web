@@ -69,6 +69,11 @@ export default {
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
     balance: 'API Balance',
+		speechSetting: '語音設置',
+		speakLang: '語言',
+		speakSound: '聲音',
+		pitch: '音調',
+		rate: '語速',
   },
   store: {
     siderButton: 'Prompt Store',

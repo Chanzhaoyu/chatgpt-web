@@ -1,8 +1,10 @@
 import { ss } from '@/utils/storage'
 
 const LOCAL_NAME = 'SpeechConfig'
+const enableSpeech = import.meta.env.VITE_ENABLE_SPEECH === 'true'
 
 export interface SpeechConfig {
+  enable?: boolean
   showTip: boolean
 
   autoSpeak?: boolean
@@ -18,6 +20,7 @@ export interface SpeechConfig {
 
 export function defaultState(): SpeechConfig {
   return {
+    enable: enableSpeech,
     showTip: true,
     autoSpeak: false,
     speechSetting: {
@@ -29,13 +32,21 @@ export function defaultState(): SpeechConfig {
 }
 
 export function getLocalState(): SpeechConfig {
+  const defaultConfig = defaultState()
   const localState = ss.get(LOCAL_NAME)
-  return { ...defaultState(), ...localState }
+  return {
+    ...defaultConfig,
+    ...localState,
+    speechSetting: {
+      ...defaultConfig.speechSetting,
+      ...localState.speechSetting,
+    },
+  }
 }
 
 export function setLocalState(state?: SpeechConfig) {
   const defaultConfig = defaultState()
-  const { autoSpeak: _autoSpeak, ...other } = state || {}
+  const { enable: _enable, autoSpeak: _autoSpeak, ...other } = state || {}
   const { voice: _voice, ...otherSpeechSetting } = state?.speechSetting || {}
   const newData: SpeechConfig = {
     ...defaultConfig,
