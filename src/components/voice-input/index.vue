@@ -1,17 +1,13 @@
 <script setup lang='ts'>
-/**
- * @desc 灵感来源 https://www.bilibili.com/video/BV12P411K7gc
- */
 import { computed, onUnmounted, ref } from 'vue'
 import { NAlert, NDescriptions, NDescriptionsItem, NModal, useDialog, useMessage } from 'naive-ui'
-import { commandType, deleteLast, emptySentences, getCmdKey, getLanguage, logger, replaceSymbol } from './utils'
+import { commandType, deleteLast, emptySentences, getCmdKey, getLanguage, logger, replaceSymbol, tips } from './utils'
+import { useSpeechObject } from './speech-object'
 import { HoverButton, SvgIcon } from '@/components/common'
-import { ss } from '@/utils/storage'
+import { useSpeechStore } from '@/store/modules/speech'
 const props = defineProps<Props>()
 
 const emit = defineEmits<Emit>()
-
-const storageKey = 'voiceInputTip'
 
 interface Props {
   isLoading: boolean
@@ -23,28 +19,21 @@ interface Emit {
   (ev: 'submit'): void
 }
 
+const speechStore = useSpeechStore()
 const enableVoice = ref(false)
 const isShowModal = ref(false)
-const voiceIcon = computed(() => enableVoice.value ? 'ic:round-record-voice-over' : 'material-symbols:voice-over-off')
+const voiceIcon = computed(() => enableVoice.value ? 'material-symbols:auto-detect-voice-outline' : 'ic:round-keyboard-voice')
 const sentences = ref<string[]>([])
 const language = ref('zh-CN')
 const showTip = ref(false)
 const dialog = useDialog()
-const tips = [
-  { label: '删除', value: '当说出"删除"，"回退"，"delete"等指令时，会删除最近的一句话' },
-  { label: '清空', value: '当说出"清除"，"清空"，"clean"等指令时，会清空整个输入框' },
-  { label: '重置', value: '当说出"清除"，"重置"等指令时，相当于右上角的删除按钮' },
-  { label: '提交', value: '当说出"发送"，"起飞"，"發送"，"send"等指令时，会发送输入框的内容' },
-  { label: '停止', value: '当说出"停止语音"，"关闭语音"，"stop"等指令时，会删除最近的一句话' },
-  { label: '标点符号', value: '当说出"逗号"，"问号"，"回车"，"空格"，"感叹号"，"句号"等指令时，会用标点符号代替文字输出' },
-  { label: '切换语言模式', value: '支持切换输入的语言模式，当前支持："切换中文"，"切换英文"，"切换粤语"，"切换潮汕话"，"switch chinese"， "switch english", ' },
-]
+const { getSpeechObject } = useSpeechObject()
 
 let recognition: any = null
 const message = useMessage()
 
 const showDebugger = (...msg: string[]) => {
-  if (location.search?.includes('debugger')) {
+  if (location.search?.includes('debugger') || import.meta.env.DEV) {
     dialog.error({
       title: '错误',
       content: msg.join('<br/>'),
@@ -56,22 +45,24 @@ const changeEnableVoice = () => {
   enableVoice.value = !enableVoice.value
 
   if (enableVoice.value) {
-    if (isShowModal.value || ss.get(storageKey)?.noShow)
+    if (isShowModal.value || !speechStore.showTip)
       startRecording()
-		 else
+    else
       showTip.value = true
   }
   else {
     stopRecording()
   }
 }
-const initRecognition = () => {
-  if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+const initRecognition = async () => {
+  const { SpeechRecognition } = await getSpeechObject()
+  if (!SpeechRecognition) {
     message.warning('当前浏览器不支持语音功能！')
     return
   }
 
-  recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)()
+  recognition = new SpeechRecognition()
+  // recognition = new NativeSpeechRecognition()
   recognition.interimResults = true // 开启实时识别
   recognition.continuous = true
   recognition.onstart = () => logger('init recognition')
@@ -86,9 +77,9 @@ const initRecognition = () => {
 
   handleRecognitionResult()
 }
-const startRecording = () => {
+const startRecording = async () => {
   if (!recognition)
-    initRecognition()
+    await initRecognition()
 
   if (recognition) {
     sentences.value = [] // 清空已有的句子
@@ -102,7 +93,8 @@ const stopRecording = () => {
   sentences.value = []
   if (!recognition)
     return
-  recognition.stop() // 停止录音
+  // recognition.stop() // 停止录音
+  recognition.abort() // 停止录音
   recognition.onstart = null
   recognition.onerror = null
   recognition.onend = null
@@ -115,9 +107,12 @@ const stopRecording = () => {
 const handleRecognitionResult = () => {
   recognition.onresult = (event: any) => {
     // event.resultIndex 是系统判断的完成句子，停顿比较就就会切换到下一句
-    const resultIndex = event.resultIndex
-    const resultItem = event.results?.[event.resultIndex]
-    const interimTranscript = (resultItem?.[0]?.transcript || '').trim()
+    const resultIndex = event.resultIndex === undefined ? event.results.length - 1 : event.resultIndex
+    const resultItem = event.results?.[resultIndex]
+    const interimTranscript = (resultItem?.[0]?.transcript || '')
+      .replace(/[&/\\#,+()!$~%.'":*?<>{}]/g, '')
+      .replace(/[。]/g, '')
+      .replace(/  +/g, ' ')
 
     let resStr = replaceSymbol(interimTranscript)
     const { cmdKey, str: newStr = resStr } = getCmdKey(resStr) || {}
@@ -126,7 +121,7 @@ const handleRecognitionResult = () => {
     // 最新的一句 resultIndex 不变
     sentences.value.splice(resultIndex, 1, resStr)
     emit('onChange', sentences.value)
-    logger(`当前第[${resultIndex}]句，记录${sentences.value.length}句，cmdKey: ${cmdKey}, isFinal:${resultItem.isFinal}`, resStr)
+    logger(`当前第[${resultIndex}]句，记录${sentences.value.length}句，cmdKey: ${cmdKey}, isFinal:${resultItem?.isFinal}`, resStr)
 
     switch (cmdKey) {
       case commandType.clear:
@@ -167,7 +162,7 @@ const switchLang = (lang?: string) => {
 }
 
 const onNegativeClick = () => {
-  ss.set(storageKey, { noShow: true })
+  speechStore.updateStore({ showTip: false })
   showTip.value = false
   isShowModal.value = true
   startRecording()

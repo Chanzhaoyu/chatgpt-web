@@ -146,5 +146,15 @@ export const emptySentences = (arr: Ref<string[]>) => {
 }
 export const logger = (...msg: string[]) => {
   // eslint-disable-next-line no-console
-  console.log('*** zaimoe', ...msg)
+  console.log('*** speech', ...msg)
 }
+
+export const tips = [
+  { label: '删除', value: '当说出"删除"，"回退"，"delete"等指令时，会删除最近的一句话' },
+  { label: '清空', value: '当说出"清除"，"清空"，"clean"等指令时，会清空整个输入框' },
+  { label: '重置', value: '当说出"清除"，"重置"等指令时，相当于右上角的删除按钮' },
+  { label: '提交', value: '当说出"发送"，"起飞"，"發送"，"send"等指令时，会发送输入框的内容' },
+  { label: '停止', value: '当说出"停止语音"，"关闭语音"，"stop"等指令时，会删除最近的一句话' },
+  { label: '标点符号', value: '当说出"逗号"，"问号"，"回车"，"空格"，"感叹号"，"句号"等指令时，会用标点符号代替文字输出' },
+  { label: '切换语言模式', value: '支持切换输入的语言模式，当前支持："切换中文"，"切换英文"，"切换粤语"，"切换潮汕话"，"switch chinese"， "switch english", ' },
+]

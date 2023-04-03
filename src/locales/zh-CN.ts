@@ -69,6 +69,11 @@ export default {
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
     balance: 'API余额',
+    speechSetting: '语音设置',
+    speakLang: '语言',
+    speakSound: '声音',
+    pitch: '音调',
+    rate: '语速',
   },
   store: {
     siderButton: '提示词商店',

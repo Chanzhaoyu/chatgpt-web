@@ -5,4 +5,9 @@ interface Window {
   $notification?: import('naive-ui').NotificationProviderInst;
 	SpeechRecognition: any;
 	webkitSpeechRecognition: any;
+	mozSpeechRecognition: any;
+	msSpeechRecognition: any;
+	oSpeechRecognition: any;
 }
+
+declare module 'web-speech-cognitive-services'

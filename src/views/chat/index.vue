@@ -17,6 +17,7 @@ import { useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
 import VoiceInput from '@/components/voice-input/index.vue'
+import AutoSpeak from '@/components/voice-output/auto-speak.vue'
 
 let controller = new AbortController()
 
@@ -461,9 +462,8 @@ const handleVoiceChange = (v: string[]) => {
 const handleReset = () => chatStore.clearChatByUuid(+uuid)
 
 const handleVoiceSubmit = () => {
-	if (!loading.value) {
-		handleSubmit()
-	}
+  if (!loading.value)
+    handleSubmit()
 }
 
 onMounted(() => {
@@ -545,6 +545,7 @@ onUnmounted(() => {
               <SvgIcon icon="ri:chat-history-line" />
             </span>
           </HoverButton>
+          <AutoSpeak />
           <VoiceInput :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
           <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
             <template #default="{ handleInput, handleBlur, handleFocus }">

@@ -49,3 +49,9 @@ export function fetchVerify<T>(token: string) {
     data: { token },
   })
 }
+
+export function fetchAzureToken<T>() {
+  return post<T>({
+    url: '/get-azure-token',
+  })
+}
