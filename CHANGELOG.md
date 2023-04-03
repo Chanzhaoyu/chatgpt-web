@@ -1,3 +1,33 @@
+## v2.10.9
+
+`2023-04-03`
+
+> 更新默认 `accessToken` 反代地址为 [[acheong08](https://github.com/acheong08)] 的 `https://bypass.churchless.tech/api/conversation`
+
+## Enhancement
+- 添加 `socks5` 代理认证 [[yimiaoxiehou](https://github.com/Chanzhaoyu/chatgpt-web/pull/999)]
+- 添加 `socks` 代理用户名密码的配置 [[hank-cp](https://github.com/Chanzhaoyu/chatgpt-web/pull/890)]
+- 添加可选日志打印 [[zcong1993](https://github.com/Chanzhaoyu/chatgpt-web/pull/1041)]
+- 更新侧边栏按钮本地化[[simonwu53](https://github.com/Chanzhaoyu/chatgpt-web/pull/911)]
+- 优化代码块滚动条高度 [[Fog3211](https://github.com/Chanzhaoyu/chatgpt-web/pull/1153)]
+## BugFix
+- 修复 `PWA` 问题 [[bingo235](https://github.com/Chanzhaoyu/chatgpt-web/pull/807)]
+- 修复 `ESM` 错误 [[kidonng](https://github.com/Chanzhaoyu/chatgpt-web/pull/826)]
+- 修复反向代理开启时限流失效的问题 [[gitgitgogogo](https://github.com/Chanzhaoyu/chatgpt-web/pull/863)]
+- 修复 `docker` 构建时 `.env` 可能被忽略的问题 [[zaiMoe](https://github.com/Chanzhaoyu/chatgpt-web/pull/877)]
+- 修复导出异常错误 [[KingTwinkle](https://github.com/Chanzhaoyu/chatgpt-web/pull/938)]
+- 修复空值异常 [[vchenpeng](https://github.com/Chanzhaoyu/chatgpt-web/pull/1103)]
+- 移动端上的体验问题
+
+## Other
+- `Docker` 容器名字名义 [[LOVECHEN](https://github.com/Chanzhaoyu/chatgpt-web/pull/1035)]
+- `kubernetes` 部署配置 [[CaoYunzhou](https://github.com/Chanzhaoyu/chatgpt-web/pull/1001)]
+- 感谢 [[assassinliujie](https://github.com/Chanzhaoyu/chatgpt-web/pull/962)] 和 [[puppywang](https://github.com/Chanzhaoyu/chatgpt-web/pull/1017)] 的某些贡献
+- 更新 `kubernetes/deploy.yaml` [[idawnwon](https://github.com/Chanzhaoyu/chatgpt-web/pull/1085)]
+- 文档更新 [[#yi-ge](https://github.com/Chanzhaoyu/chatgpt-web/pull/883)]
+- 文档更新 [[weifeng12x](https://github.com/Chanzhaoyu/chatgpt-web/pull/880)]
+- 依赖更新
+
 ## v2.10.8
 
 `2023-03-23`
