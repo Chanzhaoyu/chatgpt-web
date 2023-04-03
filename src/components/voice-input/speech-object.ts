@@ -91,7 +91,7 @@ export const useSpeechObject = () => {
       if (sameLangVoices.length && sameNameVoices.length) {
         return {
           lang: item.lang,
-          label: item.lang,
+          label: item.label,
           voices: sameNameVoices,
           source: sameNameVoices.reduce((prev, cur) => {
             prev[cur.value] = findEqualVoice(item.lang, cur.value, sameLangVoices) as SpeechSynthesisVoice
