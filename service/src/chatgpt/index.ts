@@ -5,12 +5,11 @@ import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import httpsProxyAgent from 'https-proxy-agent'
 import fetch from 'node-fetch'
-import axios from 'axios'
 import { getCacheConfig, getOriginConfig } from '../storage/config'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
-import type { RequestOptions } from './types'
+import type { BalanceResponse, RequestOptions } from './types'
 
 const { HttpsProxyAgent } = httpsProxyAgent
 
@@ -72,11 +71,15 @@ export async function initApi() {
       accessToken: config.accessToken,
       debug: !config.apiDisableDebug,
     }
+
     if (isNotEmptyString(OPENAI_API_MODEL))
       options.model = OPENAI_API_MODEL
 
-    if (isNotEmptyString(config.reverseProxy))
-      options.apiReverseProxyUrl = config.reverseProxy
+    if (isNotEmptyString(config.reverseProxy)) {
+      options.apiReverseProxyUrl = isNotEmptyString(config.reverseProxy)
+        ? config.reverseProxy
+        : 'https://bypass.churchless.tech/api/conversation'
+    }
 
     await setupProxy(options)
 
@@ -122,6 +125,7 @@ async function chatReplyProcess(options: RequestOptions) {
 }
 
 async function fetchBalance() {
+  // 计算起始日期和结束日期
   const config = await getCacheConfig()
   const OPENAI_API_KEY = config.apiKey
   const OPENAI_API_BASE_URL = config.apiBaseUrl
@@ -133,15 +137,36 @@ async function fetchBalance() {
     ? OPENAI_API_BASE_URL
     : 'https://api.openai.com'
 
+  const [startDate, endDate] = formatDate()
+
+  // 每月使用量
+  const urlUsage = `${API_BASE_URL}/v1/dashboard/billing/usage?start_date=${startDate}&end_date=${endDate}`
+
+  const headers = {
+    'Authorization': `Bearer ${OPENAI_API_KEY}`,
+    'Content-Type': 'application/json',
+  }
+
   try {
-    const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENAI_API_KEY}` }
-    const response = await axios.get(`${API_BASE_URL}/dashboard/billing/credit_grants`, { headers })
-    const balance = response.data.total_available ?? 0
-    return Promise.resolve(balance.toFixed(3))
+    // 获取已使用量
+    const useResponse = await fetch(urlUsage, { headers })
+    const usageData = await useResponse.json() as BalanceResponse
+    const usage = Math.round(usageData.total_usage) / 100
+    return Promise.resolve(usage ? `$${usage}` : '-')
   }
   catch {
     return Promise.resolve('-')
   }
+}
+
+function formatDate(): string[] {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = today.getMonth() + 1
+  const lastDay = new Date(year, month, 0)
+  const formattedFirstDay = `${year}-${month.toString().padStart(2, '0')}-01`
+  const formattedLastDay = `${year}-${month.toString().padStart(2, '0')}-${lastDay.getDate().toString().padStart(2, '0')}`
+  return [formattedFirstDay, formattedLastDay]
 }
 
 async function chatConfig() {

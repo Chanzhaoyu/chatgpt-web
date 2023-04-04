@@ -36,7 +36,7 @@ export default {
   },
   chat: {
     newChatButton: '新建對話',
-    placeholder: '來說點什麼...（Shift + Enter = 換行）',
+    placeholder: '來說點什麼...（Shift + Enter = 換行，"/" 觸發提示詞）',
     placeholderMobile: '來說點什麼...',
     copy: '複製',
     copied: '複製成功',
@@ -94,6 +94,7 @@ export default {
     loginEnabled: '注册登录',
     loginSalt: '登录混淆盐',
     loginSaltTip: '变更会导致所有已登录失效',
+    monthlyUsage: '本月使用量',
   },
   store: {
     siderButton: '提示詞商店',

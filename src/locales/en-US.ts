@@ -36,7 +36,7 @@ export default {
   },
   chat: {
     newChatButton: 'New Chat',
-    placeholder: 'Ask me anything...(Shift + Enter = line break)',
+    placeholder: 'Ask me anything...(Shift + Enter = line break, "/" to trigger prompts)',
     placeholderMobile: 'Ask me anything...',
     copy: 'Copy',
     copied: 'Copied',
@@ -94,6 +94,7 @@ export default {
     loginEnabled: 'Login Enabled',
     loginSalt: 'Login Salt',
     loginSaltTip: 'Changes will invalidate all logged in',
+    monthlyUsage: 'Monthly Usage',
   },
   store: {
     siderButton: 'Prompt Store',
