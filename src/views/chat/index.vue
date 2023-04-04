@@ -482,6 +482,21 @@ onUnmounted(() => {
           :class="[isMobile ? 'p-2' : 'p-4']"
         >
           <template v-if="!dataSources.length">
+            <div class="flex items-center flex-col justify-center mt-4 text-center ">
+              <!-- 在这里添加您要插入的HTML内容 -->
+              <div class="flex items-center flex-col justify-center mt-4 text-center ">
+                <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
+                <div>永久免费提供学习和测试，支持上下文，支持开启关闭联网模式，支持保存会话，切勿发布至国内平台或微信分享</div>
+                <div>cloudflare托管镜像:chatbot.rayboard.tk</div>
+                <div />
+                <div>如果你觉得做的好，可以给我买一瓶冰阔落</div>
+                <div>
+                  <img src="@/assets/kele.jpeg" width="200" height="100" alt="kele">
+                </div>
+              </div>
+            </div>
+
+            <!-- 在这里结束插入的HTML内容 -->
             <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
               <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
               <span>Aha~</span>
