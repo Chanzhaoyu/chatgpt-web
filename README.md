@@ -240,7 +240,7 @@ services:
 
 **nginx**
 
-将下面配置填入nginx配置文件中
+将下面配置填入nginx配置文件中，可以参考 `docker-compose/nginx/nginx.conf` 文件中添加反爬虫的方法
 
 ```
     # 防止爬虫抓取
