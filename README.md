@@ -195,9 +195,14 @@ docker run --name chatgpt-web -d -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=you
 http://localhost:3002/
 ```
 
+#### Docker 运行
+
+# 后台运行
+docker run --name chatgpt-web -d -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key 1154761334/chenbotchen:latest
+
 #### Docker compose
 
-[Hub 地址](https://hub.docker.com/repository/docker/chenzhaoyu94/chatgpt-web/general)
+[Hub 地址](https://hub.docker.com/repository/docker/1154761334/chenbotchen/general)
 
 ```yml
 version: '3'
