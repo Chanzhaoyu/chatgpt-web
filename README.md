@@ -196,10 +196,10 @@ http://localhost:3002/
 ```
 
 #### Docker 运行
-
+```bash
 # 后台运行
-docker run --name chatgpt-web -d -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key 1154761334/chenbotchen:latest
-
+docker run --name chatgpt-web -d -p 127.0.0.1:3002:3002 --e OPENAI_API_KEY=your_api_key -e AUTH_SECRET_KEY=your_auth_key -e API_REVERSE_PROXY=https://api.pawan.krd/backend-api/conversation 1154761334/chenbotchen:latest
+```
 #### Docker compose
 
 [Hub 地址](https://hub.docker.com/repository/docker/1154761334/chenbotchen/general)
