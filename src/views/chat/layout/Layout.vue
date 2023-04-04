@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { NLayout, NLayoutContent } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import Sider from './sider/index.vue'
+import RightSider from './rightSider/index.vue'
 import Permission from './Permission.vue'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAppStore, useAuthStore, useChatStore } from '@/store'
@@ -36,8 +37,8 @@ const getContainerClass = computed(() => {
 
 <template>
   <div class="h-full dark:bg-[#24272e] transition-all" :class="[isMobile ? 'p-0' : 'p-4']">
-    <div class="h-full overflow-hidden" :class="getMobileClass">
-      <NLayout class="z-40 transition" :class="getContainerClass" has-sider>
+    <div class="h-full overflow-hidden flex" :class="getMobileClass">
+      <NLayout class="z-40 transition xt-layout" :class="getContainerClass" has-sider>
         <Sider />
         <NLayoutContent class="h-full">
           <RouterView v-slot="{ Component, route }">
@@ -45,7 +46,14 @@ const getContainerClass = computed(() => {
           </RouterView>
         </NLayoutContent>
       </NLayout>
+      <RightSider />
     </div>
     <Permission :visible="needPermission" />
   </div>
 </template>
+
+<style lang="less" scoped>
+.xt-layout {
+  border-right: 1px solid #e5e7eb;
+}
+</style>

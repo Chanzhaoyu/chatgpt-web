@@ -5,6 +5,10 @@ export interface RequestOptions {
   lastContext?: { conversationId?: string; parentMessageId?: string }
   process?: (chat: ChatMessage) => void
   systemMessage?: string
+  completionParams?: {
+    model: string
+    stop?: string[]
+  }
 }
 
 export interface BalanceResponse {

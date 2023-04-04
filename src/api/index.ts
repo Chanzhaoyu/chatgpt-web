@@ -8,7 +8,7 @@ export function fetchChatAPI<T = any>(
   signal?: GenericAbortSignal,
 ) {
   return post<T>({
-    url: '/chat',
+    url: '/api/chat',
     data: { prompt, options },
     signal,
   })
@@ -16,7 +16,7 @@ export function fetchChatAPI<T = any>(
 
 export function fetchChatConfig<T = any>() {
   return post<T>({
-    url: '/config',
+    url: '/api/config',
   })
 }
 
@@ -24,14 +24,20 @@ export function fetchChatAPIProcess<T = any>(
   params: {
     prompt: string
     options?: { conversationId?: string; parentMessageId?: string }
+    completionParams?: Chat.CompletionParams
     signal?: GenericAbortSignal
     onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
 ) {
   const settingStore = useSettingStore()
 
   return post<T>({
-    url: '/chat-process',
-    data: { prompt: params.prompt, options: params.options, systemMessage: settingStore.systemMessage },
+    url: '/api/chat-process',
+    data: {
+      prompt: params.prompt,
+      options: params.options,
+      systemMessage: settingStore.systemMessage,
+      completionParams: params.completionParams,
+    },
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
   })
@@ -39,13 +45,19 @@ export function fetchChatAPIProcess<T = any>(
 
 export function fetchSession<T>() {
   return post<T>({
-    url: '/session',
+    url: '/api/session',
   })
 }
 
 export function fetchVerify<T>(token: string) {
   return post<T>({
-    url: '/verify',
+    url: '/api/verify',
     data: { token },
+  })
+}
+
+export function fetchModels<T>() {
+  return post<T>({
+    url: '/api/models',
   })
 }

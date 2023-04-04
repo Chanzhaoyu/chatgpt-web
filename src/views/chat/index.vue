@@ -68,6 +68,10 @@ async function onConversation() {
   if (!message || message.trim() === '')
     return
 
+  const curCompletionParams = chatStore.getChatCompletionParamsByActive()
+  if (!curCompletionParams)
+    return
+
   controller = new AbortController()
 
   addChat(
@@ -112,6 +116,7 @@ async function onConversation() {
       await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
         options,
+        completionParams: curCompletionParams,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {
           const xhr = event.target
@@ -210,6 +215,10 @@ async function onRegenerate(index: number) {
   if (loading.value)
     return
 
+  const curCompletionParams = chatStore.getChatCompletionParamsByActive()
+  if (!curCompletionParams)
+    return
+
   controller = new AbortController()
 
   const { requestOptions } = dataSources.value[index]
@@ -243,6 +252,7 @@ async function onRegenerate(index: number) {
       await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
         options,
+        completionParams: curCompletionParams,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {
           const xhr = event.target
