@@ -153,9 +153,7 @@ async function chatConfig() {
   const balance = await fetchBalance()
   const reverseProxy = process.env.API_REVERSE_PROXY ?? '-'
   const httpsProxy = (process.env.HTTPS_PROXY || process.env.ALL_PROXY) ?? '-'
-  const socksProxy = (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
-    ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`)
-    : '-'
+  const socksProxy = '-'
   return sendResponse<ModelConfig>({
     type: 'Success',
     data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, balance },
