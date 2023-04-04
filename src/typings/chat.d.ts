@@ -10,6 +10,11 @@ declare namespace Chat {
 		requestOptions: { prompt: string; options?: ConversationRequest | null }
 	}
 
+	interface CompletionParams {
+		model: string
+		stop: string[]
+	}
+
 	interface History {
 		title: string
 		isEdit: boolean
@@ -20,7 +25,7 @@ declare namespace Chat {
 		active: number | null
 		usingContext: boolean;
 		history: History[]
-		chat: { uuid: number; data: Chat[] }[]
+		chat: { uuid: number; data: Chat[], completionParams: CompletionParams }[]
 	}
 
 	interface ConversationRequest {

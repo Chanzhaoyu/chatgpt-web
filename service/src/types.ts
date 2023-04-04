@@ -4,6 +4,10 @@ export interface RequestProps {
   prompt: string
   options?: ChatContext
   systemMessage: string
+  completionParams?: {
+    model: string
+    stop?: string[]
+  }
 }
 
 export interface ChatContext {

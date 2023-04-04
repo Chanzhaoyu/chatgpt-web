@@ -90,7 +90,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 })()
 
 async function chatReplyProcess(options: RequestOptions) {
-  const { message, lastContext, process, systemMessage } = options
+  const { message, lastContext, process, systemMessage, completionParams } = options
   try {
     let options: SendMessageOptions = { timeoutMs }
 
@@ -108,6 +108,7 @@ async function chatReplyProcess(options: RequestOptions) {
 
     const response = await api.sendMessage(message, {
       ...options,
+      completionParams,
       onProgress: (partialResponse) => {
         process?.(partialResponse)
       },
@@ -207,10 +208,39 @@ function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPIOption
   }
 }
 
+async function getModels() {
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+  const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
+
+  if (!isNotEmptyString(OPENAI_API_KEY))
+    return Promise.resolve('-')
+
+  const API_BASE_URL = isNotEmptyString(OPENAI_API_BASE_URL)
+    ? OPENAI_API_BASE_URL
+    : 'https://api.openai.com'
+
+  try {
+    const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENAI_API_KEY}` }
+    const response = await fetch(`${API_BASE_URL}/v1/models`, { headers })
+    const modelsData = await response.json()
+    return sendResponse({
+      type: 'Success',
+      data: (modelsData as any)?.data || [],
+    })
+  }
+  catch {
+    return sendResponse({
+      type: 'Fail',
+      message: '获取失败',
+      data: [],
+    })
+  }
+}
+
 function currentModel(): ApiModel {
   return apiModel
 }
 
 export type { ChatContext, ChatMessage }
 
-export { chatReplyProcess, chatConfig, currentModel }
+export { chatReplyProcess, chatConfig, currentModel, getModels }

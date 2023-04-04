@@ -20,6 +20,11 @@ export const useChatStore = defineStore('chat-store', {
         return state.chat.find(item => item.uuid === state.active)?.data ?? []
       }
     },
+
+    getActiveChat(state: Chat.ChatState) {
+      const chat = state.chat.find(item => item.uuid === state.active)
+      return chat || null
+    },
   },
 
   actions: {
@@ -30,7 +35,7 @@ export const useChatStore = defineStore('chat-store', {
 
     addHistory(history: Chat.History, chatData: Chat.Chat[] = []) {
       this.history.unshift(history)
-      this.chat.unshift({ uuid: history.uuid, data: chatData })
+      this.chat.unshift({ uuid: history.uuid, data: chatData, completionParams: { model: 'gpt-3.5-turbo', stop: [] } })
       this.active = history.uuid
       this.reloadRoute(history.uuid)
     },
@@ -97,7 +102,7 @@ export const useChatStore = defineStore('chat-store', {
         if (this.history.length === 0) {
           const uuid = Date.now()
           this.history.push({ uuid, title: chat.text, isEdit: false })
-          this.chat.push({ uuid, data: [chat] })
+          this.chat.push({ uuid, data: [chat], completionParams: { model: 'gpt-3.5-turbo', stop: [] } })
           this.active = uuid
           this.recordState()
         }
@@ -178,6 +183,44 @@ export const useChatStore = defineStore('chat-store', {
       const index = this.chat.findIndex(item => item.uuid === uuid)
       if (index !== -1) {
         this.chat[index].data = []
+        this.recordState()
+      }
+    },
+
+    getChatCompletionParamsByUuid(uuid: number) {
+      const chat = this.chat.find(item => item.uuid === uuid)
+      return chat?.completionParams || null
+    },
+    getChatCompletionParamsByActive() {
+      if (!this.active)
+        return null
+
+      const completionParams = this.getChatCompletionParamsByUuid(this.active)
+      if (!completionParams)
+        return
+
+      const clone = {
+        ...completionParams,
+      }
+      // stop没填的话就不传，穿了个空数组的话openai会报错
+      if (clone.stop && !clone.stop.length)
+        // @ts-expect-error 已经做过判断了
+        delete clone.stop
+
+      return clone
+    },
+
+    setChatModelByActive(model: string) {
+      const chat = this.chat.find(item => item.uuid === this.active)
+      if (chat) {
+        chat.completionParams.model = model
+        this.recordState()
+      }
+    },
+    setChatStopSequenceByActive(stopSequence: string[]) {
+      const chat = this.chat.find(item => item.uuid === this.active)
+      if (chat) {
+        chat.completionParams.stop = stopSequence
         this.recordState()
       }
     },
