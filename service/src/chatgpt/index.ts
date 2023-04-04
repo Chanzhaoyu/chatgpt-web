@@ -5,6 +5,7 @@ import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import httpsProxyAgent from 'https-proxy-agent'
 import fetch from 'node-fetch'
+import axios from 'axios'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
@@ -149,9 +150,9 @@ async function fetchBalance() {
 
   try {
     // 获取已使用量
-    const useResponse = await fetch(urlUsage, { headers })
-    const usageData = await useResponse.json() as BalanceResponse
-    const usage = Math.round(usageData.total_usage) / 100
+    const useResponse = await axios.get(urlUsage, { headers })
+    const usageData = await useResponse.data.total_usage ?? 0
+    const usage = Math.round(usageData) / 100
     return Promise.resolve(usage ? `$${usage}` : '-')
   }
   catch {
