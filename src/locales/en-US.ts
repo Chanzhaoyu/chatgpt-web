@@ -28,6 +28,7 @@ export default {
     unauthorizedTips: 'Unauthorized, please verify first.',
   },
   chat: {
+    newChatButton: 'New Chat',
     placeholder: 'Ask me anything...(Shift + Enter = line break)',
     placeholderMobile: 'Ask me anything...',
     copy: 'Copy',
@@ -70,6 +71,7 @@ export default {
     balance: 'API Balance',
   },
   store: {
+    siderButton: 'Prompt Store',
     local: 'Local',
     online: 'Online',
     title: 'Title',
@@ -85,5 +87,11 @@ export default {
     importRepeatContent: 'Content is repeatedly skipped: {msg}',
     onlineImportWarning: 'Note: Please check the JSON file source!',
     downloadError: 'Please check the network status and JSON file validity',
+  },
+  systemMessage: {
+    defaultRole: 'Default Role',
+    chatRole: 'Chat Role',
+    reset: 'Reset to default role',
+    inputPrompt: 'Leave empty to use the default role',
   },
 }

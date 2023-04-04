@@ -11,9 +11,10 @@ import { useChat } from './hooks/useChat'
 import { useCopyCode } from './hooks/useCopyCode'
 import { useUsingContext } from './hooks/useUsingContext'
 import HeaderComponent from './components/Header/index.vue'
+import SysMsgPopUp from './layout/SysMsgPopUp.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useChatStore, usePromptStore } from '@/store'
+import { useChatStore, usePromptStore, useSettingStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
 
@@ -26,6 +27,7 @@ const dialog = useDialog()
 const ms = useMessage()
 
 const chatStore = useChatStore()
+const settingStore = useSettingStore()
 
 useCopyCode()
 
@@ -41,6 +43,7 @@ const conversationList = computed(() => dataSources.value.filter(item => (!item.
 
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
+const showSysMsgPopUp = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
 
 // 添加PromptStore
@@ -92,6 +95,9 @@ async function onConversation() {
   if (lastContext && usingContext.value)
     options = { ...lastContext }
 
+  // always add system message to options: either default or customized
+  options.systemMessage = settingStore.currentSystemMessage(+uuid)
+
   addChat(
     +uuid,
     {
@@ -128,10 +134,10 @@ async function onConversation() {
               dataSources.value.length - 1,
               {
                 dateTime: new Date().toLocaleString(),
-                text: lastText + data.text ?? '',
+                text: lastText + (data.text ?? ''),
                 inversion: false,
                 error: false,
-                loading: false,
+                loading: true,
                 conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
                 requestOptions: { prompt: message, options: { ...options } },
               },
@@ -147,10 +153,11 @@ async function onConversation() {
             scrollToBottomIfAtBottom()
           }
           catch (error) {
-          //
+            //
           }
         },
       })
+      updateChatSome(+uuid, dataSources.value.length - 1, { loading: false })
     }
 
     await fetchChatAPIOnce()
@@ -220,6 +227,9 @@ async function onRegenerate(index: number) {
   if (requestOptions.options)
     options = { ...requestOptions.options }
 
+  // always add system message to options: either default or customized
+  options.systemMessage = settingStore.currentSystemMessage(+uuid)
+
   loading.value = true
 
   updateChat(
@@ -258,10 +268,10 @@ async function onRegenerate(index: number) {
               index,
               {
                 dateTime: new Date().toLocaleString(),
-                text: lastText + data.text ?? '',
+                text: lastText + (data.text ?? ''),
                 inversion: false,
                 error: false,
-                loading: false,
+                loading: true,
                 conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
                 requestOptions: { prompt: message, ...options },
               },
@@ -279,6 +289,7 @@ async function onRegenerate(index: number) {
           }
         },
       })
+      updateChatSome(+uuid, index, { loading: false })
     }
     await fetchChatAPIOnce()
   }
@@ -313,6 +324,10 @@ async function onRegenerate(index: number) {
   finally {
     loading.value = false
   }
+}
+
+function handleSetSysMsg() {
+  showSysMsgPopUp.value = true
 }
 
 function handleExport() {
@@ -454,7 +469,7 @@ const footerClass = computed(() => {
 
 onMounted(() => {
   scrollToBottom()
-  if (inputRef.value)
+  if (inputRef.value && !isMobile.value)
     inputRef.value?.focus()
 })
 
@@ -473,11 +488,7 @@ onUnmounted(() => {
       @toggle-using-context="toggleUsingContext"
     />
     <main class="flex-1 overflow-hidden">
-      <div
-        id="scrollRef"
-        ref="scrollRef"
-        class="h-full overflow-hidden overflow-y-auto"
-      >
+      <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto">
         <div
           id="image-wrapper"
           class="w-full max-w-screen-xl m-auto dark:bg-[#101014]"
@@ -533,6 +544,11 @@ onUnmounted(() => {
               <SvgIcon icon="ri:chat-history-line" />
             </span>
           </HoverButton>
+          <HoverButton @click="handleSetSysMsg">
+            <span class="text-xl text-[#4f555e] dark:text-white">
+              <SvgIcon icon="ri:command-line" />
+            </span>
+          </HoverButton>
           <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
             <template #default="{ handleInput, handleBlur, handleFocus }">
               <NInput
@@ -559,4 +575,5 @@ onUnmounted(() => {
       </div>
     </footer>
   </div>
+  <SysMsgPopUp v-model:visible="showSysMsgPopUp" v-model:uuid="uuid" />
 </template>

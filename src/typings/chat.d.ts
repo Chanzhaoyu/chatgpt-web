@@ -18,7 +18,7 @@ declare namespace Chat {
 
 	interface ChatState {
 		active: number | null
-		usingContext: boolean;
+		usingContext: { uuid: number; context: boolean }[]
 		history: History[]
 		chat: { uuid: number; data: Chat[] }[]
 	}
@@ -26,6 +26,7 @@ declare namespace Chat {
 	interface ConversationRequest {
 		conversationId?: string
 		parentMessageId?: string
+        systemMessage?: string
 	}
 
 	interface ConversationResponse {

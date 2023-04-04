@@ -28,6 +28,7 @@ export default {
     unauthorizedTips: '未经授权，请先进行验证。',
   },
   chat: {
+    newChatButton: '新建聊天',
     placeholder: '来说点什么吧...（Shift + Enter = 换行）',
     placeholderMobile: '来说点什么...',
     copy: '复制',
@@ -70,6 +71,7 @@ export default {
     balance: 'API余额',
   },
   store: {
+    siderButton: '提示词商店',
     local: '本地',
     online: '在线',
     title: '标题',
@@ -85,5 +87,11 @@ export default {
     importRepeatContent: '内容重复跳过：{msg}',
     onlineImportWarning: '注意：请检查 JSON 文件来源！',
     downloadError: '请检查网络状态与 JSON 文件有效性',
+  },
+  systemMessage: {
+    defaultRole: '默认角色',
+    chatRole: '会话角色',
+    reset: '已重置到默认角色',
+    inputPrompt: '此处留白恢复到默认角色',
   },
 }

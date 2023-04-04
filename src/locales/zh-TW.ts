@@ -28,6 +28,7 @@ export default {
     unauthorizedTips: '未經授權，請先進行驗證。',
   },
   chat: {
+    newChatButton: '新建對話',
     placeholder: '來說點什麼...（Shift + Enter = 換行）',
     placeholderMobile: '來說點什麼...',
     copy: '複製',
@@ -70,6 +71,7 @@ export default {
     balance: 'API余額',
   },
   store: {
+    siderButton: '提示詞商店',
     local: '本機',
     online: '線上',
     title: '標題',
@@ -85,5 +87,11 @@ export default {
     importRepeatContent: '因內容重複跳過：{msg}',
     onlineImportWarning: '注意：請檢查 JSON 檔案來源！',
     downloadError: '請檢查網路狀態與 JSON 檔案有效性',
+  },
+  systemMessage: {
+    defaultRole: '預設角色',
+    chatRole: '會話角色',
+    reset: '已重置為預設角色',
+    inputPrompt: '此處留白恢復為預設角色',
   },
 }
