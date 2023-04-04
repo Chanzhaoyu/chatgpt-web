@@ -1,4 +1,4 @@
-import type { FetchFn } from 'chatgpt'
+import type { FetchFn } from '@tzzack/chatgpt'
 
 export interface RequestProps {
   prompt: string

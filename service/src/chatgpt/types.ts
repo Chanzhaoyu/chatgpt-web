@@ -1,4 +1,4 @@
-import type { ChatMessage } from 'chatgpt'
+import type { ChatMessage } from '@tzzack/chatgpt'
 
 export interface RequestOptions {
   message: string
