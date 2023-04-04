@@ -29,7 +29,7 @@ export default {
   },
   chat: {
     newChatButton: '新建聊天',
-    placeholder: '来说点什么吧...（Shift + Enter = 换行）',
+    placeholder: '来说点什么吧...（Shift + Enter = 换行，"/" 触发提示词）',
     placeholderMobile: '来说点什么...',
     copy: '复制',
     copied: '复制成功',
@@ -69,6 +69,7 @@ export default {
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
     balance: 'API余额',
+    monthlyUsage: '本月使用量',
   },
   store: {
     siderButton: '提示词商店',
