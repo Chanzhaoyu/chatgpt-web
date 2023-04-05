@@ -150,10 +150,15 @@ router.get('/chat-hisroty', auth, async (req, res) => {
           loading: false,
           conversationOptions: {
             parentMessageId: c.options.messageId,
+            conversationId: c.options.conversationId,
           },
           requestOptions: {
             prompt: c.prompt,
             parentMessageId: c.options.parentMessageId,
+            options: {
+              parentMessageId: c.options.messageId,
+              conversationId: c.options.conversationId,
+            },
           },
         })
       }
