@@ -87,6 +87,7 @@ export default {
     siteTitle: '网站标题',
     siteDomain: '域名 不含/',
     registerEnabled: '新用户',
+    registerReview: '新用户审核',
     registerMails: '邮箱后缀',
     apiBaseUrl: '接口地址',
     apiModel: 'Api 模型',

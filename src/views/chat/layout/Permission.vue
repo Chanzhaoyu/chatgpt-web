@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { NButton, NInput, NModal, NTabPane, NTabs, useMessage } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
-import { fetchLogin, fetchRegister, fetchVerify } from '@/api'
+import { fetchLogin, fetchRegister, fetchVerify, fetchVerifyAdmin } from '@/api'
 import { useAuthStore } from '@/store'
 import Icon403 from '@/icons/403.vue'
 
@@ -42,6 +42,8 @@ const confirmPasswordStatus = computed(() => {
 onMounted(async () => {
   const verifytoken = route.query.verifytoken as string
   await handleVerify(verifytoken)
+  const verifytokenadmin = route.query.verifytokenadmin as string
+  await handleVerifyAdmin(verifytokenadmin)
 })
 
 async function handleVerify(verifytoken: string) {
@@ -52,7 +54,27 @@ async function handleVerify(verifytoken: string) {
   try {
     loading.value = true
     await fetchVerify(secretKey)
-    ms.success('验证成功 | Verify successfully')
+    ms.success('验证成功, 请等待管理员开通 | Verify successfully, Please wait for the admin to activate')
+    router.replace('/')
+  }
+  catch (error: any) {
+    ms.error(error.message ?? 'error')
+    authStore.removeToken()
+  }
+  finally {
+    loading.value = false
+  }
+}
+
+async function handleVerifyAdmin(verifytoken: string) {
+  if (!verifytoken)
+    return
+  const secretKey = verifytoken.trim()
+
+  try {
+    loading.value = true
+    await fetchVerifyAdmin(secretKey)
+    ms.success('开通成功 | Activate successfully')
     router.replace('/')
   }
   catch (error: any) {

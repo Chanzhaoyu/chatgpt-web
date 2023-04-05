@@ -18,6 +18,7 @@ export class SiteConfig {
   loginEnabled?: boolean
   loginSalt?: string
   registerEnabled?: boolean
+  registerReview?: boolean
   registerMails?: string
   siteDomain?: string
 }

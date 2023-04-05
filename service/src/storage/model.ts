@@ -6,6 +6,7 @@ export enum Status {
   InversionDeleted = 2,
   ResponseDeleted = 3,
   PreVerify = 4,
+  AdminVerify = 5,
 }
 
 export class UserInfo {
@@ -92,6 +93,7 @@ export class SiteConfig {
     public loginEnabled?: boolean,
     public loginSalt?: string,
     public registerEnabled?: boolean,
+    public registerReview?: boolean,
     public registerMails?: string,
     public siteDomain?: string,
   ) { }

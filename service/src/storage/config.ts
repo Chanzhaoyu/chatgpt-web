@@ -45,6 +45,7 @@ export async function getOriginConfig() {
         isNotEmptyString(process.env.AUTH_SECRET_KEY),
         process.env.AUTH_SECRET_KEY,
         process.env.REGISTER_ENABLED === 'true',
+        process.env.REGISTER_REVIEW === 'true',
         process.env.REGISTER_MAILS,
         process.env.SITE_DOMAIN),
       new MailConfig(process.env.SMTP_HOST,
@@ -65,6 +66,8 @@ export async function getOriginConfig() {
         ? (`${process.env.SOCKS_PROXY_USERNAME}:${process.env.SOCKS_PROXY_PASSWORD}`)
         : ''
     }
+    if (config.siteConfig.registerReview === undefined)
+      config.siteConfig.registerReview = process.env.REGISTER_REVIEW === 'true'
   }
   return config
 }

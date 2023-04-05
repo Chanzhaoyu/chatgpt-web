@@ -87,6 +87,7 @@ export default {
     siteTitle: 'Title',
     siteDomain: 'Domain',
     registerEnabled: 'Register Enabled',
+    registerReview: 'Register Review',
     registerMails: 'Register Mails',
     apiBaseUrl: 'Api Base Url',
     apiModel: 'Api Model',

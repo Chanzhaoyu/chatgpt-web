@@ -54,6 +54,13 @@ export function fetchVerify<T>(token: string) {
   })
 }
 
+export function fetchVerifyAdmin<T>(token: string) {
+  return post<T>({
+    url: '/verifyadmin',
+    data: { token },
+  })
+}
+
 export function fetchLogin<T = any>(username: string, password: string) {
   return post<T>({
     url: '/user-login',

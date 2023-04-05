@@ -35,3 +35,28 @@ export function checkUserVerify(verify: string) {
     return username
   throw new Error('Verify failed')
 }
+
+// 可以换 aes 等方式
+export async function getUserVerifyUrlAdmin(username: string) {
+  const sign = getUserVerifyAdmin(username)
+  const config = await getCacheConfig()
+  return `${config.siteConfig.siteDomain}/#/chat/?verifytokenadmin=${sign}`
+}
+
+function getUserVerifyAdmin(username: string) {
+  const expired = new Date().getTime() + (12 * 60 * 60 * 1000)
+  const sign = `${username}|${process.env.ROOT_USER}-${expired}`
+  return `${sign}-${md5(sign)}`
+}
+
+export function checkUserVerifyAdmin(verify: string) {
+  const vs = verify.split('-')
+  const sign = vs[vs.length - 1]
+  const expired = vs[vs.length - 2]
+  vs.splice(vs.length - 2, 2)
+  const username = vs.join('-')
+  // 简单点没校验有效期
+  if (sign === md5(`${username}-${expired}`))
+    return username.split('|')[0]
+  throw new Error('Verify failed')
+}
