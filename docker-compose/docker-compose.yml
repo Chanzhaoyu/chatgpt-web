@@ -16,7 +16,7 @@ services:
       # API模型，可选，设置 OPENAI_API_KEY 时可用
       OPENAI_API_MODEL:
       # 反向代理，可选
-      API_REVERSE_PROXY:
+      API_REVERSE_PROXY: https://bypass.churchless.tech/api/conversation
       # 访问权限密钥，可选
       AUTH_SECRET_KEY:
       # 每小时最大请求次数，可选，默认无限
