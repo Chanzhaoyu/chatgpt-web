@@ -6,3 +6,7 @@ export interface RequestOptions {
   process?: (chat: ChatMessage) => void
   systemMessage?: string
 }
+
+export interface BalanceResponse {
+  total_usage: number
+}
