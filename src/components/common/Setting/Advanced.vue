@@ -11,7 +11,7 @@ const ms = useMessage()
 
 const systemMessage = ref(settingStore.systemMessage ?? '')
 
-const temperature = ref(settingStore.temperature ?? 0.8)
+const temperature = ref(settingStore.temperature ?? 0.5)
 
 const top_p = ref(settingStore.top_p ?? 1)
 
