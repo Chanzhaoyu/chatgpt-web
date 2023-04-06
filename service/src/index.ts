@@ -228,7 +228,7 @@ router.post('/chat', auth, async (req, res) => {
     const response = await chatReply(prompt, options)
     if (response.status === 'Success') {
       if (regenerate && message.options.messageId) {
-        let previousResponse = message.previousResponse || []
+        const previousResponse = message.previousResponse || []
         previousResponse.push({ response: message.response, messageId: message.options.messageId })
         await updateChat(message._id, response.data.text, response.data.id, previousResponse)
       } else {
@@ -262,7 +262,7 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
     })
     if (result.status === 'Success') {
       if (regenerate && message.options.messageId) {
-        let previousResponse = message.previousResponse || []
+        const previousResponse = message.previousResponse || []
         previousResponse.push({ response: message.response, messageId: message.options.messageId })
         await updateChat(message._id, result.data.text, result.data.id, previousResponse)
       } else {
