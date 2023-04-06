@@ -31,13 +31,12 @@ export async function getChat(roomId: number, uuid: number) {
 
 export async function updateChat(chatId: string, response: string, messageId: string, previousResponse?: []) {
   const query = { _id: new ObjectId(chatId) }
-  let update = {
+  const update = {
     $set: { 'response': response, 'options.messageId': messageId },
   }
 
-  if (previousResponse) {
+  if (previousResponse)
     update.$set.previousResponse = previousResponse
-  }
 
   await chatCol.updateOne(query, update)
 }
