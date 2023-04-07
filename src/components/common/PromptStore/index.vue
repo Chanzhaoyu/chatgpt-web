@@ -2,12 +2,12 @@
 import type { DataTableColumns } from 'naive-ui'
 import { computed, h, ref, watch } from 'vue'
 import { NButton, NCard, NDataTable, NDivider, NInput, NList, NListItem, NModal, NPopconfirm, NSpace, NTabPane, NTabs, NThing, useMessage } from 'naive-ui'
+import PubSub from 'pubsub-js'
 import PromptRecommend from '../../../assets/recommend.json'
 import { SvgIcon } from '..'
 import { usePromptStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
-
 interface DataProps {
   renderKey: string
   renderValue: string
@@ -87,7 +87,7 @@ const setDownloadURL = (url: string) => {
 }
 
 // 控制 input 按钮
-const inputStatus = computed (() => tempPromptKey.value.trim().length < 1 || tempPromptValue.value.trim().length < 1)
+const inputStatus = computed(() => tempPromptKey.value.trim().length < 1 || tempPromptValue.value.trim().length < 1)
 
 // Prompt模板相关操作
 const addPromptTemplate = () => {
@@ -140,6 +140,12 @@ const deletePromptTemplate = (row: { key: string; value: string }) => {
     ...promptList.value.filter((item: { key: string; value: string }) => item.key !== row.key),
   ] as never
   message.success(t('common.deleteSuccess'))
+}
+
+// 消息发布与订阅模式，使用prompt
+const usePrompt = (row: { key: string; value: string } | string) => {
+  PubSub.publish('send', row)
+  show.value = false
 }
 
 const clearPromptTemplate = () => {
@@ -248,6 +254,7 @@ const renderTemplate = () => {
       renderValue: item.value.length <= valueLimit ? item.value : `${item.value.substring(0, valueLimit)}...`,
       key: item.key,
       value: item.value,
+      ondblclick: () => usePrompt(item.value),
     }
   })
 }
@@ -278,6 +285,15 @@ const createColumns = (): DataTableColumns<DataProps> => {
       render(row) {
         return h('div', { class: 'flex items-center flex-col gap-2' }, {
           default: () => [h(
+            NButton,
+            {
+              tertiary: true,
+              size: 'small',
+              type: 'primary',
+              onClick: () => usePrompt(row),
+            },
+            { default: () => t('common.confirm') },
+          ), h(
             NButton,
             {
               tertiary: true,
@@ -324,6 +340,15 @@ const dataSource = computed(() => {
   }
   return data
 })
+
+// 每一行添加双击事件，双击使用prompt
+const rowProps = (row: { key: string; value: string }) => {
+  return {
+    onDblclick: () => {
+      usePrompt(row)
+    },
+  }
+}
 </script>
 
 <template>
@@ -331,29 +356,15 @@ const dataSource = computed(() => {
     <div class="space-y-4">
       <NTabs type="segment">
         <NTabPane name="local" :tab="$t('store.local')">
-          <div
-            class="flex gap-3 mb-4"
-            :class="[isMobile ? 'flex-col' : 'flex-row justify-between']"
-          >
+          <div class="flex gap-3 mb-4" :class="[isMobile ? 'flex-col' : 'flex-row justify-between']">
             <div class="flex items-center space-x-4">
-              <NButton
-                type="primary"
-                size="small"
-                @click="changeShowModal('add')"
-              >
+              <NButton type="primary" size="small" @click="changeShowModal('add')">
                 {{ $t('common.add') }}
               </NButton>
-              <NButton
-                size="small"
-                @click="changeShowModal('local_import')"
-              >
+              <NButton size="small" @click="changeShowModal('local_import')">
                 {{ $t('common.import') }}
               </NButton>
-              <NButton
-                size="small"
-                :loading="exportLoading"
-                @click="exportPromptTemplate()"
-              >
+              <NButton size="small" :loading="exportLoading" @click="exportPromptTemplate()">
                 {{ $t('common.export') }}
               </NButton>
               <NPopconfirm @positive-click="clearPromptTemplate">
@@ -370,12 +381,8 @@ const dataSource = computed(() => {
             </div>
           </div>
           <NDataTable
-            v-if="!isMobile"
-            :max-height="400"
-            :columns="columns"
-            :data="dataSource"
-            :pagination="pagination"
-            :bordered="false"
+            v-if="!isMobile" :max-height="400" :columns="columns" :data="dataSource" :pagination="pagination"
+            :bordered="false" :row-props="rowProps"
           />
           <NList v-if="isMobile" style="max-height: 400px; overflow-y: auto;">
             <NListItem v-for="(item, index) of dataSource" :key="index">
@@ -400,10 +407,7 @@ const dataSource = computed(() => {
           <div class="flex items-center gap-4">
             <NInput v-model:value="downloadURL" placeholder="" />
             <NButton
-              strong
-              secondary
-              :disabled="downloadDisabled"
-              :loading="importLoading"
+              strong secondary :disabled="downloadDisabled" :loading="importLoading"
               @click="downloadPromptTemplate()"
             >
               {{ $t('common.download') }}
@@ -411,29 +415,18 @@ const dataSource = computed(() => {
           </div>
           <NDivider />
           <div class="max-h-[360px] overflow-y-auto space-y-4">
-            <NCard
-              v-for="info in promptRecommendList"
-              :key="info.key" :title="info.key"
-              :bordered="true"
-              embedded
-            >
-              <p
-                class="overflow-hidden text-ellipsis whitespace-nowrap"
-                :title="info.desc"
-              >
+            <NCard v-for="info in promptRecommendList" :key="info.key" :title="info.key" :bordered="true" embedded>
+              <p class="overflow-hidden text-ellipsis whitespace-nowrap" :title="info.desc">
                 {{ info.desc }}
               </p>
               <template #footer>
                 <div class="flex items-center justify-end space-x-4">
                   <NButton text>
-                    <a
-                      :href="info.url"
-                      target="_blank"
-                    >
+                    <a :href="info.url" target="_blank">
                       <SvgIcon class="text-xl" icon="ri:link" />
                     </a>
                   </NButton>
-                  <NButton text @click="setDownloadURL(info.downloadUrl) ">
+                  <NButton text @click="setDownloadURL(info.downloadUrl)">
                     <SvgIcon class="text-xl" icon="ri:add-fill" />
                   </NButton>
                 </div>
@@ -452,9 +445,7 @@ const dataSource = computed(() => {
       {{ t('store.description') }}
       <NInput v-model:value="tempPromptValue" type="textarea" />
       <NButton
-        block
-        type="primary"
-        :disabled="inputStatus"
+        block type="primary" :disabled="inputStatus"
         @click="() => { modalMode === 'add' ? addPromptTemplate() : modifyPromptTemplate() }"
       >
         {{ t('common.confirm') }}
@@ -462,17 +453,10 @@ const dataSource = computed(() => {
     </NSpace>
     <NSpace v-if="modalMode === 'local_import'" vertical>
       <NInput
-        v-model:value="tempPromptValue"
-        :placeholder="t('store.importPlaceholder')"
-        :autosize="{ minRows: 3, maxRows: 15 }"
-        type="textarea"
+        v-model:value="tempPromptValue" :placeholder="t('store.importPlaceholder')"
+        :autosize="{ minRows: 3, maxRows: 15 }" type="textarea"
       />
-      <NButton
-        block
-        type="primary"
-        :disabled="inputStatus"
-        @click="() => { importPromptTemplate('local') }"
-      >
+      <NButton block type="primary" :disabled="inputStatus" @click="() => { importPromptTemplate('local') }">
         {{ t('common.import') }}
       </NButton>
     </NSpace>
