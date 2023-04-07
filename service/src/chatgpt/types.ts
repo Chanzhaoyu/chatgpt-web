@@ -1,4 +1,5 @@
 import type { ChatMessage } from 'chatgpt'
+import type fetch from 'node-fetch'
 
 export interface RequestOptions {
   message: string
@@ -8,7 +9,7 @@ export interface RequestOptions {
 }
 
 export interface SetProxyOptions {
-  [key: string]: any
+  fetch?: typeof fetch
 }
 
 export interface UsageResponse {
