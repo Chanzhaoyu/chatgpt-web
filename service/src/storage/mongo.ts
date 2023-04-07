@@ -29,11 +29,15 @@ export async function getChat(roomId: number, uuid: number) {
   return await chatCol.findOne({ roomId, uuid })
 }
 
-export async function updateChat(chatId: string, response: string, messageId: string) {
+export async function updateChat(chatId: string, response: string, messageId: string, previousResponse?: []) {
   const query = { _id: new ObjectId(chatId) }
   const update = {
     $set: { 'response': response, 'options.messageId': messageId },
   }
+
+  if (previousResponse)
+    update.$set.previousResponse = previousResponse
+
   await chatCol.updateOne(query, update)
 }
 

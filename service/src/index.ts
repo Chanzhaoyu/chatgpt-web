@@ -226,8 +226,15 @@ router.post('/chat', auth, async (req, res) => {
       ? await getChat(roomId, uuid)
       : await insertChat(uuid, prompt, roomId, options as ChatOptions)
     const response = await chatReply(prompt, options)
-    if (response.status === 'Success')
-      await updateChat(message._id, response.data.text, response.data.id)
+    if (response.status === 'Success') {
+      if (regenerate && message.options.messageId) {
+        const previousResponse = message.previousResponse || []
+        previousResponse.push({ response: message.response, messageId: message.options.messageId })
+        await updateChat(message._id, response.data.text, response.data.id, previousResponse)
+      } else {
+        await updateChat(message._id, response.data.text, response.data.id)
+      }
+    }
     res.send(response)
   }
   catch (error) {
@@ -253,8 +260,15 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
       },
       systemMessage,
     })
-    if (result.status === 'Success')
-      await updateChat(message._id, result.data.text, result.data.id)
+    if (result.status === 'Success') {
+      if (regenerate && message.options.messageId) {
+        const previousResponse = message.previousResponse || []
+        previousResponse.push({ response: message.response, messageId: message.options.messageId })
+        await updateChat(message._id, result.data.text, result.data.id, previousResponse)
+      } else {
+        await updateChat(message._id, result.data.text, result.data.id)
+      }
+    }
   }
   catch (error) {
     res.write(JSON.stringify(error))
