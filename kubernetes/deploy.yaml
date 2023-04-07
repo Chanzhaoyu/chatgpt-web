@@ -41,6 +41,12 @@ spec:
               value: ''
             - name: HTTPS_PROXY
               value: ''
+            - name: BAIDU_API_KEY
+              value: ''
+            - name: BAIDU_SECRET_KEY
+              value: ''
+            - name: BAIDU_CHECK_TIPS
+              value: ''
           resources:
             limits:
               cpu: 500m

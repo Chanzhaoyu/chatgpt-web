@@ -33,6 +33,8 @@
     "https-proxy-agent": "^5.0.1",
     "isomorphic-fetch": "^3.0.0",
     "node-fetch": "^3.3.0",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9",
     "socks-proxy-agent": "^7.0.0"
   },
   "devDependencies": {
