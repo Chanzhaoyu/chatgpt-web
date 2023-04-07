@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { NLayout, NLayoutContent } from 'naive-ui'
 import { useRouter } from 'vue-router'
+import GlobalHeader from '../components/GlobalHeader/index.vue'
 import Sider from './sider/index.vue'
 import RightSider from './rightSider/index.vue'
 import Permission from './Permission.vue'
@@ -36,8 +37,9 @@ const getContainerClass = computed(() => {
 </script>
 
 <template>
-  <div class="h-full dark:bg-[#24272e] transition-all" :class="[isMobile ? 'p-0' : 'p-4']">
-    <div class="h-full overflow-hidden flex" :class="getMobileClass">
+  <div class="h-full dark:bg-[#24272e] transition-all flex flex-col" :class="[isMobile ? 'p-0' : 'p-4']">
+    <GlobalHeader />
+    <div class="h-full overflow-hidden flex flex-1" :class="getMobileClass">
       <NLayout class="z-40 transition xt-layout" :class="getContainerClass" has-sider>
         <Sider />
         <NLayoutContent class="h-full">

@@ -25,6 +25,7 @@
   "dependencies": {
     "@traptitech/markdown-it-katex": "^3.6.0",
     "@vueuse/core": "^9.13.0",
+    "dayjs": "^1.11.7",
     "highlight.js": "^11.7.0",
     "html2canvas": "^1.4.1",
     "katex": "^0.16.4",
