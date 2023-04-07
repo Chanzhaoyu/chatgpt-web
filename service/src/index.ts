@@ -19,6 +19,71 @@ app.all('*', (_, res, next) => {
   next()
 })
 
+interface StreamMessage {
+  id: string
+  csid?: string
+  pmid?: string
+  delta: string
+  text?: string
+  finishReason?: string
+}
+
+const writeServerSendEvent = (res, data, eid?) => {
+  if (eid)
+    res.write(`id: ${eid}\n`)
+
+  res.write(`data: ${data}\n\n`)
+}
+
+router.post('/chat-sse', [auth, limiter], async (req, res) => {
+  const { csid, prompt, options = {}, systemMessage } = req.body as RequestProps
+  const headers: { [key: string]: string } = {
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'Content-Type': 'text/event-stream',
+    'Access-Control-Allow-Origin': '*',
+  }
+  let ncsid: string = csid
+  if (!csid) {
+    ncsid = (Date.now()).toString(36)
+    headers['Conversation-ID'] = ncsid
+  }
+
+  res.writeHead(200, headers)
+
+  try {
+    options.conversationId = ncsid
+    await chatReplyProcess({
+      message: prompt,
+      lastContext: options,
+      process: (chat: ChatMessage) => {
+        const message: StreamMessage = {
+          id: chat.id,
+          csid: chat.conversationId || csid || ncsid,
+          pmid: chat.parentMessageId,
+          delta: chat.delta,
+          // The other fields are not needed at the moment.
+        }
+        if (!chat.delta && chat.text)
+          message.text = chat.text
+
+        if (chat.detail && chat.detail.choices.length > 0 && chat.detail.choices[0].finish_reason)
+          message.finishReason = chat.detail.choices[0].finish_reason
+
+        writeServerSendEvent(res, JSON.stringify(message))
+      },
+      systemMessage,
+    })
+  }
+  catch (error) {
+    res.write(JSON.stringify(error))
+  }
+  finally {
+    res.end()
+  }
+})
+
+// Deprecated: by /chat-sse
 router.post('/chat-process', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
@@ -86,4 +151,5 @@ app.use('', router)
 app.use('/api', router)
 app.set('trust proxy', 1)
 
-app.listen(3002, () => globalThis.console.log('Server is running on port 3002'))
+const port = process.env.SERVICE_PORT || 3002
+app.listen(port, () => globalThis.console.log(`Server is running on port ${port}`))

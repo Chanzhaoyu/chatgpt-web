@@ -25,6 +25,9 @@ dependencies:
   pinia:
     specifier: ^2.0.33
     version: 2.0.33(typescript@4.9.5)(vue@3.2.47)
+  sse.js:
+    specifier: ^0.6.1
+    version: 0.6.1
   vue:
     specifier: ^3.2.47
     version: 3.2.47
@@ -5978,6 +5981,10 @@ packages:
     dependencies:
       readable-stream: 3.6.1
     dev: true
+
+  /sse.js@0.6.1:
+    resolution: {integrity: sha512-peXG6GnWqF5hnubhMw0WfB6rqQy7z7LaMBT067vqgQwC3gKz8JGFzexBSV80FqZ9JoUDwo3Xt5nxkrGrgbPrtA==}
+    dev: false
 
   /string-argv@0.3.1:
     resolution: {integrity: sha512-a1uQGz7IyVy9YwhqjZIZu1c8JO8dNIe20xBmSS6qu9kv++k3JGzCVmprbNN5Kn+BgzD5E7YYwg1CcjuJMRNsvg==}
