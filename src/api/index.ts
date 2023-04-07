@@ -1,5 +1,5 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
-import { post } from '@/utils/request'
+import { get, post } from '@/utils/request'
 import { useSettingStore } from '@/store'
 
 export function fetchChatAPI<T = any>(
@@ -59,5 +59,20 @@ export function fetchVerify<T>(token: string) {
 export function fetchModels<T>() {
   return post<T>({
     url: '/api/models',
+  })
+}
+
+export function fetchList<T>() {
+  return get<T>({
+    url: '/api/list',
+  })
+}
+
+export function fetchModelDetail<T>(id: string) {
+  return post<T>({
+    url: '/api/modelDetail',
+    data: {
+      fine_tune_id: id,
+    },
   })
 }
