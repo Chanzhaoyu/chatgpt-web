@@ -7,6 +7,10 @@ export interface RequestOptions {
   systemMessage?: string
 }
 
-export interface BalanceResponse {
+export interface SetProxyOptions {
+  [key: string]: any
+}
+
+export interface UsageResponse {
   total_usage: number
 }

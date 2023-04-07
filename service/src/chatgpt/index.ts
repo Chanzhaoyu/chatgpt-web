@@ -8,7 +8,7 @@ import fetch from 'node-fetch'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
-import type { BalanceResponse, RequestOptions } from './types'
+import type { RequestOptions, SetProxyOptions, UsageResponse } from './types'
 
 const { HttpsProxyAgent } = httpsProxyAgent
 
@@ -124,7 +124,7 @@ async function chatReplyProcess(options: RequestOptions) {
   }
 }
 
-async function fetchBalance() {
+async function fetchUsage() {
   // 计算起始日期和结束日期
 
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY
@@ -147,10 +147,14 @@ async function fetchBalance() {
     'Content-Type': 'application/json',
   }
 
+  const options = {} as SetProxyOptions
+
+  setupProxy(options)
+
   try {
     // 获取已使用量
-    const useResponse = await fetch(urlUsage, { headers })
-    const usageData = await useResponse.json() as BalanceResponse
+    const useResponse = await options.fetch(urlUsage, { headers })
+    const usageData = await useResponse.json() as UsageResponse
     const usage = Math.round(usageData.total_usage) / 100
     return Promise.resolve(usage ? `$${usage}` : '-')
   }
@@ -170,7 +174,7 @@ function formatDate(): string[] {
 }
 
 async function chatConfig() {
-  const balance = await fetchBalance()
+  const usage = await fetchUsage()
   const reverseProxy = process.env.API_REVERSE_PROXY ?? '-'
   const httpsProxy = (process.env.HTTPS_PROXY || process.env.ALL_PROXY) ?? '-'
   const socksProxy = (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
@@ -178,11 +182,11 @@ async function chatConfig() {
     : '-'
   return sendResponse<ModelConfig>({
     type: 'Success',
-    data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, balance },
+    data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, usage },
   })
 }
 
-function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPIOptions) {
+function setupProxy(options: SetProxyOptions) {
   if (isNotEmptyString(process.env.SOCKS_PROXY_HOST) && isNotEmptyString(process.env.SOCKS_PROXY_PORT)) {
     const agent = new SocksProxyAgent({
       hostname: process.env.SOCKS_PROXY_HOST,
