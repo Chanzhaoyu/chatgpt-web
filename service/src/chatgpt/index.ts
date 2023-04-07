@@ -149,8 +149,6 @@ async function fetchUsage() {
 
   setupProxy(options)
 
-  global.console.log(options)
-
   try {
     // 获取已使用量
     const useResponse = await options.fetch(urlUsage, { headers })
