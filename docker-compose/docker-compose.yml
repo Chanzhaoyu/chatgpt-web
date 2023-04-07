@@ -28,6 +28,12 @@ services:
       SOCKS_PROXY_PORT: xxx
       # HTTPS_PROXY 代理，可选
       HTTPS_PROXY: http://xxx:7890
+      # 百度 Api Key
+      BAIDU_API_KEY:
+      # 百度 Secret Key
+      BAIDU_SECRET_KEY:
+      # 审核不合规后的提示，可选，设置 BAIDU_API_KEY 和 BAIDU_SECRET_KEY 时可用
+      BAIDU_CHECK_TIPS:
   nginx:
     image: nginx:alpine
     ports:

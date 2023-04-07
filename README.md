@@ -176,6 +176,9 @@ pnpm dev
 - `SOCKS_PROXY_PORT` 和 `SOCKS_PROXY_HOST` 一起时生效，可选
 - `HTTPS_PROXY` 支持 `http`，`https`, `socks5`，可选
 - `ALL_PROXY` 支持 `http`，`https`, `socks5`，可选
+- `BAIDU_API_KEY` 百度智能云应用 `API Key` [获取API Key](https://console.bce.baidu.com/ai/?_=1680831884953#/ai/antiporn/app/list)（用户提问审核功能）可选
+- `BAIDU_SECRET_KEY` 百度智能云应用 `Secret Key` [获取Secret Key](https://console.bce.baidu.com/ai/?_=1680831884953#/ai/antiporn/app/list)（用户提问审核功能）可选
+- `BAIDU_CHECK_TIPS` 文本审核不合规后的提示语 [设置审核策略](https://ai.baidu.com/censoring#/strategylist)（用户提问审核功能）可选
 
 ## 打包
 
@@ -235,9 +238,16 @@ services:
       SOCKS_PROXY_PORT: xxx
       # HTTPS 代理，可选，支持 http，https，socks5
       HTTPS_PROXY: http://xxx:7890
+      # 百度智能云应用 API Key
+      BAIDU_API_KEY: xxx
+      # 百度智能云应用 Secret Key
+      BAIDU_SECRET_KEY: xxx
+      # 文本审核不合规后的提示语，可选
+      BAIDU_CHECK_TIPS: 【xx提示】请不要问我任何涉嫌违规的内容哦！
 ```
 - `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 - `OPENAI_API_MODEL`  可选，设置 `OPENAI_API_KEY` 时可用
+- `BAIDU_CHECK_TIPS`  可选，设置 `BAIDU_API_KEY` 和 `BAIDU_SECRET_KEY` 时可用
 ###  使用 Railway 部署
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/yytmgc)

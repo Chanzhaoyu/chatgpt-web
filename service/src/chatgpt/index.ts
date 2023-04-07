@@ -6,6 +6,7 @@ import { SocksProxyAgent } from 'socks-proxy-agent'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import fetch from 'node-fetch'
 import axios from 'axios'
+import rp from 'request-promise-native'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
@@ -85,6 +86,11 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
   }
 })()
 
+const BAIDU_API_KEY = process.env.BAIDU_API_KEY
+const BAIDU_SECRET_KEY = process.env.BAIDU_SECRET_KEY
+const BAIDU_CHECK_TIPS = process.env.BAIDU_CHECK_TIPS
+let BAIDU_ACCESS_TOKEN = process.env.BAIDU_ACCESS_TOKEN
+
 async function chatReplyProcess(options: RequestOptions) {
   const { message, lastContext, process, systemMessage } = options
   try {
@@ -102,6 +108,32 @@ async function chatReplyProcess(options: RequestOptions) {
         options = { ...lastContext }
     }
 
+    if (BAIDU_API_KEY != null && BAIDU_SECRET_KEY != null) {
+      // 获取百度 access token
+      if (BAIDU_ACCESS_TOKEN == null)
+        BAIDU_ACCESS_TOKEN = await getBaiduAccessToken()
+
+      // 审核文本
+      const url = `https://aip.baidubce.com/rest/2.0/solution/v1/text_censor/v2/user_defined?access_token=${BAIDU_ACCESS_TOKEN}`
+      const form = { text: message }
+      const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+      }
+      const requestOptions = { method: 'POST', url, headers, form }
+      const body = await rp(requestOptions)
+      const data = JSON.parse(body)
+      if (data.conclusion !== '合规') {
+        const msg = data.data[0].msg
+        let tips = msg
+        if (BAIDU_CHECK_TIPS != null)
+          tips = `${BAIDU_CHECK_TIPS}\n原因：${msg}`
+
+        return sendResponse({ type: 'Fail', message: tips })
+      }
+    }
+
+    // 如果审核结果为合规，继续进行回复操作
     const response = await api.sendMessage(message, {
       ...options,
       onProgress: (partialResponse) => {
@@ -118,6 +150,14 @@ async function chatReplyProcess(options: RequestOptions) {
       return sendResponse({ type: 'Fail', message: ErrorCodeMessage[code] })
     return sendResponse({ type: 'Fail', message: error.message ?? 'Please check the back-end console' })
   }
+}
+
+async function getBaiduAccessToken() {
+  const url = `https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${BAIDU_API_KEY}&client_secret=${BAIDU_SECRET_KEY}`
+  const response = await rp(url)
+  const data = JSON.parse(response)
+  const accessToken = data.access_token
+  return accessToken
 }
 
 async function fetchBalance() {
