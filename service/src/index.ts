@@ -230,14 +230,27 @@ router.post('/chat', auth, async (req, res) => {
     if (response.status === 'Success') {
       if (regenerate && message.options.messageId) {
         const previousResponse = message.previousResponse || []
-        previousResponse.push({ response: message.response, messageId: message.options.messageId })
-        await updateChat(message._id as unknown as string, response.data.text, response.data.id, previousResponse)
-      } else {
-        await updateChat(message._id as unknown as string, response.data.text, response.data.id)
+        previousResponse.push({ response: message.response, options: message.options })
+        await updateChat(message._id as unknown as string,
+          response.data.text,
+          response.data.id,
+          response.data.detail.usage as UsageResponse,
+          previousResponse)
+      }
+      else {
+        await updateChat(message._id as unknown as string,
+          response.data.text,
+          response.data.id,
+          response.data.detail.usage as UsageResponse)
       }
 
-      if (response.data.usage)
-        await insertChatUsage(req.headers.userId as string, roomId, uuid, response.data.id, response.data.detail.usage as UsageResponse)
+      if (response.data.usage) {
+        await insertChatUsage(req.headers.userId as string,
+          roomId,
+          message._id,
+          response.data.id,
+          response.data.detail.usage as UsageResponse)
+      }
     }
     res.send(response)
   }
@@ -267,14 +280,27 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
     if (result.status === 'Success') {
       if (regenerate && message.options.messageId) {
         const previousResponse = message.previousResponse || []
-        previousResponse.push({ response: message.response, messageId: message.options.messageId })
-        await updateChat(message._id as unknown as string, result.data.text, result.data.id, previousResponse)
-      } else {
-        await updateChat(message._id as unknown as string, result.data.text, result.data.id)
+        previousResponse.push({ response: message.response, options: message.options })
+        await updateChat(message._id as unknown as string,
+          result.data.text,
+          result.data.id,
+          result.data.detail.usage as UsageResponse,
+          previousResponse)
+      }
+      else {
+        await updateChat(message._id as unknown as string,
+          result.data.text,
+          result.data.id,
+          result.data.detail.usage as UsageResponse)
       }
 
-      if (result.data.detail.usage)
-        await insertChatUsage(req.headers.userId as string, roomId, uuid, result.data.id, result.data.detail.usage as UsageResponse)
+      if (result.data.detail.usage) {
+        await insertChatUsage(req.headers.userId as string,
+          roomId,
+          message._id,
+          result.data.id,
+          result.data.detail.usage as UsageResponse)
+      }
     }
   }
   catch (error) {

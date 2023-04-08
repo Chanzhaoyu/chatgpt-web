@@ -30,10 +30,17 @@ export async function getChat(roomId: number, uuid: number) {
   return await chatCol.findOne({ roomId, uuid })
 }
 
-export async function updateChat(chatId: string, response: string, messageId: string, previousResponse?: []) {
+export async function updateChat(chatId: string, response: string, messageId: string, usage: UsageResponse, previousResponse?: []) {
   const query = { _id: new ObjectId(chatId) }
   const update = {
-    $set: { 'response': response, 'options.messageId': messageId },
+    $set: {
+      'response': response,
+      'options.messageId': messageId,
+      'options.prompt_tokens': usage.prompt_tokens,
+      'options.completion_tokens': usage.completion_tokens,
+      'options.total_tokens': usage.total_tokens,
+      'options.estimated': usage.estimated,
+    },
   }
 
   if (previousResponse)
@@ -42,8 +49,8 @@ export async function updateChat(chatId: string, response: string, messageId: st
   await chatCol.updateOne(query, update)
 }
 
-export async function insertChatUsage(userId: string, roomId: number, uuid: number, messageId: string, usage: UsageResponse) {
-  const chatUsage = new ChatUsage(userId, roomId, uuid, messageId, usage)
+export async function insertChatUsage(userId: string, roomId: number, chatId: ObjectId, messageId: string, usage: UsageResponse) {
+  const chatUsage = new ChatUsage(userId, roomId, chatId, messageId, usage)
   await usageCol.insertOne(chatUsage)
   return chatUsage
 }
