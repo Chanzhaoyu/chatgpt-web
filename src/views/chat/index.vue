@@ -96,7 +96,11 @@ async function onConversation() {
     options = { ...lastContext }
 
   // always add system message to options: either default or customized
-  options.systemMessage = settingStore.currentSystemMessage(+uuid)
+  const conversationConfig: Chat.ConversationConfig = {
+    systemMessage: settingStore.currentSystemMessage(+uuid),
+    temperature: settingStore.currentTemperature,
+    top_p: settingStore.currentTopP,
+  }
 
   addChat(
     +uuid,
@@ -118,6 +122,7 @@ async function onConversation() {
       await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
         options,
+        conversationConfig,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {
           const xhr = event.target
@@ -228,7 +233,11 @@ async function onRegenerate(index: number) {
     options = { ...requestOptions.options }
 
   // always add system message to options: either default or customized
-  options.systemMessage = settingStore.currentSystemMessage(+uuid)
+  const conversationConfig: Chat.ConversationConfig = {
+    systemMessage: settingStore.currentSystemMessage(+uuid),
+    temperature: settingStore.currentTemperature,
+    top_p: settingStore.currentTopP,
+  }
 
   loading.value = true
 
@@ -252,6 +261,7 @@ async function onRegenerate(index: number) {
       await fetchChatAPIProcess<Chat.ConversationResponse>({
         prompt: message,
         options,
+        conversationConfig,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {
           const xhr = event.target

@@ -23,10 +23,15 @@ declare namespace Chat {
 		chat: { uuid: number; data: Chat[] }[]
 	}
 
+	interface ConversationConfig {
+		systemMessage: string
+		temperature: number
+		top_p: number
+	}
+
 	interface ConversationRequest {
 		conversationId?: string
 		parentMessageId?: string
-        systemMessage?: string
 	}
 
 	interface ConversationResponse {

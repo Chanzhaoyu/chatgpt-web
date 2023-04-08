@@ -19,6 +19,12 @@ export const useSettingStore = defineStore('setting-store', {
     defaultSystemMessage(state: SettingsState): string {
       return state.systemMessage
     },
+    currentTemperature(state: SettingsState): number {
+      return state.temperature
+    },
+    currentTopP(state: SettingsState): number {
+      return state.top_p
+    },
   },
 
   actions: {
