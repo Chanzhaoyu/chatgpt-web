@@ -3,6 +3,7 @@ import type { PluginOption } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
+import esbuild from 'rollup-plugin-esbuild'
 
 function setupPlugins(env: ImportMetaEnv): PluginOption[] {
   return [
@@ -18,6 +19,16 @@ function setupPlugins(env: ImportMetaEnv): PluginOption[] {
         ],
       },
     }),
+    {
+      ...esbuild({
+        target: 'chrome64',
+        loaders: {
+          '.vue': 'js',
+          '.ts': 'js'
+        }
+      }),
+      enforce: 'post',
+    }
   ]
 }
 
