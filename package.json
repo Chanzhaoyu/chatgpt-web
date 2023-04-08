@@ -33,8 +33,7 @@
     "pinia": "^2.0.33",
     "vue": "^3.2.47",
     "vue-i18n": "^9.2.2",
-    "vue-router": "^4.1.6",
-    "rollup-plugin-esbuild": "^5.0.0"
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.35.3",
