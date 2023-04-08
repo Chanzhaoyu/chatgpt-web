@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { NInput, NPopconfirm, NScrollbar } from 'naive-ui'
 import { SvgIcon } from '@/components/common'
-import { useAppStore, useChatStore } from '@/store'
+import { useAppStore, useChatStore, useSettingStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { debounce } from '@/utils/functions/debounce'
 
@@ -10,6 +10,17 @@ const { isMobile } = useBasicLayout()
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
+const settingStore = useSettingStore()
+
+// delete old orphaned chat config (bug from old config)
+function syncChatConfig() {
+  settingStore.perChatSettings.forEach((item) => {
+    const index = chatStore.history.findIndex(hist => hist.uuid === item.uuid)
+    if (index === -1)
+      settingStore.restoreDefaultChatConfig(item.uuid)
+  })
+}
+syncChatConfig()
 
 const dataSources = computed(() => chatStore.history)
 
@@ -30,9 +41,10 @@ function handleEdit({ uuid }: Chat.History, isEdit: boolean, event?: MouseEvent)
   chatStore.updateHistory(uuid, { isEdit })
 }
 
-function handleDelete(index: number, event?: MouseEvent | TouchEvent) {
+function handleDelete(index: number, { uuid }: Chat.History, event?: MouseEvent | TouchEvent) {
   event?.stopPropagation()
   chatStore.deleteHistory(index)
+  settingStore.restoreDefaultChatConfig(uuid)
   if (isMobile.value)
     appStore.setSiderCollapsed(true)
 }
@@ -87,7 +99,7 @@ function isActive(uuid: number) {
                 <button class="p-1">
                   <SvgIcon icon="ri:edit-line" @click="handleEdit(item, true, $event)" />
                 </button>
-                <NPopconfirm placement="bottom" @positive-click="handleDeleteDebounce(index, $event)">
+                <NPopconfirm placement="bottom" @positive-click="handleDeleteDebounce(index, item, $event)">
                   <template #trigger>
                     <button class="p-1">
                       <SvgIcon icon="ri:delete-bin-line" />

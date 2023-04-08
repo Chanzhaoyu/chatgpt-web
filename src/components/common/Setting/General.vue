@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { NButton, NInput, NPopconfirm, NSelect, useMessage } from 'naive-ui'
 import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon } from '@/components/common'
-import { useAppStore, useUserStore } from '@/store'
+import { useAppStore, useSettingStore, useUserStore } from '@/store'
 import type { UserInfo } from '@/store/modules/user/helper'
 import { getCurrentDate } from '@/utils/functions'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -11,6 +11,7 @@ import { t } from '@/locales'
 
 const appStore = useAppStore()
 const userStore = useUserStore()
+const settingStore = useSettingStore()
 
 const { isMobile } = useBasicLayout()
 
@@ -110,6 +111,7 @@ function importData(event: Event): void {
 
 function clearData(): void {
   localStorage.removeItem('chatStorage')
+  settingStore.resetChatConfig()
   location.reload()
 }
 

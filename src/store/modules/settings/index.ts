@@ -60,6 +60,11 @@ export const useSettingStore = defineStore('setting-store', {
       }
     },
 
+    resetChatConfig() {
+      this.perChatSettings = []
+      this.recordState()
+    },
+
     recordState() {
       setLocalState(this.$state)
     },
