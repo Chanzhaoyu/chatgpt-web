@@ -1,11 +1,11 @@
 
 cd ./service
-nohup pnpm start > service.log &
+nohup npm run start > service.log &
 echo "Start service complete!"
 
 
 cd ..
 echo "" > front.log
-nohup pnpm dev > front.log &
+nohup npm run dev > front.log &
 echo "Start front complete!"
 tail -f front.log

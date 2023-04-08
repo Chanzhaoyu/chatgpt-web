@@ -1,9 +1,9 @@
 cd ./service
-start pnpm start > service.log &
+start npm start > service.log &
 echo "Start service complete!"
 
 
 cd ..
 echo "" > front.log
-start pnpm dev > front.log &
+start npm dev > front.log &
 echo "Start front complete!"
