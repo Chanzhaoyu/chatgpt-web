@@ -24,11 +24,11 @@ function setupPlugins(env: ImportMetaEnv): PluginOption[] {
         target: 'chrome64',
         loaders: {
           '.vue': 'js',
-          '.ts': 'js'
-        }
+          '.ts': 'js',
+        },
       }),
       enforce: 'post',
-    }
+    },
   ]
 }
 
@@ -55,6 +55,7 @@ export default defineConfig((env) => {
       },
     },
     build: {
+      target: 'es2015',
       reportCompressedSize: false,
       sourcemap: false,
       commonjsOptions: {
