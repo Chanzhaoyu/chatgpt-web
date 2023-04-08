@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { NAutoComplete, NButton, NInput, NModal, NSpace, useMessage } from 'naive-ui'
+import { NAutoComplete, NButton, NInput, NModal, NSlider, useMessage } from 'naive-ui'
 import { computed, ref } from 'vue'
 import { usePromptStore, useSettingStore } from '@/store'
 import { t } from '@/locales'
@@ -24,50 +24,46 @@ const emit = defineEmits<Emit>()
 const promptStore = usePromptStore()
 const settingStore = useSettingStore()
 const ms = useMessage()
-const tempSystemMessage = ref(settingStore.currentSystemMessage(+props.uuid))
-const defaultSystemMessage = computed(() => settingStore.defaultSystemMessage)
-const loading = ref(false)
-const disabled = computed (() => loading.value)
+
+const chatConfig = computed(() => settingStore.currentChatConfig(+props.uuid))
+const temperature = ref(chatConfig.value.temperature)
+const top_p = ref(chatConfig.value.top_p)
+const systemMessage = ref(chatConfig.value.systemMessage)
+
 const show = computed({
   get: () => props.visible,
-  set: (visible: boolean) => emit('update:visible', visible),
+  set: (visible: boolean) => {
+    updateElements()
+    emit('update:visible', visible)
+  },
 })
 
-function setSystemMessage() {
-  const message = tempSystemMessage.value.trim()
-  try {
-    loading.value = true
-    if (message.length > 1) {
-      settingStore.setCurrentSystemMessage(+props.uuid, message)
-      ms.success(t('common.success'))
-      show.value = false
-    }
-    else {
-      settingStore.restoreDefaultSystemMessage(+props.uuid)
-      tempSystemMessage.value = defaultSystemMessage.value
-      ms.success(t('systemMessage.reset'))
-      show.value = false
-    }
-  }
-  catch (error) {
-    ms.error(t('common.wrong'))
-  }
-  finally {
-    loading.value = false
-  }
+function updateChatConfig() {
+  settingStore.setChatConfig(+props.uuid, {
+    temperature: temperature.value,
+    top_p: top_p.value,
+    systemMessage: systemMessage.value.trim() ? systemMessage.value.trim() : settingStore.getDefaultSystemMessage,
+  })
+  ms.success(t('common.success'))
+  show.value = false
 }
 
-function handlePress(event: KeyboardEvent) {
-  if (event.key === 'Enter' && !event.shiftKey) {
-    event.preventDefault()
-    setSystemMessage()
-  }
+function resetChatConfig() {
+  settingStore.restoreDefaultChatConfig(+props.uuid)
+  ms.success(t('common.success'))
+  show.value = false
+}
+
+function updateElements() {
+  temperature.value = chatConfig.value.temperature
+  top_p.value = chatConfig.value.top_p
+  systemMessage.value = chatConfig.value.systemMessage
 }
 
 const searchOptions = computed(() => {
-  if (tempSystemMessage.value.startsWith('/')) {
+  if (systemMessage.value.startsWith('/')) {
     const { promptList: promptTemplate } = promptStore.getPromptList()
-    return promptTemplate.filter((item: { key: string }) => item.key.toLowerCase().includes(tempSystemMessage.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
+    return promptTemplate.filter((item: { key: string }) => item.key.toLowerCase().includes(systemMessage.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
       return {
         label: obj.value,
         value: obj.value,
@@ -92,42 +88,43 @@ const renderOption = (option: { label: string }) => {
 
 <template>
   <NModal v-model:show="show" style="width: 90%; max-width: 600px;" preset="card">
-    <div class="w-full max-w-screen-xl m-auto">
-      <NSpace vertical>
-        <span class="font-bold text-lg">{{ $t('systemMessage.chatRole') }}</span>
-        <NAutoComplete v-model:value="tempSystemMessage" :options="searchOptions" :render-label="renderOption">
+    <div class="space-y-6">
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[120px]">{{ $t('setting.role') }}</span>
+        <NAutoComplete v-model:value="systemMessage" :options="searchOptions" :render-label="renderOption">
           <template #default="{ handleInput, handleBlur, handleFocus }">
             <NInput
-              v-model:value="tempSystemMessage"
+              v-model:value="systemMessage"
               type="textarea"
               rows="6"
               :placeholder="t('systemMessage.inputPrompt')"
               @input="handleInput"
               @focus="handleFocus"
               @blur="handleBlur"
-              @keypress="handlePress"
             />
           </template>
         </NAutoComplete>
-      </NSpace>
-      <div class="my-4" />
-      <NSpace vertical>
-        <span class="font-bold text-lg">{{ $t('systemMessage.defaultRole') }}</span>
-        <NInput
-          v-model:value="defaultSystemMessage"
-          type="textarea"
-          rows="6"
-          :disabled="true"
-        />
-      </NSpace>
-      <NButton
-        block
-        type="primary"
-        :disabled="disabled"
-        :loading="loading"
-        @click="setSystemMessage"
-      >
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[120px]">{{ $t('setting.temperature') }}</span>
+        <div class="flex-1">
+          <NSlider v-model:value="temperature" :max="1" :min="0" :step="0.1" />
+        </div>
+        <span>{{ temperature }}</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[120px]">{{ $t('setting.top_p') }}</span>
+        <div class="flex-1">
+          <NSlider v-model:value="top_p" :max="1" :min="0" :step="0.1" />
+        </div>
+        <span>{{ top_p }}</span>
+      </div>
+      <NButton style="margin-right: 20px" type="primary" @click="updateChatConfig">
         {{ $t('common.save') }}
+      </NButton>
+
+      <NButton @click="resetChatConfig">
+        {{ $t('common.reset') }}
       </NButton>
     </div>
   </NModal>

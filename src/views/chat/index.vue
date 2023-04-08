@@ -96,11 +96,7 @@ async function onConversation() {
     options = { ...lastContext }
 
   // always add system message to options: either default or customized
-  const conversationConfig: Chat.ConversationConfig = {
-    systemMessage: settingStore.currentSystemMessage(+uuid),
-    temperature: settingStore.currentTemperature,
-    top_p: settingStore.currentTopP,
-  }
+  const conversationConfig: Chat.ConversationConfig = settingStore.currentChatConfig(+uuid)
 
   addChat(
     +uuid,
@@ -233,11 +229,7 @@ async function onRegenerate(index: number) {
     options = { ...requestOptions.options }
 
   // always add system message to options: either default or customized
-  const conversationConfig: Chat.ConversationConfig = {
-    systemMessage: settingStore.currentSystemMessage(+uuid),
-    temperature: settingStore.currentTemperature,
-    top_p: settingStore.currentTopP,
-  }
+  const conversationConfig: Chat.ConversationConfig = settingStore.currentChatConfig(+uuid)
 
   loading.value = true
 
