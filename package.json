@@ -19,7 +19,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "bootstrap": "npm install && npm run common:prepare",
-    "common:cleanup": "rimraf node_modules && rimraf package-lock.yaml",
+    "common:cleanup": "rimraf node_modules && rimraf package-lock.json",
     "common:prepare": "husky install"
   },
   "dependencies": {

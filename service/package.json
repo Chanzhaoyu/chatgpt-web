@@ -17,11 +17,11 @@
     "start": "esno ./src/index.ts",
     "dev": "esno watch ./src/index.ts",
     "prod": "node ./build/index.mjs",
-    "build": "npm clean && tsup",
+    "build": "npm run clean && tsup",
     "clean": "rimraf build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "common:cleanup": "rimraf node_modules && rimraf package-lock.yaml"
+    "common:cleanup": "rimraf node_modules && rimraf package-lock.json"
   },
   "dependencies": {
     "axios": "^1.3.4",

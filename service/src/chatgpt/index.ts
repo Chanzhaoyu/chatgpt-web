@@ -70,6 +70,8 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     apiModel = 'ChatGPTAPI'
   }
   else {
+    throw new Error('ChatGPTUnofficialProxyAPI is now disabled')
+    /*
     const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
     const options: ChatGPTUnofficialProxyAPIOptions = {
       accessToken: process.env.OPENAI_ACCESS_TOKEN,
@@ -87,6 +89,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 
     api = new ChatGPTUnofficialProxyAPI({ ...options })
     apiModel = 'ChatGPTUnofficialProxyAPI'
+    */
   }
 })()
 
