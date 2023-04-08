@@ -77,6 +77,37 @@ export class ChatInfo {
   }
 }
 
+export class UsageResponse {
+  prompt_tokens: number
+  completion_tokens: number
+  total_tokens: number
+  estimated: boolean
+}
+
+export class ChatUsage {
+  _id: ObjectId
+  userId: string
+  roomId: number
+  uuid: number
+  messageId: string
+  promptTokens: number
+  completionTokens: number
+  totalTokens: number
+  estimated: boolean
+  dateTime: number
+  constructor(userId: string, roomId: number, uuid: number, messageId: string, usage: UsageResponse) {
+    this.userId = userId
+    this.roomId = roomId
+    this.uuid = uuid
+    this.messageId = messageId
+    this.dateTime = new Date().getTime()
+    this.promptTokens = usage.prompt_tokens
+    this.completionTokens = usage.completion_tokens
+    this.totalTokens = usage.total_tokens
+    this.estimated = usage.estimated
+  }
+}
+
 export class Config {
   constructor(
     public _id: ObjectId,
