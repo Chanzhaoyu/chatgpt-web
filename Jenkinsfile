@@ -34,6 +34,6 @@ pipeline {
                     }
                 } 
             }
-        } gst
+        }
     }
 }
