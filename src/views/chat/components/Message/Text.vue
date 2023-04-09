@@ -51,9 +51,7 @@ const wrapClass = computed(() => {
 
 const text = computed(() => {
   const value = props.text ?? ''
-  if (!props.asRawText)
-    return mdi.render(value)
-  return value
+  return mdi.render(value)
 })
 
 function highlightBlock(str: string, lang?: string) {
@@ -66,14 +64,13 @@ defineExpose({ textRef })
 <template>
   <div class="text-black" :class="wrapClass">
     <div ref="textRef" class="leading-relaxed break-words">
-      <div v-if="!inversion">
-        <div v-if="!asRawText" class="markdown-body" v-html="text" />
-        <div v-else class="whitespace-pre-wrap" v-text="text" />
+      <div v-if="!inversion" class="flex items-end">
+        <div class="w-full markdown-body" v-html="text" />
+        <span v-if="loading" class="dark:text-white w-[4px] h-[20px] block animate-blink" />
       </div>
-      <div v-else class="whitespace-pre-wrap" v-text="text" />
-      <template v-if="loading">
-        <span class="dark:text-white w-[4px] h-[20px] block animate-blink" />
-      </template>
+      <div v-else class="whitespace-pre-wrap">
+        <div class="w-full markdown-body" v-html="text" />
+      </div>
     </div>
   </div>
 </template>
