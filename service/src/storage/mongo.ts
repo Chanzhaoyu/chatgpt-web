@@ -1,7 +1,7 @@
 import { MongoClient, ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'
-import { ChatInfo, ChatRoom, Status, UserInfo } from './model'
-import type { ChatOptions, Config } from './model'
+import { ChatInfo, ChatRoom, ChatUsage, Status, UserInfo } from './model'
+import type { ChatOptions, Config, UsageResponse } from './model'
 
 dotenv.config()
 
@@ -11,6 +11,7 @@ const chatCol = client.db('chatgpt').collection('chat')
 const roomCol = client.db('chatgpt').collection('chat_room')
 const userCol = client.db('chatgpt').collection('user')
 const configCol = client.db('chatgpt').collection('config')
+const usageCol = client.db('chatgpt').collection('chat_usage')
 
 /**
  * 插入聊天信息
@@ -29,16 +30,29 @@ export async function getChat(roomId: number, uuid: number) {
   return await chatCol.findOne({ roomId, uuid })
 }
 
-export async function updateChat(chatId: string, response: string, messageId: string, previousResponse?: []) {
+export async function updateChat(chatId: string, response: string, messageId: string, usage: UsageResponse, previousResponse?: []) {
   const query = { _id: new ObjectId(chatId) }
   const update = {
-    $set: { 'response': response, 'options.messageId': messageId },
+    $set: {
+      'response': response,
+      'options.messageId': messageId,
+      'options.prompt_tokens': usage.prompt_tokens,
+      'options.completion_tokens': usage.completion_tokens,
+      'options.total_tokens': usage.total_tokens,
+      'options.estimated': usage.estimated,
+    },
   }
 
   if (previousResponse)
     update.$set.previousResponse = previousResponse
 
   await chatCol.updateOne(query, update)
+}
+
+export async function insertChatUsage(userId: string, roomId: number, chatId: ObjectId, messageId: string, usage: UsageResponse) {
+  const chatUsage = new ChatUsage(userId, roomId, chatId, messageId, usage)
+  await usageCol.insertOne(chatUsage)
+  return chatUsage
 }
 
 export async function createChatRoom(userId: string, title: string, roomId: number) {
