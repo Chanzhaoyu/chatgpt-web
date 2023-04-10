@@ -296,10 +296,80 @@ async function getModelDetail(req: any) {
   }
 }
 
+async function createModel(req: any) {
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+  const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
+
+  if (!isNotEmptyString(OPENAI_API_KEY))
+    return Promise.resolve('-')
+
+  const API_BASE_URL = isNotEmptyString(OPENAI_API_BASE_URL)
+    ? OPENAI_API_BASE_URL
+    : 'https://api.openai.com'
+
+  try {
+    const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENAI_API_KEY}` }
+    const response = await fetch(`${API_BASE_URL}/v1/fine-tunes`, {
+      headers,
+      method: 'POST',
+      body: req.body,
+    })
+    const modelDetailData = await response.json()
+    return sendResponse({
+      type: 'Success',
+      data: (modelDetailData as any)?.data || [],
+    })
+  }
+  catch {
+    return sendResponse({
+      type: 'Fail',
+      message: '获取失败',
+      data: [],
+    })
+  }
+}
+
+async function uploadFile(file: any) {
+  const purpose = 'fine-tune' // 目的先默认为微调
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+  const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
+
+  if (!isNotEmptyString(OPENAI_API_KEY))
+    return Promise.resolve('-')
+
+  const API_BASE_URL = isNotEmptyString(OPENAI_API_BASE_URL)
+    ? OPENAI_API_BASE_URL
+    : 'https://api.openai.com'
+
+  try {
+    const headers = { 'Content-Type': 'multipart/form-data;charset=UTF-8', 'Authorization': `Bearer ${OPENAI_API_KEY}` }
+    const response = await fetch(`${API_BASE_URL}/v1/files`, {
+      headers,
+      method: 'POST',
+      body: {
+        file,
+        purpose,
+      },
+    })
+    const uploadRes = await response.json()
+    return {
+      type: 'Success',
+      data: (uploadRes as any)?.id || '',
+    }
+  }
+  catch {
+    return {
+      type: 'Fail',
+      message: '上传失败',
+      data: '',
+    }
+  }
+}
+
 function currentModel(): ApiModel {
   return apiModel
 }
 
 export type { ChatContext, ChatMessage }
 
-export { chatReplyProcess, chatConfig, currentModel, getModels, getList, getModelDetail }
+export { chatReplyProcess, chatConfig, currentModel, getModels, getList, getModelDetail, createModel }

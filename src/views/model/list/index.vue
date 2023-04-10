@@ -137,9 +137,8 @@ onMounted(async () => {
     <div class="model-list__header">
       <div>
         <NButton @click="goBack">
-          返回
+          chat
         </NButton>
-        <span class="ml-2">微调</span>
       </div>
       <NButton type="info" @click="toCreate">
         创建
