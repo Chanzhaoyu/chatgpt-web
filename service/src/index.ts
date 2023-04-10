@@ -1,7 +1,7 @@
 import express from 'express'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
-import { chatConfig, chatReplyProcess, currentModel, getList, getModelDetail, getModels } from './chatgpt'
+import { chatConfig, chatReplyProcess, createModel, currentModel, getList, getModelDetail, getModels } from './chatgpt'
 import { auth } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
@@ -64,9 +64,19 @@ router.get('/list', auth, async (req, res) => {
   }
 })
 
-router.post('/modelDetail', auth, async (req, res) => {
+router.post('/model-detail', auth, async (req, res) => {
   try {
     const response = await getModelDetail(req)
+    res.send(response)
+  }
+  catch (error) {
+    res.send(error)
+  }
+})
+
+router.post('/create-model', auth, async (req, res) => {
+  try {
+    const response = await createModel(req)
     res.send(response)
   }
   catch (error) {

@@ -5,12 +5,6 @@ import { ROUTER } from '@/router/const'
 
 const router = useRouter()
 
-const jumpToChat = () => {
-  router.push({
-    name: ROUTER.name.root,
-  })
-}
-
 const jumpToModel = () => {
   router.push({
     name: ROUTER.name.model,
@@ -21,9 +15,6 @@ const jumpToModel = () => {
 <template>
   <div class="global-header">
     <NSpace>
-      <NButton @click="jumpToChat">
-        Chat
-      </NButton>
       <NButton @click="jumpToModel">
         微调
       </NButton>
@@ -33,6 +24,6 @@ const jumpToModel = () => {
 
 <style lang="less" scoped>
 .global-header {
-    padding: 4px;
+  padding: 4px 24px;
 }
 </style>

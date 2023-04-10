@@ -15,3 +15,9 @@ export interface HyperParam {
   n_epochs: number
   prompt_loss_weight: number
 }
+
+export interface CreateModelReq {
+  training_file: string
+  model: string
+  suffix: string
+}

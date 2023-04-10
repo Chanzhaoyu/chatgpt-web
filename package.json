@@ -25,6 +25,7 @@
   "dependencies": {
     "@traptitech/markdown-it-katex": "^3.6.0",
     "@vueuse/core": "^9.13.0",
+    "clipboard": "^2.0.11",
     "dayjs": "^1.11.7",
     "highlight.js": "^11.7.0",
     "html2canvas": "^1.4.1",
@@ -34,7 +35,8 @@
     "pinia": "^2.0.33",
     "vue": "^3.2.47",
     "vue-i18n": "^9.2.2",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "vue3-json-viewer": "^2.2.2"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.35.3",

@@ -15,6 +15,7 @@ specifiers:
   '@vueuse/core': ^9.13.0
   autoprefixer: ^10.4.13
   axios: ^1.3.4
+  clipboard: ^2.0.11
   crypto-js: ^4.1.1
   dayjs: ^1.11.7
   eslint: ^8.35.0
@@ -39,10 +40,12 @@ specifiers:
   vue-i18n: ^9.2.2
   vue-router: ^4.1.6
   vue-tsc: ^1.2.0
+  vue3-json-viewer: ^2.2.2
 
 dependencies:
   '@traptitech/markdown-it-katex': registry.npmmirror.com/@traptitech/markdown-it-katex/3.6.0
   '@vueuse/core': registry.npmmirror.com/@vueuse/core/9.13.0_vue@3.2.47
+  clipboard: registry.npmmirror.com/clipboard/2.0.11
   dayjs: registry.npmmirror.com/dayjs/1.11.7
   highlight.js: registry.npmmirror.com/highlight.js/11.7.0
   html2canvas: registry.npmmirror.com/html2canvas/1.4.1
@@ -53,6 +56,7 @@ dependencies:
   vue: registry.npmmirror.com/vue/3.2.47
   vue-i18n: registry.npmmirror.com/vue-i18n/9.2.2_vue@3.2.47
   vue-router: registry.npmmirror.com/vue-router/4.1.6_vue@3.2.47
+  vue3-json-viewer: registry.npmmirror.com/vue3-json-viewer/2.2.2_vue@3.2.47
 
 devDependencies:
   '@antfu/eslint-config': registry.npmmirror.com/@antfu/eslint-config/0.35.3_ip5up2nocltd47wbnuyybe5dxu
@@ -3566,6 +3570,16 @@ packages:
       string-width: registry.npmmirror.com/string-width/5.1.2
     dev: true
 
+  registry.npmmirror.com/clipboard/2.0.11:
+    resolution: {integrity: sha512-C+0bbOqkezLIsmWSvlsXS0Q0bmkugu7jcfMIACB+RDEntIzQIkdr148we28AfSloQLRdZlYL/QYyrq05j/3Faw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/clipboard/-/clipboard-2.0.11.tgz}
+    name: clipboard
+    version: 2.0.11
+    dependencies:
+      good-listener: registry.npmmirror.com/good-listener/1.2.2
+      select: registry.npmmirror.com/select/1.1.2
+      tiny-emitter: registry.npmmirror.com/tiny-emitter/2.1.0
+    dev: false
+
   registry.npmmirror.com/cliui/8.0.1:
     resolution: {integrity: sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/cliui/-/cliui-8.0.1.tgz}
     name: cliui
@@ -3947,6 +3961,12 @@ packages:
     version: 1.0.0
     engines: {node: '>=0.4.0'}
     dev: true
+
+  registry.npmmirror.com/delegate/3.2.0:
+    resolution: {integrity: sha512-IofjkYBZaZivn0V8nnsMJGBr4jVLxHDheKSW88PyxS5QC4Vo9ZbZVvhzlSxY87fVq3STR6r+4cGepyHkcWOQSw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/delegate/-/delegate-3.2.0.tgz}
+    name: delegate
+    version: 3.2.0
+    dev: false
 
   registry.npmmirror.com/didyoumean/1.2.2:
     resolution: {integrity: sha512-gxtyfqMg7GKyhQmb056K7M3xszy/myH8w+B4RT+QXBQsvAOdc3XymqDDPHx1BgPgsdAA5SIifona89YtRATDzw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/didyoumean/-/didyoumean-1.2.2.tgz}
@@ -5124,6 +5144,14 @@ packages:
       merge2: registry.npmmirror.com/merge2/1.4.1
       slash: registry.npmmirror.com/slash/3.0.0
     dev: true
+
+  registry.npmmirror.com/good-listener/1.2.2:
+    resolution: {integrity: sha512-goW1b+d9q/HIwbVYZzZ6SsTr4IgE+WA44A0GmPIQstuOrgsFcT7VEJ48nmr9GaRtNu0XTKacFLGnBPAM6Afouw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/good-listener/-/good-listener-1.2.2.tgz}
+    name: good-listener
+    version: 1.2.2
+    dependencies:
+      delegate: registry.npmmirror.com/delegate/3.2.0
+    dev: false
 
   registry.npmmirror.com/gopd/1.0.1:
     resolution: {integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/gopd/-/gopd-1.0.1.tgz}
@@ -7391,6 +7419,12 @@ packages:
     version: 0.3.6
     dev: false
 
+  registry.npmmirror.com/select/1.1.2:
+    resolution: {integrity: sha512-OwpTSOfy6xSs1+pwcNrv0RBMOzI39Lp3qQKUTPVVPRjCdNa5JH/oPRiqsesIskK8TVgmRiHwO4KXlV2Li9dANA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/select/-/select-1.1.2.tgz}
+    name: select
+    version: 1.1.2
+    dev: false
+
   registry.npmmirror.com/semver/5.7.1:
     resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/semver/-/semver-5.7.1.tgz}
     name: semver
@@ -7919,6 +7953,12 @@ packages:
       readable-stream: registry.npmmirror.com/readable-stream/3.6.2
     dev: true
 
+  registry.npmmirror.com/tiny-emitter/2.1.0:
+    resolution: {integrity: sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/tiny-emitter/-/tiny-emitter-2.1.0.tgz}
+    name: tiny-emitter
+    version: 2.1.0
+    dev: false
+
   registry.npmmirror.com/to-fast-properties/2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz}
     name: to-fast-properties
@@ -8412,6 +8452,18 @@ packages:
       '@vue/runtime-dom': registry.npmmirror.com/@vue/runtime-dom/3.2.47
       '@vue/server-renderer': registry.npmmirror.com/@vue/server-renderer/3.2.47_vue@3.2.47
       '@vue/shared': registry.npmmirror.com/@vue/shared/3.2.47
+
+  registry.npmmirror.com/vue3-json-viewer/2.2.2_vue@3.2.47:
+    resolution: {integrity: sha512-56l3XDGggnpwEqZieXsSMhNT4NhtO6d7zuSAxHo4i0UVxymyY2jRb7UMQOU1ztChKALZCAzX7DlgrsnEhxu77A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue3-json-viewer/-/vue3-json-viewer-2.2.2.tgz}
+    id: registry.npmmirror.com/vue3-json-viewer/2.2.2
+    name: vue3-json-viewer
+    version: 2.2.2
+    peerDependencies:
+      vue: ^3.2.0
+    dependencies:
+      clipboard: registry.npmmirror.com/clipboard/2.0.11
+      vue: registry.npmmirror.com/vue/3.2.47
+    dev: false
 
   registry.npmmirror.com/vueuc/0.4.51_vue@3.2.47:
     resolution: {integrity: sha512-pLiMChM4f+W8czlIClGvGBYo656lc2Y0/mXFSCydcSmnCR1izlKPGMgiYBGjbY9FDkFG8a2HEVz7t0DNzBWbDw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vueuc/-/vueuc-0.4.51.tgz}

@@ -1,4 +1,5 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
+import type { CreateModelReq } from './types'
 import { get, post } from '@/utils/request'
 import { useSettingStore } from '@/store'
 
@@ -70,9 +71,26 @@ export function fetchList<T>() {
 
 export function fetchModelDetail<T>(id: string) {
   return post<T>({
-    url: '/api/modelDetail',
+    url: '/api/model-detail',
     data: {
       fine_tune_id: id,
     },
+  })
+}
+
+export function prepareData<T>(formData: FormData) {
+  return post<T>({
+    url: '/api/prepare-data',
+    data: formData,
+    headers: {
+      'Content-type': 'multipart/form-data;charset=UTF-8',
+    },
+  })
+}
+
+export function createModel<T>(params: CreateModelReq) {
+  return post<T>({
+    url: '/api/create-model',
+    data: params,
   })
 }
