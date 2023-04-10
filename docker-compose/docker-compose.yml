@@ -6,6 +6,8 @@ services:
     image: chenzhaoyu94/chatgpt-web # 总是使用latest,更新时重新pull该tag镜像即可
     ports:
       - 3002:3002
+    volumes:
+      - db-data:/app/public
     environment:
       # 二选一
       OPENAI_API_KEY:
@@ -41,7 +43,12 @@ services:
     expose:
       - '80'
     volumes:
-      - ./nginx/html:/usr/share/nginx/html
+      - db-data:/usr/share/nginx/html
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     links:
       - app
+    depends_on:
+     - app
+volumes:
+  db-data:
+
