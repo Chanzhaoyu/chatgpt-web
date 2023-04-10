@@ -30,3 +30,4 @@ coverage
 
 # Environment variables files
 /service/.env
+/service/uploads

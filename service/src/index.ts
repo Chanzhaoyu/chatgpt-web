@@ -1,13 +1,17 @@
 import express from 'express'
+import multer from 'multer'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
-import { chatConfig, chatReplyProcess, createModel, currentModel, getList, getModelDetail, getModels } from './chatgpt'
+import { chatConfig, chatReplyProcess, createModel, currentModel, getList, getModelDetail, getModels, prepareData } from './chatgpt'
 import { auth } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
+import { storage } from './utils/file'
 
 const app = express()
 const router = express.Router()
+
+const upload = multer({ storage })
 
 app.use(express.static('public'))
 app.use(express.json())
@@ -115,6 +119,16 @@ router.post('/verify', async (req, res) => {
       throw new Error('密钥无效 | Secret key is invalid')
 
     res.send({ status: 'Success', message: 'Verify successfully', data: null })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/prepareData', upload.single('file'), async (req, res) => {
+  try {
+    const response = await prepareData((req as any).file)
+    res.send(response)
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

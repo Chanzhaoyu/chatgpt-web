@@ -32,6 +32,7 @@
     "express-rate-limit": "^6.7.0",
     "https-proxy-agent": "^5.0.1",
     "isomorphic-fetch": "^3.0.0",
+    "multer": "1.4.5-lts.1",
     "node-fetch": "^3.3.0",
     "socks-proxy-agent": "^7.0.0"
   },

@@ -1,10 +1,14 @@
+import { createReadStream, existsSync, readdirSync } from 'fs'
+import { exec } from 'child_process'
+import Readline from 'readline'
 import * as dotenv from 'dotenv'
 import 'isomorphic-fetch'
 import type { ChatGPTAPIOptions, ChatMessage, SendMessageOptions } from '@tzzack/chatgpt'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from '@tzzack/chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import httpsProxyAgent from 'https-proxy-agent'
-import fetch from 'node-fetch'
+import fetch, { FormData, fileFromSync } from 'node-fetch'
+import { handlerFullPath } from 'src/utils/file'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
@@ -335,34 +339,28 @@ async function uploadFile(file: any) {
   const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
 
   if (!isNotEmptyString(OPENAI_API_KEY))
-    return Promise.resolve('-')
+    return ''
 
   const API_BASE_URL = isNotEmptyString(OPENAI_API_BASE_URL)
     ? OPENAI_API_BASE_URL
     : 'https://api.openai.com'
 
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('purpose', purpose)
+
   try {
-    const headers = { 'Content-Type': 'multipart/form-data;charset=UTF-8', 'Authorization': `Bearer ${OPENAI_API_KEY}` }
+    const headers = { Authorization: `Bearer ${OPENAI_API_KEY}` }
     const response = await fetch(`${API_BASE_URL}/v1/files`, {
       headers,
       method: 'POST',
-      body: {
-        file,
-        purpose,
-      },
+      body: formData,
     })
     const uploadRes = await response.json()
-    return {
-      type: 'Success',
-      data: (uploadRes as any)?.id || '',
-    }
+    return (uploadRes as any)?.id || ''
   }
   catch {
-    return {
-      type: 'Fail',
-      message: '上传失败',
-      data: '',
-    }
+    return ''
   }
 }
 
@@ -370,6 +368,60 @@ function currentModel(): ApiModel {
   return apiModel
 }
 
+interface PrepareDataRes {
+  message: string
+  data: '' | { id: string; list: Record<string, any>[] }
+  status: 'Success' | 'Fail'
+}
+
+function prepareData(file: any) {
+  return new Promise<PrepareDataRes>((resolve, reject) => {
+    if (existsSync(file.path)) {
+      const { filename, folder } = handlerFullPath(file.path)
+      exec(`cd ${folder} &&  openai tools fine_tunes.prepare_data -f ${filename} -q`, (_err) => {
+        if (_err) {
+          reject(new Error('微调接口调用失败失败'))
+          return
+        }
+        // 查找解析后的文件
+        const files = readdirSync(folder)
+        const preparedFilename = files.find(item => item !== filename)
+        if (!preparedFilename) {
+          resolve({ message: '文件解析失败', data: '', status: 'Success' })
+          return
+        }
+        const preparedFile = `${folder}/${preparedFilename}`
+        uploadFile(fileFromSync(preparedFile, 'text/plain')).then((res) => {
+          const preparedFileData = createReadStream(preparedFile)
+          const rl = Readline.createInterface({
+            input: preparedFileData,
+            crlfDelay: Infinity,
+          })
+          const MAX_LINE = 100
+          let curr = 1
+          const list = []
+          rl.on('line', (line) => {
+            if (curr > MAX_LINE) {
+              rl.close()
+              return
+            }
+
+            try {
+              list.push(JSON.parse(line))
+            }
+            finally {
+              curr++
+            }
+          })
+          rl.on('close', () => resolve({ message: '', data: { id: res, list }, status: 'Success' }))
+        })
+      })
+      return
+    }
+    resolve({ message: '文件解析失败', data: null, status: 'Fail' })
+  })
+}
+
 export type { ChatContext, ChatMessage }
 
-export { chatReplyProcess, chatConfig, currentModel, getModels, getList, getModelDetail, createModel }
+export { chatReplyProcess, chatConfig, currentModel, getModels, getList, getModelDetail, prepareData, createModel }
