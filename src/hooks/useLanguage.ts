@@ -19,7 +19,7 @@ export function useLanguage() {
         return zhTW
       default:
         setLocale('zh-CN')
-        return enUS
+        return zhCN
     }
   })
 
