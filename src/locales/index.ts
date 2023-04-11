@@ -1,6 +1,7 @@
 import type { App } from 'vue'
 import { createI18n } from 'vue-i18n'
 import enUS from './en-US'
+import koKR from './ko-KR'
 import zhCN from './zh-CN'
 import zhTW from './zh-TW'
 import { useAppStoreWithOut } from '@/store/modules/app'
@@ -16,6 +17,7 @@ const i18n = createI18n({
   allowComposition: true,
   messages: {
     'en-US': enUS,
+    'ko-KR': koKR,
     'zh-CN': zhCN,
     'zh-TW': zhTW,
   },
