@@ -8,7 +8,7 @@ services:
       - 3002:3002
     environment:
       # 二选一
-      OPENAI_API_KEY:
+      OPENAI_API_KEY: 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
       # 二选一
       OPENAI_ACCESS_TOKEN:
       # API接口地址，可选，设置 OPENAI_API_KEY 时可用
@@ -18,15 +18,15 @@ services:
       # 反向代理，可选
       API_REVERSE_PROXY:
       # 访问权限密钥，可选
-      AUTH_SECRET_KEY:
+      AUTH_SECRET_KEY: 1qaz@WSX
       # 每小时最大请求次数，可选，默认无限
       MAX_REQUEST_PER_HOUR: 0
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
       # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
-      SOCKS_PROXY_HOST:
+      SOCKS_PROXY_HOST: 127.0.0.1
       # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
-      SOCKS_PROXY_PORT:
+      SOCKS_PROXY_PORT: 7890
       # Socks代理用户名，可选，和 SOCKS_PROXY_HOST & SOCKS_PROXY_PORT 一起时生效
       SOCKS_PROXY_USERNAME:
       # Socks代理密码，可选，和 SOCKS_PROXY_HOST & SOCKS_PROXY_PORT 一起时生效

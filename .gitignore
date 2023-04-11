@@ -28,5 +28,8 @@ coverage
 *.sln
 *.sw?
 
+# docker files
+docker-compose/**
+
 # Environment variables files
 /service/.env
