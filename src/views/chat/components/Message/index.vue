@@ -113,7 +113,7 @@ function handleRegenerate() {
                 <span>]</span>
               </span>
             </template>
-            <span class="text-sm">
+            <span class="text-xs">
               {{ usage.estimated ? '预估 ' : '' }}提问 {{ usage.prompt_tokens }}
               + 回复 {{ usage.completion_tokens }}
               = 总消耗 <a :href="url_openai_token" target="_blank">token</a> {{ usage.total_tokens }}
