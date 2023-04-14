@@ -114,9 +114,11 @@ function handleRegenerate() {
               </span>
             </template>
             <span class="text-xs">
-              {{ usage.estimated ? '预估 ' : '' }}提问 {{ usage.prompt_tokens }}
-              + 回复 {{ usage.completion_tokens }}
-              = 总消耗 <a :href="url_openai_token" target="_blank">token</a> {{ usage.total_tokens }}
+              {{ usage.estimated ? t('chat.usageEstimate') : '' }}
+              {{ t('chat.usagePrompt') }} {{ usage.prompt_tokens }}
+              + {{ t('chat.usageResponse') }} {{ usage.completion_tokens }}
+              = {{ t('chat.usageTotal') }}<a :href="url_openai_token" target="_blank">(?)</a>
+              {{ usage.total_tokens }}
             </span>
           </NPopover>
         </template>

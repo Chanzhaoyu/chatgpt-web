@@ -56,6 +56,10 @@ export default {
     clearHistoryConfirm: '确定清空聊天记录?',
     preview: '预览',
     showRawText: '显示原文',
+    usageEstimate: '预估',
+    usagePrompt: '提问',
+    usageResponse: '回复',
+    usageTotal: '总消耗 token',
   },
   setting: {
     setting: '设置',
