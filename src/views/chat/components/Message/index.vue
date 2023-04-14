@@ -15,7 +15,12 @@ interface Props {
   inversion?: boolean
   error?: boolean
   loading?: boolean
-  usage?: object
+  usage?: {
+    completion_tokens: number
+    prompt_tokens: number
+    total_tokens: number
+    estimated: boolean
+  }
 }
 
 interface Emit {

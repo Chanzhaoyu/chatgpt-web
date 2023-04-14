@@ -9,7 +9,12 @@ declare namespace Chat {
     loading?: boolean
     conversationOptions?: ConversationRequest | null
     requestOptions: { prompt: string; options?: ConversationRequest | null }
-    usage?: { completion_tokens: number; prompt_tokens: number; total_tokens: number, estimated: boolean }
+    usage?: {
+      completion_tokens: number
+      prompt_tokens: number
+      total_tokens: number
+      estimated: boolean
+    }
   }
 
   interface History {
