@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
-import { NDropdown } from 'naive-ui'
+import { NDropdown, NPopover } from 'naive-ui'
 import AvatarComponent from './Avatar.vue'
 import TextComponent from './Text.vue'
 import { SvgIcon } from '@/components/common'
@@ -15,6 +15,7 @@ interface Props {
   inversion?: boolean
   error?: boolean
   loading?: boolean
+  usage?: object
 }
 
 interface Emit {
@@ -35,6 +36,8 @@ const textRef = ref<HTMLElement>()
 const asRawText = ref(props.inversion)
 
 const messageRef = ref<HTMLElement>()
+
+const url_openai_token = 'https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them'
 
 const options = computed(() => {
   const common = [
@@ -95,6 +98,23 @@ function handleRegenerate() {
     <div class="overflow-hidden text-sm " :class="[inversion ? 'items-end' : 'items-start']">
       <p class="text-xs text-[#b4bbc4]" :class="[inversion ? 'text-right' : 'text-left']">
         {{ dateTime }}
+        <template v-if="usage">
+          <NPopover trigger="hover">
+            <template #trigger>
+              <span>
+                <span>[</span>
+                <span>{{ usage.estimated ? '~' : '' }}</span>
+                <span>{{ usage.prompt_tokens }}+{{ usage.completion_tokens }}={{ usage.total_tokens }}</span>
+                <span>]</span>
+              </span>
+            </template>
+            <span class="text-sm">
+              {{ usage.estimated ? '预估 ' : '' }}提问 {{ usage.prompt_tokens }}
+              + 回复 {{ usage.completion_tokens }}
+              = 总消耗 <a :href="url_openai_token" target="_blank">token</a> {{ usage.total_tokens }}
+            </span>
+          </NPopover>
+        </template>
       </p>
       <div
         class="flex items-end gap-1 mt-2"

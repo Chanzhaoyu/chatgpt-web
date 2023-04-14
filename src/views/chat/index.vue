@@ -135,6 +135,14 @@ async function onConversation() {
             chunk = responseText.substring(lastIndex)
           try {
             const data = JSON.parse(chunk)
+            const usage = data.detail.usage
+              ? {
+                  completion_tokens: data.detail.usage.completion_tokens || null,
+                  prompt_tokens: data.detail.usage.prompt_tokens || null,
+                  total_tokens: data.detail.usage.total_tokens || null,
+                  estimated: data.detail.usage.estimated || null,
+                }
+              : undefined
             updateChat(
               +uuid,
               dataSources.value.length - 1,
@@ -146,6 +154,7 @@ async function onConversation() {
                 loading: true,
                 conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
                 requestOptions: { prompt: message, options: { ...options } },
+                usage,
               },
             )
 
@@ -269,6 +278,14 @@ async function onRegenerate(index: number) {
             chunk = responseText.substring(lastIndex)
           try {
             const data = JSON.parse(chunk)
+            const usage = data.detail.usage
+              ? {
+                completion_tokens: data.detail.usage.completion_tokens || null,
+                prompt_tokens: data.detail.usage.prompt_tokens || null,
+                total_tokens: data.detail.usage.total_tokens || null,
+                estimated: data.detail.usage.estimated || null,
+              }
+              : undefined
             updateChat(
               +uuid,
               index,
@@ -280,6 +297,7 @@ async function onRegenerate(index: number) {
                 loading: true,
                 conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
                 requestOptions: { prompt: message, options: { ...options } },
+                usage,
               },
             )
 
@@ -552,6 +570,7 @@ onUnmounted(() => {
                   :date-time="item.dateTime"
                   :text="item.text"
                   :inversion="item.inversion"
+                  :usage="item.usage || null"
                   :error="item.error"
                   :loading="item.loading"
                   @regenerate="onRegenerate(index)"
