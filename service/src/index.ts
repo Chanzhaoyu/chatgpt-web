@@ -272,7 +272,19 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
       message: prompt,
       lastContext: options,
       process: (chat: ChatMessage) => {
-        res.write(firstChunk ? JSON.stringify(chat) : `\n${JSON.stringify(chat)}`)
+        const chuck = {
+          id: chat.id,
+          conversationId: chat.conversationId,
+          text: chat.text,
+          detail: {
+            choices: [
+              {
+                finish_reason: chat.detail.choices[0].finish_reason,
+              },
+            ],
+          },
+        }
+        res.write(firstChunk ? JSON.stringify(chuck) : `\n${JSON.stringify(chuck)}`)
         firstChunk = false
       },
       systemMessage,
