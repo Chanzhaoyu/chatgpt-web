@@ -421,11 +421,13 @@ router.post('/user-login', async (req, res) => {
     if (user == null
       || user.status !== Status.Normal
       || user.password !== md5(password)) {
+      if (user.password !== md5(password))
+        throw new Error('用户不存在或密码错误 | User does not exist or incorrect password.')
       if (user != null && user.status === Status.PreVerify)
         throw new Error('请去邮箱中验证 | Please verify in the mailbox')
       if (user != null && user.status === Status.AdminVerify)
         throw new Error('请等待管理员开通 | Please wait for the admin to activate')
-      throw new Error('用户不存在或密码错误 | User does not exist or incorrect password.')
+      throw new Error('账户状态异常 | Account status abnormal.')
     }
     const config = await getCacheConfig()
     const token = jwt.sign({
@@ -494,12 +496,12 @@ router.post('/verifyadmin', async (req, res) => {
     const username = await checkUserVerifyAdmin(token)
     const user = await getUser(username)
     if (user != null && user.status === Status.Normal) {
-      res.send({ status: 'Fail', message: '邮箱已开通 | The email has been opened.', data: null })
+      res.send({ status: 'Fail', message: '账户已开通 | The email has been opened.', data: null })
       return
     }
     await verifyUser(username, Status.Normal)
     await sendNoticeMail(username)
-    res.send({ status: 'Success', message: '开通成功 | Activate successfully', data: null })
+    res.send({ status: 'Success', message: '账户已激活 | Account has been activated.', data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

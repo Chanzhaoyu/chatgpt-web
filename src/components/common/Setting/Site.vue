@@ -73,6 +73,7 @@ onMounted(() => {
           <div class="flex-1">
             <NSwitch
               :round="false"
+              :disabled="config && config.loginEnabled"
               :value="config && config.loginEnabled"
               @update:value="(val) => { if (config) config.loginEnabled = val }"
             />
@@ -82,13 +83,10 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.loginSalt') }}</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.loginSalt" placeholder=""
+              :value="config && config.loginSalt" :placeholder="$t('setting.loginSaltTip')"
               @input="(val) => { if (config) config.loginSalt = val }"
             />
           </div>
-          <p>
-            {{ $t('setting.loginSaltTip') }}
-          </p>
         </div>
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.registerEnabled') }}</span>
