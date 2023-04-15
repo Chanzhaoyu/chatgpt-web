@@ -35,8 +35,8 @@ export async function initApi() {
     throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
 
   if (isNotEmptyString(config.apiKey)) {
-    const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
-    const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
+    const OPENAI_API_BASE_URL = config.apiBaseUrl
+    const OPENAI_API_MODEL = config.apiModel
     const model = isNotEmptyString(OPENAI_API_MODEL) ? OPENAI_API_MODEL : 'gpt-3.5-turbo'
 
     const options: ChatGPTAPIOptions = {
@@ -66,7 +66,7 @@ export async function initApi() {
     apiModel = 'ChatGPTAPI'
   }
   else {
-    const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
+    const OPENAI_API_MODEL = config.apiModel
     const options: ChatGPTUnofficialProxyAPIOptions = {
       accessToken: config.accessToken,
       debug: !config.apiDisableDebug,
@@ -210,8 +210,8 @@ async function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPI
     }
   }
   else {
-    if (isNotEmptyString(config.httpsProxy) || isNotEmptyString(process.env.ALL_PROXY)) {
-      const httpsProxy = config.httpsProxy || process.env.ALL_PROXY
+    if (isNotEmptyString(config.httpsProxy)) {
+      const httpsProxy = config.httpsProxy
       if (httpsProxy) {
         const agent = new HttpsProxyAgent(httpsProxy)
         options.fetch = (url, options) => {

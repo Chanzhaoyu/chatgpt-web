@@ -186,7 +186,6 @@ pnpm dev
 - `SOCKS_PROXY_USERNAME` optional, effective with SOCKS_PROXY_HOST and SOCKS_PROXY_PORT
 - `SOCKS_PROXY_PASSWORD` optional, effective with SOCKS_PROXY_HOST and SOCKS_PROXY_PORT
 - `HTTPS_PROXY` optional, support http，https, socks5
-- `ALL_PROXY` optional, support http，https, socks5
 
 ![docker](./docs/docker.png)
 
@@ -312,7 +311,6 @@ The `OPENAI_API_MODEL` is optional and only used when setting the `OPENAI_API_KE
 | `SOCKS_PROXY_USERNAME` | Optional, effective with `SOCKS_PROXY_HOST` & `SOCKS_PROXY_PORT`  | Socks proxy username.                                                                                            |
 | `SOCKS_PROXY_PASSWORD` | Optional, effective with `SOCKS_PROXY_HOST` & `SOCKS_PROXY_PORT`  | Socks proxy password.                                                                                            |
 | `HTTPS_PROXY`          | Optional                                                          | HTTPS Proxy.                                                                                                     |
-| `ALL_PROXY`            | Optional                                                          | ALL Proxy.                                                                                                       |
 
 > Note: Changing environment variables in Railway will cause re-deployment.
 
