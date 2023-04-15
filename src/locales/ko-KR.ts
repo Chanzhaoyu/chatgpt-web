@@ -56,6 +56,10 @@ export default {
     clearHistoryConfirm: '채팅 기록을 지우시겠습니까?',
     preview: '미리보기',
     showRawText: '원시 텍스트로 표시',
+    usageEstimate: '예상',
+    usagePrompt: '질문',
+    usageResponse: '답변',
+    usageTotal: '총 소비 token',
   },
   setting: {
     setting: '설정',

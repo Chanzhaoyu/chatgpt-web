@@ -142,6 +142,14 @@ router.get('/chat-hisroty', auth, async (req, res) => {
         })
       }
       if (c.status !== Status.ResponseDeleted) {
+        const usage = c.options.completion_tokens
+          ? {
+              completion_tokens: c.options.completion_tokens || null,
+              prompt_tokens: c.options.prompt_tokens || null,
+              total_tokens: c.options.total_tokens || null,
+              estimated: c.options.estimated || null,
+            }
+          : undefined
         result.push({
           uuid: c.uuid,
           dateTime: new Date(c.dateTime).toLocaleString(),
@@ -161,6 +169,7 @@ router.get('/chat-hisroty', auth, async (req, res) => {
               conversationId: c.options.conversationId,
             },
           },
+          usage,
         })
       }
     })
@@ -272,7 +281,19 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
       message: prompt,
       lastContext: options,
       process: (chat: ChatMessage) => {
-        res.write(firstChunk ? JSON.stringify(chat) : `\n${JSON.stringify(chat)}`)
+        const chuck = {
+          id: chat.id,
+          conversationId: chat.conversationId,
+          text: chat.text,
+          detail: {
+            choices: [
+              {
+                finish_reason: chat.detail.choices[0].finish_reason,
+              },
+            ],
+          },
+        }
+        res.write(firstChunk ? JSON.stringify(chuck) : `\n${JSON.stringify(chuck)}`)
         firstChunk = false
       },
       systemMessage,
@@ -302,6 +323,9 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
           result.data.detail.usage as UsageResponse)
       }
     }
+
+    // return the whole response including usage
+    res.write(`\n${JSON.stringify(result.data)}`)
   }
   catch (error) {
     res.write(JSON.stringify(error))

@@ -56,6 +56,10 @@ export default {
     clearHistoryConfirm: '確定清除紀錄?',
     preview: '預覽',
     showRawText: '顯示原文',
+    usageEstimate: '預估',
+    usagePrompt: '提問',
+    usageResponse: '回復',
+    usageTotal: '總消耗 token',
   },
   setting: {
     setting: '設定',
