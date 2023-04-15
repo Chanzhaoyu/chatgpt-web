@@ -34,7 +34,7 @@ spec:
             - name: AUTH_SECRET_KEY
               value: '123456'
             - name: TIMEOUT_MS
-              value: '60000'
+              value: '600000'
             - name: SOCKS_PROXY_HOST
               value: ''
             - name: SOCKS_PROXY_PORT

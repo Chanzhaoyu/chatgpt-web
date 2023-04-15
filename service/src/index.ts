@@ -6,7 +6,7 @@ import type { ChatContext, ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, currentModel, initApi } from './chatgpt'
 import { auth } from './middleware/auth'
 import { clearConfigCache, getCacheConfig, getOriginConfig } from './storage/config'
-import type { ChatOptions, Config, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
+import type { ChatInfo, ChatOptions, Config, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
 import { Status } from './storage/model'
 import {
   clearChat,
@@ -271,16 +271,21 @@ router.post('/chat', auth, async (req, res) => {
 router.post('/chat-process', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
+  const { roomId, uuid, regenerate, prompt, options = {}, systemMessage, temperature, top_p } = req.body as RequestProps
+
+  let lastResponse
+  let result
+  let message: ChatInfo
   try {
-    const { roomId, uuid, regenerate, prompt, options = {}, systemMessage, temperature, top_p } = req.body as RequestProps
-    const message = regenerate
+    message = regenerate
       ? await getChat(roomId, uuid)
       : await insertChat(uuid, prompt, roomId, options as ChatOptions)
     let firstChunk = true
-    const result = await chatReplyProcess({
+    result = await chatReplyProcess({
       message: prompt,
       lastContext: options,
       process: (chat: ChatMessage) => {
+        lastResponse = chat
         const chuck = {
           id: chat.id,
           conversationId: chat.conversationId,
@@ -300,7 +305,22 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
       temperature,
       top_p,
     })
-    if (result.status === 'Success') {
+    // return the whole response including usage
+    res.write(`\n${JSON.stringify(result.data)}`)
+  }
+  catch (error) {
+    res.write(JSON.stringify(error))
+  }
+  finally {
+    res.end()
+    try {
+      if (result == null || result === undefined || result.status !== 'Success')
+        result = { data: lastResponse }
+
+      if (result.data === undefined)
+        // eslint-disable-next-line no-unsafe-finally
+        return
+
       if (regenerate && message.options.messageId) {
         const previousResponse = message.previousResponse || []
         previousResponse.push({ response: message.response, options: message.options })
@@ -325,15 +345,9 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
           result.data.detail.usage as UsageResponse)
       }
     }
-
-    // return the whole response including usage
-    res.write(`\n${JSON.stringify(result.data)}`)
-  }
-  catch (error) {
-    res.write(JSON.stringify(error))
-  }
-  finally {
-    res.end()
+    catch (error) {
+      global.console.log(error)
+    }
   }
 })
 

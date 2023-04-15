@@ -104,10 +104,12 @@ export class ChatUsage {
     this.roomId = roomId
     this.chatId = chatId
     this.messageId = messageId
-    this.promptTokens = usage.prompt_tokens
-    this.completionTokens = usage.completion_tokens
-    this.totalTokens = usage.total_tokens
-    this.estimated = usage.estimated
+    if (usage) {
+      this.promptTokens = usage.prompt_tokens
+      this.completionTokens = usage.completion_tokens
+      this.totalTokens = usage.total_tokens
+      this.estimated = usage.estimated
+    }
     this.dateTime = new Date().getTime()
   }
 }

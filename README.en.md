@@ -233,7 +233,7 @@ services:
       # reverse proxy, optional
       API_REVERSE_PROXY: xxx
       # timeout, in milliseconds, optional
-      TIMEOUT_MS: 60000
+      TIMEOUT_MS: 600000
       # socks proxy, optional, effective with SOCKS_PROXY_PORT
       SOCKS_PROXY_HOST: xxxx
       # socks proxy port, optional, effective with SOCKS_PROXY_HOST
