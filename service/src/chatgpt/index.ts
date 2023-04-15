@@ -89,7 +89,9 @@ export async function initApi() {
 }
 
 async function chatReplyProcess(options: RequestOptions) {
-  const { message, lastContext, process, systemMessage } = options
+  const config = await getCacheConfig()
+  const model = isNotEmptyString(config.apiModel) ? config.apiModel : 'gpt-3.5-turbo'
+  const { message, lastContext, process, systemMessage, temperature, top_p } = options
   try {
     const timeoutMs = (await getCacheConfig()).timeoutMs
     let options: SendMessageOptions = { timeoutMs }
@@ -97,6 +99,7 @@ async function chatReplyProcess(options: RequestOptions) {
     if (apiModel === 'ChatGPTAPI') {
       if (isNotEmptyString(systemMessage))
         options.systemMessage = systemMessage
+      options.completionParams = { model, temperature, top_p }
     }
 
     if (lastContext != null) {

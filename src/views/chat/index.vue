@@ -280,11 +280,11 @@ async function onRegenerate(index: number) {
             const data = JSON.parse(chunk)
             const usage = data.detail.usage
               ? {
-                completion_tokens: data.detail.usage.completion_tokens || null,
-                prompt_tokens: data.detail.usage.prompt_tokens || null,
-                total_tokens: data.detail.usage.total_tokens || null,
-                estimated: data.detail.usage.estimated || null,
-              }
+                  completion_tokens: data.detail.usage.completion_tokens || null,
+                  prompt_tokens: data.detail.usage.prompt_tokens || null,
+                  total_tokens: data.detail.usage.total_tokens || null,
+                  estimated: data.detail.usage.estimated || null,
+                }
               : undefined
             updateChat(
               +uuid,

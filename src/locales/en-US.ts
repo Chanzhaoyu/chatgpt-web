@@ -71,6 +71,8 @@ export default {
     avatarLink: 'Avatar Link',
     name: 'Name',
     description: 'Description',
+    temperature: 'Temperature',
+    top_p: 'Top_p',
     saveUserInfo: 'Save User Info',
     role: 'Role',
     chatHistory: 'ChatHistory',
