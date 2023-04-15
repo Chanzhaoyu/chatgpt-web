@@ -66,19 +66,12 @@ export async function initApi() {
     apiModel = 'ChatGPTAPI'
   }
   else {
-    const OPENAI_API_MODEL = config.apiModel
+    const model = isNotEmptyString(config.apiModel) ? config.apiModel : 'gpt-3.5-turbo'
     const options: ChatGPTUnofficialProxyAPIOptions = {
       accessToken: config.accessToken,
+      apiReverseProxyUrl: isNotEmptyString(config.reverseProxy) ? config.reverseProxy : 'https://bypass.churchless.tech/api/conversation',
+      model,
       debug: !config.apiDisableDebug,
-    }
-
-    if (isNotEmptyString(OPENAI_API_MODEL))
-      options.model = OPENAI_API_MODEL
-
-    if (isNotEmptyString(config.reverseProxy)) {
-      options.apiReverseProxyUrl = isNotEmptyString(config.reverseProxy)
-        ? config.reverseProxy
-        : 'https://bypass.churchless.tech/api/conversation'
     }
 
     await setupProxy(options)

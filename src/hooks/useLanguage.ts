@@ -22,7 +22,7 @@ export function useLanguage() {
         return koKR
       default:
         setLocale('zh-CN')
-        return enUS
+        return zhCN
     }
   })
 
