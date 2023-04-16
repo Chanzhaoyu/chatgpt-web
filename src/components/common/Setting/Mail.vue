@@ -24,12 +24,10 @@ async function fetchConfig() {
   }
 }
 
-async function updateMailInfo(mail?: MailConfig) {
-  if (!mail)
-    return
+async function updateMailInfo() {
   saving.value = true
   try {
-    const { data } = await fetchUpdateMail(mail)
+    const { data } = await fetchUpdateMail(config.value as MailConfig)
     config.value = data
     ms.success(t('common.success'))
   }
@@ -39,12 +37,10 @@ async function updateMailInfo(mail?: MailConfig) {
   saving.value = false
 }
 
-async function testMail(mail?: MailConfig) {
-  if (!mail)
-    return
+async function testMail() {
   testing.value = true
   try {
-    const { message } = await fetchTestMail(mail) as { status: string; message: string }
+    const { message } = await fetchTestMail(config.value as MailConfig) as { status: string; message: string }
     ms.success(message)
   }
   catch (error: any) {
@@ -112,10 +108,10 @@ onMounted(() => {
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]" />
           <div class="flex flex-wrap items-center gap-4">
-            <NButton :loading="saving" type="primary" @click="updateMailInfo(config)">
+            <NButton :loading="saving" type="primary" @click="updateMailInfo()">
               {{ $t('common.save') }}
             </NButton>
-            <NButton :loading="testing" type="info" @click="testMail(config)">
+            <NButton :loading="testing" type="info" @click="testMail()">
               {{ $t('common.test') }}
             </NButton>
           </div>

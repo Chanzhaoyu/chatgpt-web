@@ -3,10 +3,10 @@ import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
 import type { RequestProps } from './types'
 import type { ChatContext, ChatMessage } from './chatgpt'
-import { chatConfig, chatReplyProcess, currentModel, initApi } from './chatgpt'
+import { auditText, chatConfig, chatReplyProcess, currentModel, initApi, initAuditService } from './chatgpt'
 import { auth } from './middleware/auth'
 import { clearConfigCache, getCacheConfig, getOriginConfig } from './storage/config'
-import type { ChatInfo, ChatOptions, Config, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
+import type { AuditConfig, ChatInfo, ChatOptions, Config, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
 import { Status } from './storage/model'
 import {
   clearChat,
@@ -588,6 +588,36 @@ router.post('/mail-test', rootAuth, async (req, res) => {
     const user = await getUserById(userId)
     await sendTestMail(user.email, config)
     res.send({ status: 'Success', message: '发送成功 | Successfully', data: null })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/setting-audit', rootAuth, async (req, res) => {
+  try {
+    const config = req.body as AuditConfig
+
+    const thisConfig = await getOriginConfig()
+    thisConfig.auditConfig = config
+    const result = await updateConfig(thisConfig)
+    clearConfigCache()
+    initAuditService(config)
+    res.send({ status: 'Success', message: '操作成功 | Successfully', data: result.auditConfig })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/audit-test', rootAuth, async (req, res) => {
+  try {
+    const { audit, text } = req.body as { audit: AuditConfig; text: string }
+    const config = await getCacheConfig()
+    initAuditService(audit)
+    const result = await auditText(audit, text)
+    initAuditService(config.auditConfig)
+    res.send({ status: 'Success', message: !result ? '含敏感词 | Contains sensitive words' : '不含敏感词 | Does not contain sensitive words.', data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

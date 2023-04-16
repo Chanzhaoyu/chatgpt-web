@@ -5,6 +5,9 @@ import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import httpsProxyAgent from 'https-proxy-agent'
 import fetch from 'node-fetch'
+import type { AuditConfig } from 'src/storage/model'
+import type { TextAuditService } from '../utils/textAudit'
+import { textAuditServices } from '../utils/textAudit'
 import { getCacheConfig, getOriginConfig } from '../storage/config'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
@@ -26,6 +29,7 @@ const ErrorCodeMessage: Record<string, string> = {
 
 let apiModel: ApiModel
 let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
+let auditService: TextAuditService
 
 export async function initApi() {
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
@@ -85,6 +89,10 @@ async function chatReplyProcess(options: RequestOptions) {
   const config = await getCacheConfig()
   const model = isNotEmptyString(config.apiModel) ? config.apiModel : 'gpt-3.5-turbo'
   const { message, lastContext, process, systemMessage, temperature, top_p } = options
+
+  if ((config.auditConfig?.enabled ?? false) && !await auditText(config.auditConfig, message))
+    return sendResponse({ type: 'Fail', message: '含有敏感词 | Contains sensitive words' })
+
   try {
     const timeoutMs = (await getCacheConfig()).timeoutMs
     let options: SendMessageOptions = { timeoutMs }
@@ -120,9 +128,28 @@ async function chatReplyProcess(options: RequestOptions) {
   }
 }
 
+export function initAuditService(audit: AuditConfig) {
+  if (!audit || !audit.options || !audit.options.apiKey || !audit.options.apiSecret)
+    throw new Error('未配置 | Not configured.')
+  const Service = textAuditServices[audit.provider]
+  auditService = new Service(audit.options)
+}
+
+async function auditText(audit: AuditConfig, text: string): Promise<boolean> {
+  if (!auditService)
+    initAuditService(audit)
+
+  return await auditService.audit(text)
+}
+let cachedBanlance: number | undefined
+let cacheExpiration = 0
+
 async function fetchBalance() {
-  // 计算起始日期和结束日期
   const now = new Date().getTime()
+  if (cachedBanlance && cacheExpiration > now)
+    return Promise.resolve(cachedBanlance.toFixed(3))
+
+  // 计算起始日期和结束日期
   const startDate = new Date(now - 90 * 24 * 60 * 60 * 1000)
   const endDate = new Date(now + 24 * 60 * 60 * 1000)
 
@@ -165,9 +192,10 @@ async function fetchBalance() {
     const totalUsage = usageData.total_usage / 100
 
     // 计算剩余额度
-    const balance = totalAmount - totalUsage
+    cachedBanlance = totalAmount - totalUsage
+    cacheExpiration = now + 10 * 60 * 1000
 
-    return Promise.resolve(balance.toFixed(3))
+    return Promise.resolve(cachedBanlance.toFixed(3))
   }
   catch {
     return Promise.resolve('-')
@@ -226,4 +254,4 @@ initApi()
 
 export type { ChatContext, ChatMessage }
 
-export { chatReplyProcess, chatConfig, currentModel }
+export { chatReplyProcess, chatConfig, currentModel, auditText }

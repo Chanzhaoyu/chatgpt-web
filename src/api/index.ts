@@ -1,6 +1,6 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
 import { get, post } from '@/utils/request'
-import type { ConfigState, MailConfig, SiteConfig } from '@/components/common/Setting/model'
+import type { AuditConfig, ConfigState, MailConfig, SiteConfig } from '@/components/common/Setting/model'
 import { useAuthStore, useSettingStore } from '@/store'
 
 export function fetchChatAPI<T = any>(
@@ -165,6 +165,20 @@ export function fetchTestMail<T = any>(mail: MailConfig) {
   return post<T>({
     url: '/mail-test',
     data: mail,
+  })
+}
+
+export function fetchUpdateAudit<T = any>(audit: AuditConfig) {
+  return post<T>({
+    url: '/setting-audit',
+    data: audit,
+  })
+}
+
+export function fetchTestAudit<T = any>(text: string, audit: AuditConfig) {
+  return post<T>({
+    url: '/audit-test',
+    data: { audit, text },
   })
 }
 

@@ -270,6 +270,13 @@ services:
       SMTP_TSL: true
       SMTP_USERNAME: noreply@examile.com
       SMTP_PASSWORD: xxx
+      # 是否开启敏感词审核, 因为响应结果是流式 所以暂时没审核
+      AUDIT_ENABLED: false
+      # https://ai.baidu.com/ai-doc/ANTIPORN/Vk3h6xaga
+      AUDIT_PROVIDER: baidu
+      AUDIT_API_KEY: xxx
+      AUDIT_API_SECRET: xxx
+      AUDIT_TEXT_LABEL: xxx
     links:
       - database
 

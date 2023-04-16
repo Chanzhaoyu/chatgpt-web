@@ -1,3 +1,6 @@
+import { TextAudioType } from '../storage/model'
+import type { TextAuditServiceProvider } from './textAudit'
+
 export function isNumber<T extends number>(value: T | unknown): value is number {
   return Object.prototype.toString.call(value) === '[object Number]'
 }
@@ -20,4 +23,17 @@ export function isFunction<T extends (...args: any[]) => any | void | never>(val
 
 export function isEmail(value: any): boolean {
   return isNotEmptyString(value) && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
+}
+
+export function isTextAuditServiceProvider(value: any): value is TextAuditServiceProvider {
+  return value === 'baidu' // || value === 'ali'
+}
+
+export function isTextAudioType(value: any): value is TextAudioType {
+  return (
+    value === TextAudioType.None
+    || value === TextAudioType.Request
+    || value === TextAudioType.Response
+    || value === TextAudioType.All
+  )
 }
