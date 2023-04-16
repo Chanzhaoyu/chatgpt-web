@@ -1,11 +1,15 @@
 <script setup lang='ts'>
-import { computed } from 'vue'
-import { NAvatar } from 'naive-ui'
+import { computed, ref } from 'vue'
+import { NAvatar, NButton } from 'naive-ui'
 import { useUserStore } from '@/store'
 import defaultAvatar from '@/assets/avatar.jpg'
 import { isString } from '@/utils/is'
+import Permission from '@/views/chat/layout/Permission.vue'
 
 const userStore = useUserStore()
+// const authStore = useAuthStore()
+// const needPermission = computed(() => !!authStore.session?.auth && !authStore.token)
+const needPermission = ref(false)
 
 const userInfo = computed(() => userStore.userInfo)
 </script>
@@ -29,9 +33,12 @@ const userInfo = computed(() => userStore.userInfo)
       <h2 v-if="userInfo.name" class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
         {{ userInfo.name }}
       </h2>
-      <h2 v-else class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
-        {{ $t('common.notLoggedIn') }}
-      </h2>
+      <NButton v-else tag="a" type="info" ghost @click="needPermission = true">
+        <span class="text-xl text-[#4f555e] dark:text-white">
+          {{ $t('common.notLoggedIn') }}
+        </span>
+      </NButton>
     </div>
+    <Permission :visible="needPermission" />
   </div>
 </template>

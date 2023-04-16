@@ -19,21 +19,28 @@ export async function getUserVerifyUrl(username: string) {
 }
 
 function getUserVerify(username: string) {
+  return getVerify(username, '')
+}
+function getVerify(username: string, key: string) {
   const expired = new Date().getTime() + (12 * 60 * 60 * 1000)
-  const sign = `${username}-${expired}`
+  const sign = `${username}${key}-${expired}`
   return `${sign}-${md5(sign)}`
 }
 
-export function checkUserVerify(verify: string) {
+function checkVerify(verify: string) {
   const vs = verify.split('-')
   const sign = vs[vs.length - 1]
   const expired = vs[vs.length - 2]
   vs.splice(vs.length - 2, 2)
-  const username = vs.join('-')
+  const prefix = vs.join('-')
   // 简单点没校验有效期
-  if (sign === md5(`${username}-${expired}`))
-    return username
+  if (sign === md5(`${prefix}-${expired}`))
+    return prefix.split('|')[0]
   throw new Error('Verify failed')
+}
+
+export function checkUserVerify(verify: string) {
+  return checkVerify(verify)
 }
 
 // 可以换 aes 等方式
@@ -44,19 +51,26 @@ export async function getUserVerifyUrlAdmin(username: string) {
 }
 
 function getUserVerifyAdmin(username: string) {
-  const expired = new Date().getTime() + (12 * 60 * 60 * 1000)
-  const sign = `${username}|${process.env.ROOT_USER}-${expired}`
-  return `${sign}-${md5(sign)}`
+  return getVerify(username, `|${process.env.ROOT_USER}`)
 }
 
 export function checkUserVerifyAdmin(verify: string) {
-  const vs = verify.split('-')
-  const sign = vs[vs.length - 1]
-  const expired = vs[vs.length - 2]
-  vs.splice(vs.length - 2, 2)
-  const username = vs.join('-')
-  // 简单点没校验有效期
-  if (sign === md5(`${username}-${expired}`))
-    return username.split('|')[0]
+  return checkVerify(verify)
+}
+
+export async function getUserResetPasswordUrl(username: string) {
+  const sign = getUserResetPassword(username)
+  const config = await getCacheConfig()
+  return `${config.siteConfig.siteDomain}/#/chat/?verifyresetpassword=${sign}`
+}
+
+function getUserResetPassword(username: string) {
+  return getVerify(username, '|rp')
+}
+
+export function checkUserResetPassword(verify: string, username: string) {
+  const name = checkVerify(verify)
+  if (name === username)
+    return name
   throw new Error('Verify failed')
 }

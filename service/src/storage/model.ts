@@ -20,6 +20,7 @@ export class UserInfo {
   verifyTime?: string
   avatar?: string
   description?: string
+  updateTime?: string
   constructor(email: string, password: string) {
     this.name = email
     this.email = email
@@ -27,6 +28,7 @@ export class UserInfo {
     this.status = Status.PreVerify
     this.createTime = new Date().toLocaleString()
     this.verifyTime = null
+    this.updateTime = new Date().toLocaleString()
   }
 }
 

@@ -27,6 +27,16 @@ export async function sendVerifyMailAdmin(toMail: string, verifyName: string, ve
   sendMail(toMail, `${config.siteConfig.siteTitle} 账号申请`, mailHtml, config.mailConfig)
 }
 
+export async function sendResetPasswordMail(toMail: string, verifyUrl: string) {
+  const config = (await getCacheConfig())
+  const templatesPath = path.join(__dirname, 'templates')
+  const mailTemplatePath = path.join(templatesPath, 'mail.resetpassword.template.html')
+  let mailHtml = fs.readFileSync(mailTemplatePath, 'utf8')
+  mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
+  mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
+  sendMail(toMail, `${config.siteConfig.siteTitle} 密码重置`, mailHtml, config.mailConfig)
+}
+
 export async function sendNoticeMail(toMail: string) {
   const config = (await getCacheConfig())
 

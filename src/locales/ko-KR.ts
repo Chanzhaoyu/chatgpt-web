@@ -33,6 +33,8 @@ export default {
     email: '이메일',
     password: '비밀번호',
     passwordConfirm: '비밀번호 확인',
+    resetPassword: '암호를 재설정',
+    resetPasswordMail: '비밀번호 재설정 메일 보내기',
   },
   chat: {
     newChatButton: '새 채팅',

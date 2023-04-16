@@ -14,7 +14,7 @@ import { useUsingContext } from './hooks/useUsingContext'
 import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useChatStore, usePromptStore } from '@/store'
+import { useAuthStore, useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
 import { debounce } from '@/utils/functions/debounce'
@@ -26,6 +26,7 @@ const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
 const route = useRoute()
 const dialog = useDialog()
 const ms = useMessage()
+const authStore = useAuthStore()
 
 const chatStore = useChatStore()
 
@@ -613,6 +614,7 @@ onUnmounted(() => {
               <NInput
                 ref="inputRef"
                 v-model:value="prompt"
+                :disabled="authStore.token === undefined"
                 type="textarea"
                 :placeholder="placeholder"
                 :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"

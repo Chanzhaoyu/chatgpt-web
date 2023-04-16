@@ -160,6 +160,12 @@ export async function updateUserInfo(userId: string, user: UserInfo) {
   return result
 }
 
+export async function updateUserPassword(userId: string, password: string) {
+  const result = userCol.updateOne({ _id: new ObjectId(userId) }
+    , { $set: { password, updateTime: new Date().toLocaleString() } })
+  return result
+}
+
 export async function getUser(email: string): Promise<UserInfo> {
   email = email.toLowerCase()
   return await userCol.findOne({ email }) as UserInfo

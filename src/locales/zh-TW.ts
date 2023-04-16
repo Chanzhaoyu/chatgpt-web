@@ -33,6 +33,8 @@ export default {
     email: '電子郵件',
     password: '密碼',
     passwordConfirm: '確認密碼',
+    resetPassword: '重置密码',
+    resetPasswordMail: '发送重置密码邮件',
   },
   chat: {
     newChatButton: '新建對話',
