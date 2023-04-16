@@ -162,6 +162,8 @@ export class AuditConfig {
     public provider: TextAuditServiceProvider,
     public options: TextAuditServiceOptions,
     public textType: TextAudioType,
+    public customizeEnabled: boolean,
+    public sensitiveWords: string,
   ) { }
 }
 

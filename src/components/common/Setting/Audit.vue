@@ -65,6 +65,27 @@ onMounted(() => {
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditCustomizeEnabled') }}</span>
+          <div class="flex-1">
+            <NSwitch
+              :round="false" :value="config && config.customizeEnabled"
+              @update:value="(val) => { if (config) config.customizeEnabled = val }"
+            />
+          </div>
+        </div>
+        <div v-if="config && config.customizeEnabled" class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditCustomizeWords') }}</span>
+          <div class="flex-1">
+            <NInput
+              :value="config && config.sensitiveWords"
+              placeholder="One word per line"
+              type="textarea"
+              :autosize="{ minRows: 1, maxRows: 4 }"
+              @input="(val) => { if (config) config.sensitiveWords = val }"
+            />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditEnabled') }}</span>
           <div class="flex-1">
             <NSwitch
@@ -117,7 +138,7 @@ onMounted(() => {
             <a target="_blank" href="https://ai.baidu.com/ai-doc/ANTIPORN/Nk3h6xbb2#%E7%BB%86%E5%88%86%E6%A0%87%E7%AD%BE%E5%AF%B9%E7%85%A7%E8%A1%A8">{{ $t('setting.auditBaiduLabelLink') }}</a>
           </p>
         </div>
-        <div v-if="config && config.enabled" class="flex items-center space-x-4">
+        <div v-if="config && (config.enabled || config.customizeEnabled)" class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditTest') }}</span>
           <div class="flex-1">
             <NInput

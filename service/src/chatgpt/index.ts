@@ -90,9 +90,6 @@ async function chatReplyProcess(options: RequestOptions) {
   const model = isNotEmptyString(config.apiModel) ? config.apiModel : 'gpt-3.5-turbo'
   const { message, lastContext, process, systemMessage, temperature, top_p } = options
 
-  if ((config.auditConfig?.enabled ?? false) && !await auditText(config.auditConfig, message))
-    return sendResponse({ type: 'Fail', message: '含有敏感词 | Contains sensitive words' })
-
   try {
     const timeoutMs = (await getCacheConfig()).timeoutMs
     let options: SendMessageOptions = { timeoutMs }
@@ -135,11 +132,19 @@ export function initAuditService(audit: AuditConfig) {
   auditService = new Service(audit.options)
 }
 
-async function auditText(audit: AuditConfig, text: string): Promise<boolean> {
-  if (!auditService)
-    initAuditService(audit)
-
-  return await auditService.audit(text)
+async function containsSensitiveWords(audit: AuditConfig, text: string): Promise<boolean> {
+  if (audit.customizeEnabled && isNotEmptyString(audit.sensitiveWords)) {
+    const textLower = text.toLowerCase()
+    const notSafe = audit.sensitiveWords.split('\n').filter(d => textLower.includes(d.trim().toLowerCase())).length > 0
+    if (notSafe)
+      return true
+  }
+  if (audit.enabled) {
+    if (!auditService)
+      initAuditService(audit)
+    return await auditService.containsSensitiveWords(text)
+  }
+  return false
 }
 let cachedBanlance: number | undefined
 let cacheExpiration = 0
@@ -193,7 +198,7 @@ async function fetchBalance() {
 
     // 计算剩余额度
     cachedBanlance = totalAmount - totalUsage
-    cacheExpiration = now + 10 * 60 * 1000
+    cacheExpiration = now + 60 * 60 * 1000
 
     return Promise.resolve(cachedBanlance.toFixed(3))
   }
@@ -254,4 +259,4 @@ initApi()
 
 export type { ChatContext, ChatMessage }
 
-export { chatReplyProcess, chatConfig, currentModel, auditText }
+export { chatReplyProcess, chatConfig, currentModel, containsSensitiveWords }

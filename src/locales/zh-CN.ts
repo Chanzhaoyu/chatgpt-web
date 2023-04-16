@@ -103,7 +103,7 @@ export default {
     loginSalt: '登录混淆盐',
     loginSaltTip: '变更会导致所有已登录失效',
     monthlyUsage: '本月使用量',
-    auditEnabled: '审核状态',
+    auditEnabled: '第三方',
     auditProvider: '提供商',
     auditApiKey: 'Api Key',
     auditApiSecret: 'Api Secret',
@@ -111,6 +111,8 @@ export default {
     auditBaiduLabel: '二级分类',
     auditBaiduLabelTip: '英文逗号分隔, 如果空, 仅政治',
     auditBaiduLabelLink: '查看细分类型',
+    auditCustomizeEnabled: '自定义',
+    auditCustomizeWords: '敏感词',
   },
   store: {
     siderButton: '提示词商店',

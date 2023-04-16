@@ -50,4 +50,6 @@ export class AuditConfig {
   provider?: TextAuditServiceProvider
   options?: TextAuditServiceOptions
   textType?: TextAudioType
+  customizeEnabled?: boolean
+  sensitiveWords?: string
 }

@@ -101,7 +101,7 @@ export default {
     loginSalt: '로그인 정보 암호화 Salt',
     loginSaltTip: '변경하면 모든사용자의 로그인이 풀립니다.',
     monthlyUsage: '월간 사용량',
-    auditEnabled: '승인 상태',
+    auditEnabled: '타사',
     auditProvider: '공급자',
     auditApiKey: 'Api Key',
     auditApiSecret: 'Api Secret',
@@ -109,6 +109,8 @@ export default {
     auditBaiduLabel: 'Label',
     auditBaiduLabelTip: '영어 쉼표로 구분, If empty, only politics.',
     auditBaiduLabelLink: '레이블 세부 정보로 이동',
+    auditCustomizeEnabled: '맞춤화하다',
+    auditCustomizeWords: '단어 맞춤설정',
   },
   store: {
     siderButton: '프롬프트 스토어',

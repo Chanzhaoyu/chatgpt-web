@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
 import type { RequestProps } from './types'
 import type { ChatContext, ChatMessage } from './chatgpt'
-import { auditText, chatConfig, chatReplyProcess, currentModel, initApi, initAuditService } from './chatgpt'
+import { chatConfig, chatReplyProcess, containsSensitiveWords, currentModel, initApi, initAuditService } from './chatgpt'
 import { auth } from './middleware/auth'
 import { clearConfigCache, getCacheConfig, getOriginConfig } from './storage/config'
 import type { AuditConfig, ChatInfo, ChatOptions, Config, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
@@ -277,6 +277,16 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
   let result
   let message: ChatInfo
   try {
+    const config = await getCacheConfig()
+    if (config.auditConfig.enabled || config.auditConfig.customizeEnabled) {
+      const userId = req.headers.userId.toString()
+      const user = await getUserById(userId)
+      if (user.email.toLowerCase() !== process.env.ROOT_USER && await containsSensitiveWords(config.auditConfig, prompt)) {
+        res.send({ status: 'Fail', message: '含有敏感词 | Contains sensitive words', data: null })
+        return
+      }
+    }
+
     message = regenerate
       ? await getChat(roomId, uuid)
       : await insertChat(uuid, prompt, roomId, options as ChatOptions)
@@ -602,7 +612,8 @@ router.post('/setting-audit', rootAuth, async (req, res) => {
     thisConfig.auditConfig = config
     const result = await updateConfig(thisConfig)
     clearConfigCache()
-    initAuditService(config)
+    if (config.enabled)
+      initAuditService(config)
     res.send({ status: 'Success', message: '操作成功 | Successfully', data: result.auditConfig })
   }
   catch (error) {
@@ -614,10 +625,12 @@ router.post('/audit-test', rootAuth, async (req, res) => {
   try {
     const { audit, text } = req.body as { audit: AuditConfig; text: string }
     const config = await getCacheConfig()
-    initAuditService(audit)
-    const result = await auditText(audit, text)
-    initAuditService(config.auditConfig)
-    res.send({ status: 'Success', message: !result ? '含敏感词 | Contains sensitive words' : '不含敏感词 | Does not contain sensitive words.', data: null })
+    if (audit.enabled)
+      initAuditService(audit)
+    const result = await containsSensitiveWords(audit, text)
+    if (audit.enabled)
+      initAuditService(config.auditConfig)
+    res.send({ status: 'Success', message: result ? '含敏感词 | Contains sensitive words' : '不含敏感词 | Does not contain sensitive words.', data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
