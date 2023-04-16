@@ -73,7 +73,7 @@ export default {
     name: '名称',
     description: '描述',
     role: '角色设定',
-    temperature: 'Temperature',
+    temperature: '思维发散程度',
     saveUserInfo: '保存用户信息',
     top_p: 'Top_p',
     chatHistory: '聊天记录',

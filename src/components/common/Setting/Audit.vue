@@ -113,7 +113,7 @@ onMounted(() => {
               @input="(val) => { if (config && config.options) config.options.label = val }"
             />
           </div>
-          <p v-if="config && config.type === 'baidu'">
+          <p v-if="config && config.provider === 'baidu'">
             <a target="_blank" href="https://ai.baidu.com/ai-doc/ANTIPORN/Nk3h6xbb2#%E7%BB%86%E5%88%86%E6%A0%87%E7%AD%BE%E5%AF%B9%E7%85%A7%E8%A1%A8">{{ $t('setting.auditBaiduLabelLink') }}</a>
           </p>
         </div>

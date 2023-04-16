@@ -130,7 +130,7 @@ async function chatReplyProcess(options: RequestOptions) {
 
 export function initAuditService(audit: AuditConfig) {
   if (!audit || !audit.options || !audit.options.apiKey || !audit.options.apiSecret)
-    throw new Error('未配置 | Not configured.')
+    return
   const Service = textAuditServices[audit.provider]
   auditService = new Service(audit.options)
 }
