@@ -3,9 +3,17 @@ import { getToken, removeToken, setToken } from './helper'
 import { store } from '@/store'
 import { fetchSession } from '@/api'
 
+export interface User {
+  uid?: string
+  name?: string
+  avatar?: string
+  hit?: number
+}
+
 interface SessionResponse {
   auth: boolean
   model: 'ChatGPTAPI' | 'ChatGPTUnofficialProxyAPI'
+  user: User | null
 }
 
 export interface AuthState {

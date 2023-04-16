@@ -1,8 +1,18 @@
 import { isNotEmptyString } from '../utils/is'
 
+const cookieName = process.env.COOKIE_NAME || 'user'
+const OAuthEnabled = isNotEmptyString(process.env.CLIENT_ID) && isNotEmptyString(process.env.CLIENT_SECRET)
+const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
+const AuthKeyEnabled = isNotEmptyString(AUTH_SECRET_KEY)
+
 const auth = async (req, res, next) => {
-  const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
-  if (isNotEmptyString(AUTH_SECRET_KEY)) {
+  if (OAuthEnabled) {
+    const user = req.cookies[cookieName]
+    if (user)
+      next() // TODO: refresh the cookie lifetime
+    else res.json({ status: 'Unauthorized', message: 'Please authenticate.', data: null })
+  }
+  else if (AuthKeyEnabled) {
     try {
       const Authorization = req.header('Authorization')
       if (!Authorization || Authorization.replace('Bearer ', '').trim() !== AUTH_SECRET_KEY.trim())
@@ -18,4 +28,4 @@ const auth = async (req, res, next) => {
   }
 }
 
-export { auth }
+export { auth, cookieName }
