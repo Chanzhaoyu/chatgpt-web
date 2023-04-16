@@ -88,6 +88,6 @@ export default {
     importError: '키 값 불일치',
     importRepeatTitle: '제목이 반복되어 건너뜀: {msg}',
     importRepeatContent: '내용이 반복되어 건너뜀: {msg}',
-    onlineImportWarning: '참고: JSON 파일 소스를 확인하십시오!',    
+    onlineImportWarning: '참고: JSON 파일 소스를 확인하십시오!',
   },
 }
