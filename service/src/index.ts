@@ -304,11 +304,14 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
           detail: {
             choices: [
               {
-                finish_reason: chat.detail.choices[0].finish_reason,
+                finish_reason: undefined,
               },
             ],
           },
         }
+        if (chat.detail && chat.detail.choices.length > 0)
+          chuck.detail.choices[0].finish_reason = chat.detail.choices[0].finish_reason
+
         res.write(firstChunk ? JSON.stringify(chuck) : `\n${JSON.stringify(chuck)}`)
         firstChunk = false
       },
