@@ -136,7 +136,7 @@ async function onConversation() {
             chunk = responseText.substring(lastIndex)
           try {
             const data = JSON.parse(chunk)
-            const usage = data.detail.usage
+            const usage = (data.detail && data.detail.usage)
               ? {
                   completion_tokens: data.detail.usage.completion_tokens || null,
                   prompt_tokens: data.detail.usage.prompt_tokens || null,
@@ -279,7 +279,7 @@ async function onRegenerate(index: number) {
             chunk = responseText.substring(lastIndex)
           try {
             const data = JSON.parse(chunk)
-            const usage = data.detail.usage
+            const usage = (data.detail && data.detail.usage)
               ? {
                   completion_tokens: data.detail.usage.completion_tokens || null,
                   prompt_tokens: data.detail.usage.prompt_tokens || null,
@@ -571,7 +571,7 @@ onUnmounted(() => {
                   :date-time="item.dateTime"
                   :text="item.text"
                   :inversion="item.inversion"
-                  :usage="item.usage || undefined"
+                  :usage="item && item.usage || undefined"
                   :error="item.error"
                   :loading="item.loading"
                   @regenerate="onRegenerate(index)"
