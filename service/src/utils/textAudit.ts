@@ -40,12 +40,12 @@ export class BaiduTextAuditService implements TextAuditService {
     // https://ai.baidu.com/ai-doc/ANTIPORN/Nk3h6xbb2#%E7%BB%86%E5%88%86%E6%A0%87%E7%AD%BE%E5%AF%B9%E7%85%A7%E8%A1%A8
 
     // 3 仅政治
-    const safe = data.data.filter(d => d.subType === 3).length <= 0
-    if (!safe || !this.options.label)
-      return safe
+    const sensitive = data.data.filter(d => d.subType === 3).length > 0
+    if (sensitive || !this.options.label)
+      return sensitive
     const str = JSON.stringify(data)
     for (const l of this.options.label.split(',')) {
-      if (str.indexOf(l))
+      if (str.includes(l))
         return true
     }
     return false
