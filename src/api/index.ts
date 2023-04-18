@@ -134,6 +134,13 @@ export function fetchRenameChatRoom<T = any>(title: string, roomId: number) {
   })
 }
 
+export function fetchUpdateChatRoomPrompt<T = any>(prompt: string, roomId: number) {
+  return post<T>({
+    url: '/room-prompt',
+    data: { prompt, roomId },
+  })
+}
+
 export function fetchDeleteChatRoom<T = any>(roomId: number) {
   return post<T>({
     url: '/room-delete',

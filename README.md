@@ -7,7 +7,17 @@
 </br>
 
 ## 说明
-> **此项目 Fork 自 [Chanzhaoyu/chatgpt-web](https://github.com/Chanzhaoyu/chatgpt-web), 除了定时合并该分支, 新增了部分特色功能, 注册&登录, 前端页面设置apikey 等**
+> **此项目 Fork 自 [Chanzhaoyu/chatgpt-web](https://github.com/Chanzhaoyu/chatgpt-web), 新增了部分特色功能:**
+
+[✓] 注册&登录&重置密码
+
+[✓] 同步历史会话
+
+[✓] 前端页面设置apikey
+
+[✓] 自定义敏感词
+
+[✓] 每个会话设置独有 Prompt
 </br>
 
 ## 截图
@@ -17,6 +27,7 @@
 ![cover](./docs/c1.png)
 ![cover2](./docs/c2.png)
 ![cover3](./docs/basesettings.jpg)
+![cover3](./docs/prompt.jpg)
 
 - [ChatGPT Web](#chatgpt-web)
 	- [介绍](#介绍)

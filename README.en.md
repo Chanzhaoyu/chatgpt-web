@@ -7,7 +7,18 @@
 </br>
 
 ## Introduction
-> **This project is forked from [Chanzhaoyu/chatgpt-web](https://github.com/Chanzhaoyu/chatgpt-web). In addition to regularly merging this branch, some unique features have been added such as registration and login, setting API key on the front-end page.**
+> **This project is forked from [Chanzhaoyu/chatgpt-web](https://github.com/Chanzhaoyu/chatgpt-web), some unique features have been added:**
+
+[✓] Register & Login & Reset Password
+
+[✓] Sync chat history 
+
+[✓] Front-end page setting apikey
+
+[✓] Custom Sensitive Words
+
+[✓] Set unique prompts for each chat room
+
 </br>
 
 ## Screenshots
@@ -17,6 +28,7 @@
 ![cover](./docs/c1.png)
 ![cover2](./docs/c2.png)
 ![cover3](./docs/basesettings.jpg)
+![cover3](./docs/prompt_en.jpg)
 
 - [ChatGPT Web](#chatgpt-web)
 	- [Introduction](#introduction)

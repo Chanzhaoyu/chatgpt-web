@@ -4,7 +4,6 @@ import { NButton, NInput, NModal, NTabPane, NTabs, useMessage } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import { fetchLogin, fetchRegister, fetchResetPassword, fetchSendResetMail, fetchVerify, fetchVerifyAdmin } from '@/api'
 import { useAuthStore } from '@/store'
-import Icon403 from '@/icons/403.vue'
 
 interface Props {
   visible: boolean
@@ -200,17 +199,13 @@ async function handleResetPassword() {
 </script>
 
 <template>
-  <NModal :show="visible" style="width: 90%; max-width: 640px">
+  <NModal :show="visible" style="width: 90%; max-width: 440px">
     <div class="p-10 bg-white rounded dark:bg-slate-800">
       <div class="space-y-4">
         <header class="space-y-2">
           <h2 class="text-2xl font-bold text-center text-slate-800 dark:text-neutral-200">
-            403
+            {{ $t('common.notLoggedIn') }}
           </h2>
-          <p class="text-base text-center text-slate-500 dark:text-slate-500">
-            {{ $t('common.unauthorizedTips') }}
-          </p>
-          <Icon403 class="w-[200px] m-auto" />
         </header>
 
         <!-- Add Tabs -->

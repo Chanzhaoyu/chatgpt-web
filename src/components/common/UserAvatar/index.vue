@@ -1,15 +1,19 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
 import { NAvatar, NButton } from 'naive-ui'
-import { useUserStore } from '@/store'
+import { useAuthStore, useUserStore } from '@/store'
 import defaultAvatar from '@/assets/avatar.jpg'
 import { isString } from '@/utils/is'
 import Permission from '@/views/chat/layout/Permission.vue'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
 
 const userStore = useUserStore()
-// const authStore = useAuthStore()
-// const needPermission = computed(() => !!authStore.session?.auth && !authStore.token)
+const authStore = useAuthStore()
 const needPermission = ref(false)
+
+const { isMobile } = useBasicLayout()
+if (!!authStore.session?.auth && !authStore.token)
+  needPermission.value = isMobile.value
 
 const userInfo = computed(() => userStore.userInfo)
 </script>
@@ -33,8 +37,11 @@ const userInfo = computed(() => userStore.userInfo)
       <h2 v-if="userInfo.name" class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
         {{ userInfo.name }}
       </h2>
-      <NButton v-else tag="a" type="info" ghost @click="needPermission = true">
-        <span class="text-xl text-[#4f555e] dark:text-white">
+      <NButton
+        v-else tag="a" text
+        @click="needPermission = true"
+      >
+        <span class="text-xl text-[#ff69b4] dark:text-white">
           {{ $t('common.notLoggedIn') }}
         </span>
       </NButton>
