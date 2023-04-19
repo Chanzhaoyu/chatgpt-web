@@ -457,7 +457,7 @@ router.post('/session', async (req, res) => {
     const config = await getCacheConfig()
     const hasAuth = config.siteConfig.loginEnabled
     const allowRegister = (await getCacheConfig()).siteConfig.registerEnabled
-    res.send({ status: 'Success', message: '', data: { auth: hasAuth, allowRegister, model: currentModel() } })
+    res.send({ status: 'Success', message: '', data: { auth: hasAuth, allowRegister, model: currentModel(), title: config.siteConfig.siteTitle } })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

@@ -450,7 +450,7 @@ function handleStop() {
 
 async function loadMoreMessage(event: any) {
   const chatIndex = chatStore.chat.findIndex(d => d.uuid === +uuid)
-  if (chatIndex <= -1)
+  if (chatIndex <= -1 || chatStore.chat[chatIndex].data.length <= 0)
     return
 
   const scrollPosition = event.target.scrollHeight - event.target.scrollTop
@@ -623,7 +623,7 @@ onUnmounted(() => {
               <NInput
                 ref="inputRef"
                 v-model:value="prompt"
-                :disabled="authStore.token === undefined"
+                :disabled="!!authStore.session?.auth && !authStore.token"
                 type="textarea"
                 :placeholder="placeholder"
                 :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"

@@ -40,8 +40,11 @@ const userInfo = computed(() => userStore.userInfo)
         v-else tag="a" text
         @click="showPermission = true"
       >
-        <span class="text-xl text-[#ff69b4] dark:text-white">
+        <span v-if="!!authStore.session?.auth && !authStore.token" class="text-xl text-[#ff69b4] dark:text-white">
           {{ $t('common.notLoggedIn') }}
+        </span>
+        <span v-else class="text-xl text-[#ff69b4] dark:text-white">
+          {{ authStore .session?.title }}
         </span>
       </NButton>
     </div>
