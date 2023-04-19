@@ -9,11 +9,10 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 
 const userStore = useUserStore()
 const authStore = useAuthStore()
-const needPermission = ref(false)
-
 const { isMobile } = useBasicLayout()
-if (!!authStore.session?.auth && !authStore.token)
-  needPermission.value = isMobile.value
+const showPermission = ref(false)
+
+const needPermission = computed(() => !!authStore.session?.auth && !authStore.token && (isMobile.value || showPermission.value))
 
 const userInfo = computed(() => userStore.userInfo)
 </script>
@@ -39,7 +38,7 @@ const userInfo = computed(() => userStore.userInfo)
       </h2>
       <NButton
         v-else tag="a" text
-        @click="needPermission = true"
+        @click="showPermission = true"
       >
         <span class="text-xl text-[#ff69b4] dark:text-white">
           {{ $t('common.notLoggedIn') }}
