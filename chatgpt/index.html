@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+	<meta charset="UTF-8">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<meta content="yes" name="apple-mobile-web-app-capable"/>
+	<link rel="apple-touch-icon" href="/favicon.ico">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover" />
+	<title>ChatGPT 机器人</title>
+  <script type="module" crossorigin src="/assets/index-64de634d.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/@vue_shared@3.2.47-1870027e.js">
+  <link rel="modulepreload" crossorigin href="/assets/@vue_reactivity@3.2.47-41cada1d.js">
+  <link rel="modulepreload" crossorigin href="/assets/@vue_runtime-core@3.2.47-d9a89b1b.js">
+  <link rel="modulepreload" crossorigin href="/assets/@vue_runtime-dom@3.2.47-1f3621cd.js">
+  <link rel="modulepreload" crossorigin href="/assets/seemly@0.3.6-5600174a.js">
+  <link rel="modulepreload" crossorigin href="/assets/evtd@0.2.4-b614532e.js">
+  <link rel="modulepreload" crossorigin href="/assets/vooks@0.2.12_vue@3.2.47-6d2a1cf4.js">
+  <link rel="modulepreload" crossorigin href="/assets/vdirs@0.1.8_vue@3.2.47-4519c5fd.js">
+  <link rel="modulepreload" crossorigin href="/assets/treemate@0.3.11-25c27bff.js">
+  <link rel="modulepreload" crossorigin href="/assets/@css-render_vue3-ssr@0.15.12_vue@3.2.47-9765db09.js">
+  <link rel="modulepreload" crossorigin href="/assets/@juggle_resize-observer@3.4.0-41516555.js">
+  <link rel="modulepreload" crossorigin href="/assets/@emotion_hash@0.8.0-8a8e73f6.js">
+  <link rel="modulepreload" crossorigin href="/assets/css-render@0.15.12-57b1a53f.js">
+  <link rel="modulepreload" crossorigin href="/assets/vueuc@0.4.51_vue@3.2.47-56f5039e.js">
+  <link rel="modulepreload" crossorigin href="/assets/lodash-es@4.17.21-cabc0acd.js">
+  <link rel="modulepreload" crossorigin href="/assets/date-fns@2.29.3-975a2d8f.js">
+  <link rel="modulepreload" crossorigin href="/assets/@css-render_plugin-bem@0.15.12_css-render@0.15.12-9dde7ffe.js">
+  <link rel="modulepreload" crossorigin href="/assets/naive-ui@2.34.3_vue@3.2.47-b44668a5.js">
+  <link rel="modulepreload" crossorigin href="/assets/@iconify_vue@4.1.0_vue@3.2.47-cce582b6.js">
+  <link rel="modulepreload" crossorigin href="/assets/vue-demi@0.13.11_vue@3.2.47-71ba0ef2.js">
+  <link rel="modulepreload" crossorigin href="/assets/pinia@2.0.33_hmuptsblhheur2tugfgucj7gc4-b06c6206.js">
+  <link rel="modulepreload" crossorigin href="/assets/katex@0.16.4-d49885c5.js">
+  <link rel="modulepreload" crossorigin href="/assets/@traptitech_markdown-it-katex@3.6.0-183244bb.js">
+  <link rel="modulepreload" crossorigin href="/assets/crypto-js@4.1.1-5d2574b3.js">
+  <link rel="modulepreload" crossorigin href="/assets/vue-router@4.1.6_vue@3.2.47-becc39a8.js">
+  <link rel="modulepreload" crossorigin href="/assets/axios@1.3.4-aba6f0e0.js">
+  <link rel="modulepreload" crossorigin href="/assets/@vueuse_shared@9.13.0_vue@3.2.47-31ba0d1d.js">
+  <link rel="modulepreload" crossorigin href="/assets/@vueuse_core@9.13.0_vue@3.2.47-804c0f63.js">
+  <link rel="modulepreload" crossorigin href="/assets/@intlify_shared@9.2.2-6f62a0ce.js">
+  <link rel="modulepreload" crossorigin href="/assets/@intlify_message-compiler@9.2.2-e451351e.js">
+  <link rel="modulepreload" crossorigin href="/assets/@intlify_devtools-if@9.2.2-c61c979f.js">
+  <link rel="modulepreload" crossorigin href="/assets/@intlify_core-base@9.2.2-e46b7bcb.js">
+  <link rel="modulepreload" crossorigin href="/assets/vue-i18n@9.2.2_vue@3.2.47-f2ff64de.js">
+  <link rel="stylesheet" href="/assets/katex@0.16-3a7d1dfb.css">
+  <link rel="stylesheet" href="/assets/index-e63d040b.css">
+</head>
+
+<body class="dark:bg-black">
+	<div id="app">
+		<style>
+			.loading-wrap {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+			}
+
+			.balls {
+				width: 4em;
+				display: flex;
+				flex-flow: row nowrap;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			.balls div {
+				width: 0.8em;
+				height: 0.8em;
+				border-radius: 50%;
+				background-color: #4b9e5f;
+			}
+
+			.balls div:nth-of-type(1) {
+				transform: translateX(-100%);
+				animation: left-swing 0.5s ease-in alternate infinite;
+			}
+
+			.balls div:nth-of-type(3) {
+				transform: translateX(-95%);
+				animation: right-swing 0.5s ease-out alternate infinite;
+			}
+
+			@keyframes left-swing {
+
+				50%,
+				100% {
+					transform: translateX(95%);
+				}
+			}
+
+			@keyframes right-swing {
+				50% {
+					transform: translateX(-95%);
+				}
+
+				100% {
+					transform: translateX(100%);
+				}
+			}
+
+			@media (prefers-color-scheme: dark) {
+				body {
+					background: #121212;
+				}
+			}
+		</style>
+		<div class="loading-wrap">
+			<div class="balls">
+				<div></div>
+				<div></div>
+				<div></div>
+			</div>
+		</div>
+	</div>
+	
+</body>
+
+</html>

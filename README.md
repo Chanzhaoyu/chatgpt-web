@@ -1,337 +1,169 @@
 # ChatGPT Web
 
-> 声明：此项目只发布于 GitHub，基于 MIT 协议，免费且作为开源学习使用。并且不会有任何形式的卖号、付费服务、讨论群、讨论组等行为。谨防受骗。
+## 系统截图
 
-![cover](./docs/c1.png)
-![cover2](./docs/c2.png)
+客户端
+<img width="1438" alt="image" src="https://user-images.githubusercontent.com/13517412/230752830-06bcb883-1a27-48de-8162-b42f2abb2d1e.png">
+<img width="1439" alt="image" src="https://user-images.githubusercontent.com/13517412/230752840-efd890fb-0457-4c2a-a8e3-cde93948f99e.png">
+<img width="1439" alt="image" src="https://user-images.githubusercontent.com/13517412/230752867-84c6e619-a151-4f7d-848a-120ccc64d5cf.png">
+<img width="1439" alt="image" src="https://user-images.githubusercontent.com/13517412/230752872-b1670e7e-cce9-4744-becb-f0d657a58598.png">
+<img width="1439" alt="image" src="https://user-images.githubusercontent.com/13517412/230752885-776f357c-2c4a-4e1e-aaf5-f02ca6551be2.png">
 
-- [ChatGPT Web](#chatgpt-web)
-	- [介绍](#介绍)
-	- [待实现路线](#待实现路线)
-	- [前置要求](#前置要求)
-		- [Node](#node)
-		- [PNPM](#pnpm)
-		- [填写密钥](#填写密钥)
-	- [安装依赖](#安装依赖)
-		- [后端](#后端)
-		- [前端](#前端)
-	- [测试环境运行](#测试环境运行)
-		- [后端服务](#后端服务)
-		- [前端网页](#前端网页)
-	- [环境变量](#环境变量)
-	- [打包](#打包)
-		- [使用 Docker](#使用-docker)
-			- [Docker 参数示例](#docker-参数示例)
-			- [Docker build \& Run](#docker-build--run)
-			- [Docker compose](#docker-compose)
-		- [使用 Railway 部署](#使用-railway-部署)
-			- [Railway 环境变量](#railway-环境变量)
-		- [手动打包](#手动打包)
-			- [后端服务](#后端服务-1)
-			- [前端网页](#前端网页-1)
-	- [常见问题](#常见问题)
-	- [参与贡献](#参与贡献)
-	- [赞助](#赞助)
-	- [License](#license)
-## 介绍
+<img width="1277" alt="image" src="https://user-images.githubusercontent.com/13517412/232736158-45458700-a61d-4c86-8f81-e7a842ebe073.png">
 
-支持双模型，提供了两种非官方 `ChatGPT API` 方法
+管理端
+<img width="1439" alt="登录" src="https://user-images.githubusercontent.com/13517412/230766669-9eb38029-e0f3-4ba1-985d-abf0757505b4.png">
+<img width="1277" alt="修改密码" src="https://user-images.githubusercontent.com/13517412/232736883-43cd549e-1d18-4f48-a5f7-af8c65c5718b.png">
+<img width="1279" alt="image" src="https://user-images.githubusercontent.com/13517412/232737651-471e0116-bc04-47ad-ac20-1dd0c14e46f1.png">
 
-| 方式                                          | 免费？ | 可靠性     | 质量 |
-| --------------------------------------------- | ------ | ---------- | ---- |
-| `ChatGPTAPI(gpt-3.5-turbo-0301)`                           | 否     | 可靠       | 相对较笨 |
-| `ChatGPTUnofficialProxyAPI(网页 accessToken)` | 是     | 相对不可靠 | 聪明 |
+<img width="1439" alt="image" src="https://user-images.githubusercontent.com/13517412/230752907-586329a6-e395-48ef-9bdf-cce8b8610cdf.png">
 
-对比：
-1. `ChatGPTAPI` 使用 `gpt-3.5-turbo` 通过 `OpenAI` 官方 `API` 调用 `ChatGPT`
-2. `ChatGPTUnofficialProxyAPI` 使用非官方代理服务器访问 `ChatGPT` 的后端`API`，绕过`Cloudflare`（依赖于第三方服务器，并且有速率限制）
+<img width="1438" alt="image" src="https://user-images.githubusercontent.com/13517412/230752920-87d24962-9452-496a-ad6f-7d67252a49e8.png">
+<img width="1439" alt="image" src="https://user-images.githubusercontent.com/13517412/230752936-8460e759-6ace-4a89-a146-8d6c5380a536.png">
+<img width="1278" alt="image" src="https://user-images.githubusercontent.com/13517412/232738306-2239a5de-bd70-4c39-84e8-a9825933ef97.png">
 
-警告：
-1. 你应该首先使用 `API` 方式
-2. 使用 `API` 时，如果网络不通，那是国内被墙了，你需要自建代理，绝对不要使用别人的公开代理，那是危险的。
-3. 使用 `accessToken` 方式时反向代理将向第三方暴露您的访问令牌，这样做应该不会产生任何不良影响，但在使用这种方法之前请考虑风险。
-4. 使用 `accessToken` 时，不管你是国内还是国外的机器，都会使用代理。默认代理为 [acheong08](https://github.com/acheong08) 大佬的 `https://bypass.churchless.tech/api/conversation`，这不是后门也不是监听，除非你有能力自己翻过 `CF` 验证，用前请知悉。[社区代理](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)（注意：只有这两个是推荐，其他第三方来源，请自行甄别）
-5. 把项目发布到公共网络时，你应该设置 `AUTH_SECRET_KEY` 变量添加你的密码访问权限，你也应该修改 `index.html` 中的 `title`，防止被关键词搜索到。
+<img width="1437" alt="image" src="https://user-images.githubusercontent.com/13517412/230752949-4a92334d-cc69-4d09-b587-a44e92845c57.png">
+<img width="1438" alt="image" src="https://user-images.githubusercontent.com/13517412/230752958-c2a67800-84bd-4c45-b98e-a629042ee5c7.png">
+<img width="1439" alt="image" src="https://user-images.githubusercontent.com/13517412/230752964-b57da9e1-1a42-4967-ae6c-1da1c64c547e.png">
+<img width="1439" alt="image" src="https://user-images.githubusercontent.com/13517412/230752973-2dac4562-51af-4fe5-9138-0331b228cfe6.png">
+<img width="1439" alt="image" src="https://user-images.githubusercontent.com/13517412/230752984-67ff808f-c87e-44f0-9957-bfcb0b6c1802.png">
 
-切换方式：
-1. 进入 `service/.env.example` 文件，复制内容到 `service/.env` 文件
-2. 使用 `OpenAI API Key` 请填写 `OPENAI_API_KEY` 字段 [(获取 apiKey)](https://platform.openai.com/overview)
-3. 使用 `Web API` 请填写 `OPENAI_ACCESS_TOKEN` 字段 [(获取 accessToken)](https://chat.openai.com/api/auth/session)
-4. 同时存在时以 `OpenAI API Key` 优先
+<img width="1279" alt="image" src="https://user-images.githubusercontent.com/13517412/232735670-2d277962-1312-4900-b6f1-248531835a9e.png">
 
-环境变量：
+<img width="1436" alt="image" src="https://user-images.githubusercontent.com/13517412/230753011-125fe575-8947-4d1e-8496-b3afb4f2db7e.png">
 
-全部参数变量请查看或[这里](#环境变量)
+为了方便大家沟通交流，同步消息，建了QQ群，目前已有 `1135` 人，群号 `145225165`，申请入群后请及时回复验证码，否则360秒后会被群机器人自动移除群。
+![image](https://user-images.githubusercontent.com/13517412/230753075-0d815446-3e24-4a09-bee4-e3fa59dec76e.png)
+<img width="679" alt="image" src="https://user-images.githubusercontent.com/13517412/230753144-0c5ea0ee-55a6-4d5d-8282-53fcbc9355c7.png">
 
-```
-/service/.env.example
-```
+## 功能列表
+[✓] 支持最新模型 `GPT4.0`
 
-## 待实现路线
-[✓] 双模型
+[✓] 登录注册，管理后台可以设置首次登录赠送免费提问次数
 
-[✓] 多会话储存和上下文逻辑
+[✓] 支持多 `key` 轮询池
 
-[✓] 对代码等消息类型的格式化美化处理
+[✓] 支持上下文对话
 
-[✓] 访问权限控制
+[✓] 支持百度敏感词过滤
 
-[✓] 数据导入、导出
+[✓] 支持自定义回复内容，比如提问当前使用 `GPT` 版本，可以自定义回复内容为 4.0 版本
 
-[✓] 保存消息到本地图片
+[✓] 提示词prompt商店管理
 
-[✓] 界面多语言
+[✓] 卡密套餐管理、卡密生成和核销
 
-[✓] 界面主题
+[✗] 实现联网搜索
 
-[✗] More...
+[✗] 解决输入的文本超出模型最大tokens
 
-## 前置要求
+[✗] 支持分享获取免费次数
 
-### Node
+[✗] 支持分销
 
-`node` 需要 `^16 || ^18 || ^19` 版本（`node >= 14` 需要安装 [fetch polyfill](https://github.com/developit/unfetch#usage-as-a-polyfill)），使用 [nvm](https://github.com/nvm-sh/nvm) 可管理本地多个 `node` 版本
+[✗] 支持代理商
 
+## 手动部署
+> 服务器无需安装任何环境，只需要安装 nginx 来配置域名，nginx 修改配置后需要重启才能生效
+
+服务器放行 `3000` 端口，将数据库文件 `db.sql` 导入到 `mysql`，修改 `service` 目录下 `.env` 里数据库配置信息、邮箱配置、百度文本审核配置信息，其他配置信息无需改动
+
+根据自己的系统选择对应的服务端，下面以 `linux` 环境为例，
+进入 `service` 目录，运行 `nohup ./amd64.linux>gpt.log &` 启动后端服务
+运行 `curl http://127.0.0.1:3000`，如果出现
 ```shell
-node -v
+{"Hello":"Gochat 后端服务启动成功"}
 ```
+说明后端服务启动成功
 
-### PNPM
-如果你没有安装过 `pnpm`
+将用户端绑定到 `chatgpt` 目录，如 `chat.baidu.com`，`nginx` 主要配置如下：
 ```shell
-npm install pnpm -g
+listen 80;
+server_name chat.baidu.com;
+index index.php index.html index.htm default.php default.htm default.html;
+
+location / {
+    root /www/wwwroot/chatgpt/fontend/; // 改成自己客户端项目实际路径
+    index index.html index.htm;
+    try_files $uri $uri/ /index.html;
+}
+
+location /api/{
+    proxy_pass http://127.0.0.1:3000;
+}
 ```
+访问 `chat.baidu.com` 即可访问前台
 
-### 填写密钥
-获取 `Openai Api Key` 或 `accessToken` 并填写本地环境变量 [跳转](#介绍)
-
-```
-# service/.env 文件
-
-# OpenAI API Key - https://platform.openai.com/overview
-OPENAI_API_KEY=
-
-# change this to an `accessToken` extracted from the ChatGPT site's `https://chat.openai.com/api/auth/session` response
-OPENAI_ACCESS_TOKEN=
-```
-
-## 安装依赖
-
-> 为了简便 `后端开发人员` 的了解负担，所以并没有采用前端 `workspace` 模式，而是分文件夹存放。如果只需要前端页面做二次开发，删除 `service` 文件夹即可。
-
-### 后端
-
-进入文件夹 `/service` 运行以下命令
-
+将管理端域名绑定到 `admin` 目录，如 `admin.baidu.com`，`nginx` 主要配置如下：
 ```shell
-pnpm install
+listen 80;
+server_name admin.baidu.com;
+index index.php index.html index.htm default.php default.htm default.html;
+
+location / {
+    root /www/wwwroot/chatgpt/admin/; // 改成自己管理端项目实际路径
+    index index.html index.htm;
+    try_files $uri $uri/ /index.html;
+}
+
+location /backend/{
+    proxy_pass http://127.0.0.1:3000/backend/;
+}
 ```
+访问 `chat.baidu.com` 即可访问管理后台，默认账号 `245629560@qq.com`, 密码 `123456`
 
-### 前端
-根目录下运行以下命令
-```shell
-pnpm bootstrap
-```
+## 宝塔部署
+- 上传源码
 
-## 测试环境运行
-### 后端服务
+  点击宝塔左侧文件菜单，将源码上传到 `www/wwwroot` 目录，如下图
+  ![](https://gouguoyin.oss-cn-beijing.aliyuncs.com/tools/images/2130706433/20230419/001.png)
+- 导入数据库
+  
+  点击宝塔左侧数据库菜单，点击添加数据库，填写数据库信息，并记下数据库密码，如下图
+  ![](https://gouguoyin.oss-cn-beijing.aliyuncs.com/tools/images/2130706433/20230419/002.png)
+  点击提交后找到新添加的数据库，点击导入按钮弹出上传框，点击从本地上传，选择 `db.sql` 文件进行上传
+  ![](https://gouguoyin.oss-cn-beijing.aliyuncs.com/tools/images/2130706433/20230419/003.png)
+  ![](https://gouguoyin.oss-cn-beijing.aliyuncs.com/tools/images/2130706433/20230419/004.png)
+  ![](https://gouguoyin.oss-cn-beijing.aliyuncs.com/tools/images/2130706433/20230419/005.png)
 
-进入文件夹 `/service` 运行以下命令
+- 修改配置信息
 
-```shell
-pnpm start
-```
+    点击宝塔左侧文件菜单，找到 `service/.env` 配置文件，修改里面的数据库配置信息、邮箱配置信息和百度文本审核配置信息
+    ![](https://gouguoyin.oss-cn-beijing.aliyuncs.com/tools/images/2130706433/20230419/007.png)
 
-### 前端网页
-根目录下运行以下命令
-```shell
-pnpm dev
-```
+- 启动服务端
 
-## 环境变量
+    点击宝塔左侧网站菜单，选择 `go项目`，添加 `go项目`，选择要运行的二进制文件
+    ![](https://gouguoyin.oss-cn-beijing.aliyuncs.com/tools/images/2130706433/20230419/008.png)
+    ![](https://gouguoyin.oss-cn-beijing.aliyuncs.com/tools/images/2130706433/20230419/009.png)
+    点击宝塔左侧终端菜单，输入 `curl http://127.0.0.1:3000`，如果出现
+    ```shell
+    {"Hello":"Gochat 后端服务启动成功"}
+    ```
+    说明后端服务启动成功
 
-`API` 可用：
+## 关联链接
+自建代理开源项目：https://github.com/easychen/openai-api-proxy/
 
-- `OPENAI_API_KEY` 和 `OPENAI_ACCESS_TOKEN` 二选一
-- `OPENAI_API_MODEL`  设置模型，可选，默认：`gpt-3.5-turbo`
-- `OPENAI_API_BASE_URL` 设置接口地址，可选，默认：`https://api.openai.com`
-- `OPENAI_API_DISABLE_DEBUG` 设置接口关闭 debug 日志，可选，默认：empty 不关闭
+百度敏感词过滤接口申请：https://console.bce.baidu.com/ai/?fromai=1#/ai/antiporn/overview/resource/getFree
 
-`ACCESS_TOKEN` 可用：
+## 更新日志
+### v1.0.4
+- 增加百度敏感词过滤支持
+- 增加对gpt-4.0、gpt-4-0314、gpt-4-32k、gpt-4-32k-0314 模型的支持
+- 管理后台支持修改登录账号
+- 管理后台新增对模型的细调
+- 管理后台支持生成卡密时直接绑定用户
+- 修复管理后台套餐保存报错的 bug
+- 修复管理后台生成卡券选择套餐时勾选后是数字的 bug
+### v1.0.3
+- 修复无法流式输出的bug
+- 修复无法关联上下文的bug，目前默认关联最近5条历史记录
+- 优化会员登录状态判断
+- 修复管理后台只有一个 `key` 时报错的 bug
+- 修复会员多次叠加购买次卡时次数没有叠加的 bug
+- 管理后台仪表盘显示真实数据
+- 管理后台会员管理增加删除操作
 
-- `OPENAI_ACCESS_TOKEN`  和 `OPENAI_API_KEY` 二选一，同时存在时，`OPENAI_API_KEY` 优先
-- `API_REVERSE_PROXY` 设置反向代理，可选，默认：`https://bypass.churchless.tech/api/conversation`，[社区](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)（注意：只有这两个是推荐，其他第三方来源，请自行甄别）
-
-通用：
-
-- `AUTH_SECRET_KEY` 访问权限密钥，可选
-- `MAX_REQUEST_PER_HOUR` 每小时最大请求次数，可选，默认无限
-- `TIMEOUT_MS` 超时，单位毫秒，可选
-- `SOCKS_PROXY_HOST` 和 `SOCKS_PROXY_PORT` 一起时生效，可选
-- `SOCKS_PROXY_PORT` 和 `SOCKS_PROXY_HOST` 一起时生效，可选
-- `HTTPS_PROXY` 支持 `http`，`https`, `socks5`，可选
-- `ALL_PROXY` 支持 `http`，`https`, `socks5`，可选
-
-## 打包
-
-### 使用 Docker
-
-#### Docker 参数示例
-
-![docker](./docs/docker.png)
-
-#### Docker build & Run
-
-```bash
-docker build -t chatgpt-web .
-
-# 前台运行
-docker run --name chatgpt-web --rm -it -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
-
-# 后台运行
-docker run --name chatgpt-web -d -p 127.0.0.1:3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
-
-# 运行地址
-http://localhost:3002/
-```
-
-#### Docker compose
-
-[Hub 地址](https://hub.docker.com/repository/docker/chenzhaoyu94/chatgpt-web/general)
-
-```yml
-version: '3'
-
-services:
-  app:
-    image: chenzhaoyu94/chatgpt-web # 总是使用 latest ,更新时重新 pull 该 tag 镜像即可
-    ports:
-      - 127.0.0.1:3002:3002
-    environment:
-      # 二选一
-      OPENAI_API_KEY: sk-xxx
-      # 二选一
-      OPENAI_ACCESS_TOKEN: xxx
-      # API接口地址，可选，设置 OPENAI_API_KEY 时可用
-      OPENAI_API_BASE_URL: xxx
-      # API模型，可选，设置 OPENAI_API_KEY 时可用，https://platform.openai.com/docs/models
-      # gpt-4, gpt-4-0314, gpt-4-32k, gpt-4-32k-0314, gpt-3.5-turbo, gpt-3.5-turbo-0301, text-davinci-003, text-davinci-002, code-davinci-002
-      OPENAI_API_MODEL: xxx
-      # 反向代理，可选
-      API_REVERSE_PROXY: xxx
-      # 访问权限密钥，可选
-      AUTH_SECRET_KEY: xxx
-      # 每小时最大请求次数，可选，默认无限
-      MAX_REQUEST_PER_HOUR: 0
-      # 超时，单位毫秒，可选
-      TIMEOUT_MS: 60000
-      # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
-      SOCKS_PROXY_HOST: xxx
-      # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
-      SOCKS_PROXY_PORT: xxx
-      # HTTPS 代理，可选，支持 http，https，socks5
-      HTTPS_PROXY: http://xxx:7890
-```
-- `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
-- `OPENAI_API_MODEL`  可选，设置 `OPENAI_API_KEY` 时可用
-###  使用 Railway 部署
-
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/yytmgc)
-
-#### Railway 环境变量
-
-| 环境变量名称          | 必填                   | 备注                                                                                               |
-| --------------------- | ---------------------- | -------------------------------------------------------------------------------------------------- |
-| `PORT`                | 必填                   | 默认 `3002`
-| `AUTH_SECRET_KEY`          | 可选                   | 访问权限密钥                                        |
-| `MAX_REQUEST_PER_HOUR`          | 可选                   | 每小时最大请求次数，可选，默认无限                                        |
-| `TIMEOUT_MS`          | 可选                   | 超时时间，单位毫秒                                                                             |
-| `OPENAI_API_KEY`      | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)            |
-| `OPENAI_ACCESS_TOKEN` | `Web API` 二选一       | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session) |
-| `OPENAI_API_BASE_URL`   | 可选，`OpenAI API` 时可用 |  `API`接口地址  |
-| `OPENAI_API_MODEL`   | 可选，`OpenAI API` 时可用 |  `API`模型  |
-| `API_REVERSE_PROXY`   | 可选，`Web API` 时可用 | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)    |
-| `SOCKS_PROXY_HOST`   | 可选，和 `SOCKS_PROXY_PORT` 一起时生效 | Socks代理    |
-| `SOCKS_PROXY_PORT`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理端口    |
-| `SOCKS_PROXY_USERNAME`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理用户名    |
-| `SOCKS_PROXY_PASSWORD`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理密码    |
-| `HTTPS_PROXY`   | 可选 | HTTPS 代理，支持 http，https, socks5    |
-| `ALL_PROXY`   | 可选 | 所有代理 代理，支持 http，https, socks5    |
-
-> 注意: `Railway` 修改环境变量会重新 `Deploy`
-
-### 手动打包
-#### 后端服务
-> 如果你不需要本项目的 `node` 接口，可以省略如下操作
-
-复制 `service` 文件夹到你有 `node` 服务环境的服务器上。
-
-```shell
-# 安装
-pnpm install
-
-# 打包
-pnpm build
-
-# 运行
-pnpm prod
-```
-
-PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
-
-#### 前端网页
-
-1、修改根目录下 `.env` 文件中的 `VITE_GLOB_API_URL` 为你的实际后端接口地址
-
-2、根目录下运行以下命令，然后将 `dist` 文件夹内的文件复制到你网站服务的根目录下
-
-[参考信息](https://cn.vitejs.dev/guide/static-deploy.html#building-the-app)
-
-```shell
-pnpm build
-```
-
-## 常见问题
-Q: 为什么 `Git` 提交总是报错？
-
-A: 因为有提交信息验证，请遵循 [Commit 指南](./CONTRIBUTING.md)
-
-Q: 如果只使用前端页面，在哪里改请求接口？
-
-A: 根目录下 `.env` 文件中的 `VITE_GLOB_API_URL` 字段。
-
-Q: 文件保存时全部爆红?
-
-A: `vscode` 请安装项目推荐插件，或手动安装 `Eslint` 插件。
-
-Q: 前端没有打字机效果？
-
-A: 一种可能原因是经过 Nginx 反向代理，开启了 buffer，则 Nginx 会尝试从后端缓冲一定大小的数据再发送给浏览器。请尝试在反代参数后添加 `proxy_buffering off;`，然后重载 Nginx。其他 web server 配置同理。
-
-## 参与贡献
-
-贡献之前请先阅读 [贡献指南](./CONTRIBUTING.md)
-
-感谢所有做过贡献的人!
-
-<a href="https://github.com/Chanzhaoyu/chatgpt-web/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Chanzhaoyu/chatgpt-web" />
-</a>
-
-## 赞助
-
-如果你觉得这个项目对你有帮助，并且情况允许的话，可以给我一点点支持，总之非常感谢支持～
-
-<div style="display: flex; gap: 20px;">
-	<div style="text-align: center">
-		<img style="max-width: 100%" src="./docs/wechat.png" alt="微信" />
-		<p>WeChat Pay</p>
-	</div>
-	<div style="text-align: center">
-		<img style="max-width: 100%" src="./docs/alipay.png" alt="支付宝" />
-		<p>Alipay</p>
-	</div>
-</div>
-
-## License
-MIT © [ChenZhaoYu](./license)
+## 鸣谢
+[chatgpt-web 原项目](https://github.com/Chanzhaoyu/chatgpt-web)

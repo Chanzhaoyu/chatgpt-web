@@ -1,0 +1,1 @@
+import{r as t}from"./index.4abee10a.js";function n(e){return t.get({url:"/key/list",params:e})}function u(e){return t.get({url:"/key/detail",params:e})}function o(e){return t.post({url:"/key/update",params:e})}function s(e){return t.get({url:"/key/delete",params:e})}export{u as a,n as g,s as r,o as s};

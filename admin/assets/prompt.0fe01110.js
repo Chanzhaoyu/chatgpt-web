@@ -1,0 +1,1 @@
+import{r}from"./index.4abee10a.js";function o(t){return r.get({url:"/setting/prompt/list",params:t})}function n(t){return r.post({url:"/setting/prompt/update",params:t})}function p(t){return r.get({url:"/setting/prompt/detail",params:t})}function s(t){return r.get({url:"/setting/prompt/delete",params:t})}export{o as a,p as g,s as r,n as s};
