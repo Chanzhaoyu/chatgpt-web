@@ -43,6 +43,7 @@ export const useChatStore = defineStore('chat-store', {
       }
       else {
         this.active = uuid
+        this.syncChat({ uuid } as Chat.History)
         this.reloadRoute(uuid)
       }
       callback && callback()
