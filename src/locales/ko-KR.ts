@@ -49,6 +49,7 @@ export default {
     clearHistoryConfirm: '채팅 기록을 삭제하시겠습니까?',
     preview: '미리보기',
     showRawText: '원본 텍스트로 보기',
+    searchPlaceholder: '채팅 기록 검색',
   },
   setting: {
     setting: '설정',
@@ -88,6 +89,6 @@ export default {
     importError: '키 값 불일치',
     importRepeatTitle: '제목이 반복되어 건너뜀: {msg}',
     importRepeatContent: '내용이 반복되어 건너뜀: {msg}',
-    onlineImportWarning: '참고: JSON 파일 소스를 확인하십시오!',    
+    onlineImportWarning: '참고: JSON 파일 소스를 확인하십시오!',
   },
 }

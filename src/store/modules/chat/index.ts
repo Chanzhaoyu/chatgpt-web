@@ -20,11 +20,28 @@ export const useChatStore = defineStore('chat-store', {
         return state.chat.find(item => item.uuid === state.active)?.data ?? []
       }
     },
+
+    getFilteredHistories(state: Chat.ChatState) {
+      const keyword = state.searchKeyword.trim().toLowerCase()
+      if (!keyword)
+        return state.history
+
+      const h_uuids = state.history.filter(h => h.title.toLowerCase().includes(keyword)).map(h => h.uuid)
+      const r_uuids = state.chat.filter(c => c.data.some(d => d.text.toLowerCase().includes(keyword))).map(c => c.uuid)
+      const uuids = new Set([...h_uuids, ...r_uuids])
+
+      return state.history.filter(ds => uuids.has(ds.uuid))
+    },
   },
 
   actions: {
     setUsingContext(context: boolean) {
       this.usingContext = context
+      this.recordState()
+    },
+
+    setSearchKeyword(keyword: string) {
+      this.searchKeyword = keyword
       this.recordState()
     },
 

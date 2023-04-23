@@ -26,6 +26,7 @@ export default {
     failed: '操作失敗',
     verify: '驗證',
     unauthorizedTips: '未經授權，請先進行驗證。',
+    searchPlaceholder: '搜尋歷史聊天內容',
   },
   chat: {
     newChatButton: '新增對話',

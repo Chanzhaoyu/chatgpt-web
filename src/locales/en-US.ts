@@ -49,6 +49,7 @@ export default {
     clearHistoryConfirm: 'Are you sure to clear chat history?',
     preview: 'Preview',
     showRawText: 'Show as raw text',
+    searchPlaceholder: 'Search chat history',
   },
   setting: {
     setting: 'Setting',

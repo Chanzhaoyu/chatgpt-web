@@ -21,6 +21,7 @@ declare namespace Chat {
 		usingContext: boolean;
 		history: History[]
 		chat: { uuid: number; data: Chat[] }[]
+		searchKeyword: string
 	}
 
 	interface ConversationRequest {
