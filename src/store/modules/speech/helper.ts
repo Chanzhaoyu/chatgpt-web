@@ -16,6 +16,7 @@ export interface SpeechConfig {
     sound?: string
     pitch: number
     rate: number
+    useDefault: boolean
   }
 }
 
@@ -28,20 +29,21 @@ export function defaultState(): SpeechConfig {
       lang: 'zh-CN',
       pitch: 1,
       rate: 1,
+      useDefault: false,
     },
   }
 }
 
 export function getLocalState(): SpeechConfig {
   const defaultConfig = defaultState()
-  const localState = ss.get(LOCAL_NAME)
+  const localState: SpeechConfig | null = ss.get(LOCAL_NAME)
   return {
     ...defaultConfig,
     ...localState,
     enable: enableSpeech,
     speechSetting: {
       ...defaultConfig.speechSetting,
-      ...localState.speechSetting,
+      ...localState?.speechSetting,
     },
   }
 }

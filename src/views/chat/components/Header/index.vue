@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import {computed, nextTick, ref} from 'vue'
+import { computed, nextTick, ref } from 'vue'
+import { useDialog } from 'naive-ui'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useAppStore, useChatStore } from '@/store'
 import Setting from '@/components/common/Setting/index.vue'
-import {t} from "@/locales";
-import {useDialog} from "naive-ui";
+import { t } from '@/locales'
 
 interface Props {
-  usingContext: boolean;
-	loading: boolean;
+  usingContext: boolean
+  loading: boolean
 }
 
 interface Emit {
@@ -17,7 +17,7 @@ interface Emit {
   (ev: 'clean'): void
 }
 
-const {loading} = defineProps<Props>()
+const { loading } = defineProps<Props>()
 
 const emit = defineEmits<Emit>()
 const showSetting = ref(false)
@@ -48,16 +48,16 @@ function toggleUsingContext() {
 }
 
 function handleClear() {
-	if (loading)
-		return
+  if (loading)
+    return
 
-	dialog.warning({
-		title: t('chat.clearChat'),
-		content: t('chat.clearChatConfirm'),
-		positiveText: t('common.yes'),
-		negativeText: t('common.no'),
-		onPositiveClick: () => emit('clean'),
-	})
+  dialog.warning({
+    title: t('chat.clearChat'),
+    content: t('chat.clearChatConfirm'),
+    positiveText: t('common.yes'),
+    negativeText: t('common.no'),
+    onPositiveClick: () => emit('clean'),
+  })
 }
 </script>
 
@@ -92,18 +92,18 @@ function handleClear() {
             <SvgIcon icon="ri:download-2-line" />
           </span>
         </HoverButton>
-				<HoverButton @click="handleClear">
-            <span class="text-xl text-[#4f555e] dark:text-white">
-              <SvgIcon icon="ri:delete-bin-line" />
-            </span>
-				</HoverButton>
-				<HoverButton @click="showSetting = true">
-					<span class="text-xl text-[#4f555e] dark:text-white">
-						<SvgIcon icon="ri:settings-4-line" />
-					</span>
-				</HoverButton>
+        <HoverButton @click="handleClear">
+          <span class="text-xl text-[#4f555e] dark:text-white">
+            <SvgIcon icon="ri:delete-bin-line" />
+          </span>
+        </HoverButton>
+        <HoverButton @click="showSetting = true">
+          <span class="text-xl text-[#4f555e] dark:text-white">
+            <SvgIcon icon="ri:settings-4-line" />
+          </span>
+        </HoverButton>
       </div>
     </div>
-		<Setting v-if="showSetting" v-model:visible="showSetting" />
+    <Setting v-if="showSetting" v-model:visible="showSetting" />
   </header>
 </template>

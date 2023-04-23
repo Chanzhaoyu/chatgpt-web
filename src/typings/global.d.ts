@@ -8,6 +8,7 @@ interface Window {
 	mozSpeechRecognition: any;
 	msSpeechRecognition: any;
 	oSpeechRecognition: any;
+	loggerDebugger: any;
 }
 
 declare module 'web-speech-cognitive-services'

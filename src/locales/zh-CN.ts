@@ -72,7 +72,7 @@ export default {
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
     balance: 'API余额',
-		monthlyUsage: '本月使用量',
+    monthlyUsage: '本月使用量',
     speechSetting: '语音设置',
     speakLang: '语言',
     speakSound: '声音',
