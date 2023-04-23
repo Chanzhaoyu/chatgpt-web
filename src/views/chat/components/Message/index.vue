@@ -8,6 +8,8 @@ import { copyText } from '@/utils/format'
 import { useIconRender } from '@/hooks/useIconRender'
 import { t } from '@/locales'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
+import SpeakBtn from '@/components/voice-output/speak-btn.vue'
+import { useSpeechStore } from '@/store/modules/speech'
 
 interface Props {
   dateTime?: string
@@ -25,6 +27,7 @@ interface Emit {
 const props = defineProps<Props>()
 
 const emit = defineEmits<Emit>()
+const speechStore = useSpeechStore()
 
 const { isMobile } = useBasicLayout()
 
@@ -109,6 +112,12 @@ function handleRegenerate() {
           :as-raw-text="asRawText"
         />
         <div class="flex flex-col">
+          <SpeakBtn
+            v-if="!inversion && speechStore.enable"
+            :loading="loading"
+            class="mb-2 transition text-neutral-300 hover:text-neutral-800 dark:hover:text-neutral-300"
+            :text="text"
+          />
           <button
             v-if="!inversion"
             class="mb-2 transition text-neutral-300 hover:text-neutral-800 dark:hover:text-neutral-300"

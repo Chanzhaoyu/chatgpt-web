@@ -1,4 +1,5 @@
 import express from 'express'
+import { getAzureSubscriptionKey } from './middleware/get-speech-token'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
@@ -81,6 +82,8 @@ router.post('/verify', async (req, res) => {
     res.send({ status: 'Fail', message: error.message, data: null })
   }
 })
+
+router.post('/get-azure-token', getAzureSubscriptionKey)
 
 app.use('', router)
 app.use('/api', router)

@@ -11,11 +11,14 @@ import { useChat } from './hooks/useChat'
 import { useCopyCode } from './hooks/useCopyCode'
 import { useUsingContext } from './hooks/useUsingContext'
 import HeaderComponent from './components/Header/index.vue'
-import { HoverButton, SvgIcon } from '@/components/common'
+import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
+import VoiceInput from '@/components/voice-input/index.vue'
+import AutoSpeak from '@/components/voice-output/auto-speak.vue'
+import { useSpeechStore } from '@/store/modules/speech'
 
 let controller = new AbortController()
 
@@ -26,6 +29,7 @@ const dialog = useDialog()
 const ms = useMessage()
 
 const chatStore = useChatStore()
+const speechStore = useSpeechStore()
 
 useCopyCode()
 
@@ -374,21 +378,6 @@ function handleDelete(index: number) {
   })
 }
 
-function handleClear() {
-  if (loading.value)
-    return
-
-  dialog.warning({
-    title: t('chat.clearChat'),
-    content: t('chat.clearChatConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
-    onPositiveClick: () => {
-      chatStore.clearChatByUuid(+uuid)
-    },
-  })
-}
-
 function handleEnter(event: KeyboardEvent) {
   if (!isMobile.value) {
     if (event.key === 'Enter' && !event.shiftKey) {
@@ -454,6 +443,16 @@ const footerClass = computed(() => {
   return classes
 })
 
+const handleVoiceChange = (v: string[]) => {
+  prompt.value = v.filter(item => !!item).join('')
+}
+const handleReset = () => chatStore.clearChatByUuid(+uuid)
+
+const handleVoiceSubmit = () => {
+  if (!loading.value)
+    handleSubmit()
+}
+
 onMounted(() => {
   scrollToBottom()
   if (inputRef.value && !isMobile.value)
@@ -469,10 +468,11 @@ onUnmounted(() => {
 <template>
   <div class="flex flex-col w-full h-full">
     <HeaderComponent
-      v-if="isMobile"
       :using-context="usingContext"
+      :loading="loading"
       @export="handleExport"
       @toggle-using-context="toggleUsingContext"
+      @clean="handleReset"
     />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto">
@@ -516,21 +516,8 @@ onUnmounted(() => {
     <footer :class="footerClass">
       <div class="w-full max-w-screen-xl m-auto">
         <div class="flex items-center justify-between space-x-2">
-          <HoverButton @click="handleClear">
-            <span class="text-xl text-[#4f555e] dark:text-white">
-              <SvgIcon icon="ri:delete-bin-line" />
-            </span>
-          </HoverButton>
-          <HoverButton v-if="!isMobile" @click="handleExport">
-            <span class="text-xl text-[#4f555e] dark:text-white">
-              <SvgIcon icon="ri:download-2-line" />
-            </span>
-          </HoverButton>
-          <HoverButton v-if="!isMobile" @click="toggleUsingContext">
-            <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
-              <SvgIcon icon="ri:chat-history-line" />
-            </span>
-          </HoverButton>
+          <AutoSpeak v-if="speechStore.enable" />
+          <VoiceInput v-if="speechStore.enable" :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
           <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
             <template #default="{ handleInput, handleBlur, handleFocus }">
               <NInput
