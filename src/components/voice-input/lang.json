@@ -246,91 +246,12 @@
     }
   ],
   "default": [
-    {
-      "lang": "zh-CN",
-      "label": "中文（简体）",
-      "voices": [
-        {
-          "value": "Microsoft Huihui - Chinese (Simplified, PRC)",
-          "label": "辉辉"
-        },
-        {
-          "value": "Microsoft Kangkang - Chinese (Simplified, PRC)",
-          "label": "康康"
-        },
-        {
-          "value": "Microsoft Yaoyao - Chinese (Simplified, PRC)",
-          "label": "瑶瑶"
-        },
-        {
-          "value": "Google 普通话（中国大陆）",
-          "label": "Google 普通话"
-        }
-      ]
-    },
-    {
-      "lang": "en-US",
-      "label": "美式英语",
-      "voices": [
-        {
-          "value": "Google US English",
-          "label": "US English"
-        }
-      ]
-    },
-    {
-      "lang": "en-GB",
-      "label": "英式英语",
-      "voices": [
-        {
-          "value": "Google UK English Female",
-          "label": "UK English Female"
-        },
-        {
-          "value": "Google UK English Male",
-          "label": "UK English Male"
-        }
-      ]
-    },
-    {
-      "lang": "it-IT",
-      "label": "意大利语",
-      "voices": [
-        {
-          "value": "Google italiano",
-          "label": "Italiano"
-        }
-      ]
-    },
-    {
-      "lang": "ja-JP",
-      "label": "日语",
-      "voices": [
-        {
-          "value": "Google 日本語",
-          "label": "日本語"
-        }
-      ]
-    },
-    {
-      "lang": "zh-HK",
-      "label": "粤语（香港）",
-      "voices": [
-        {
-          "value": "Google 粤語（香港）",
-          "label": "粤語"
-        }
-      ]
-    },
-    {
-      "lang": "zh-TW",
-      "label": "国语（台湾）",
-      "voices": [
-        {
-          "value": "Google 國語（臺灣）",
-          "label": "國語"
-        }
-      ]
-    }
+    "zh-CN",
+    "zh-HK",
+    "zh-TW",
+    "en-US",
+    "en-GB",
+    "it-IT",
+    "ja-JP"
   ]
 }
