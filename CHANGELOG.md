@@ -2,7 +2,7 @@
 
 `2023-04-03`
 
-> 更新默认 `accessToken` 反代地址为 [[acheong08](https://github.com/acheong08)] 的 `https://bypass.churchless.tech/api/conversation`
+> 更新默认 `accessToken` 反代地址为 [[pengzhile](https://github.com/pengzhile)] 的 `https://ai.fakeopen.com/api/conversation`
 
 ## Enhancement
 - 添加 `socks5` 代理认证 [[yimiaoxiehou](https://github.com/Chanzhaoyu/chatgpt-web/pull/999)]
@@ -101,7 +101,7 @@
 
 `2023-03-13`
 
-更新依赖，`access_token` 默认代理为 [acheong08](https://github.com/acheong08) 的 `https://bypass.duti.tech/api/conversation`
+更新依赖，`access_token` 默认代理为 [pengzhile](https://github.com/pengzhile) 的 `https://bypass.duti.tech/api/conversation`
 
 ## Feature
 - `Prompt` 商店在线导入可以导入两种 `recommend.json`里提到的模板 [simonwu53](https://github.com/Chanzhaoyu/chatgpt-web/pull/521)
