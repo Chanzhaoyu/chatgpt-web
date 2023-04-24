@@ -1,6 +1,50 @@
 {
   "auzre": [
     {
+      "lang": "en-US",
+      "label": "English (United States)",
+      "voices": [
+        {
+          "value": "en-US-JennyNeural",
+          "label": "Jenny (Female, Neural)"
+        },
+        {
+          "value": "en-US-JessaNeural",
+          "label": "Jessa (Female, Neural)"
+        },
+        {
+          "value": "en-US-AriaNeural",
+          "label": "Aria (Female, Neural)"
+        },
+        {
+          "value": "en-US-GuyNeural",
+          "label": "Guy (Male, Neural)"
+        },
+        {
+          "value": "en-US-DaveNeural",
+          "label": "Dave (Male, Neural)"
+        },
+        {
+          "value": "en-US-ChristopherNeural",
+          "label": "Christopher (Male, Neural)"
+        }
+      ]
+    },
+    {
+      "lang": "vi-VN",
+      "label": "Tiếng Việt",
+      "voices": [
+        {
+          "value": "vi-VN-HoaiMyNeural",
+          "label": "Nữ Hoài My"
+        },
+        {
+          "value": "vi-VN-NamMinhNeural",
+          "label": "Nam - Nam Minh"
+        }
+      ]
+    },
+    {
       "lang": "zh-CN",
       "label": "中文（普通话，简体）",
       "voices": [
@@ -189,36 +233,6 @@
       ]
     },
     {
-      "lang": "en-US",
-      "label": "English (United States)",
-      "voices": [
-        {
-          "value": "en-US-JennyNeural",
-          "label": "Jenny (Female, Neural)"
-        },
-        {
-          "value": "en-US-JessaNeural",
-          "label": "Jessa (Female, Neural)"
-        },
-        {
-          "value": "en-US-AriaNeural",
-          "label": "Aria (Female, Neural)"
-        },
-        {
-          "value": "en-US-GuyNeural",
-          "label": "Guy (Male, Neural)"
-        },
-        {
-          "value": "en-US-DaveNeural",
-          "label": "Dave (Male, Neural)"
-        },
-        {
-          "value": "en-US-ChristopherNeural",
-          "label": "Christopher (Male, Neural)"
-        }
-      ]
-    },
-    {
       "lang": "ja-JP",
       "label": "日本語 (日本)",
       "voices": [
@@ -246,6 +260,7 @@
     }
   ],
   "default": [
+    "vi-VN",
     "zh-CN",
     "zh-HK",
     "zh-TW",
