@@ -26,7 +26,7 @@ export function defaultState(): SpeechConfig {
     showTip: true,
     autoSpeak: false,
     speechSetting: {
-      lang: 'zh-CN',
+      lang: 'vi-VN',
       pitch: 1,
       rate: 1,
       useDefault: false,
