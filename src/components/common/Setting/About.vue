@@ -20,7 +20,7 @@ const loading = ref(false)
 
 const config = ref<ConfigState>()
 
-// const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
+ const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
 
 async function fetchConfig() {
   try {
@@ -60,16 +60,16 @@ onMounted(() => {
           Nếu bạn cho rằng dự án này hữu ích với bạn, đừng quên chia sẻ cho bạn bè. xin cảm ơn!
         </p>
       </div>
-      <!-- <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
-      <p v-if="isChatGPTAPI">
-        {{ $t("setting.monthlyUsage") }}：{{ config?.usage ?? '-' }}
-      </p>
+      <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
+      <!-- <p v-if="isChatGPTAPI">
+         {{ $t("setting.monthlyUsage") }}：{{ config?.usage ?? '-' }}
+      </p> -->
       <p v-if="!isChatGPTAPI">
         {{ $t("setting.reverseProxy") }}：{{ config?.reverseProxy ?? '-' }}
       </p>
       <p>{{ $t("setting.timeout") }}：{{ config?.timeoutMs ?? '-' }}</p>
       <p>{{ $t("setting.socks") }}：{{ config?.socksProxy ?? '-' }}</p>
-      <p>{{ $t("setting.httpsProxy") }}：{{ config?.httpsProxy ?? '-' }}</p> -->
+      <p>{{ $t("setting.httpsProxy") }}：{{ config?.httpsProxy ?? '-' }}</p> 
     </div>
   </NSpin>
 </template>
