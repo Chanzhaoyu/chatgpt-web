@@ -1,8 +1,14 @@
 [
   {
     "key": "awesome-chatgpt-prompts",
-    "desc": "ChatGPT prompts",
-    "downloadUrl": "https://timny.com/prompts.json",
-    "url": "https://timny.com/prompts.json"
+    "desc": "ChatGPT",
+    "downloadUrl": "https://raw.githubusercontent.com/PlexPt/awesome-chatgpt-prompts-zh/main/prompts-zh.json",
+    "url": "https://github.com/PlexPt/awesome-chatgpt-prompts-zh"
+  },
+  {
+    "key": "awesome-chatgpt-prompts",
+    "desc": "ChatGPT",
+    "downloadUrl": "https://raw.githubusercontent.com/PlexPt/awesome-chatgpt-prompts-zh/main/prompts-zh-TW.json",
+    "url": "https://github.com/PlexPt/awesome-chatgpt-prompts-zh"
   }
 ]
