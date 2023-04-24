@@ -64,7 +64,7 @@ export default {
       <NSlider v-model:value="formData.rate" :min="0" :max="10" />
     </NFormItem>
   </NForm>
-  <NFormItem label="使用默认语音" path="useDefault">
+  <NFormItem label="Sử dụng mặc định" path="useDefault">
     <NSwitch v-model:value="formData.useDefault" />
   </NFormItem>
 </template>

@@ -8,7 +8,7 @@ export function useLanguage() {
 
   const language = computed(() => {
     switch (appStore.language) {
-      case 'ko-KR':
+      case 'vi-VN':
         setLocale('vi-VN')
         return viVN
       case 'en-US':
