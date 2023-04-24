@@ -4,7 +4,7 @@ import enUS from './en-US'
 import koKR from './ko-KR'
 import zhCN from './zh-CN'
 import zhTW from './zh-TW'
-import zhTW from './ru-RU'
+import ruRU from './ru-RU'
 import { useAppStoreWithOut } from '@/store/modules/app'
 import type { Language } from '@/store/modules/app/helper'
 
