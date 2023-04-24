@@ -46,18 +46,18 @@ onMounted(() => {
       </h2>
       <div class="p-2 space-y-2 rounded-md bg-neutral-100 dark:bg-neutral-700">
         <p>
-          此项目开源于
+          Timny ChatBot 
           <a
             class="text-blue-600 dark:text-blue-500"
-            href="https://github.com/Chanzhaoyu/chatgpt-web"
+            href="https://chat.timny.com"
             target="_blank"
           >
-            GitHub
+            Timny ChatBot
           </a>
-          ，免费且基于 MIT 协议，没有任何形式的付费行为！
+         Miễn phí và dựa trên thỏa thuận của MIT
         </p>
         <p>
-          如果你觉得此项目对你有帮助，请在 GitHub 帮我点个 Star 或者给予一点赞助，谢谢！
+          Nếu bạn cho rằng dự án này hữu ích với bạn, đừng quên chia sẻ cho bạn bè. xin cảm ơn!
         </p>
       </div>
       <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
