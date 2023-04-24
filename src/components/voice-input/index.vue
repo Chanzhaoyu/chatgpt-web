@@ -24,7 +24,7 @@ const enableVoice = ref(false)
 const isShowModal = ref(false)
 const voiceIcon = computed(() => enableVoice.value ? 'material-symbols:auto-detect-voice-outline' : 'ic:round-keyboard-voice')
 const sentences = ref<string[]>([])
-const language = ref('zh-CN')
+const language = ref('vi-VN')
 const showTip = ref(false)
 const { getSpeechObject } = useSpeechObject()
 
@@ -52,7 +52,7 @@ const changeEnableVoice = () => {
 const initRecognition = async () => {
   const { SpeechRecognition } = await getSpeechObject()
   if (!SpeechRecognition) {
-    message.warning('当前浏览器不支持语音功能！')
+    message.warning('Trình duyệt hiện tại không hỗ trợ chức năng đàm thoại!')
     return
   }
 
@@ -62,11 +62,11 @@ const initRecognition = async () => {
   recognition.continuous = true
   recognition.onstart = () => logger('init recognition')
   recognition.onerror = (e: any) => {
-    logger('识别错误了！')
+    logger('Xác định sai！')
     window.loggerDebugger(e?.error?.toString() ?? e.toString())
   }
   recognition.onend = () => {
-    logger('为啥终止了？')
+    logger('Tại sao đã kết thúc？')
     changeEnableVoice()
   }
 
@@ -80,7 +80,7 @@ const startRecording = async () => {
     sentences.value = [] // 清空已有的句子
     recognition.lang = language.value
     recognition.start()
-    message.success('语音开启！')
+    message.success('Bật giọng nói！')
   }
 }
 // 结束录音
@@ -95,8 +95,8 @@ const stopRecording = () => {
   recognition.onend = null
   recognition.onresult = null
   recognition = null
-  logger('停止语音')
-  message.warning('语音关闭！')
+  logger('Dừng sử dụng giọng nói')
+  message.warning('Tắt tiếng！')
 }
 // 监听语音识别结果
 const handleRecognitionResult = () => {
@@ -116,7 +116,7 @@ const handleRecognitionResult = () => {
     // 最新的一句 resultIndex 不变
     sentences.value.splice(resultIndex, 1, resStr)
     emit('onChange', sentences.value)
-    logger(`当前第[${resultIndex}]句，记录${sentences.value.length}句，cmdKey: ${cmdKey}, isFinal:${resultItem?.isFinal}`, resStr)
+    logger(`Bây giờ đang ghi lại câu thứ [${resultIndex}]，đã ghi lại${sentences.value.length}câu，cmdKey: ${cmdKey}, isFinal:${resultItem?.isFinal}`, resStr)
 
     switch (cmdKey) {
       case commandType.clear:
@@ -186,17 +186,17 @@ export default {
     v-model:show="showTip"
     style="width: 75%; max-width: 640px;"
     preset="dialog"
-    title="语音输入 tips"
+    title="Giọng nói tips"
     :mask-closable="false"
     positive-text="OK"
-    negative-text="不在提示"
+    negative-text="Không cần"
     :closable="false"
     :close-on-esc="false"
     @positive-click="onPositiveClick"
     @negative-click="onNegativeClick"
   >
-    <NAlert type="default" title="使用说明">
-      开启语音功能后，就可以通过语音来输入内容，能更好的与 chatgpt 聊天。为了更好的操作，提供了一些语音指令，以方便你与 chatgpt 交流：
+    <NAlert type="default" title="Hướng dẫn sử dụng">
+      Sau khi kích hoạt chức năng giọng nói, bạn có thể nhập nội dung thông qua giọng nói và tương tác với ChatGPT tốt hơn. Để sử dụng hiệu quả, chúng tôi cung cấp một số lệnh giọng nói để bạn có thể giao tiếp với ChatGPT một cách dễ dàng hơn:
     </NAlert>
     <NDescriptions label-placement="left" bordered :column="1" style="max-height: 40vh;overflow: auto">
       <NDescriptionsItem v-for="item in tips" :key="item.label" label-style="width: 80px">
