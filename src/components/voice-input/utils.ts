@@ -29,6 +29,7 @@ const replaceMap: replaceMapItem[] = [
 ]
 
 const langMap: Record<string, string[]> = {
+  'vi-VN': ['切换英语', '切换英文', 'Tiếng việt'],
   'zh-CN': ['切换中文', '切换汉语', '切换普通话', 'switch chinese'],
   'en-US': ['切换英语', '切换英文', 'switch english'],
   'zh-HK': ['切换粤语', '切换白话'],
@@ -36,11 +37,11 @@ const langMap: Record<string, string[]> = {
 
 const sentenceFlag = ['\r\n', '.', '。', '!', '！', '?', '？']
 const commandTermMap: Record<commandType, string[]> = {
-  [commandType.clear]: ['清除', '清空', 'clear', 'clean'],
-  [commandType.deleteLast]: ['删除', '撤销', '回退', 'delete', 'revert'],
-  [commandType.reset]: ['重置', 'reset'],
-  [commandType.submit]: ['发送', '提交', '起飞', 'run', 'go', 'start', 'send', '發送'],
-  [commandType.stop]: ['停止语音', '关闭语音', 'stop', '關閉語音'],
+  [commandType.clear]: ['Xóa', '清空', 'clear', 'clean'],
+  [commandType.deleteLast]: ['Xóa hết', '撤销', '回退', 'delete', 'revert'],
+  [commandType.reset]: ['Thiết lập lại', 'reset'],
+  [commandType.submit]: ['Gửi', '提交', '起飞', 'run', 'go', 'start', 'send', '發送'],
+  [commandType.stop]: ['Dừng', '关闭语音', 'stop', '關閉語音'],
   [commandType.switchLang]: Object.keys(langMap).map(key => langMap[key]).flat(),
 }
 
@@ -149,11 +150,11 @@ export const logger = (...msg: string[]) => {
 }
 
 export const tips = [
-  { label: '删除', value: '当说出"删除"，"回退"，"delete"等指令时，会删除最近的一句话' },
-  { label: '清空', value: '当说出"清除"，"清空"，"clean"等指令时，会清空整个输入框' },
-  { label: '重置', value: '当说出"reset"，"重置"等指令时，相当于右上角的删除按钮' },
-  { label: '提交', value: '当说出"发送"，"起飞"，"發送"，"send"等指令时，会发送输入框的内容' },
-  { label: '停止', value: '当说出"停止语音"，"关闭语音"，"stop"等指令时，会删除最近的一句话' },
-  { label: '标点符号', value: '当说出"逗号"，"问号"，"回车"，"空格"，"感叹号"，"句号"等指令时，会用标点符号代替文字输出' },
-  { label: '切换语言模式', value: '支持切换输入的语言模式，当前支持："切换中文"，"切换英文"，"切换粤语"，"switch chinese"， "switch english"' },
+  { label: 'Xóa bỏ', value: 'Khi nói "Xóa bỏ", "Trở lại", "delete" hoặc các lệnh tương tự, câu nói gần đây nhất sẽ bị xóa bỏ' },
+  { label: 'Làm sạch', value: 'Khi nói "Làm sạch", "Xoá hết", "clean" hoặc các lệnh tương tự, toàn bộ khung nhập liệu sẽ được làm sạch' },
+  { label: 'Thiết lập lại', value: 'Khi nói "reset", "Thiết lập lại" hoặc các lệnh tương tự, tương đương với nút Xóa ở góc trên bên phải' },
+  { label: 'Gửi', value: 'Khi nói "Gửi", "Cất cánh", "send" hoặc các lệnh tương tự, nội dung trong khung nhập liệu sẽ được gửi đi' },
+  { label: 'Dừng', value: 'Khi nói "Dừng giọng nói", "Tắt giọng nói", "stop" hoặc các lệnh tương tự, câu nói gần đây nhất sẽ bị xóa bỏ' },
+  { label: 'Dấu câu', value: 'Khi nói "Dấu phẩy", "Dấu hỏi", "Enter", "Khoảng trắng", "Dấu chấm than", "Dấu chấm" hoặc các lệnh tương tự, dấu câu sẽ được sử dụng để thay thế cho văn bản đầu ra' },
+  { label: 'Chuyển đổi chế độ ngôn ngữ', value: 'Hỗ trợ chuyển đổi chế độ ngôn ngữ nhập liệu, hiện đang hỗ trợ: "Chuyển sang tiếng Trung Quốc", "Chuyển sang tiếng Anh", "Chuyển sang tiếng Quảng Đông", "switch chinese", "switch english"' },
 ]
