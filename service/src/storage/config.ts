@@ -83,6 +83,8 @@ export async function getOriginConfig() {
         label: process.env.AUDIT_TEXT_LABEL,
       },
       getTextAuditServiceOptionFromString(process.env.AUDIT_TEXT_TYPE),
+      false,
+      '',
     )
   }
   return config
