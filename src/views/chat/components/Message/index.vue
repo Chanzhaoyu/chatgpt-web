@@ -102,7 +102,7 @@ function handleRegenerate() {
     </div>
     <div class="overflow-hidden text-sm " :class="[inversion ? 'items-end' : 'items-start']">
       <p class="text-xs text-[#b4bbc4]" :class="[inversion ? 'text-right' : 'text-left']">
-        {{ dateTime }}
+        {{ new Date(dateTime as string).toLocaleString() }}
         <template v-if="usage">
           <NPopover trigger="hover">
             <template #trigger>

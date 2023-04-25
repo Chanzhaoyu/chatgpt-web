@@ -78,7 +78,7 @@ onMounted(() => {
           <div class="flex-1">
             <NInput
               :value="config && config.sensitiveWords"
-              placeholder="One word per line"
+              placeholder="一行一个敏感词 | One word per line"
               type="textarea"
               :autosize="{ minRows: 1, maxRows: 4 }"
               @input="(val) => { if (config) config.sensitiveWords = val }"
