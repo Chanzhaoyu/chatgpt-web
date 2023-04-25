@@ -73,7 +73,7 @@ export async function initApi() {
     const model = isNotEmptyString(config.apiModel) ? config.apiModel : 'gpt-3.5-turbo'
     const options: ChatGPTUnofficialProxyAPIOptions = {
       accessToken: config.accessToken,
-      apiReverseProxyUrl: isNotEmptyString(config.reverseProxy) ? config.reverseProxy : 'https://bypass.churchless.tech/api/conversation',
+      apiReverseProxyUrl: isNotEmptyString(config.reverseProxy) ? config.reverseProxy : 'https://ai.fakeopen.com/api/conversation',
       model,
       debug: !config.apiDisableDebug,
     }
