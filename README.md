@@ -266,7 +266,7 @@ services:
       # mongodb 的连接字符串
       MONGODB_URL: 'mongodb://chatgpt:xxxx@database:27017'
       # 网站是否开启注册
-      REGISTER_ENABLED: true
+      REGISTER_ENABLED: 'true'
       # 开启注册之后 网站注册允许的邮箱后缀 如果空 则允许任意后缀
       REGISTER_MAILS: '@qq.com,@sina.com,@163.com'
       # 开启注册之后 密码加密的盐
@@ -278,11 +278,11 @@ services:
       # 开启注册之后 发送验证邮箱配置
       SMTP_HOST: smtp.exmail.qq.com
       SMTP_PORT: 465
-      SMTP_TSL: true
+      SMTP_TSL: 'true'
       SMTP_USERNAME: noreply@examile.com
       SMTP_PASSWORD: xxx
       # 是否开启敏感词审核, 因为响应结果是流式 所以暂时没审核
-      AUDIT_ENABLED: false
+      AUDIT_ENABLED: 'false'
       # https://ai.baidu.com/ai-doc/ANTIPORN/Vk3h6xaga
       AUDIT_PROVIDER: baidu
       AUDIT_API_KEY: xxx
