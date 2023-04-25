@@ -97,7 +97,7 @@ export default {
     registerReview: '등록 리뷰',
     registerMails: '메일 등록',
     apiBaseUrl: 'API 베이스 URL',
-    apiModel: 'API 모델',
+    apiModel: 'Chat 모델',
     accessToken: '액세스 토큰',
     loginEnabled: '로그인 활성화',
     loginSalt: '로그인 정보 암호화 Salt',

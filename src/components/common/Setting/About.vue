@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { computed, onMounted, ref } from 'vue'
-import { NButton, NInput, NSpin, useMessage } from 'naive-ui'
+import { NButton, NInput, NSelect, NSpin, useMessage } from 'naive-ui'
 import { ConfigState } from './model'
 import { fetchChatConfig, fetchUpdateBaseSetting } from '@/api'
 import { useAuthStore } from '@/store'
@@ -15,6 +15,21 @@ const saving = ref(false)
 
 const config = ref<ConfigState>()
 config.value = new ConfigState()
+
+const chatModelOptions = [
+  'gpt-3.5-turbo',
+  'gpt-3.5-turbo-0301',
+  'gpt-4',
+  'gpt-4-0314',
+  'gpt-4-32k',
+  'gpt-4-32k-0314',
+].map((model: string) => {
+  return {
+    label: model,
+    key: model,
+    value: model,
+  }
+})
 
 const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
 
@@ -68,12 +83,6 @@ onMounted(() => {
             <NInput :value="config && config.apiBaseUrl" placeholder="https://api.openai.com" @input="(val) => { if (config) config.apiBaseUrl = val }" />
           </div>
         </div>
-        <div v-if="isChatGPTAPI" class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.apiModel') }}</span>
-          <div class="flex-1">
-            <NInput :value="config && config.apiModel" placeholder="" @input="(val) => { if (config) config.apiModel = val }" />
-          </div>
-        </div>
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.accessToken') }}</span>
           <div class="flex-1">
@@ -84,6 +93,17 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.reverseProxy') }}</span>
           <div class="flex-1">
             <NInput :value="config && config.reverseProxy" placeholder="" @input="(val) => { if (config) config.reverseProxy = val }" />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.apiModel') }}</span>
+          <div class="flex-1">
+            <NSelect
+              style="width: 240px"
+              :value="config && config.apiModel"
+              :options="chatModelOptions"
+              @update-value="(val) => { if (config) config.apiModel = val }"
+            />
           </div>
         </div>
         <div class="flex items-center space-x-4">

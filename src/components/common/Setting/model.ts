@@ -3,7 +3,7 @@ export class ConfigState {
   apiKey?: string
   accessToken?: string
   apiBaseUrl?: string
-  apiModel?: string
+  apiModel?: API_CHAT_MODEL
   reverseProxy?: string
   socksProxy?: string
   socksAuth?: string
@@ -13,6 +13,9 @@ export class ConfigState {
   mailConfig?: MailConfig
   auditConfig?: AuditConfig
 }
+
+// https://platform.openai.com/docs/models/overview
+export type API_CHAT_MODEL = 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0301' | 'gpt-4' | 'gpt-4-0314' | 'gpt-4-32k' | 'gpt-4-32k-0314'
 
 export class SiteConfig {
   siteTitle?: string

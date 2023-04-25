@@ -99,7 +99,7 @@ export default {
     registerReview: '新用户审核',
     registerMails: '邮箱后缀',
     apiBaseUrl: '接口地址',
-    apiModel: 'Api 模型',
+    apiModel: '模型',
     accessToken: 'Access Token',
     loginEnabled: '注册登录',
     loginSalt: '登录混淆盐',
