@@ -30,7 +30,7 @@ spec:
             - name: OPENAI_API_MODEL
               value: gpt-3.5-turbo
             - name: API_REVERSE_PROXY
-              value: https://bypass.churchless.tech/api/conversation
+              value: https://ai.fakeopen.com/api/conversation
             - name: AUTH_SECRET_KEY
               value: '123456'
             - name: TIMEOUT_MS
