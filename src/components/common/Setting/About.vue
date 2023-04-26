@@ -88,6 +88,9 @@ onMounted(() => {
           <div class="flex-1">
             <NInput :value="config && config.accessToken" placeholder="" @input="(val) => { if (config) config.accessToken = val }" />
           </div>
+          <p>
+            <a target="_blank" href="https://chat.openai.com/api/auth/session">Get Token</a>
+          </p>
         </div>
         <div v-if="!isChatGPTAPI" class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.reverseProxy') }}</span>
