@@ -21,7 +21,7 @@ const i18n = createI18n({
     'ko-KR': koKR,
     'zh-CN': zhCN,
     'zh-TW': zhTW,
-		'ru-RU': ruRU,
+    'ru-RU': ruRU,
   },
 })
 

@@ -77,7 +77,7 @@ export default {
     siderButton: 'Хранилище подсказок',
     local: 'Локальное',
     online: 'Онлайн',
-        title: 'Название',
+    title: 'Название',
     description: 'Описание',
     clearStoreConfirm: 'Вы действительно хотите очистить данные?',
     importPlaceholder: 'Пожалуйста, вставьте здесь JSON-данные',
