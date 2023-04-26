@@ -1,14 +1,11 @@
 <script setup lang='ts'>
 import { computed, onMounted, ref } from 'vue'
 import { NInput, NPopconfirm, NScrollbar, NSpin } from 'naive-ui'
-import { useScroll } from '../../hooks/useScroll'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAuthStoreWithout } from '@/store/modules/auth'
 import { debounce } from '@/utils/functions/debounce'
-
-const { scrollToBottom } = useScroll()
 
 const { isMobile } = useBasicLayout()
 
@@ -26,15 +23,9 @@ onMounted(async () => {
 })
 
 async function handleSyncChatRoom() {
-  // if (chatStore.history.length == 1 && chatStore.history[0].title == 'New Chat'
-  //   && chatStore.chat[0].data.length <= 0)
   loadingRoom.value = true
   chatStore.syncHistory(() => {
     loadingRoom.value = false
-    if (chatStore.active) {
-      const uuid = chatStore.active
-      chatStore.syncChat({ uuid } as Chat.History, undefined, scrollToBottom)
-    }
   })
 }
 

@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
-import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MessageReactive } from 'naive-ui'
@@ -471,6 +471,16 @@ async function loadMoreMessage(event: any) {
 }
 
 const handleLoadMoreMessage = debounce(loadMoreMessage, 300)
+const handleSyncChat
+  = debounce(() => {
+    // 直接刷 极小概率不请求
+    chatStore.syncChat({ uuid: Number(uuid) } as Chat.History, undefined, () => {
+      firstLoading.value = false
+      scrollToBottom()
+      if (inputRef.value && !isMobile.value)
+        inputRef.value?.focus()
+    })
+  }, 200)
 
 async function handleScroll(event: any) {
   const scrollTop = event.target.scrollTop
@@ -524,15 +534,11 @@ const footerClass = computed(() => {
 
 onMounted(() => {
   firstLoading.value = true
-  debounce(() => {
-    // 直接刷 极小概率不请求
-    chatStore.syncChat({ uuid: Number(uuid) } as Chat.History, undefined, () => {
-      firstLoading.value = false
-      scrollToBottom()
-      if (inputRef.value && !isMobile.value)
-        inputRef.value?.focus()
-    })
-  }, 200)()
+  handleSyncChat()
+})
+
+watch(() => chatStore.active, (newVal, oldVal) => {
+  handleSyncChat()
 })
 
 onUnmounted(() => {
