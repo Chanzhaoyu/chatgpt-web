@@ -417,7 +417,13 @@ router.post('/user-register', async (req, res) => {
 
     const user = await getUser(username)
     if (user != null) {
-      res.send({ status: 'Fail', message: '邮箱已存在 | The email exists', data: null })
+      if (user.status === Status.PreVerify) {
+        await sendVerifyMail(username, await getUserVerifyUrl(username))
+        throw new Error('请去邮箱中验证 | Please verify in the mailbox')
+      }
+      if (user.status === Status.AdminVerify)
+        throw new Error('请等待管理员开通 | Please wait for the admin to activate')
+      res.send({ status: 'Fail', message: '账号已存在 | The email exists', data: null })
       return
     }
     const newPassword = md5(password)
@@ -556,7 +562,7 @@ router.post('/verify', async (req, res) => {
     const username = await checkUserVerify(token)
     const user = await getUser(username)
     if (user != null && user.status === Status.Normal) {
-      res.send({ status: 'Fail', message: '邮箱已存在 | The email exists', data: null })
+      res.send({ status: 'Fail', message: '账号已存在 | The email exists', data: null })
       return
     }
     const config = await getCacheConfig()

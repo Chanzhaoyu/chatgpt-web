@@ -6,6 +6,7 @@ import mila from 'markdown-it-link-attributes'
 import hljs from 'highlight.js'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
+import { copyToClip } from '@/utils/copy'
 
 interface Props {
   inversion?: boolean
