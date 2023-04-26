@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
 import type { RequestProps } from './types'
 import type { ChatContext, ChatMessage } from './chatgpt'
-import { chatConfig, chatReplyProcess, containsSensitiveWords, currentModel, initApi, initAuditService } from './chatgpt'
+import { chatConfig, chatReplyProcess, containsSensitiveWords, initApi, initAuditService } from './chatgpt'
 import { auth } from './middleware/auth'
 import { clearConfigCache, getCacheConfig, getOriginConfig } from './storage/config'
 import type { AuditConfig, ChatInfo, ChatOptions, Config, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
@@ -463,7 +463,10 @@ router.post('/session', async (req, res) => {
     const config = await getCacheConfig()
     const hasAuth = config.siteConfig.loginEnabled
     const allowRegister = (await getCacheConfig()).siteConfig.registerEnabled
-    res.send({ status: 'Success', message: '', data: { auth: hasAuth, allowRegister, model: currentModel(), title: config.siteConfig.siteTitle } })
+    if (config.apiModel !== 'ChatGPTAPI' && config.apiModel !== 'ChatGPTUnofficialProxyAPI')
+      config.apiModel = 'ChatGPTAPI'
+
+    res.send({ status: 'Success', message: '', data: { auth: hasAuth, allowRegister, model: config.apiModel, title: config.siteConfig.siteTitle } })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -604,14 +607,17 @@ router.post('/verifyadmin', async (req, res) => {
 
 router.post('/setting-base', rootAuth, async (req, res) => {
   try {
-    const { apiKey, apiModel, apiBaseUrl, accessToken, timeoutMs, reverseProxy, socksProxy, socksAuth, httpsProxy } = req.body as Config
+    const { apiKey, apiModel, chatModel, apiBaseUrl, accessToken, timeoutMs, reverseProxy, socksProxy, socksAuth, httpsProxy } = req.body as Config
 
-    if (apiKey == null && accessToken == null)
-      throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable.')
+    if (apiModel === 'ChatGPTAPI' && !isNotEmptyString(apiKey))
+      throw new Error('Missing OPENAI_API_KEY environment variable.')
+    else if (!isNotEmptyString(accessToken))
+      throw new Error('Missing OPENAI_ACCESS_TOKEN environment variable.')
 
     const thisConfig = await getOriginConfig()
     thisConfig.apiKey = apiKey
     thisConfig.apiModel = apiModel
+    thisConfig.chatModel = chatModel
     thisConfig.apiBaseUrl = apiBaseUrl
     thisConfig.accessToken = accessToken
     thisConfig.reverseProxy = reverseProxy

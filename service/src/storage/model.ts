@@ -128,6 +128,7 @@ export class Config {
     public accessToken?: string,
     public apiBaseUrl?: string,
     public apiModel?: string,
+    public chatModel?: string,
     public reverseProxy?: string,
     public socksProxy?: string,
     public socksAuth?: string,

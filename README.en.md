@@ -189,7 +189,8 @@ pnpm dev
 - `OPENAI_API_KEY` one of two
 - `OPENAI_ACCESS_TOKEN` one of two, `OPENAI_API_KEY` takes precedence when both are present
 - `OPENAI_API_BASE_URL` optional, available when `OPENAI_API_KEY` is set
-- `OPENAI_API_MODEL` optional, available when `OPENAI_API_KEY` is set
+- `OPENAI_API_MODEL`  `ChatGPTAPI` OR `ChatGPTUnofficialProxyAPI`
+- `OPENAI_CHAT_MODEL` gpt-4 gpt-3.5-turbo-0301
 - `API_REVERSE_PROXY` optional, available when `OPENAI_ACCESS_TOKEN` is set [Reference](#introduction)
 - `AUTH_SECRET_KEY` Access Password，optional
 - `TIMEOUT_MS` timeout, in milliseconds, optional
@@ -240,8 +241,10 @@ services:
       OPENAI_ACCESS_TOKEN: xxxxxx
       # api interface url, optional, available when OPENAI_API_KEY is set
       OPENAI_API_BASE_URL: xxxx
-      # api model, optional, available when OPENAI_API_KEY is set
+      # ChatGPTAPI 或者 ChatGPTUnofficialProxyAPI
       OPENAI_API_MODEL: xxxx
+      # gpt-4 gpt-3.5-turbo-0301
+      OPENAI_CHAT_MODEL: xxxx
       # reverse proxy, optional
       API_REVERSE_PROXY: xxx
       # timeout, in milliseconds, optional
@@ -307,7 +310,6 @@ volumes:
   mongodb: {}
 ```
 The `OPENAI_API_BASE_URL` is optional and only used when setting the `OPENAI_API_KEY`.
-The `OPENAI_API_MODEL` is optional and only used when setting the `OPENAI_API_KEY`.
 
 ### Deployment with Railway
 
@@ -323,7 +325,7 @@ The `OPENAI_API_MODEL` is optional and only used when setting the `OPENAI_API_KE
 | `OPENAI_API_KEY`       | Optional                                                          | Required for `OpenAI API`. `apiKey` can be obtained from [here](https://platform.openai.com/overview).           |
 | `OPENAI_ACCESS_TOKEN`  | Optional                                                          | Required for `Web API`. `accessToken` can be obtained from [here](https://chat.openai.com/api/auth/session).     |
 | `OPENAI_API_BASE_URL`  | Optional, only for `OpenAI API`                                   | API endpoint.                                                                                                    |
-| `OPENAI_API_MODEL`     | Optional, only for `OpenAI API`                                   | API model.                                                                                                       |
+| `OPENAI_API_MODEL`     | `ChatGPTAPI` OR `ChatGPTUnofficialProxyAPI`                                  | API model.                                                                                                       |
 | `API_REVERSE_PROXY`    | Optional, only for `Web API`                                      | Reverse proxy address for `Web API`. [Details](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy) |
 | `SOCKS_PROXY_HOST`     | Optional, effective with `SOCKS_PROXY_PORT`                       | Socks proxy.                                                                                                     |
 | `SOCKS_PROXY_PORT`     | Optional, effective with `SOCKS_PROXY_HOST`                       | Socks proxy port.                                                                                                |
