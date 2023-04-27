@@ -351,8 +351,11 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
   finally {
     res.end()
     try {
-      if (result == null || result === undefined || result.status !== 'Success')
+      if (result == null || result === undefined || result.status !== 'Success') {
+        if (result && result.status !== 'Success')
+          lastResponse = { text: result.message }
         result = { data: lastResponse }
+      }
 
       if (result.data === undefined)
         // eslint-disable-next-line no-unsafe-finally
