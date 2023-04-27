@@ -1,12 +1,14 @@
 <script setup lang='ts'>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { NAvatar, NButton } from 'naive-ui'
+import { useRoute } from 'vue-router'
 import { useAuthStore, useUserStore } from '@/store'
 import defaultAvatar from '@/assets/avatar.jpg'
 import { isString } from '@/utils/is'
 import Permission from '@/views/chat/layout/Permission.vue'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 
+const route = useRoute()
 const userStore = useUserStore()
 const authStore = useAuthStore()
 const { isMobile } = useBasicLayout()
@@ -15,6 +17,12 @@ const showPermission = ref(false)
 const needPermission = computed(() => !!authStore.session?.auth && !authStore.token && (isMobile.value || showPermission.value))
 
 const userInfo = computed(() => userStore.userInfo)
+
+onMounted(async () => {
+  const sign = route.query.verifyresetpassword as string
+  if (sign)
+    showPermission.value = true
+})
 </script>
 
 <template>
