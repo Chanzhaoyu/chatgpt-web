@@ -28,7 +28,7 @@ export default {
     unauthorizedTips: '未經授權，請先進行驗證。',
   },
   chat: {
-    newChatButton: '新建對話',
+    newChatButton: '新增對話',
     placeholder: '來說點什麼...（Shift + Enter = 換行，"/" 觸發提示詞）',
     placeholderMobile: '來說點什麼...',
     copy: '複製',
@@ -53,12 +53,14 @@ export default {
   setting: {
     setting: '設定',
     general: '總覽',
-    advanced: '高級',
+    advanced: '進階',
     config: '設定',
     avatarLink: '頭貼連結',
     name: '名稱',
     description: '描述',
     role: '角色設定',
+    temperature: 'Temperature',
+    top_p: 'Top_p',
     resetUserInfo: '重設使用者資訊',
     chatHistory: '紀錄',
     theme: '主題',
@@ -68,7 +70,7 @@ export default {
     timeout: '逾時',
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
-    balance: 'API余額',
+    balance: 'API Credit 餘額',
     monthlyUsage: '本月使用量',
   },
   store: {
