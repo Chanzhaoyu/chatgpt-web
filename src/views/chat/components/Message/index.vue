@@ -50,13 +50,14 @@ const options = computed(() => {
     },
   ]
 
-  if (!props.inversion) {
-    common.unshift({
-      label: asRawText.value ? t('chat.preview') : t('chat.showRawText'),
-      key: 'toggleRenderType',
-      icon: iconRender({ icon: asRawText.value ? 'ic:outline-code-off' : 'ic:outline-code' }),
-    })
-  }
+  // 显示原文功能按钮
+  // if (!props.inversion) {
+  //   common.unshift({
+  //     label: asRawText.value ? t('chat.preview') : t('chat.showRawText'),
+  //     key: 'toggleRenderType',
+  //     icon: iconRender({ icon: asRawText.value ? 'ic:outline-code-off' : 'ic:outline-code' }),
+  //   })
+  // }
 
   return common
 })

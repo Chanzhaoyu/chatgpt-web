@@ -37,6 +37,11 @@ const language = computed({
 
 const themeOptions: { label: string; key: Theme; icon: string }[] = [
   {
+    label: 'Dark',
+    key: 'dark',
+    icon: 'ri:moon-foggy-line',
+  },
+  {
     label: 'Auto',
     key: 'auto',
     icon: 'ri:contrast-line',
@@ -45,11 +50,6 @@ const themeOptions: { label: string; key: Theme; icon: string }[] = [
     label: 'Light',
     key: 'light',
     icon: 'ri:sun-foggy-line',
-  },
-  {
-    label: 'Dark',
-    key: 'dark',
-    icon: 'ri:moon-foggy-line',
   },
 ]
 
@@ -150,10 +150,7 @@ function handleImportButtonClick(): void {
           {{ $t('common.save') }}
         </NButton>
       </div>
-      <div
-        class="flex items-center space-x-4"
-        :class="isMobile && 'items-start'"
-      >
+      <div class="flex items-center space-x-4" :class="isMobile && 'items-start'">
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.chatHistory') }}</span>
 
         <div class="flex flex-wrap items-center gap-4">
@@ -189,11 +186,7 @@ function handleImportButtonClick(): void {
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.theme') }}</span>
         <div class="flex flex-wrap items-center gap-4">
           <template v-for="item of themeOptions" :key="item.key">
-            <NButton
-              size="small"
-              :type="item.key === theme ? 'primary' : undefined"
-              @click="appStore.setTheme(item.key)"
-            >
+            <NButton size="small" :type="item.key === theme ? 'primary' : undefined" @click="appStore.setTheme(item.key)">
               <template #icon>
                 <SvgIcon :icon="item.icon" />
               </template>
@@ -205,9 +198,7 @@ function handleImportButtonClick(): void {
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.language') }}</span>
         <div class="flex flex-wrap items-center gap-4">
           <NSelect
-            style="width: 140px"
-            :value="language"
-            :options="languageOptions"
+            style="width: 140px" :value="language" :options="languageOptions"
             @update-value="value => appStore.setLanguage(value)"
           />
         </div>

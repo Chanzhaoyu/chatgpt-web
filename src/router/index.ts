@@ -2,9 +2,31 @@ import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { setupPageGuard } from './permission'
-import { ChatLayout } from '@/views/chat/layout'
+import { ChatLayout, PlayLayout } from '@/views/chat/layout'
 
 const routes: RouteRecordRaw[] = [
+  {
+    path: '/play',
+    name: 'Play',
+    component: PlayLayout,
+    children: [
+      {
+        path: '/play/:uuid?',
+        name: 'PlayChat',
+        component: () => import('@/views/chat/play.vue'),
+      },
+    ],
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('@/views/exception/404/index.vue'),
+  },
+  {
+    path: '/500',
+    name: '500',
+    component: () => import('@/views/exception/500/index.vue'),
+  },
   {
     path: '/',
     name: 'Root',
@@ -18,21 +40,8 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-
   {
-    path: '/404',
-    name: '404',
-    component: () => import('@/views/exception/404/index.vue'),
-  },
-
-  {
-    path: '/500',
-    name: '500',
-    component: () => import('@/views/exception/500/index.vue'),
-  },
-
-  {
-    path: '/:pathMatch(.*)*',
+    path: '/:pathMatch(.*)',
     name: 'notFound',
     redirect: '/404',
   },

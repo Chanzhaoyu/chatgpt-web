@@ -17,6 +17,7 @@ const show = ref(false)
 const collapsed = computed(() => appStore.siderCollapsed)
 
 function handleAdd() {
+  // 向聊天历史 store 中增加新的聊天记录
   chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
   if (isMobile.value)
     appStore.setSiderCollapsed(true)
@@ -71,25 +72,31 @@ watch(
   >
     <div class="flex flex-col h-full" :style="mobileSafeArea">
       <main class="flex flex-col flex-1 min-h-0">
+        <!-- 新建聊天 -->
         <div class="p-4">
-          <NButton dashed block @click="handleAdd">
+          <!-- 新建课程按钮颜色 -->
+          <NButton dashed block color="#5624d0" @click="handleAdd">
             {{ $t('chat.newChatButton') }}
           </NButton>
         </div>
+        <!-- 聊天历史列表 -->
         <div class="flex-1 min-h-0 pb-4 overflow-hidden">
           <List />
         </div>
+        <!-- 提示词商店按钮 -->
         <div class="p-4">
           <NButton block @click="show = true">
             {{ $t('store.siderButton') }}
           </NButton>
         </div>
       </main>
+      <!-- 用户 profile 和 设置 -->
       <Footer />
     </div>
   </NLayoutSider>
   <template v-if="isMobile">
     <div v-show="!collapsed" class="fixed inset-0 z-40 bg-black/40" @click="handleUpdateCollapsed" />
   </template>
+  <!-- 提示词商店对话框 -->
   <PromptStore v-model:visible="show" />
 </template>

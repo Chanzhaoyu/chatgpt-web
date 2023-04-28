@@ -2,7 +2,7 @@ import { ss } from '@/utils/storage'
 
 const LOCAL_NAME = 'appSetting'
 
-export type Theme = 'light' | 'dark' | 'auto'
+export type Theme = 'dark' | 'light' | 'auto'
 
 export type Language = 'zh-CN' | 'zh-TW' | 'en-US'
 
@@ -13,7 +13,7 @@ export interface AppState {
 }
 
 export function defaultSetting(): AppState {
-  return { siderCollapsed: false, theme: 'light', language: 'zh-CN' }
+  return { siderCollapsed: false, theme: 'dark', language: 'zh-CN' }
 }
 
 export function getLocalSetting(): AppState {

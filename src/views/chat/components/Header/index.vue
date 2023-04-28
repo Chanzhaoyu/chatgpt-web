@@ -63,7 +63,7 @@ function toggleUsingContext() {
       </h1>
       <div class="flex items-center space-x-2">
         <HoverButton @click="toggleUsingContext">
-          <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
+          <span class="text-xl" :class="{ 'text-[#5624d0]': usingContext, 'text-[#a8071a]': !usingContext }">
             <SvgIcon icon="ri:chat-history-line" />
           </span>
         </HoverButton>

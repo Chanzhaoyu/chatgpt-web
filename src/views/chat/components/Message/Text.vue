@@ -37,13 +37,14 @@ mdi.use(mila, { attrs: { target: '_blank', rel: 'noopener' } })
 mdi.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
 
 const wrapClass = computed(() => {
+  // 聊天消息颜色设置
   return [
     'text-wrap',
     'min-w-[20px]',
     'rounded-md',
     isMobile.value ? 'p-2' : 'px-3 py-2',
-    props.inversion ? 'bg-[#d2f9d1]' : 'bg-[#f4f6f8]',
-    props.inversion ? 'dark:bg-[#a1dc95]' : 'dark:bg-[#1e1e20]',
+    props.inversion ? 'bg-[#5624d0]' : 'bg-[#f4f6f8]',
+    props.inversion ? 'dark:bg-[#8b6dd5]' : 'dark:bg-[#1e1e20]',
     props.inversion ? 'message-request' : 'message-reply',
     { 'text-red-500': props.error },
   ]
