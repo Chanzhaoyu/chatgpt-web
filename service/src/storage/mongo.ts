@@ -203,5 +203,7 @@ export async function updateConfig(config: Config): Promise<Config> {
   const result = await configCol.replaceOne({ _id: config._id }, config, { upsert: true })
   if (result.modifiedCount > 0 || result.upsertedCount > 0)
     return config
+  if (result.matchedCount > 0 && result.modifiedCount <= 0 && result.upsertedCount <= 0)
+    return config
   return null
 }
