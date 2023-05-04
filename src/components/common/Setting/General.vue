@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { NButton, NInput, NPopconfirm, NSelect, useMessage } from 'naive-ui'
-import type { Language, Theme } from '@/store/modules/app/helper'
+import type { Language, StartsOption, Theme } from '@/store/modules/app/helper'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useUserStore } from '@/store'
 import type { UserInfo } from '@/store/modules/user/helper'
@@ -34,6 +34,20 @@ const language = computed({
     appStore.setLanguage(value)
   },
 })
+
+const whenStarts = computed({
+  get() {
+    return appStore.whenStarts
+  },
+  set(value: StartsOption) {
+    appStore.setStartsOption(value)
+  },
+})
+
+const startsOptions: { label: string; key: StartsOption; value: StartsOption }[] = [
+  { label: 'last chat', key: 'last', value: 'last' },
+  { label: 'new chat', key: 'new', value: 'new' },
+]
 
 const themeOptions: { label: string; key: Theme; icon: string }[] = [
   {
@@ -211,6 +225,17 @@ function handleImportButtonClick(): void {
             :value="language"
             :options="languageOptions"
             @update-value="value => appStore.setLanguage(value)"
+          />
+        </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.whenStarts') }}</span>
+        <div class="flex flex-wrap items-center gap-4">
+          <NSelect
+            style="width: 140px"
+            :value="whenStarts"
+            :options="startsOptions"
+            @update-value="value => appStore.setStartsOption(value)"
           />
         </div>
       </div>
