@@ -15,6 +15,7 @@ const usageCol = client.db('chatgpt').collection('chat_usage')
 
 /**
  * 插入聊天信息
+ * @param uuid
  * @param text 内容 prompt or response
  * @param roomId
  * @param options
@@ -28,6 +29,10 @@ export async function insertChat(uuid: number, text: string, roomId: number, opt
 
 export async function getChat(roomId: number, uuid: number) {
   return await chatCol.findOne({ roomId, uuid }) as ChatInfo
+}
+
+export async function getChatByMessageId(messageId: string) {
+  return await chatCol.findOne({ 'options.messageId': messageId }) as ChatInfo
 }
 
 export async function updateChat(chatId: string, response: string, messageId: string, usage: UsageResponse, previousResponse?: []) {
