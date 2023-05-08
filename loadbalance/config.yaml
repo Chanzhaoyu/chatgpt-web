@@ -1,0 +1,11 @@
+mysql:
+    host: 127.0.0.1
+    port: 3306
+    username: root
+    password: 123456
+
+web:
+    secret: 123456
+    basePort: 63000
+    reverseProxy: https://proxy.zhangjiashu.tech/chatgpt/conversation #反向代理，默认或者换自己建的
+

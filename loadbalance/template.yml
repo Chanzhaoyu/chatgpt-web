@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  app:
+    container_name: $name
+    image: chenzhaoyu94/chatgpt-web 
+    ports:
+      - $port:3002
+    environment:
+      OPENAI_ACCESS_TOKEN: $token
+      OPENAI_API_MODEL:
+      API_REVERSE_PROXY: $proxy
+      # 访问权限密钥，可选
+      AUTH_SECRET_KEY: $secret
+      TIMEOUT_MS: 60000
