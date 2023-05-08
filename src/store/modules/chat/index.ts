@@ -240,7 +240,7 @@ export const useChatStore = defineStore('chat-store', {
 
       const chatIndex = this.chat.findIndex(item => item.uuid === uuid)
       if (chatIndex !== -1) {
-        fetchDeleteChat(uuid, this.chat[chatIndex].data[index].uuid || 0, this.chat[0].data[index].inversion)
+        fetchDeleteChat(uuid, this.chat[chatIndex].data[index].uuid || 0, this.chat[chatIndex].data[index].inversion)
         this.chat[chatIndex].data.splice(index, 1)
         this.recordState()
       }
