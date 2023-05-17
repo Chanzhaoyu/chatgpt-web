@@ -39,7 +39,7 @@ const summary = ref({
   totalTokens: 0,
 })
 const loading = ref(false)
-const range = ref([
+const range: any = ref([
   dayjs().subtract(30, 'day').startOf('day').valueOf(),
   dayjs().endOf('day').valueOf(),
 ])
