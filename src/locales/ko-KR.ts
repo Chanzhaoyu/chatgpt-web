@@ -72,6 +72,7 @@ export default {
     httpsProxy: 'HTTPS 프록시',
     balance: 'API 잔액',
     monthlyUsage: '월 사용량',
+    accessTokenExpirationTime: '개발',
   },
   store: {
     siderButton: '프롬프트 저장소',

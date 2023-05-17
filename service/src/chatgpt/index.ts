@@ -5,9 +5,11 @@ import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import httpsProxyAgent from 'https-proxy-agent'
 import fetch from 'node-fetch'
+import jwt_decode from 'jwt-decode'
+import dayjs, { Dayjs } from 'dayjs'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
-import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
+import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, JWT, ModelConfig } from '../types'
 import type { RequestOptions, SetProxyOptions, UsageResponse } from './types'
 
 const { HttpsProxyAgent } = httpsProxyAgent
@@ -175,9 +177,20 @@ async function chatConfig() {
   const socksProxy = (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
     ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`)
     : '-'
+  let accessTokenExpirationTime = '-'
+  if (apiModel === 'ChatGPTUnofficialProxyAPI' && process.env.OPENAI_ACCESS_TOKEN) {
+    try {
+      const jwt = jwt_decode(process.env.OPENAI_ACCESS_TOKEN) as JWT
+      if (jwt.exp)
+        accessTokenExpirationTime = dayjs.unix(jwt.exp).format('YYYY-MM-DD HH:mm:ss')
+    }
+    catch (error) {
+      console.warn('[jwt_decode]', error)
+    }
+  }
   return sendResponse<ModelConfig>({
     type: 'Success',
-    data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, usage },
+    data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, usage, accessTokenExpirationTime },
   })
 }
 
