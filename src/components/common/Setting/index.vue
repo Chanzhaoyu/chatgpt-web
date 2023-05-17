@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { NModal, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
 import Advanced from './Advanced.vue'
+import Statistics from './Statistics.vue'
 import About from './About.vue'
 import Site from './Site.vue'
 import Mail from './Mail.vue'
@@ -59,6 +60,15 @@ const show = computed({
           </template>
           <div class="min-h-[100px]">
             <Advanced />
+          </div>
+        </NTabPane>
+        <NTabPane name="Statistics" tab="Statistics">
+          <template #tab>
+            <SvgIcon class="text-lg" icon="ri:bar-chart-box-line" />
+            <span class="ml-2">{{ $t('setting.statistics') }}</span>
+          </template>
+          <div class="min-h-[100px]">
+            <Statistics />
           </div>
         </NTabPane>
         <NTabPane v-if="userStore.userInfo.root" name="Config" tab="Config">
