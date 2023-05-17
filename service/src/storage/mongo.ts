@@ -219,7 +219,7 @@ export async function getUserStatisticsByDay(userId: ObjectId, start: number, en
       $match: {
         dateTime: {
           $gte: start,
-          $lt: end,
+          $lte: end,
         },
         userId,
       },

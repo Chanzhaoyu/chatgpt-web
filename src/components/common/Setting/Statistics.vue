@@ -4,6 +4,7 @@ import { NCol, NDatePicker, NIcon, NNumberAnimation, NRow, NSpin, NStatistic } f
 import type { ChartData, ChartOptions } from 'chart.js'
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js'
 import { Bar } from 'vue-chartjs'
+import dayjs from 'dayjs'
 import { t } from '@/locales'
 import { fetchUserStatistics } from '@/api'
 import { SvgIcon } from '@/components/common'
@@ -29,28 +30,45 @@ const chartData: ChartData<'bar'> = reactive({
     },
   ],
 })
-
 const chartOptions: ChartOptions<'bar'> = {
   responsive: true,
 }
-
 const summary = ref({
   promptTokens: 0,
   completionTokens: 0,
   totalTokens: 0,
 })
 const loading = ref(false)
-const range = ref<[number, number]>([
-  new Date().getTime() - 30 * 86400 * 1000,
-  new Date().getTime(),
+const range = ref([
+  dayjs().subtract(30, 'day').startOf('day').valueOf(),
+  dayjs().endOf('day').valueOf(),
 ])
+const rangeShortcuts: { [index: string]: [number, number] } = {}
+// last month
+rangeShortcuts[t('setting.statisticsPeriodLastMonth')] = [
+  dayjs().subtract(1, 'month').startOf('month').valueOf(),
+  dayjs().subtract(1, 'month').endOf('month').valueOf(),
+]
+// current month
+rangeShortcuts[t('setting.statisticsPeriodCurrentMonth')] = [
+  dayjs().startOf('month').valueOf(),
+  dayjs().endOf('month').valueOf(),
+]
+// last 30 days
+rangeShortcuts[t('setting.statisticsPeriodLast30Days')] = [
+  dayjs().subtract(30, 'day').startOf('day').valueOf(),
+  dayjs().endOf('day').valueOf(),
+]
 
 const showChart = ref(true)
 
 async function fetchStatistics() {
   try {
     loading.value = true
-    const { data } = await fetchUserStatistics(...range.value)
+    const { data } = await fetchUserStatistics(
+      dayjs(range.value[0]).startOf('day').valueOf(),
+      dayjs(range.value[1]).endOf('day').valueOf(),
+    )
 
     if (Object.keys(data.chartData).length) {
       summary.value.promptTokens = data.promptTokens
@@ -87,8 +105,8 @@ onMounted(() => {
           <div class="flex-1">
             <NDatePicker
               v-model:value="range"
-              type="datetimerange"
-              clearable
+              type="daterange"
+              :shortcuts="rangeShortcuts"
               @update:value="fetchStatistics"
             />
           </div>
@@ -103,7 +121,7 @@ onMounted(() => {
                     <SvgIcon class="text-lg" icon="ri-chat-upload-line" />
                   </NIcon>
                 </template>
-                <NNumberAnimation :from="0" :to="summary.promptTokens" />
+                <NNumberAnimation :duration="1000" :to="summary.promptTokens" />
               </NStatistic>
             </NCol>
             <NCol :span="8" class="text-center">
@@ -113,7 +131,7 @@ onMounted(() => {
                     <SvgIcon class="text-lg" icon="ri-chat-download-line" />
                   </NIcon>
                 </template>
-                <NNumberAnimation :from="0" :to="summary.completionTokens" />
+                <NNumberAnimation :duration="1000" :to="summary.completionTokens" />
               </NStatistic>
             </NCol>
             <NCol :span="8" class="text-center">
@@ -123,7 +141,7 @@ onMounted(() => {
                     <SvgIcon class="text-lg" icon="ri-question-answer-line" />
                   </NIcon>
                 </template>
-                <NNumberAnimation :from="0" :to="summary.totalTokens" />
+                <NNumberAnimation :duration="1000" :to="summary.totalTokens" />
               </NStatistic>
             </NCol>
           </NRow>

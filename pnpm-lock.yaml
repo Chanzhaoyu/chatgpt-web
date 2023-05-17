@@ -10,6 +10,9 @@ dependencies:
   chart.js:
     specifier: ^4.3.0
     version: 4.3.0
+  dayjs:
+    specifier: ^1.11.7
+    version: 1.11.7
   highlight.js:
     specifier: ^11.7.0
     version: 11.7.0
@@ -3133,6 +3136,10 @@ packages:
   /date-fns@2.29.3:
     resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
     engines: {node: '>=0.11'}
+    dev: false
+
+  /dayjs@1.11.7:
+    resolution: {integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==}
     dev: false
 
   /de-indent@1.0.2:
