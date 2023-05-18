@@ -72,6 +72,7 @@ export default {
     httpsProxy: 'HTTPS Proxy',
     balance: 'API Credit 餘額',
     monthlyUsage: '本月使用量',
+    accessTokenExpirationTime: '过期時間',
   },
   store: {
     siderButton: '提示詞商店',

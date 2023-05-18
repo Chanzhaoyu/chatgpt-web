@@ -72,6 +72,7 @@ export default {
     httpsProxy: 'HTTPS-прокси',
     balance: 'Баланс API',
     monthlyUsage: 'Ежемесячное использование',
+    accessTokenExpirationTime: 'Время',
   },
   store: {
     siderButton: 'Хранилище подсказок',
