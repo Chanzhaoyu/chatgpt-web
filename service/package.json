@@ -17,6 +17,7 @@
     "start": "esno ./src/index.ts",
     "dev": "esno watch ./src/index.ts",
     "prod": "node ./build/index.mjs",
+    "deploy:prod": "pm2 start ecosystem.config.js --only prod",
     "build": "pnpm clean && tsup",
     "clean": "rimraf build",
     "lint": "eslint .",
