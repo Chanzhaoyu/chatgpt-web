@@ -216,3 +216,10 @@ export function fetchUpdateBaseSetting<T = any>(config: ConfigState) {
     data: config,
   })
 }
+
+export function fetchUserStatistics<T = any>(start: number, end: number) {
+  return post<T>({
+    url: '/statistics/by-day',
+    data: { start, end },
+  })
+}

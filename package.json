@@ -25,6 +25,8 @@
   "dependencies": {
     "@traptitech/markdown-it-katex": "^3.6.0",
     "@vueuse/core": "^9.13.0",
+    "chart.js": "^4.3.0",
+    "dayjs": "^1.11.7",
     "highlight.js": "^11.7.0",
     "html2canvas": "^1.4.1",
     "jwt-decode": "^3.1.2",
@@ -33,6 +35,7 @@
     "naive-ui": "^2.34.3",
     "pinia": "^2.0.33",
     "vue": "^3.2.47",
+    "vue-chartjs": "^5.2.0",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.1.6"
   },
@@ -41,6 +44,7 @@
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
     "@iconify/vue": "^4.1.0",
+    "@types/chart.js": "^2.9.37",
     "@types/crypto-js": "^4.1.1",
     "@types/katex": "^0.16.0",
     "@types/markdown-it": "^12.2.3",

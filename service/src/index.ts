@@ -23,6 +23,7 @@ import {
   getChats,
   getUser,
   getUserById,
+  getUserStatisticsByDay,
   insertChat,
   insertChatUsage,
   renameChatRoom,
@@ -713,6 +714,19 @@ router.post('/audit-test', rootAuth, async (req, res) => {
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/statistics/by-day', auth, async (req, res) => {
+  try {
+    const userId = req.headers.userId
+    const { start, end } = req.body as { start: number; end: number }
+
+    const data = await getUserStatisticsByDay(new ObjectId(userId as string), start, end)
+    res.send({ status: 'Success', message: '', data })
+  }
+  catch (error) {
+    res.send(error)
   }
 })
 
