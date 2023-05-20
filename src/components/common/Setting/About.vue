@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { onMounted, ref, watch } from 'vue'
-import { NButton, NInput, NSelect, NSpin, useMessage } from 'naive-ui'
+import { NButton, NInput, NSelect, NSpin, NTag, useMessage } from 'naive-ui'
 import { ConfigState } from './model'
 import { fetchChatConfig, fetchUpdateBaseSetting } from '@/api'
 import { t } from '@/locales'
@@ -110,8 +110,17 @@ onMounted(() => {
           <div class="flex-1">
             <NInput :value="config.accessToken" placeholder="" @input="(val) => { config.accessToken = val }" />
           </div>
+        </div>
+        <div v-if="!isChatGPTAPI" class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.accessTokenExpiredTime') }}</span>
+          <div class="flex-1">
+            {{ config.accessTokenExpiredTime }}
+            <NTag v-if="config.accessTokenExpiredTime && config.accessTokenExpiredTime !== '-' && new Date(config.accessTokenExpiredTime as string) < new Date()" :bordered="false" type="warning">
+              {{ new Date(config.accessTokenExpiredTime as string) > new Date() ? '' : 'Expired' }}
+            </NTag>
+          </div>
           <p>
-            <a target="_blank" href="https://chat.openai.com/api/auth/session">Get Token</a>
+            <a target="_blank" href="https://chat.openai.com/api/auth/session">Goto Refresh Token</a>
           </p>
         </div>
         <div v-if="!isChatGPTAPI" class="flex items-center space-x-4">

@@ -124,6 +124,7 @@ export default {
     auditBaiduLabelLink: '查看细分类型',
     auditCustomizeEnabled: '自定义',
     auditCustomizeWords: '敏感词',
+    accessTokenExpiredTime: '过期时间',
   },
   store: {
     siderButton: '提示词商店',

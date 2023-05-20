@@ -122,6 +122,7 @@ export default {
     auditBaiduLabelLink: '레이블 세부 정보로 이동',
     auditCustomizeEnabled: '맞춤화하다',
     auditCustomizeWords: '단어 맞춤설정',
+    accessTokenExpiredTime: '만료된 시간',
   },
   store: {
     siderButton: '프롬프트 스토어',

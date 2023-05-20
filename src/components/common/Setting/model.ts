@@ -2,6 +2,7 @@ export class ConfigState {
   timeoutMs?: number
   apiKey?: string
   accessToken?: string
+  accessTokenExpiredTime?: string
   apiBaseUrl?: string
   apiModel?: ApiModel
   chatModel?: CHATMODEL

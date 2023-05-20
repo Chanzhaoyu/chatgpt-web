@@ -35,6 +35,24 @@ export interface ModelConfig {
   httpsProxy?: string
   allowRegister?: boolean
   balance?: string
+  accessTokenExpiredTime?: string
 }
 
 export type ApiModel = 'ChatGPTAPI' | 'ChatGPTUnofficialProxyAPI' | undefined
+
+export interface JWT {
+  'https://api.openai.com/profile': {
+    'email': string
+    'email_verified': boolean
+  }
+  'https://api.openai.com/auth': {
+    'user_id': string
+  }
+  'iss': string
+  'sub': string
+  'aud': []
+  'iat': number
+  'exp': number
+  'azp': string
+  'scope': string
+}
