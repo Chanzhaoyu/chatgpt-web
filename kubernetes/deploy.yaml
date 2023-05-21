@@ -29,8 +29,6 @@ spec:
               value: 'https://api.openai.com'
             - name: OPENAI_API_MODEL
               value: ChatGPTAPI
-            - name: OPENAI_CHAT_MODEL
-              value: gpt-3.5-turbo
             - name: API_REVERSE_PROXY
               value: https://ai.fakeopen.com/api/conversation
             - name: AUTH_SECRET_KEY

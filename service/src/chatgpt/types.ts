@@ -1,4 +1,5 @@
 import type { ChatMessage } from 'chatgpt'
+import type { CHATMODEL } from 'src/storage/model'
 
 export interface RequestOptions {
   message: string
@@ -7,6 +8,7 @@ export interface RequestOptions {
   systemMessage?: string
   temperature?: number
   top_p?: number
+  chatModel: CHATMODEL
 }
 
 export interface BalanceResponse {

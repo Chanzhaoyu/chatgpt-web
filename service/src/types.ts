@@ -27,7 +27,6 @@ export interface ChatGPTUnofficialProxyAPIOptions {
 
 export interface ModelConfig {
   apiModel?: ApiModel
-  chatModel?: string
   reverseProxy?: string
   timeoutMs?: number
   socksProxy?: string

@@ -1,8 +1,8 @@
 import { MongoClient, ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'
 import dayjs from 'dayjs'
-import { ChatInfo, ChatRoom, ChatUsage, Status, UserInfo } from './model'
-import type { ChatOptions, Config, UsageResponse } from './model'
+import { ChatInfo, ChatRoom, ChatUsage, Status, UserConfig, UserInfo } from './model'
+import type { CHATMODEL, ChatOptions, Config, UsageResponse } from './model'
 
 dotenv.config()
 
@@ -192,6 +192,11 @@ export async function updateUserInfo(userId: string, user: UserInfo) {
     , { $set: { name: user.name, description: user.description, avatar: user.avatar } })
 }
 
+export async function updateUserChatModel(userId: string, chatModel: CHATMODEL) {
+  return userCol.updateOne({ _id: new ObjectId(userId) }
+    , { $set: { 'config.chatModel': chatModel } })
+}
+
 export async function updateUserPassword(userId: string, password: string) {
   return userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { password, updateTime: new Date().toLocaleString() } })
@@ -203,7 +208,12 @@ export async function getUser(email: string): Promise<UserInfo> {
 }
 
 export async function getUserById(userId: string): Promise<UserInfo> {
-  return await userCol.findOne({ _id: new ObjectId(userId) }) as UserInfo
+  const userInfo = await userCol.findOne({ _id: new ObjectId(userId) }) as UserInfo
+  if (userInfo.config == null) {
+    userInfo.config = new UserConfig()
+    userInfo.config.chatModel = 'gpt-3.5-turbo'
+  }
+  return userInfo
 }
 
 export async function verifyUser(email: string, status: Status) {

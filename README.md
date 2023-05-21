@@ -180,7 +180,6 @@ pnpm dev
 `API` 可用：
 
 - `OPENAI_API_KEY` 和 `OPENAI_ACCESS_TOKEN` 二选一
-- `OPENAI_CHAT_MODEL`  设置模型，可选，默认：`gpt-3.5-turbo`
 - `OPENAI_API_BASE_URL` 设置接口地址，可选，默认：`https://api.openai.com`
 - `OPENAI_API_DISABLE_DEBUG` 设置接口关闭 debug 日志，可选，默认：empty 不关闭
 
@@ -247,9 +246,6 @@ services:
       OPENAI_API_BASE_URL: xxx
       # ChatGPTAPI ChatGPTUnofficialProxyAPI
       OPENAI_API_MODEL: ChatGPTAPI
-      # API模型，可选，设置 OPENAI_API_KEY 时可用，https://platform.openai.com/docs/models
-      # gpt-4, gpt-4-0314, gpt-4-32k, gpt-4-32k-0314, gpt-3.5-turbo, gpt-3.5-turbo-0301, text-davinci-003, text-davinci-002, code-davinci-002
-      OPENAI_CHAT_MODEL: xxx
       # 反向代理，可选
       API_REVERSE_PROXY: xxx
       # 每小时最大请求次数，可选，默认无限
@@ -343,7 +339,6 @@ volumes:
 | `OPENAI_ACCESS_TOKEN` | `Web API` 二选一       | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session) |
 | `OPENAI_API_BASE_URL`   | 可选，`OpenAI API` 时可用 |  `API`接口地址  |
 | `OPENAI_API_MODEL`   | ChatGPTAPI OR ChatGPTUnofficialProxyAPI |  `API`模型  |
-| `OPENAI_CHAT_MODEL`   | 可选，`OpenAI API` 时可用 |  `API`模型  |
 | `API_REVERSE_PROXY`   | 可选，`Web API` 时可用 | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)    |
 | `SOCKS_PROXY_HOST`   | 可选，和 `SOCKS_PROXY_PORT` 一起时生效 | Socks代理    |
 | `SOCKS_PROXY_PORT`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理端口    |

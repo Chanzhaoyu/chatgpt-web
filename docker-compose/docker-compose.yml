@@ -19,8 +19,6 @@ services:
       OPENAI_API_BASE_URL:
       # ChatGPTAPI 或者 ChatGPTUnofficialProxyAPI
       OPENAI_API_MODEL: 
-      # gpt-4 gpt-3.5-turbo-0301 等 
-      OPENAI_CHAT_MODEL:
       # 反向代理，可选
       API_REVERSE_PROXY:
       # 访问jwt加密参数，可选 不为空则允许登录 同时需要设置 MONGODB_URL

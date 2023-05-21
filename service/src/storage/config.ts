@@ -33,7 +33,6 @@ export async function getOriginConfig() {
       process.env.OPENAI_ACCESS_TOKEN,
       process.env.OPENAI_API_BASE_URL,
       process.env.OPENAI_API_MODEL || 'ChatGPTAPI',
-      process.env.OPENAI_CHAT_MODEL || 'gpt-3.5-turbo',
       process.env.API_REVERSE_PROXY,
       (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
         ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`)
@@ -71,8 +70,6 @@ export async function getOriginConfig() {
     if (config.siteConfig.registerReview === undefined)
       config.siteConfig.registerReview = process.env.REGISTER_REVIEW === 'true'
   }
-  if (!isNotEmptyString(config.chatModel))
-    config.chatModel = 'gpt-3.5-turbo'
   if (config.apiModel !== 'ChatGPTAPI' && config.apiModel !== 'ChatGPTUnofficialProxyAPI') {
     if (isNotEmptyString(config.accessToken))
       config.apiModel = 'ChatGPTUnofficialProxyAPI'

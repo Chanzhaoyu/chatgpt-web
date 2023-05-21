@@ -20,26 +20,6 @@ const apiModelOptions = ['ChatGPTAPI', 'ChatGPTUnofficialProxyAPI'].map((model: 
   }
 })
 
-const chatModelOptions = [
-  'gpt-3.5-turbo',
-  'gpt-3.5-turbo-0301',
-  'gpt-4',
-  'gpt-4-0314',
-  'gpt-4-32k',
-  'gpt-4-32k-0314',
-  'text-davinci-002-render-sha-mobile',
-  'gpt-4-mobile',
-].map((model: string) => {
-  let label = model
-  if (model === 'text-davinci-002-render-sha-mobile')
-    label = 'gpt-3.5-mobile'
-  return {
-    label,
-    key: model,
-    value: model,
-  }
-})
-
 let isChatGPTAPI = config.value.apiModel === 'ChatGPTAPI'
 
 watch(
@@ -132,17 +112,6 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.reverseProxy') }}</span>
           <div class="flex-1">
             <NInput :value="config.reverseProxy" placeholder="" @input="(val) => { config.reverseProxy = val }" />
-          </div>
-        </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.chatModel') }}</span>
-          <div class="flex-1">
-            <NSelect
-              style="width: 444px"
-              :value="config.chatModel"
-              :options="chatModelOptions"
-              @update-value="(val) => { config.chatModel = val }"
-            />
           </div>
         </div>
         <div class="flex items-center space-x-4">

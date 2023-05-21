@@ -108,7 +108,6 @@ export default {
     registerMails: '邮箱后缀',
     apiBaseUrl: '接口地址',
     apiModel: '接口类型',
-    chatModel: '模型',
     accessToken: 'Access Token',
     loginEnabled: '注册登录',
     loginSalt: '登录混淆盐',
