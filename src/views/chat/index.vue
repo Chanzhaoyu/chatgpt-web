@@ -14,7 +14,7 @@ import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAuthStore, useChatStore, usePromptStore } from '@/store'
-import { fetchChatAPIProcess } from '@/api'
+import { fetchChatAPIProcess, fetchChatResponseoHistory } from '@/api'
 import { t } from '@/locales'
 import { debounce } from '@/utils/functions/debounce'
 import IconPrompt from '@/icons/Prompt.vue'
@@ -235,6 +235,8 @@ async function onRegenerate(index: number) {
   controller = new AbortController()
 
   const { requestOptions } = dataSources.value[index]
+  let responseCount = dataSources.value[index].responseCount || 1
+  responseCount++
 
   let message = requestOptions?.prompt ?? ''
 
@@ -252,6 +254,7 @@ async function onRegenerate(index: number) {
       dateTime: new Date().toLocaleString(),
       text: '',
       inversion: false,
+      responseCount,
       error: false,
       loading: true,
       conversationOptions: null,
@@ -294,6 +297,7 @@ async function onRegenerate(index: number) {
                 dateTime: new Date().toLocaleString(),
                 text: lastText + (data.text ?? ''),
                 inversion: false,
+                responseCount,
                 error: false,
                 loading: true,
                 conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
@@ -339,6 +343,7 @@ async function onRegenerate(index: number) {
         dateTime: new Date().toLocaleString(),
         text: errorMessage,
         inversion: false,
+        responseCount,
         error: true,
         loading: false,
         conversationOptions: null,
@@ -349,6 +354,25 @@ async function onRegenerate(index: number) {
   finally {
     loading.value = false
   }
+}
+
+async function onResponseHistory(index: number, historyIndex: number) {
+  const chat = (await fetchChatResponseoHistory(+uuid, dataSources.value[index].uuid || Date.now(), historyIndex)).data
+  updateChat(
+    +uuid,
+    index,
+    {
+      dateTime: chat.dateTime,
+      text: chat.text,
+      inversion: false,
+      responseCount: chat.responseCount,
+      error: true,
+      loading: false,
+      conversationOptions: chat.conversationOptions,
+      requestOptions: { prompt: chat.requestOptions.prompt, options: { ...chat.requestOptions.options } },
+      usage: chat.usage,
+    },
+  )
 }
 
 function handleExport() {
@@ -578,11 +602,13 @@ onUnmounted(() => {
                   :date-time="item.dateTime"
                   :text="item.text"
                   :inversion="item.inversion"
+                  :response-count="item.responseCount"
                   :usage="item && item.usage || undefined"
                   :error="item.error"
                   :loading="item.loading"
                   @regenerate="onRegenerate(index)"
                   @delete="handleDelete(index)"
+                  @response-history="(ev) => onResponseHistory(index, ev)"
                 />
                 <div class="sticky bottom-0 left-0 flex justify-center">
                   <NButton v-if="loading" type="warning" @click="handleStop">

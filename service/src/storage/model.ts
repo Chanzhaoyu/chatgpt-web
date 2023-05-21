@@ -51,9 +51,9 @@ export class ChatOptions {
   parentMessageId?: string
   messageId?: string
   conversationId?: string
-  promptTokens?: number
-  completionTokens?: number
-  totalTokens?: number
+  prompt_tokens?: number
+  completion_tokens?: number
+  total_tokens?: number
   estimated?: boolean
   constructor(parentMessageId?: string, messageId?: string, conversationId?: string) {
     this.parentMessageId = parentMessageId

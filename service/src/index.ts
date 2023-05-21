@@ -135,7 +135,7 @@ router.post('/room-delete', auth, async (req, res) => {
   }
 })
 
-router.get('/chat-hisroty', auth, async (req, res) => {
+router.get('/chat-history', auth, async (req, res) => {
   try {
     const userId = req.headers.userId as string
     const roomId = +req.query.roomId
@@ -179,6 +179,7 @@ router.get('/chat-hisroty', auth, async (req, res) => {
           inversion: false,
           error: false,
           loading: false,
+          responseCount: (c.previousResponse?.length ?? 0) + 1,
           conversationOptions: {
             parentMessageId: c.options.messageId,
             conversationId: c.options.conversationId,
@@ -197,6 +198,66 @@ router.get('/chat-hisroty', auth, async (req, res) => {
     })
 
     res.send({ status: 'Success', message: null, data: result })
+  }
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Load error', data: null })
+  }
+})
+
+router.get('/chat-response-history', auth, async (req, res) => {
+  try {
+    const userId = req.headers.userId as string
+    const roomId = +req.query.roomId
+    const uuid = +req.query.uuid
+    const index = +req.query.index
+    if (!roomId || !await existsChatRoom(userId, roomId)) {
+      res.send({ status: 'Success', message: null, data: [] })
+      // res.send({ status: 'Fail', message: 'Unknow room', data: null })
+      return
+    }
+    const chat = await getChat(roomId, uuid)
+    if (chat.previousResponse === undefined || chat.previousResponse.length < index) {
+      res.send({ status: 'Fail', message: 'Error', data: [] })
+      return
+    }
+    const response = index >= chat.previousResponse.length
+      ? chat
+      : chat.previousResponse[index]
+    const usage = response.options.completion_tokens
+      ? {
+          completion_tokens: response.options.completion_tokens || null,
+          prompt_tokens: response.options.prompt_tokens || null,
+          total_tokens: response.options.total_tokens || null,
+          estimated: response.options.estimated || null,
+        }
+      : undefined
+    res.send({
+      status: 'Success',
+      message: null,
+      data: {
+        uuid: chat.uuid,
+        dateTime: new Date(chat.dateTime).toLocaleString(),
+        text: response.response,
+        inversion: false,
+        error: false,
+        loading: false,
+        responseCount: (chat.previousResponse?.length ?? 0) + 1,
+        conversationOptions: {
+          parentMessageId: response.options.messageId,
+          conversationId: response.options.conversationId,
+        },
+        requestOptions: {
+          prompt: chat.prompt,
+          parentMessageId: response.options.parentMessageId,
+          options: {
+            parentMessageId: response.options.messageId,
+            conversationId: response.options.conversationId,
+          },
+        },
+        usage,
+      },
+    })
   }
   catch (error) {
     console.error(error)
@@ -296,9 +357,10 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
   let { roomId, uuid, regenerate, prompt, options = {}, systemMessage, temperature, top_p } = req.body as RequestProps
   const userId = req.headers.userId as string
   const room = await getChatRoom(userId, roomId)
+  if (room == null)
+    global.console.error(`Unable to get chat room \t ${userId}\t ${roomId}`)
   if (room != null && isNotEmptyString(room.prompt))
     systemMessage = room.prompt
-
   let lastResponse
   let result
   let message: ChatInfo
