@@ -27,9 +27,14 @@ const chatModelOptions = [
   'gpt-4-0314',
   'gpt-4-32k',
   'gpt-4-32k-0314',
+  'text-davinci-002-render-sha-mobile',
+  'gpt-4-mobile',
 ].map((model: string) => {
+  let label = model
+  if (model === 'text-davinci-002-render-sha-mobile')
+    label = 'gpt-3.5-mobile'
   return {
-    label: model,
+    label,
     key: model,
     value: model,
   }
@@ -133,7 +138,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.chatModel') }}</span>
           <div class="flex-1">
             <NSelect
-              style="width: 240px"
+              style="width: 444px"
               :value="config.chatModel"
               :options="chatModelOptions"
               @update-value="(val) => { config.chatModel = val }"
