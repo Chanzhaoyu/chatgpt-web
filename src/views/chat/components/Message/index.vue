@@ -124,7 +124,10 @@ async function handlePreviousResponse(next: number) {
       <AvatarComponent :image="inversion" />
     </div>
     <div class="overflow-hidden text-sm " :class="[inversion ? 'items-end' : 'items-start']">
-      <p class="text-xs text-[#b4bbc4]" :class="[inversion ? 'text-right' : 'text-left']">
+      <p v-if="inversion" class="text-xs text-[#b4bbc4]" :class="[inversion ? 'text-right' : 'text-left']">
+        {{ new Date(dateTime as string).toLocaleString() }}
+      </p>
+      <p v-else class="text-xs text-[#b4bbc4]" :class="[inversion ? 'text-right' : 'text-left']">
         <NSpace>
           {{ new Date(dateTime as string).toLocaleString() }}
           <NButtonGroup v-if="!inversion && responseCount && responseCount > 1">
