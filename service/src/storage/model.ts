@@ -38,12 +38,14 @@ export class ChatRoom {
   userId: string
   title: string
   prompt: string
+  usingContext: boolean
   status: Status = Status.Normal
   constructor(userId: string, title: string, roomId: number) {
     this.userId = userId
     this.title = title
     this.prompt = undefined
     this.roomId = roomId
+    this.usingContext = true
   }
 }
 

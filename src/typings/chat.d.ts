@@ -25,6 +25,7 @@ declare namespace Chat {
     loading?: boolean
     all?: boolean
     prompt?: string
+    usingContext: boolean
   }
 
   interface ChatState {

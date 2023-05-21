@@ -30,6 +30,7 @@ import {
   updateChat,
   updateConfig,
   updateRoomPrompt,
+  updateRoomUsingContext,
   updateUserInfo,
   updateUserPassword,
   verifyUser,
@@ -66,6 +67,7 @@ router.get('/chatrooms', auth, async (req, res) => {
         title: r.title,
         isEdit: false,
         prompt: r.prompt,
+        usingContext: r.usingContext === undefined ? true : r.usingContext,
       })
     })
     res.send({ status: 'Success', message: null, data: result })
@@ -107,6 +109,22 @@ router.post('/room-prompt', auth, async (req, res) => {
     const userId = req.headers.userId as string
     const { prompt, roomId } = req.body as { prompt: string; roomId: number }
     const success = await updateRoomPrompt(userId, roomId, prompt)
+    if (success)
+      res.send({ status: 'Success', message: 'Saved successfully', data: null })
+    else
+      res.send({ status: 'Fail', message: 'Saved Failed', data: null })
+  }
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Rename error', data: null })
+  }
+})
+
+router.post('/room-context', auth, async (req, res) => {
+  try {
+    const userId = req.headers.userId as string
+    const { using, roomId } = req.body as { using: boolean; roomId: number }
+    const success = await updateRoomUsingContext(userId, roomId, using)
     if (success)
       res.send({ status: 'Success', message: 'Saved successfully', data: null })
     else

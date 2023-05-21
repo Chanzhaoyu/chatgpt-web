@@ -148,6 +148,13 @@ export function fetchUpdateChatRoomPrompt<T = any>(prompt: string, roomId: numbe
   })
 }
 
+export function fetchUpdateChatRoomUsingContext<T = any>(using: boolean, roomId: number) {
+  return post<T>({
+    url: '/room-context',
+    data: { using, roomId },
+  })
+}
+
 export function fetchDeleteChatRoom<T = any>(roomId: number) {
   return post<T>({
     url: '/room-delete',

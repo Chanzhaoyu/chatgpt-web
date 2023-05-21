@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { getLocalState, setLocalState } from './helper'
 import { router } from '@/router'
-import { fetchClearChat, fetchCreateChatRoom, fetchDeleteChat, fetchDeleteChatRoom, fetchGetChatHistory, fetchGetChatRooms, fetchRenameChatRoom } from '@/api'
+import { fetchClearChat, fetchCreateChatRoom, fetchDeleteChat, fetchDeleteChatRoom, fetchGetChatHistory, fetchGetChatRooms, fetchRenameChatRoom, fetchUpdateChatRoomUsingContext } from '@/api'
 
 export const useChatStore = defineStore('chat-store', {
   state: (): Chat.ChatState => getLocalState(),
@@ -39,7 +39,7 @@ export const useChatStore = defineStore('chat-store', {
         this.chat.unshift({ uuid: r.uuid, data: [] })
       }
       if (uuid == null) {
-        await this.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
+        await this.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false, usingContext: true })
       }
       else {
         this.active = uuid
@@ -89,8 +89,8 @@ export const useChatStore = defineStore('chat-store', {
       }
     },
 
-    setUsingContext(context: boolean) {
-      this.usingContext = context
+    async  setUsingContext(context: boolean, roomId: number) {
+      await fetchUpdateChatRoomUsingContext(context, roomId)
       this.recordState()
     },
 
@@ -118,7 +118,7 @@ export const useChatStore = defineStore('chat-store', {
       this.chat.splice(index, 1)
 
       if (this.history.length === 0) {
-        await this.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
+        await this.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false, usingContext: true })
         return
       }
 
@@ -166,7 +166,7 @@ export const useChatStore = defineStore('chat-store', {
         if (this.history.length === 0) {
           const uuid = Date.now()
           fetchCreateChatRoom(chat.text, uuid)
-          this.history.push({ uuid, title: chat.text, isEdit: false })
+          this.history.push({ uuid, title: chat.text, isEdit: false, usingContext: true })
           this.chat.push({ uuid, data: [chat] })
           this.active = uuid
           this.recordState()
