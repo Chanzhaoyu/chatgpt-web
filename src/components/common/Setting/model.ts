@@ -63,3 +63,12 @@ export class AuditConfig {
   customizeEnabled?: boolean
   sensitiveWords?: string
 }
+
+export enum Status {
+  Normal = 0,
+  Deleted = 1,
+  InversionDeleted = 2,
+  ResponseDeleted = 3,
+  PreVerify = 4,
+  AdminVerify = 5,
+}

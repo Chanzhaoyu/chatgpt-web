@@ -18,6 +18,8 @@
 [✓] 自定义敏感词
 
 [✓] 每个会话设置独有 Prompt
+
+[✓] 用户管理
 </br>
 
 ## 截图
@@ -28,6 +30,7 @@
 ![cover2](./docs/c2.png)
 ![cover3](./docs/basesettings.jpg)
 ![cover3](./docs/prompt.jpg)
+![cover3](./docs/user-manager.jpg)
 
 - [ChatGPT Web](#chatgpt-web)
 	- [介绍](#介绍)

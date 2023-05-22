@@ -22,6 +22,7 @@ export class UserInfo {
   description?: string
   updateTime?: string
   config?: UserConfig
+  root?: boolean
   constructor(email: string, password: string) {
     this.name = email
     this.email = email
@@ -30,6 +31,7 @@ export class UserInfo {
     this.createTime = new Date().toLocaleString()
     this.verifyTime = null
     this.updateTime = new Date().toLocaleString()
+    this.root = false
   }
 }
 

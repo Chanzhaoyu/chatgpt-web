@@ -131,9 +131,8 @@ export async function getChats(roomId: number, lastId?: number) {
   if (!lastId)
     lastId = new Date().getTime()
   const query = { roomId, uuid: { $lt: lastId }, status: { $ne: Status.Deleted } }
-  const sort = { dateTime: -1 }
   const limit = 20
-  const cursor = await chatCol.find(query).sort(sort).limit(limit)
+  const cursor = await chatCol.find(query).sort({ dateTime: -1 }).limit(limit)
   const chats = []
   await cursor.forEach(doc => chats.push(doc))
   chats.reverse()
@@ -207,6 +206,21 @@ export async function getUser(email: string): Promise<UserInfo> {
   return await userCol.findOne({ email }) as UserInfo
 }
 
+export async function getUsers(page: number, size: number): Promise<{ users: UserInfo[]; total: number }> {
+  const cursor = userCol.find({}).sort({ createTime: -1 })
+  const total = await cursor.count()
+  const skip = (page - 1) * size
+  const limit = size
+  const pagedCursor = cursor.skip(skip).limit(limit)
+  const users: UserInfo[] = []
+  await pagedCursor.forEach(doc => users.push(doc))
+  users.forEach((user) => {
+    if (user.root == null)
+      user.root = process.env.ROOT_USER === user.email.toLowerCase()
+  })
+  return { users, total }
+}
+
 export async function getUserById(userId: string): Promise<UserInfo> {
   const userInfo = await userCol.findOne({ _id: new ObjectId(userId) }) as UserInfo
   if (userInfo.config == null) {
@@ -219,6 +233,10 @@ export async function getUserById(userId: string): Promise<UserInfo> {
 export async function verifyUser(email: string, status: Status) {
   email = email.toLowerCase()
   return await userCol.updateOne({ email }, { $set: { status, verifyTime: new Date().toLocaleString() } })
+}
+
+export async function updateUserStatus(userId: string, status: Status) {
+  return await userCol.updateOne({ _id: new ObjectId(userId) }, { $set: { status, verifyTime: new Date().toLocaleString() } })
 }
 
 export async function getConfig(): Promise<Config> {
