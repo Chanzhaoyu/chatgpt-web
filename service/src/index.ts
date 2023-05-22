@@ -649,7 +649,7 @@ router.post('/user-info', auth, async (req, res) => {
 
 router.post('/user-chat-model', auth, async (req, res) => {
   try {
-    const { chatModel } = req.query as { chatModel: CHATMODEL }
+    const { chatModel } = req.body as { chatModel: CHATMODEL }
     const userId = req.headers.userId.toString()
 
     const user = await getUserById(userId)

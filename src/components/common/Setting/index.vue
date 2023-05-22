@@ -100,7 +100,7 @@ const show = computed({
           </template>
           <Audit />
         </NTabPane>
-        <NTabPane name="UserConfig" tab="UserConfig">
+        <NTabPane v-if="userStore.userInfo.root" name="UserConfig" tab="UserConfig">
           <template #tab>
             <SvgIcon class="text-lg" icon="ri-user-5-line" />
             <span class="ml-2">{{ $t('setting.userConfig') }}</span>

@@ -223,10 +223,11 @@ export async function getUsers(page: number, size: number): Promise<{ users: Use
 
 export async function getUserById(userId: string): Promise<UserInfo> {
   const userInfo = await userCol.findOne({ _id: new ObjectId(userId) }) as UserInfo
-  if (userInfo.config == null) {
+  if (userInfo.config == null)
     userInfo.config = new UserConfig()
+  if (userInfo.config.chatModel == null)
     userInfo.config.chatModel = 'gpt-3.5-turbo'
-  }
+
   return userInfo
 }
 
