@@ -20,6 +20,8 @@
 [✓] 每个会话设置独有 Prompt
 
 [✓] 用户管理
+
+[✓] 多 Key 随机
 </br>
 
 ## 截图
@@ -31,6 +33,7 @@
 ![cover3](./docs/basesettings.jpg)
 ![cover3](./docs/prompt.jpg)
 ![cover3](./docs/user-manager.jpg)
+![cover3](./docs/key-manager.jpg)
 
 - [ChatGPT Web](#chatgpt-web)
 	- [介绍](#介绍)
@@ -410,7 +413,18 @@ A: 一种可能原因是经过 Nginx 反向代理，开启了 buffer，则 Nginx
 </a>
 
 ## 赞助
-如果你觉得这个项目对你有帮助，请给我点个Star。
+如果你觉得这个项目对你有帮助，请给我点个Star。并且情况允许的话，可以给我一点点支持，总之非常感谢支持～
+
+<div style="display: flex; gap: 20px;">
+	<div style="text-align: center">
+		<img style="max-width: 100%" src="./docs/wechat.png" alt="微信" />
+		<p>WeChat Pay</p>
+	</div>
+	<div style="text-align: center">
+		<img style="max-width: 100%" src="./docs/alipay.png" alt="支付宝" />
+		<p>Alipay</p>
+	</div>
+</div>
 
 ## License
 MIT © [Kerwin1202](./license)

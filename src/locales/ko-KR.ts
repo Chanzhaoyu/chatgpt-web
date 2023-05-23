@@ -65,6 +65,9 @@ export default {
     deleteUser: 'Delete User',
     deleteUserConfirm: 'Are you sure to delete this user?',
     verifiedUser: 'Verified User',
+    deleteKey: 'Delete Key',
+    editKeyButton: 'Edit Key',
+    deleteKeyConfirm: 'Are you sure to delete this key?',
   },
   setting: {
     setting: '설정',
@@ -126,6 +129,10 @@ export default {
     auditCustomizeWords: '단어 맞춤설정',
     accessTokenExpiredTime: '만료된 시간',
     userConfig: 'Users',
+    keysConfig: 'Keys Manager',
+    userRoles: 'User Role',
+    status: 'Status',
+    chatModels: 'Chat Models',
   },
   store: {
     siderButton: '프롬프트 스토어',

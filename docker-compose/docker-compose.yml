@@ -11,16 +11,6 @@ services:
       - database
     environment:
       TZ: Asia/Shanghai
-      # 二选一
-      OPENAI_API_KEY: 
-      # 二选一
-      OPENAI_ACCESS_TOKEN:
-      # API接口地址，可选，设置 OPENAI_API_KEY 时可用
-      OPENAI_API_BASE_URL:
-      # ChatGPTAPI 或者 ChatGPTUnofficialProxyAPI
-      OPENAI_API_MODEL: 
-      # 反向代理，可选
-      API_REVERSE_PROXY:
       # 访问jwt加密参数，可选 不为空则允许登录 同时需要设置 MONGODB_URL
       AUTH_SECRET_KEY:
       # 每小时最大请求次数，可选，默认无限
@@ -35,8 +25,6 @@ services:
       SOCKS_PROXY_USERNAME:
       # Socks代理密码，可选，和 SOCKS_PROXY_HOST & SOCKS_PROXY_PORT 一起时生效
       SOCKS_PROXY_PASSWORD:
-      # HTTPS_PROXY 代理，可选
-      HTTPS_PROXY: http://xxxx:7890
       # 网站名称
       SITE_TITLE: ChatGpt Web
       # mongodb 的连接字符串

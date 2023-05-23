@@ -4,7 +4,7 @@ export class ConfigState {
   accessToken?: string
   accessTokenExpiredTime?: string
   apiBaseUrl?: string
-  apiModel?: ApiModel
+  apiModel?: APIMODEL
   reverseProxy?: string
   socksProxy?: string
   socksAuth?: string
@@ -21,8 +21,6 @@ export type CHATMODEL = 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0301' | 'gpt-4' | 'gpt-
 export class UserConfig {
   chatModel?: CHATMODEL
 }
-
-export type ApiModel = 'ChatGPTAPI' | 'ChatGPTUnofficialProxyAPI' | undefined
 
 export class SiteConfig {
   siteTitle?: string
@@ -71,4 +69,67 @@ export enum Status {
   ResponseDeleted = 3,
   PreVerify = 4,
   AdminVerify = 5,
+  Disabled = 6,
 }
+
+export enum UserRole {
+  Admin = 0,
+  User = 1,
+  Guest = 2,
+}
+
+export class KeyConfig {
+  _id?: string
+  key: string
+  keyModel: APIMODEL
+  chatModels: CHATMODEL[]
+  userRoles: UserRole[]
+  status: Status
+  remark: string
+  constructor(key: string, keyModel: APIMODEL, chatModels: CHATMODEL[], userRoles: UserRole[], remark: string) {
+    this.key = key
+    this.keyModel = keyModel
+    this.chatModels = chatModels
+    this.userRoles = userRoles
+    this.status = Status.Normal
+    this.remark = remark
+  }
+}
+
+export type APIMODEL = 'ChatGPTAPI' | 'ChatGPTUnofficialProxyAPI' | undefined
+
+export const apiModelOptions = ['ChatGPTAPI', 'ChatGPTUnofficialProxyAPI'].map((model: string) => {
+  return {
+    label: model,
+    key: model,
+    value: model,
+  }
+})
+
+export const chatModelOptions = [
+  'gpt-3.5-turbo',
+  'gpt-3.5-turbo-0301',
+  'gpt-4',
+  'gpt-4-0314',
+  'gpt-4-32k',
+  'gpt-4-32k-0314',
+  'text-davinci-002-render-sha-mobile',
+  'gpt-4-mobile',
+].map((model: string) => {
+  let label = model
+  if (model === 'text-davinci-002-render-sha-mobile')
+    label = 'gpt-3.5-mobile'
+  return {
+    label,
+    key: model,
+    value: model,
+  }
+})
+
+export const userRoleOptions = Object.values(UserRole).filter(d => isNaN(Number(d))).map((role) => {
+  return {
+    label: role as string,
+    key: role as string,
+    value: UserRole[role as keyof typeof UserRole],
+  }
+})

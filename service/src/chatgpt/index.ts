@@ -5,14 +5,14 @@ import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import httpsProxyAgent from 'https-proxy-agent'
 import fetch from 'node-fetch'
-import type { AuditConfig, CHATMODEL } from 'src/storage/model'
+import type { AuditConfig, CHATMODEL, KeyConfig, UserInfo } from 'src/storage/model'
 import jwt_decode from 'jwt-decode'
 import dayjs from 'dayjs'
 import type { TextAuditService } from '../utils/textAudit'
 import { textAuditServices } from '../utils/textAudit'
-import { getCacheConfig, getOriginConfig } from '../storage/config'
+import { getCacheApiKeys, getCacheConfig, getOriginConfig } from '../storage/config'
 import { sendResponse } from '../utils'
-import { isNotEmptyString } from '../utils/is'
+import { hasAnyRole, isNotEmptyString } from '../utils/is'
 import type { ChatContext, ChatGPTUnofficialProxyAPIOptions, JWT, ModelConfig } from '../types'
 import { getChatByMessageId } from '../storage/mongo'
 import type { RequestOptions } from './types'
@@ -32,20 +32,17 @@ const ErrorCodeMessage: Record<string, string> = {
 
 let auditService: TextAuditService
 
-export async function initApi(chatModel: CHATMODEL) {
+export async function initApi(key: KeyConfig, chatModel: CHATMODEL) {
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
 
   const config = await getCacheConfig()
-  if (!config.apiKey && !config.accessToken)
-    throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
-
   const model = chatModel as string
 
-  if (config.apiModel === 'ChatGPTAPI') {
+  if (key.keyModel === 'ChatGPTAPI') {
     const OPENAI_API_BASE_URL = config.apiBaseUrl
 
     const options: ChatGPTAPIOptions = {
-      apiKey: config.apiKey,
+      apiKey: key.key,
       completionParams: { model },
       debug: !config.apiDisableDebug,
       messageStore: undefined,
@@ -73,7 +70,7 @@ export async function initApi(chatModel: CHATMODEL) {
   }
   else {
     const options: ChatGPTUnofficialProxyAPIOptions = {
-      accessToken: config.accessToken,
+      accessToken: key.key,
       apiReverseProxyUrl: isNotEmptyString(config.reverseProxy) ? config.reverseProxy : 'https://ai.fakeopen.com/api/conversation',
       model,
       debug: !config.apiDisableDebug,
@@ -86,27 +83,30 @@ export async function initApi(chatModel: CHATMODEL) {
 }
 
 async function chatReplyProcess(options: RequestOptions) {
-  const config = await getCacheConfig()
   const model = options.chatModel
+  const key = options.key
+  if (key == null || key === undefined)
+    throw new Error('没有可用的配置。请再试一次 | No available configuration. Please try again.')
+
   const { message, lastContext, process, systemMessage, temperature, top_p } = options
 
   try {
     const timeoutMs = (await getCacheConfig()).timeoutMs
     let options: SendMessageOptions = { timeoutMs }
 
-    if (config.apiModel === 'ChatGPTAPI') {
+    if (key.keyModel === 'ChatGPTAPI') {
       if (isNotEmptyString(systemMessage))
         options.systemMessage = systemMessage
       options.completionParams = { model, temperature, top_p }
     }
 
     if (lastContext != null) {
-      if (config.apiModel === 'ChatGPTAPI')
+      if (key.keyModel === 'ChatGPTAPI')
         options.parentMessageId = lastContext.parentMessageId
       else
         options = { ...lastContext }
     }
-    const api = await initApi(model)
+    const api = await initApi(key, model)
     const response = await api.sendMessage(message, {
       ...options,
       onProgress: (partialResponse) => {
@@ -122,6 +122,9 @@ async function chatReplyProcess(options: RequestOptions) {
     if (Reflect.has(ErrorCodeMessage, code))
       return sendResponse({ type: 'Fail', message: ErrorCodeMessage[code] })
     return sendResponse({ type: 'Fail', message: error.message ?? 'Please check the back-end console' })
+  }
+  finally {
+    releaseApiKey(key)
   }
 }
 
@@ -304,6 +307,39 @@ async function getMessageById(id: string): Promise<ChatMessage | undefined> {
   else { return undefined }
 }
 
+const _lockedKeys: string[] = []
+async function randomKeyConfig(keys: KeyConfig[]): Promise < KeyConfig | null > {
+  if (keys.length <= 0)
+    return null
+  let unsedKeys = keys.filter(d => !_lockedKeys.includes(d.key))
+  const start = Date.now()
+  while (unsedKeys.length <= 0) {
+    if (Date.now() - start > 3000)
+      break
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    unsedKeys = keys.filter(d => !_lockedKeys.includes(d.key))
+  }
+  if (unsedKeys.length <= 0)
+    return null
+  const thisKey = unsedKeys[Math.floor(Math.random() * unsedKeys.length)]
+  _lockedKeys.push(thisKey.key)
+  return thisKey
+}
+
+async function getRandomApiKey(user: UserInfo): Promise<KeyConfig | undefined> {
+  const keys = (await getCacheApiKeys()).filter(d => hasAnyRole(d.userRoles, user.roles))
+  return randomKeyConfig(keys)
+}
+
+async function releaseApiKey(key: KeyConfig) {
+  if (key == null || key === undefined)
+    return
+
+  const index = _lockedKeys.indexOf(key.key)
+  if (index >= 0)
+    _lockedKeys.splice(index, 1)
+}
+
 export type { ChatContext, ChatMessage }
 
-export { chatReplyProcess, chatConfig, containsSensitiveWords }
+export { chatReplyProcess, chatConfig, containsSensitiveWords, getRandomApiKey }

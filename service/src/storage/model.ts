@@ -8,6 +8,13 @@ export enum Status {
   ResponseDeleted = 3,
   PreVerify = 4,
   AdminVerify = 5,
+  Disabled = 6,
+}
+
+export enum UserRole {
+  Admin = 0,
+  User = 1,
+  Guest = 2,
 }
 
 export class UserInfo {
@@ -22,7 +29,7 @@ export class UserInfo {
   description?: string
   updateTime?: string
   config?: UserConfig
-  root?: boolean
+  roles?: UserRole[]
   constructor(email: string, password: string) {
     this.name = email
     this.email = email
@@ -31,7 +38,7 @@ export class UserInfo {
     this.createTime = new Date().toLocaleString()
     this.verifyTime = null
     this.updateTime = new Date().toLocaleString()
-    this.root = false
+    this.roles = [UserRole.User]
   }
 }
 
@@ -41,6 +48,18 @@ export class UserConfig {
 
 // https://platform.openai.com/docs/models/overview
 export type CHATMODEL = 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0301' | 'gpt-4' | 'gpt-4-0314' | 'gpt-4-32k' | 'gpt-4-32k-0314' | 'ext-davinci-002-render-sha-mobile' | 'gpt-4-mobile' | 'gpt-4-browsing'
+
+export const CHATMODELS: CHATMODEL[] = [
+  'gpt-3.5-turbo',
+  'gpt-3.5-turbo-0301',
+  'gpt-4',
+  'gpt-4-0314',
+  'gpt-4-32k',
+  'gpt-4-32k-0314',
+  'ext-davinci-002-render-sha-mobile',
+  'gpt-4-mobile',
+  'gpt-4-browsing',
+]
 
 export class ChatRoom {
   _id: ObjectId
@@ -139,7 +158,7 @@ export class Config {
     public apiDisableDebug?: boolean,
     public accessToken?: string,
     public apiBaseUrl?: string,
-    public apiModel?: string,
+    public apiModel?: APIMODEL,
     public reverseProxy?: string,
     public socksProxy?: string,
     public socksAuth?: string,
@@ -189,3 +208,23 @@ export enum TextAudioType {
   Response = 1 << 1, // 二进制 10
   All = Request | Response, // 二进制 11
 }
+
+export class KeyConfig {
+  _id: ObjectId
+  key: string
+  keyModel: APIMODEL
+  chatModels: CHATMODEL[]
+  userRoles: UserRole[]
+  status: Status
+  remark: string
+  constructor(key: string, keyModel: APIMODEL, chatModels: CHATMODEL[], userRoles: UserRole[], remark: string) {
+    this.key = key
+    this.keyModel = keyModel
+    this.chatModels = chatModels
+    this.userRoles = userRoles
+    this.status = Status.Normal
+    this.remark = remark
+  }
+}
+
+export type APIMODEL = 'ChatGPTAPI' | 'ChatGPTUnofficialProxyAPI'

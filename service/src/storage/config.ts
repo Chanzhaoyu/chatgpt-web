@@ -2,8 +2,8 @@ import { ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'
 import type { TextAuditServiceProvider } from 'src/utils/textAudit'
 import { isNotEmptyString, isTextAuditServiceProvider } from '../utils/is'
-import { AuditConfig, Config, MailConfig, SiteConfig, TextAudioType } from './model'
-import { getConfig } from './mongo'
+import { AuditConfig, CHATMODELS, Config, KeyConfig, MailConfig, SiteConfig, TextAudioType, UserRole } from './model'
+import { getConfig, getKeys, upsertKey } from './mongo'
 
 dotenv.config()
 
@@ -115,4 +115,47 @@ function getTextAuditServiceOptionFromString(value: string): TextAudioType {
 export function clearConfigCache() {
   cacheExpiration = 0
   cachedConfig = null
+}
+
+let apiKeysCachedConfig: KeyConfig[] | undefined
+let apiKeysCacheExpiration = 0
+
+export async function getCacheApiKeys(): Promise<KeyConfig[]> {
+  const now = Date.now()
+  if (apiKeysCachedConfig && apiKeysCacheExpiration > now)
+    return Promise.resolve(apiKeysCachedConfig)
+
+  const loadedConfig = (await getApiKeys()).keys
+
+  apiKeysCachedConfig = loadedConfig
+  apiKeysCacheExpiration = now + 10 * 60 * 1000
+
+  return Promise.resolve(apiKeysCachedConfig)
+}
+
+export async function getApiKeys() {
+  const result = await getKeys()
+  if (result.keys.length <= 0) {
+    const config = await getCacheConfig()
+    if (config.apiModel === 'ChatGPTAPI')
+      result.keys.push(await upsertKey(new KeyConfig(config.apiKey, 'ChatGPTAPI', [], [], '')))
+
+    if (config.apiModel === 'ChatGPTUnofficialProxyAPI')
+      result.keys.push(await upsertKey(new KeyConfig(config.accessToken, 'ChatGPTUnofficialProxyAPI', [], [], '')))
+
+    result.total++
+  }
+  result.keys.forEach((key) => {
+    if (key.userRoles == null || key.userRoles.length <= 0) {
+      key.userRoles.push(UserRole.Admin)
+      key.userRoles.push(UserRole.User)
+      key.userRoles.push(UserRole.Guest)
+    }
+    if (key.chatModels == null || key.chatModels.length <= 0) {
+      CHATMODELS.forEach((chatModel) => {
+        key.chatModels.push(chatModel)
+      })
+    }
+  })
+  return result
 }

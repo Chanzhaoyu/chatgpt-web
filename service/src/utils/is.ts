@@ -1,3 +1,4 @@
+import type { UserRole } from '../storage/model'
 import { TextAudioType } from '../storage/model'
 import type { TextAuditServiceProvider } from './textAudit'
 
@@ -36,4 +37,11 @@ export function isTextAudioType(value: any): value is TextAudioType {
     || value === TextAudioType.Response
     || value === TextAudioType.All
   )
+}
+export function hasAnyRole(userRoles: UserRole[] | undefined, roles: UserRole[]): boolean {
+  if (!userRoles || userRoles.length === 0 || !roles || roles.length === 0)
+    return false
+
+  const roleNames = roles.map(role => role.toString())
+  return roleNames.some(roleName => userRoles.some(userRole => userRole.toString() === roleName))
 }

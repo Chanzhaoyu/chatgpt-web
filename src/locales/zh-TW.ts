@@ -65,6 +65,9 @@ export default {
     deleteUser: '删除用户',
     deleteUserConfirm: '你确定要删除这个用户吗?',
     verifiedUser: '通过验证',
+    deleteKey: '删除 Key',
+    editKeyButton: '编辑 Key',
+    deleteKeyConfirm: '你确定要删除这个 key 吗?',
   },
   setting: {
     setting: '設定',
@@ -128,6 +131,10 @@ export default {
     auditCustomizeWords: '敏感词',
     accessTokenExpiredTime: '过期时间',
     userConfig: '用户管理',
+    keysConfig: 'Keys 管理',
+    userRoles: '用户权限',
+    status: '状态',
+    chatModels: '对话模型',
   },
   store: {
     siderButton: '提示詞商店',

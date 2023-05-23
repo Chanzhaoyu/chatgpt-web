@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
 import { NButton, NDataTable, NTag, useDialog, useMessage } from 'naive-ui'
-import { Status } from './model'
+import { Status, UserRole } from './model'
 import { fetchGetUsers, fetchUpdateUserStatus } from '@/api'
 import { t } from '@/locales'
 
@@ -20,21 +20,21 @@ const columns = [
     maxWidth: 200,
   },
   {
-    title: '注册时间',
+    title: 'Register Time',
     key: 'createTime',
     width: 220,
   },
   {
-    title: '验证时间',
+    title: 'Verify Time',
     key: 'verifyTime',
     width: 220,
   },
   {
-    title: '管理员',
+    title: 'IsAdmin',
     key: 'status',
     width: 200,
     render(row: any) {
-      if (row.root) {
+      if (row.roles.includes(UserRole.Admin)) {
         return h(
           NTag,
           {
@@ -53,7 +53,7 @@ const columns = [
     },
   },
   {
-    title: '状态',
+    title: 'Status',
     key: 'status',
     width: 200,
     render(row: any) {
@@ -66,7 +66,7 @@ const columns = [
     width: 200,
     render(row: any) {
       const actions: any[] = []
-      if (row.root)
+      if (row.roles.includes(UserRole.Admin))
         return actions
 
       if (row.status === Status.Normal) {
