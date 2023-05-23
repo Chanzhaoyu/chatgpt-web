@@ -588,7 +588,7 @@ router.post('/user-login', async (req, res) => {
       avatar: user.avatar,
       description: user.description,
       userId: user._id,
-      root: !user.roles.includes(UserRole.Admin),
+      root: user.roles.includes(UserRole.Admin),
       config: user.config,
     }, config.siteConfig.loginSalt.trim())
     res.send({ status: 'Success', message: '登录成功 | Login successfully', data: { token } })
