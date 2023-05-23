@@ -256,7 +256,7 @@ onMounted(async () => {
               style="width: 100%"
               multiple
               :value="keyConfig.chatModels"
-              :options="authStore.session?.chatModels"
+              :options="authStore.session?.allChatModels"
               @update-value="value => keyConfig.chatModels = value"
             />
           </div>

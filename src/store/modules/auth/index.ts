@@ -16,6 +16,11 @@ interface SessionResponse {
     key: string
     value: string
   }[]
+  allChatModels: {
+    label: string
+    key: string
+    value: string
+  }[]
 }
 
 export interface AuthState {

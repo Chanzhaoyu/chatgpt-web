@@ -602,6 +602,7 @@ router.post('/session', async (req, res) => {
         model: config.apiModel,
         title: config.siteConfig.siteTitle,
         chatModels,
+        allChatModels: chatModelOptions,
       },
     })
   }
