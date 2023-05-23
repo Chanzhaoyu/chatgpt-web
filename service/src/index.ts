@@ -430,7 +430,7 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
       temperature,
       top_p,
       chatModel: user.config.chatModel,
-      key: await getRandomApiKey(user),
+      key: await getRandomApiKey(user, user.config.chatModel),
     })
     // return the whole response including usage
     res.write(`\n${JSON.stringify(result.data)}`)
