@@ -38,6 +38,7 @@ export function isTextAudioType(value: any): value is TextAudioType {
     || value === TextAudioType.All
   )
 }
+
 export function hasAnyRole(userRoles: UserRole[] | undefined, roles: UserRole[]): boolean {
   if (!userRoles || userRoles.length === 0 || !roles || roles.length === 0)
     return false

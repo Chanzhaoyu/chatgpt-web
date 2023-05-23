@@ -553,27 +553,6 @@ const renderOption = (option: { label: string }) => {
   return []
 }
 
-const chatModelOptions = [
-  'gpt-3.5-turbo',
-  'gpt-3.5-turbo-0301',
-  'gpt-4',
-  'gpt-4-0314',
-  'gpt-4-32k',
-  'gpt-4-32k-0314',
-  'text-davinci-002-render-sha-mobile',
-  'gpt-4-mobile',
-  'gpt-4-browsing',
-].map((model: string) => {
-  let label = model
-  if (model === 'text-davinci-002-render-sha-mobile')
-    label = 'gpt-3.5-mobile'
-  return {
-    label,
-    key: model,
-    value: model,
-  }
-})
-
 const placeholder = computed(() => {
   if (isMobile.value)
     return t('chat.placeholderMobile')
@@ -692,9 +671,10 @@ onUnmounted(() => {
               </span>
             </HoverButton>
             <NSelect
-              style="width: 200px"
+              style="width: 250px"
               :value="userStore.userInfo.config.chatModel"
-              :options="chatModelOptions"
+              :options="authStore.session?.chatModels"
+              :disabled="!!authStore.session?.auth && !authStore.token"
               @update-value="(val) => handleSyncChatModel(val)"
             />
           </div>

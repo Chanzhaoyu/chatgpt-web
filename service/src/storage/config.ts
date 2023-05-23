@@ -133,6 +133,11 @@ export async function getCacheApiKeys(): Promise<KeyConfig[]> {
   return Promise.resolve(apiKeysCachedConfig)
 }
 
+export function clearApiKeyCache() {
+  apiKeysCacheExpiration = 0
+  getCacheApiKeys()
+}
+
 export async function getApiKeys() {
   const result = await getKeys()
   if (result.keys.length <= 0) {

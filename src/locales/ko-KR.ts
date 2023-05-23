@@ -63,6 +63,7 @@ export default {
     usageResponse: '답변',
     usageTotal: '총 소비 token',
     deleteUser: 'Delete User',
+    setUserRole: 'Set Role',
     deleteUserConfirm: 'Are you sure to delete this user?',
     verifiedUser: 'Verified User',
     deleteKey: 'Delete Key',

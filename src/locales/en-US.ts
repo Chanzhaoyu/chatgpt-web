@@ -63,6 +63,7 @@ export default {
     usageResponse: 'Response',
     usageTotal: 'Total token cost',
     deleteUser: 'Delete User',
+    setUserRole: 'Set Role',
     deleteUserConfirm: 'Are you sure to delete this user?',
     verifiedUser: 'Verified User',
     deleteKey: 'Delete Key',

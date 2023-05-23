@@ -5,10 +5,10 @@ import { ObjectId } from 'mongodb'
 import type { RequestProps } from './types'
 import type { ChatContext, ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, containsSensitiveWords, getRandomApiKey, initAuditService } from './chatgpt'
-import { auth } from './middleware/auth'
-import { clearConfigCache, getApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
+import { auth, getUserId } from './middleware/auth'
+import { clearApiKeyCache, clearConfigCache, getApiKeys, getCacheApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
 import type { AuditConfig, CHATMODEL, ChatInfo, ChatOptions, Config, KeyConfig, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
-import { Status, UserRole } from './storage/model'
+import { Status, UserRole, chatModelOptions } from './storage/model'
 import {
   clearChat,
   createChatRoom,
@@ -36,12 +36,13 @@ import {
   updateUserChatModel,
   updateUserInfo,
   updateUserPassword,
+  updateUserRole,
   updateUserStatus,
   upsertKey,
   verifyUser,
 } from './storage/mongo'
 import { limiter } from './middleware/limiter'
-import { isEmail, isNotEmptyString } from './utils/is'
+import { hasAnyRole, isEmail, isNotEmptyString } from './utils/is'
 import { sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
 import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserResetPasswordUrl, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
 import { rootAuth } from './middleware/rootAuth'
@@ -558,8 +559,51 @@ router.post('/session', async (req, res) => {
     const allowRegister = (await getCacheConfig()).siteConfig.registerEnabled
     if (config.apiModel !== 'ChatGPTAPI' && config.apiModel !== 'ChatGPTUnofficialProxyAPI')
       config.apiModel = 'ChatGPTAPI'
+    const userId = await getUserId(req)
+    const chatModels: {
+      label
+      key: string
+      value: string
+    }[] = []
+    if (userId != null) {
+      const user = await getUserById(userId)
+      const keys = (await getCacheApiKeys()).filter(d => hasAnyRole(d.userRoles, user.roles))
 
-    res.send({ status: 'Success', message: '', data: { auth: hasAuth, allowRegister, model: config.apiModel, title: config.siteConfig.siteTitle } })
+      const count: { key: string; count: number }[] = []
+      chatModelOptions.forEach((chatModel) => {
+        keys.forEach((key) => {
+          if (key.chatModels.includes(chatModel.value)) {
+            if (count.filter(d => d.key === chatModel.value).length <= 0) {
+              count.push({ key: chatModel.value, count: 1 })
+            }
+            else {
+              const thisCount = count.filter(d => d.key === chatModel.value)[0]
+              thisCount.count++
+            }
+          }
+        })
+      })
+      count.forEach((c) => {
+        const thisChatModel = chatModelOptions.filter(d => d.value === c.key)[0]
+        chatModels.push({
+          label: `${thisChatModel.label} (${c.count})`,
+          key: c.key,
+          value: c.key,
+        })
+      })
+    }
+
+    res.send({
+      status: 'Success',
+      message: '',
+      data: {
+        auth: hasAuth,
+        allowRegister,
+        model: config.apiModel,
+        title: config.siteConfig.siteTitle,
+        chatModels,
+      },
+    })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -686,6 +730,17 @@ router.post('/user-status', rootAuth, async (req, res) => {
     await updateUserStatus(userId, status)
     if ((user.status === Status.PreVerify || user.status === Status.AdminVerify) && status === Status.Normal)
       await sendNoticeMail(user.email)
+    res.send({ status: 'Success', message: '更新成功 | Update successfully' })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/user-role', rootAuth, async (req, res) => {
+  try {
+    const { userId, roles } = req.body as { userId: string; roles: UserRole[] }
+    await updateUserRole(userId, roles)
     res.send({ status: 'Success', message: '更新成功 | Update successfully' })
   }
   catch (error) {
@@ -873,6 +928,7 @@ router.post('/setting-key-upsert', rootAuth, async (req, res) => {
     if (keyConfig._id !== undefined)
       keyConfig._id = new ObjectId(keyConfig._id)
     await upsertKey(keyConfig)
+    clearApiKeyCache()
     res.send({ status: 'Success', message: '成功 | Successfully' })
   }
   catch (error) {

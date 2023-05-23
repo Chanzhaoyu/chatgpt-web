@@ -61,6 +61,27 @@ export const CHATMODELS: CHATMODEL[] = [
   'gpt-4-browsing',
 ]
 
+export const chatModelOptions = [
+  'gpt-3.5-turbo',
+  'gpt-3.5-turbo-0301',
+  'gpt-4',
+  'gpt-4-0314',
+  'gpt-4-32k',
+  'gpt-4-32k-0314',
+  'text-davinci-002-render-sha-mobile',
+  'gpt-4-mobile',
+  'gpt-4-browsing',
+].map((model: string) => {
+  let label = model
+  if (model === 'text-davinci-002-render-sha-mobile')
+    label = 'gpt-3.5-mobile'
+  return {
+    label,
+    key: model,
+    value: model,
+  }
+})
+
 export class ChatRoom {
   _id: ObjectId
   roomId: number

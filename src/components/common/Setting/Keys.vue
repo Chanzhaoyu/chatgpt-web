@@ -2,12 +2,14 @@
 import { h, onMounted, reactive, ref } from 'vue'
 import { NButton, NDataTable, NInput, NModal, NSelect, NSpace, NSwitch, NTag, useDialog, useMessage } from 'naive-ui'
 import type { CHATMODEL } from './model'
-import { KeyConfig, Status, UserRole, apiModelOptions, chatModelOptions, userRoleOptions } from './model'
+import { KeyConfig, Status, UserRole, apiModelOptions, userRoleOptions } from './model'
 import { fetchGetKeys, fetchUpdateApiKeyStatus, fetchUpsertApiKey } from '@/api'
 import { t } from '@/locales'
+import { useAuthStore } from '@/store'
 
 const ms = useMessage()
 const dialog = useDialog()
+const authStore = useAuthStore()
 const loading = ref(false)
 const show = ref(false)
 const handleSaving = ref(false)
@@ -254,7 +256,7 @@ onMounted(async () => {
               style="width: 100%"
               multiple
               :value="keyConfig.chatModels"
-              :options="chatModelOptions"
+              :options="authStore.session?.chatModels"
               @update-value="value => keyConfig.chatModels = value"
             />
           </div>

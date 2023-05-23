@@ -232,6 +232,8 @@ export async function getUserById(userId: string): Promise<UserInfo> {
 }
 
 function initUserInfo(userInfo: UserInfo) {
+  if (userInfo == null)
+    return
   if (userInfo.config == null)
     userInfo.config = new UserConfig()
   if (userInfo.config.chatModel == null)
@@ -250,6 +252,10 @@ export async function verifyUser(email: string, status: Status) {
 
 export async function updateUserStatus(userId: string, status: Status) {
   return await userCol.updateOne({ _id: new ObjectId(userId) }, { $set: { status, verifyTime: new Date().toLocaleString() } })
+}
+
+export async function updateUserRole(userId: string, roles: UserRole[]) {
+  return await userCol.updateOne({ _id: new ObjectId(userId) }, { $set: { roles, verifyTime: new Date().toLocaleString() } })
 }
 
 export async function getConfig(): Promise<Config> {

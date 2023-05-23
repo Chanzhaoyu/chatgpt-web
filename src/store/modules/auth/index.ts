@@ -11,6 +11,11 @@ interface SessionResponse {
   model: 'ChatGPTAPI' | 'ChatGPTUnofficialProxyAPI'
   allowRegister: boolean
   title: string
+  chatModels: {
+    label: string
+    key: string
+    value: string
+  }[]
 }
 
 export interface AuthState {

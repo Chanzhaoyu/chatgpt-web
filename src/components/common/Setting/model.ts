@@ -106,26 +106,6 @@ export const apiModelOptions = ['ChatGPTAPI', 'ChatGPTUnofficialProxyAPI'].map((
   }
 })
 
-export const chatModelOptions = [
-  'gpt-3.5-turbo',
-  'gpt-3.5-turbo-0301',
-  'gpt-4',
-  'gpt-4-0314',
-  'gpt-4-32k',
-  'gpt-4-32k-0314',
-  'text-davinci-002-render-sha-mobile',
-  'gpt-4-mobile',
-].map((model: string) => {
-  let label = model
-  if (model === 'text-davinci-002-render-sha-mobile')
-    label = 'gpt-3.5-mobile'
-  return {
-    label,
-    key: model,
-    value: model,
-  }
-})
-
 export const userRoleOptions = Object.values(UserRole).filter(d => isNaN(Number(d))).map((role) => {
   return {
     label: role as string,
@@ -133,3 +113,11 @@ export const userRoleOptions = Object.values(UserRole).filter(d => isNaN(Number(
     value: UserRole[role as keyof typeof UserRole],
   }
 })
+
+export class UserInfo {
+  _id?: string
+  roles: UserRole[]
+  constructor(roles: UserRole[]) {
+    this.roles = roles
+  }
+}
