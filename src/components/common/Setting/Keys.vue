@@ -88,7 +88,7 @@ const columns = [
   {
     title: 'Action',
     key: '_id',
-    width: 200,
+    width: 220,
     render(row: KeyConfig) {
       const actions: any[] = []
       if (row.status === Status.Normal) {

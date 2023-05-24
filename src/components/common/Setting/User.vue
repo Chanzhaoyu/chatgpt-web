@@ -66,22 +66,22 @@ const columns = [
   {
     title: 'Action',
     key: '_id',
-    width: 200,
+    width: 220,
     render(row: any) {
       const actions: any[] = []
-      if (row.status === Status.Normal) {
-        actions.push(h(
-          NButton,
-          {
-            size: 'small',
-            type: 'error',
-            style: {
-              marginRight: '6px',
-            },
-            onClick: () => handleUpdateUserStatus(row._id, Status.Deleted),
+      actions.push(h(
+        NButton,
+        {
+          size: 'small',
+          type: 'error',
+          style: {
+            marginRight: '6px',
           },
-          { default: () => t('chat.deleteUser') },
-        ))
+          onClick: () => handleUpdateUserStatus(row._id, Status.Deleted),
+        },
+        { default: () => t('chat.deleteUser') },
+      ))
+      if (row.status === Status.Normal) {
         actions.push(h(
           NButton,
           {
