@@ -212,8 +212,9 @@ export async function getUser(email: string): Promise<UserInfo> {
 }
 
 export async function getUsers(page: number, size: number): Promise<{ users: UserInfo[]; total: number }> {
-  const cursor = userCol.find({ status: { $ne: Status.Deleted } }).sort({ createTime: -1 })
-  const total = await cursor.count()
+  const query = { status: { $ne: Status.Deleted } }
+  const cursor = userCol.find(query).sort({ createTime: -1 })
+  const total = await userCol.countDocuments(query)
   const skip = (page - 1) * size
   const limit = size
   const pagedCursor = cursor.skip(skip).limit(limit)
@@ -341,8 +342,9 @@ export async function getUserStatisticsByDay(userId: ObjectId, start: number, en
 }
 
 export async function getKeys(): Promise<{ keys: KeyConfig[]; total: number }> {
-  const cursor = await keyCol.find({ status: { $ne: Status.Disabled } })
-  const total = await cursor.count()
+  const query = { status: { $ne: Status.Disabled } }
+  const cursor = await keyCol.find(query)
+  const total = await keyCol.countDocuments(query)
   const keys = []
   await cursor.forEach(doc => keys.push(doc))
   return { keys, total }
