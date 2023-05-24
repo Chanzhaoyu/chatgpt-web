@@ -1,19 +1,26 @@
 <script setup lang='ts'>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { NSpin } from 'naive-ui'
 import { fetchChatConfig } from '@/api'
 import pkg from '@/../package.json'
+import { useAuthStore } from '@/store'
 
 interface ConfigState {
   timeoutMs?: number
   reverseProxy?: string
   apiModel?: string
   socksProxy?: string
+  httpsProxy?: string
+  usage?: string
 }
+
+const authStore = useAuthStore()
 
 const loading = ref(false)
 
 const config = ref<ConfigState>()
+
+const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
 
 async function fetchConfig() {
   try {
@@ -45,18 +52,24 @@ onMounted(() => {
             href="https://github.com/Chanzhaoyu/chatgpt-web"
             target="_blank"
           >
-            Github
+            GitHub
           </a>
           ，免费且基于 MIT 协议，没有任何形式的付费行为！
         </p>
         <p>
-          如果你觉得此项目对你有帮助，请在 Github 帮我点个 Star 或者给予一点赞助，谢谢！
+          如果你觉得此项目对你有帮助，请在 GitHub 帮我点个 Star 或者给予一点赞助，谢谢！
         </p>
       </div>
       <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
-      <p>{{ $t("setting.reverseProxy") }}：{{ config?.reverseProxy ?? '-' }}</p>
+      <p v-if="isChatGPTAPI">
+        {{ $t("setting.monthlyUsage") }}：{{ config?.usage ?? '-' }}
+      </p>
+      <p v-if="!isChatGPTAPI">
+        {{ $t("setting.reverseProxy") }}：{{ config?.reverseProxy ?? '-' }}
+      </p>
       <p>{{ $t("setting.timeout") }}：{{ config?.timeoutMs ?? '-' }}</p>
       <p>{{ $t("setting.socks") }}：{{ config?.socksProxy ?? '-' }}</p>
+      <p>{{ $t("setting.httpsProxy") }}：{{ config?.httpsProxy ?? '-' }}</p>
     </div>
   </NSpin>
 </template>

@@ -1,13 +1,11 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
-import { NCard, NModal, NTabPane, NTabs } from 'naive-ui'
+import { NModal, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
+import Advanced from './Advanced.vue'
 import About from './About.vue'
+import { useAuthStore } from '@/store'
 import { SvgIcon } from '@/components/common'
-
-const props = defineProps<Props>()
-
-const emit = defineEmits<Emit>()
 
 interface Props {
   visible: boolean
@@ -17,9 +15,15 @@ interface Emit {
   (e: 'update:visible', visible: boolean): void
 }
 
-const active = ref('General')
+const props = defineProps<Props>()
 
-const reload = ref(false)
+const emit = defineEmits<Emit>()
+
+const authStore = useAuthStore()
+
+const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
+
+const active = ref('General')
 
 const show = computed({
   get() {
@@ -29,18 +33,11 @@ const show = computed({
     emit('update:visible', visible)
   },
 })
-
-function handleReload() {
-  reload.value = true
-  setTimeout(() => {
-    reload.value = false
-  }, 0)
-}
 </script>
 
 <template>
-  <NModal v-model:show="show" :auto-focus="false">
-    <NCard role="dialog" aria-modal="true" :bordered="false" style="width: 100%; max-width: 640px">
+  <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 640px">
+    <div>
       <NTabs v-model:value="active" type="line" animated>
         <NTabPane name="General" tab="General">
           <template #tab>
@@ -48,7 +45,16 @@ function handleReload() {
             <span class="ml-2">{{ $t('setting.general') }}</span>
           </template>
           <div class="min-h-[100px]">
-            <General v-if="!reload" @update="handleReload" />
+            <General />
+          </div>
+        </NTabPane>
+        <NTabPane v-if="isChatGPTAPI" name="Advanced" tab="Advanced">
+          <template #tab>
+            <SvgIcon class="text-lg" icon="ri:equalizer-line" />
+            <span class="ml-2">{{ $t('setting.advanced') }}</span>
+          </template>
+          <div class="min-h-[100px]">
+            <Advanced />
           </div>
         </NTabPane>
         <NTabPane name="Config" tab="Config">
@@ -59,6 +65,6 @@ function handleReload() {
           <About />
         </NTabPane>
       </NTabs>
-    </NCard>
+    </div>
   </NModal>
 </template>
