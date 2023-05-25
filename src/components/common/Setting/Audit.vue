@@ -156,6 +156,9 @@ onMounted(() => {
             <NButton :loading="testing" type="info" @click="testAudit()">
               {{ $t('common.test') }}
             </NButton>
+            <p class="text-xs text-[#b4bbc4] text-left">
+              {{ $t('common.auditTip') }}
+            </p>
           </div>
         </div>
       </div>

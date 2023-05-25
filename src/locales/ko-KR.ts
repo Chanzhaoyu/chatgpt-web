@@ -35,6 +35,7 @@ export default {
     passwordConfirm: '비밀번호 확인',
     resetPassword: '암호를 재설정',
     resetPasswordMail: '비밀번호 재설정 메일 보내기',
+    auditTip: 'Sensitive words do not take effect on Admin.',
   },
   chat: {
     newChatButton: '새 채팅',

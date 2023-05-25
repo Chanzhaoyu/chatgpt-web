@@ -35,6 +35,7 @@ export default {
     passwordConfirm: 'Confirm Password',
     resetPassword: 'Reset Password',
     resetPasswordMail: 'Send Reset Password Mail',
+    auditTip: 'Sensitive words do not take effect on Admin.',
   },
   chat: {
     newChatButton: 'New Chat',
