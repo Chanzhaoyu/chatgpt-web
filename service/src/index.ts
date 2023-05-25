@@ -585,8 +585,9 @@ router.post('/session', async (req, res) => {
       })
       count.forEach((c) => {
         const thisChatModel = chatModelOptions.filter(d => d.value === c.key)[0]
+        const suffix = c.count > 1 ? ` (${c.count})` : ''
         chatModels.push({
-          label: `${thisChatModel.label} (${c.count})`,
+          label: `${thisChatModel.label}${suffix}`,
           key: c.key,
           value: c.key,
         })

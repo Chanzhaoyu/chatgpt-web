@@ -134,6 +134,7 @@ export default {
     userRoles: 'User Role',
     status: 'Status',
     chatModels: 'Chat Models',
+    remark: 'Remark',
   },
   store: {
     siderButton: '프롬프트 스토어',

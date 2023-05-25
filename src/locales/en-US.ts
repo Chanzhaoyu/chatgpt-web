@@ -136,6 +136,7 @@ export default {
     userRoles: 'User Role',
     status: 'Status',
     chatModels: 'Chat Models',
+    remark: 'Remark',
   },
   store: {
     siderButton: 'Prompt Store',
