@@ -802,11 +802,6 @@ router.post('/setting-base', rootAuth, async (req, res) => {
   try {
     const { apiKey, apiModel, apiBaseUrl, accessToken, timeoutMs, reverseProxy, socksProxy, socksAuth, httpsProxy } = req.body as Config
 
-    if (apiModel === 'ChatGPTAPI' && !isNotEmptyString(apiKey))
-      throw new Error('Missing OPENAI_API_KEY environment variable.')
-    else if (apiModel === 'ChatGPTUnofficialProxyAPI' && !isNotEmptyString(accessToken))
-      throw new Error('Missing OPENAI_ACCESS_TOKEN environment variable.')
-
     const thisConfig = await getOriginConfig()
     thisConfig.apiKey = apiKey
     thisConfig.apiModel = apiModel
