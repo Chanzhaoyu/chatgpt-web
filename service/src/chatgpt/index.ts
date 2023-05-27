@@ -81,10 +81,12 @@ export async function initApi(key: KeyConfig, chatModel: CHATMODEL) {
     return new ChatGPTUnofficialProxyAPI({ ...options })
   }
 }
-
+const processThreads: { userId: string; abort: AbortController; messageId: string }[] = []
 async function chatReplyProcess(options: RequestOptions) {
   const model = options.chatModel
   const key = options.key
+  const userId = options.userId
+  const messageId = options.messageId
   if (key == null || key === undefined)
     throw new Error('没有可用的配置。请再试一次 | No available configuration. Please try again.')
 
@@ -107,6 +109,10 @@ async function chatReplyProcess(options: RequestOptions) {
         options = { ...lastContext }
     }
     const api = await initApi(key, model)
+
+    const abort = new AbortController()
+    options.abortSignal = abort.signal
+    processThreads.push({ userId, abort, messageId })
     const response = await api.sendMessage(message, {
       ...options,
       onProgress: (partialResponse) => {
@@ -125,7 +131,20 @@ async function chatReplyProcess(options: RequestOptions) {
   }
   finally {
     releaseApiKey(key)
+    const index = processThreads.findIndex(d => d.userId === userId)
+    if (index > -1)
+      processThreads.splice(index, 1)
   }
+}
+
+export function abortChatProcess(userId: string) {
+  const index = processThreads.findIndex(d => d.userId === userId)
+  if (index <= -1)
+    return
+  const messageId = processThreads[index].messageId
+  processThreads[index].abort.abort()
+  processThreads.splice(index, 1)
+  return messageId
 }
 
 export function initAuditService(audit: AuditConfig) {
@@ -328,10 +347,8 @@ async function randomKeyConfig(keys: KeyConfig[]): Promise<KeyConfig | null> {
   const thisLockedKey = _lockedKeys.filter(d => d.key === thisKey.key)
   if (thisLockedKey.length <= 0)
     _lockedKeys.push({ key: thisKey.key, count: 1 })
-
   else
     thisLockedKey[0].count++
-
   return thisKey
 }
 

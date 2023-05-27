@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 import { ObjectId } from 'mongodb'
 import type { RequestProps } from './types'
 import type { ChatContext, ChatMessage } from './chatgpt'
-import { chatConfig, chatReplyProcess, containsSensitiveWords, getRandomApiKey, initAuditService } from './chatgpt'
+import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, getRandomApiKey, initAuditService } from './chatgpt'
 import { auth, getUserId } from './middleware/auth'
 import { clearApiKeyCache, clearConfigCache, getApiKeys, getCacheApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
 import type { AuditConfig, CHATMODEL, ChatInfo, ChatOptions, Config, KeyConfig, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
@@ -431,6 +431,8 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
       top_p,
       chatModel: user.config.chatModel,
       key: await getRandomApiKey(user, user.config.chatModel),
+      userId,
+      messageId: message._id.toString(),
     })
     // return the whole response including usage
     res.write(`\n${JSON.stringify(result.data)}`)
@@ -457,6 +459,7 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
         await updateChat(message._id as unknown as string,
           result.data.text,
           result.data.id,
+          result.data.conversationId,
           result.data.detail?.usage as UsageResponse,
           previousResponse as [])
       }
@@ -464,6 +467,7 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
         await updateChat(message._id as unknown as string,
           result.data.text,
           result.data.id,
+          result.data.conversationId,
           result.data.detail?.usage as UsageResponse)
       }
 
@@ -478,6 +482,23 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
     catch (error) {
       global.console.log(error)
     }
+  }
+})
+
+router.post('/chat-abort', [auth, limiter], async (req, res) => {
+  try {
+    const userId = req.headers.userId.toString()
+    const { text, messageId, conversationId } = req.body as { text: string; messageId: string; conversationId: string }
+    const msgId = await abortChatProcess(userId)
+    await updateChat(msgId,
+      text,
+      messageId,
+      conversationId,
+      null)
+    res.send({ status: 'Success', message: 'OK', data: null })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: '重置邮件已发送 | Reset email has been sent', data: null })
   }
 })
 

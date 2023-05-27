@@ -10,6 +10,8 @@ export interface RequestOptions {
   top_p?: number
   chatModel: CHATMODEL
   key: KeyConfig
+  userId: string
+  messageId: string
 }
 
 export interface BalanceResponse {

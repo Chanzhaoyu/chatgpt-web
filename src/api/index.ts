@@ -59,6 +59,13 @@ export function fetchChatAPIProcess<T = any>(
   })
 }
 
+export function fetchChatStopResponding<T = any>(text: string, messageId: string, conversationId: string) {
+  return post<T>({
+    url: '/chat-abort',
+    data: { text, messageId, conversationId },
+  })
+}
+
 export function fetchChatResponseoHistory<T = any>(roomId: number, uuid: number, index: number) {
   return get<T>({
     url: '/chat-response-history',

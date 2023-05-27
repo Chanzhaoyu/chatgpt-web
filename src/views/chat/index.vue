@@ -13,7 +13,7 @@ import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAuthStore, useChatStore, usePromptStore, useUserStore } from '@/store'
-import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchUpdateUserChatModel } from '@/api'
+import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding, fetchUpdateUserChatModel } from '@/api'
 import { t } from '@/locales'
 import { debounce } from '@/utils/functions/debounce'
 import IconPrompt from '@/icons/Prompt.vue'
@@ -22,6 +22,7 @@ import type { CHATMODEL } from '@/components/common/Setting/model'
 const Prompt = defineAsyncComponent(() => import('@/components/common/Setting/Prompt.vue'))
 
 let controller = new AbortController()
+let lastChatInfo: any = {}
 
 const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
 
@@ -138,6 +139,7 @@ async function onConversation() {
             chunk = responseText.substring(lastIndex)
           try {
             const data = JSON.parse(chunk)
+            lastChatInfo = data
             const usage = (data.detail && data.detail.usage)
               ? {
                   completion_tokens: data.detail.usage.completion_tokens || null,
@@ -284,6 +286,7 @@ async function onRegenerate(index: number) {
             chunk = responseText.substring(lastIndex)
           try {
             const data = JSON.parse(chunk)
+            lastChatInfo = data
             const usage = (data.detail && data.detail.usage)
               ? {
                   completion_tokens: data.detail.usage.completion_tokens || null,
@@ -464,10 +467,11 @@ function handleEnter(event: KeyboardEvent) {
   }
 }
 
-function handleStop() {
+async function handleStop() {
   if (loading.value) {
     controller.abort()
     loading.value = false
+    await fetchChatStopResponding(lastChatInfo.text, lastChatInfo.id, lastChatInfo.conversationId)
   }
 }
 
@@ -581,6 +585,10 @@ async function handleSyncChatModel(chatModel: CHATMODEL) {
 onMounted(() => {
   firstLoading.value = true
   handleSyncChat()
+
+  const chatModels = authStore.session?.chatModels
+  if (chatModels != null && chatModels.filter(d => d.value === userStore.userInfo.config.chatModel).length <= 0)
+    ms.error('你选择的模型已不存在，请重新选择 | The selected model not exists, please choose again.', { duration: 7000 })
 })
 
 watch(() => chatStore.active, (newVal, oldVal) => {
