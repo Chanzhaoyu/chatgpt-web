@@ -307,22 +307,31 @@ async function getMessageById(id: string): Promise<ChatMessage | undefined> {
   else { return undefined }
 }
 
-const _lockedKeys: string[] = []
-async function randomKeyConfig(keys: KeyConfig[]): Promise < KeyConfig | null > {
+const _lockedKeys: { key: string; count: number }[] = []
+const _oneTimeCount = 3 // api
+async function randomKeyConfig(keys: KeyConfig[]): Promise<KeyConfig | null> {
   if (keys.length <= 0)
     return null
-  let unsedKeys = keys.filter(d => !_lockedKeys.includes(d.key))
+  let unsedKeys = keys.filter(d => _lockedKeys.filter(l => d.key === l.key).length <= 0
+    || _lockedKeys.filter(l => d.key === l.key)[0].count < _oneTimeCount)
   const start = Date.now()
   while (unsedKeys.length <= 0) {
     if (Date.now() - start > 3000)
       break
     await new Promise(resolve => setTimeout(resolve, 1000))
-    unsedKeys = keys.filter(d => !_lockedKeys.includes(d.key))
+    unsedKeys = keys.filter(d => _lockedKeys.filter(l => d.key === l.key).length <= 0
+      || _lockedKeys.filter(l => d.key === l.key)[0].count < _oneTimeCount)
   }
   if (unsedKeys.length <= 0)
     return null
   const thisKey = unsedKeys[Math.floor(Math.random() * unsedKeys.length)]
-  _lockedKeys.push(thisKey.key)
+  const thisLockedKey = _lockedKeys.filter(d => d.key === thisKey.key)
+  if (thisLockedKey.length <= 0)
+    _lockedKeys.push({ key: thisKey.key, count: 1 })
+
+  else
+    thisLockedKey[0].count++
+
   return thisKey
 }
 
@@ -335,9 +344,17 @@ async function releaseApiKey(key: KeyConfig) {
   if (key == null || key === undefined)
     return
 
-  const index = _lockedKeys.indexOf(key.key)
-  if (index >= 0)
-    _lockedKeys.splice(index, 1)
+  const lockedKeys = _lockedKeys.filter(d => d.key === key.key)
+  if (lockedKeys.length > 0) {
+    if (lockedKeys[0].count <= 1) {
+      const index = _lockedKeys.findIndex(item => item.key === key.key)
+      if (index !== -1)
+        _lockedKeys.splice(index, 1)
+    }
+    else {
+      lockedKeys[0].count--
+    }
+  }
 }
 
 export type { ChatContext, ChatMessage }
