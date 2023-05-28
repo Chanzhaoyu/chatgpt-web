@@ -121,7 +121,7 @@ async function handleLogin() {
     const result = await fetchLogin(name, pwd)
     await authStore.setToken(result.data.token)
     ms.success('success')
-    router.go(0)
+    window.location.reload()
   }
   catch (error: any) {
     ms.error(error.message ?? 'error')
