@@ -506,7 +506,9 @@ const handleSyncChat
     // 直接刷 极小概率不请求
     chatStore.syncChat({ uuid: Number(uuid) } as Chat.History, undefined, () => {
       firstLoading.value = false
-      scrollToBottom()
+      const scrollRef = document.querySelector('#scrollRef')
+      if (scrollRef)
+        nextTick(() => scrollRef.scrollTop = scrollRef.scrollHeight)
       if (inputRef.value && !isMobile.value)
         inputRef.value?.focus()
     })

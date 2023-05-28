@@ -1,14 +1,12 @@
 <script setup lang='ts'>
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { NInput, NPopconfirm, NScrollbar, NSpin } from 'naive-ui'
-import { useScroll } from '../../hooks/useScroll'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAuthStoreWithout } from '@/store/modules/auth'
 import { debounce } from '@/utils/functions/debounce'
 
-const { scrollToBottom } = useScroll()
 const { isMobile } = useBasicLayout()
 
 const appStore = useAppStore()
@@ -31,7 +29,11 @@ async function handleSyncChatRoom() {
     // 本来这里不需要的, 但是 vue 渲染的时候 chat 可能优先渲染等原因 导致概率不刷新
     if (chatStore.active) {
       const uuid = chatStore.active
-      chatStore.syncChat({ uuid } as Chat.History, undefined, scrollToBottom)
+      chatStore.syncChat({ uuid } as Chat.History, undefined, () => {
+        const scrollRef = document.querySelector('#scrollRef')
+        if (scrollRef)
+          nextTick(() => scrollRef.scrollTop = scrollRef.scrollHeight)
+      })
     }
   })
 }
