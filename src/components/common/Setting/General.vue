@@ -99,7 +99,17 @@ function importData(event: Event): void {
   reader.onload = () => {
     try {
       const data = JSON.parse(reader.result as string)
-      localStorage.setItem('chatStorage', JSON.stringify(data))
+      // 合并历史聊天记录：去重合并data.history数组data.chat数组到原聊天记录列表
+      // 获取原聊天数据
+      const originalData = JSON.parse(localStorage.getItem('chatStorage') || '{}')
+      // 去重合并history
+      originalData.data.history = [...originalData.data.history, ...data.data.history]
+        .filter((item, index, arr) => arr.findIndex(i => i.uuid === item.uuid) === index)
+      // 去重合并chat
+      originalData.data.chat = [...originalData.data.chat, ...data.data.chat]
+        .filter((item, index, arr) => arr.findIndex(i => i.uuid === item.uuid) === index)
+      // 更新本地存储
+      localStorage.setItem('chatStorage', JSON.stringify(originalData))
       ms.success(t('common.success'))
       location.reload()
     }
