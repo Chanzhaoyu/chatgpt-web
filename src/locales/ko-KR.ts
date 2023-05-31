@@ -58,6 +58,7 @@ export default {
     avatarLink: '아바타 링크',
     name: '이름',
     description: '설명',
+    model: '모델',
     role: '역할',
     temperature: '온도',
     top_p: 'Top_p',

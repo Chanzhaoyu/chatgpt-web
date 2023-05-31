@@ -34,37 +34,43 @@ if (!isNotEmptyString(process.env.OPENAI_API_KEY) && !isNotEmptyString(process.e
 
 let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 
+const models = ["gpt-4", "gpt-4-32k", "gpt-3.5-turbo"];
+
+let chatGPTAPI: Record<string, ChatGPTAPI> = {};
+
 (async () => {
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
 
   if (isNotEmptyString(process.env.OPENAI_API_KEY)) {
     const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
 
-    const options: ChatGPTAPIOptions = {
-      apiKey: process.env.OPENAI_API_KEY,
-      completionParams: { model },
-      debug: !disableDebug,
-    }
+	  for (const model of models) {
+		  const options: ChatGPTAPIOptions = {
+			  apiKey: process.env.OPENAI_API_KEY,
+			  completionParams: { model },
+			  debug: !disableDebug,
+		  }
 
-    // increase max token limit if use gpt-4
-    if (model.toLowerCase().includes('gpt-4')) {
-      // if use 32k model
-      if (model.toLowerCase().includes('32k')) {
-        options.maxModelTokens = 32768
-        options.maxResponseTokens = 8192
-      }
-      else {
-        options.maxModelTokens = 8192
-        options.maxResponseTokens = 2048
-      }
-    }
+		  // increase max token limit if use gpt-4
+		  if (model.toLowerCase().includes('gpt-4')) {
+			  // if use 32k model
+			  if (model.toLowerCase().includes('32k')) {
+				  options.maxModelTokens = 32768
+				  options.maxResponseTokens = 8192
+			  }
+			  else {
+				  options.maxModelTokens = 8192
+				  options.maxResponseTokens = 2048
+			  }
+		  }
 
-    if (isNotEmptyString(OPENAI_API_BASE_URL))
-      options.apiBaseUrl = `${OPENAI_API_BASE_URL}/v1`
+		  if (isNotEmptyString(OPENAI_API_BASE_URL))
+			  options.apiBaseUrl = `${OPENAI_API_BASE_URL}/v1`
 
-    setupProxy(options)
+		  setupProxy(options)
+		  chatGPTAPI[model] = new ChatGPTAPI({ ...options })
+	  }
 
-    api = new ChatGPTAPI({ ...options })
     apiModel = 'ChatGPTAPI'
   }
   else {
@@ -83,11 +89,15 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 })()
 
 async function chatReplyProcess(options: RequestOptions) {
-  const { message, lastContext, process, systemMessage, temperature, top_p } = options
+  let { message, lastContext, process, model, systemMessage, temperature, top_p } = options
   try {
     let options: SendMessageOptions = { timeoutMs }
 
     if (apiModel === 'ChatGPTAPI') {
+			if (!isNotEmptyString(model)) {
+				model = 'gpt-3.5-turbo'
+			}
+			api = chatGPTAPI[model]
       if (isNotEmptyString(systemMessage))
         options.systemMessage = systemMessage
       options.completionParams = { model, temperature, top_p }

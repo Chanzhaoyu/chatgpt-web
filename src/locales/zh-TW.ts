@@ -58,6 +58,7 @@ export default {
     avatarLink: '頭貼連結',
     name: '名稱',
     description: '描述',
+    model: '模型',
     role: '角色設定',
     temperature: 'Temperature',
     top_p: 'Top_p',

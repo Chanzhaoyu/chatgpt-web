@@ -58,6 +58,7 @@ export default {
     avatarLink: 'Ссылка на аватар',
     name: 'Имя',
     description: 'Описание',
+    model: 'модель',
     role: 'Роль',
     temperature: 'Температура',
     top_p: 'Top_p',
