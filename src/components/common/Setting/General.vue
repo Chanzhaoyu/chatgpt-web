@@ -111,7 +111,7 @@ function importData(event: Event): void {
         .filter((item, index, arr) => arr.findIndex(i => i.uuid === item.uuid) === index)
       // 更新本地存储
       chatStore.recordState()
-      ms.success(t('common.success'))
+      ms.success(t('common.importSuccess'))
       location.reload()
     }
     catch (error) {
