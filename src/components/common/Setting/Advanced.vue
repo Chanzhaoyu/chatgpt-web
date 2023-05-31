@@ -4,6 +4,7 @@ import {NSelect, NButton, NInput, NSlider, useMessage} from 'naive-ui'
 import { useSettingStore } from '@/store'
 import type { SettingsState } from '@/store/modules/settings/helper'
 import { t } from '@/locales'
+import {isNotEmptyString} from "../../../../service/src/utils/is";
 
 const settingStore = useSettingStore()
 
@@ -17,20 +18,15 @@ const temperature = ref(settingStore.temperature ?? 0.5)
 
 const top_p = ref(settingStore.top_p ?? 1)
 
-const ALL_MODELS = [
-	{
-		label: "gpt-4",
-		value: "gpt-4",
-	},
-	{
-		label: "gpt-4-32k",
-		value: "gpt-4-32k",
-	},
+const ALL_MODELS = isNotEmptyString(import.meta.env.VITE_OPENAI_API_MODEL) ? import.meta.env.VITE_OPENAI_API_MODEL.split(',').map(name => ({
+	label: name,
+	value: name,
+})) : [
 	{
 		label: "gpt-3.5-turbo",
 		value: "gpt-3.5-turbo",
 	},
-] as const;
+]
 
 function updateSettings(options: Partial<SettingsState>) {
   settingStore.updateSetting(options)

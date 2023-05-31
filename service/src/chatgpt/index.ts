@@ -34,7 +34,7 @@ if (!isNotEmptyString(process.env.OPENAI_API_KEY) && !isNotEmptyString(process.e
 
 let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 
-const models = ["gpt-4", "gpt-4-32k", "gpt-3.5-turbo"];
+const models = isNotEmptyString(process.env.OPENAI_API_MODEL) ? process.env.OPENAI_API_MODEL.split(',') : ['gpt-3.5-turbo']
 
 let chatGPTAPI: Record<string, ChatGPTAPI> = {};
 
