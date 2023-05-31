@@ -1,5 +1,6 @@
 import { rateLimit } from 'express-rate-limit'
 import { isNotEmptyString } from '../utils/is'
+const requestIp = require('request-ip')
 
 const MAX_REQUEST_PER_HOUR = process.env.MAX_REQUEST_PER_HOUR
 
@@ -11,6 +12,9 @@ const limiter = rateLimit({
   windowMs: 60 * 60 * 1000, // Maximum number of accesses within an hour
   max: maxCount,
   statusCode: 200, // 200 means success，but the message is 'Too many request from this IP in 1 hour'
+  keyGenerator: (req, _) => {
+    return requestIp.getClientIp(req) // IP address from requestIp.mw(), as opposed to req.ip
+  },
   message: async (req, res) => {
     res.send({ status: 'Fail', message: 'Too many request from this IP in 1 hour', data: null })
   },
