@@ -3,13 +3,14 @@ import { computed, ref } from 'vue'
 import { NButton, NInput, NPopconfirm, NSelect, useMessage } from 'naive-ui'
 import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon } from '@/components/common'
-import { useAppStore, useUserStore } from '@/store'
+import { useAppStore, useChatStore, useUserStore } from '@/store'
 import type { UserInfo } from '@/store/modules/user/helper'
 import { getCurrentDate } from '@/utils/functions'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
 
 const appStore = useAppStore()
+const chatStore = useChatStore()
 const userStore = useUserStore()
 
 const { isMobile } = useBasicLayout()
@@ -98,18 +99,18 @@ function importData(event: Event): void {
   const reader: FileReader = new FileReader()
   reader.onload = () => {
     try {
-      const data = JSON.parse(reader.result as string)
+      const data = JSON.parse(reader.result as string).data
       // 合并历史聊天记录：去重合并data.history数组data.chat数组到原聊天记录列表
       // 获取原聊天数据
-      const originalData = JSON.parse(localStorage.getItem('chatStorage') || '{}')
+      const originalData = chatStore.$state
       // 去重合并history
-      originalData.data.history = [...originalData.data.history, ...data.data.history]
+      originalData.history = [...originalData.history, ...data.history]
         .filter((item, index, arr) => arr.findIndex(i => i.uuid === item.uuid) === index)
       // 去重合并chat
-      originalData.data.chat = [...originalData.data.chat, ...data.data.chat]
+      originalData.chat = [...originalData.chat, ...data.chat]
         .filter((item, index, arr) => arr.findIndex(i => i.uuid === item.uuid) === index)
       // 更新本地存储
-      localStorage.setItem('chatStorage', JSON.stringify(originalData))
+      chatStore.recordState()
       ms.success(t('common.success'))
       location.reload()
     }
