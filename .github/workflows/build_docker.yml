@@ -38,4 +38,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/chatgpt-web:${{ github.ref_name }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/chatgpt-web:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/chatgpt-web:v1
