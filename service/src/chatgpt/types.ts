@@ -1,5 +1,5 @@
 import type { ChatMessage } from 'chatgpt'
-import type { CHATMODEL, KeyConfig } from 'src/storage/model'
+import type { CHATMODEL, UserInfo } from 'src/storage/model'
 
 export interface RequestOptions {
   message: string
@@ -9,9 +9,9 @@ export interface RequestOptions {
   temperature?: number
   top_p?: number
   chatModel: CHATMODEL
-  key: KeyConfig
-  userId: string
+  user: UserInfo
   messageId: string
+  tryCount: number
 }
 
 export interface BalanceResponse {

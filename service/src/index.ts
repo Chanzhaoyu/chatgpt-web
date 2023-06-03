@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 import { ObjectId } from 'mongodb'
 import type { RequestProps } from './types'
 import type { ChatContext, ChatMessage } from './chatgpt'
-import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, getRandomApiKey, initAuditService } from './chatgpt'
+import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, initAuditService } from './chatgpt'
 import { auth, getUserId } from './middleware/auth'
 import { clearApiKeyCache, clearConfigCache, getApiKeys, getCacheApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
 import type { AuditConfig, CHATMODEL, ChatInfo, ChatOptions, Config, KeyConfig, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
@@ -430,9 +430,9 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
       temperature,
       top_p,
       chatModel: user.config.chatModel,
-      key: await getRandomApiKey(user, user.config.chatModel),
-      userId,
+      user,
       messageId: message._id.toString(),
+      tryCount: 0,
     })
     // return the whole response including usage
     res.write(`\n${JSON.stringify(result.data)}`)
@@ -480,7 +480,7 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
       }
     }
     catch (error) {
-      global.console.log(error)
+      global.console.error(error)
     }
   }
 })
