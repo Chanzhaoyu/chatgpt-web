@@ -429,10 +429,10 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
       systemMessage,
       temperature,
       top_p,
-      chatModel: user.config.chatModel,
       user,
       messageId: message._id.toString(),
       tryCount: 0,
+      room,
     })
     // return the whole response including usage
     res.write(`\n${JSON.stringify(result.data)}`)
