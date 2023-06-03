@@ -37,6 +37,7 @@
     "mongodb": "^5.1.0",
     "node-fetch": "^3.3.0",
     "nodemailer": "^6.9.1",
+    "request-ip": "^3.3.0",
     "socks-proxy-agent": "^7.0.0"
   },
   "devDependencies": {
