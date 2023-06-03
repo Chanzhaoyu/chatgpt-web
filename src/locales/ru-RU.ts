@@ -13,6 +13,7 @@ export default {
     export: 'Экспортировать',
     exportSuccess: 'Экспорт выполнен успешно',
     import: 'Импортировать',
+    mergeImport: 'Объединить импорт',
     importSuccess: 'Импорт выполнен успешно',
     clear: 'Очистить',
     clearSuccess: 'Очищено успешно',
@@ -26,7 +27,7 @@ export default {
     failed: 'Не удалось',
     verify: 'Проверить',
     unauthorizedTips: 'Не авторизован, сначала подтвердите свою личность.',
-		stopResponding: 'Прекращение отклика',
+    stopResponding: 'Прекращение отклика',
   },
   chat: {
     newChatButton: 'Новый чат',

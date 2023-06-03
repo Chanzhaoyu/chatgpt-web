@@ -13,6 +13,7 @@ export default {
     export: '导出',
     exportSuccess: '导出成功',
     import: '导入',
+    mergeImport: '合并导入',
     importSuccess: '导入成功',
     clear: '清空',
     clearSuccess: '清空成功',
@@ -26,7 +27,7 @@ export default {
     failed: '操作失败',
     verify: '验证',
     unauthorizedTips: '未经授权，请先进行验证。',
-		stopResponding: '停止响应',
+    stopResponding: '停止响应',
   },
   chat: {
     newChatButton: '新建聊天',

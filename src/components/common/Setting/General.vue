@@ -182,7 +182,7 @@ function handleImportButtonClick(): void {
             <template #icon>
               <SvgIcon icon="ri:upload-2-fill" />
             </template>
-            {{ $t('common.import') }}
+            {{ $t('common.mergeImport') }}
           </NButton>
 
           <NPopconfirm placement="bottom" @positive-click="clearData">
