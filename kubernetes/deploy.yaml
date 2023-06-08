@@ -24,7 +24,7 @@ spec:
             - containerPort: 3002
           env:
             - name: OPENAI_API_KEY
-              value: sk-xxx
+              value: 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
             - name: OPENAI_API_BASE_URL
               value: 'https://api.openai.com'
             - name: OPENAI_API_MODEL
