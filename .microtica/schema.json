@@ -1,0 +1,14 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "schema://microtica/nextjs.json",
+    "title": "NextJS service schema",
+    "type": "object",
+    "properties": {
+        "inputs": {
+            "type": "object",
+            "properties": {},
+            "required": []
+        }
+    },
+    "additionalProperties": false
+}

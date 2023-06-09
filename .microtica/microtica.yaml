@@ -1,0 +1,22 @@
+steps:
+    BuildApplication:
+        type: build
+        commands:
+            - echo "No command to execute"
+
+        docker:
+            image_name: "{{MIC_PIPELINE_NAME}}"
+            registry: "{{CONTAINER_REGISTRY_ID}}"
+            tag: "{{MIC_PIPELINE_EXECUTION_ID}}"
+            dockerfile: ./.microtica/Dockerfile
+
+        cache: false
+
+    DeployApplication:
+        type: deploy
+        target: kubernetes
+        cluster: "{{CLUSTER_ID}}"
+        service: "{{SERVICE_NAME}}"
+        namespace: "{{CLUSTER_NAMESPACE}}"
+        branch_filter: "{{MIC_BRANCH_FILTER}}"
+        tag: "{{MIC_PIPELINE_EXECUTION_ID}}"
