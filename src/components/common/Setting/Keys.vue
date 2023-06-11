@@ -6,10 +6,13 @@ import { KeyConfig, Status, UserRole, apiModelOptions, userRoleOptions } from '.
 import { fetchGetKeys, fetchUpdateApiKeyStatus, fetchUpsertApiKey } from '@/api'
 import { t } from '@/locales'
 import { useAuthStore } from '@/store'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
 
 const ms = useMessage()
 const dialog = useDialog()
 const authStore = useAuthStore()
+const { isMobile } = useBasicLayout()
+
 const loading = ref(false)
 const show = ref(false)
 const handleSaving = ref(false)
@@ -227,20 +230,20 @@ onMounted(async () => {
     </div>
   </div>
 
-  <NModal v-model:show="show" :auto-focus="false" preset="card" style="width:50%;">
+  <NModal v-model:show="show" :auto-focus="false" preset="card" :style="{ width: !isMobile ? '50%' : '100%' }">
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.apiModel') }}</span>
-          <div>
+          <div class="flex-1">
             <NSelect
-              style="width: 240px"
+              style="width: 100%"
               :value="keyConfig.keyModel"
               :options="apiModelOptions"
               @update-value="value => keyConfig.keyModel = value"
             />
           </div>
-          <p>
+          <p v-if="!isMobile">
             <a v-if="keyConfig.keyModel === 'ChatGPTAPI'" target="_blank" href="https://platform.openai.com/account/api-keys">Get Api Key</a>
             <a v-else target="_blank" href="https://chat.openai.com/api/auth/session">Get Access Token</a>
           </p>
