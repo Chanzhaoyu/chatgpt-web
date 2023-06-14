@@ -1,0 +1,23 @@
+name: Import an existing app
+description: Import an existing app from your Git repository and deploy it on your Kubernetes cluster.
+logo: https://microtica.s3.eu-central-1.amazonaws.com/assets/templates/logos/import-app.svg
+repo: https://github.com/microtica/templates/tree/master/import-app
+
+inputs:
+  properties:
+    AppName:
+      type: string
+      description: The name of the application. The name will be shown in the portal.
+      maxLength: 23
+      pattern: ^[a-z]*$
+      patternErrorMessage: "The app name can contain only lowercase letters."
+  required:
+    - AppName
+
+service:
+  "{{AppName}}":
+    source: git
+    containerPort: "{{CONTAINER_PORT}}"
+    autoScaling:
+      minReplicas: 1
+      maxReplicas: 1
