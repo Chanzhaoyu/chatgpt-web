@@ -46,18 +46,22 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
       debug: !disableDebug,
     }
 
+		const lowercaseModel= model.toLowerCase()
     // increase max token limit if use gpt-4
-    if (model.toLowerCase().includes('gpt-4')) {
-      // if use 32k model
-      if (model.toLowerCase().includes('32k')) {
-        options.maxModelTokens = 32768
-        options.maxResponseTokens = 8192
-      }
-      else {
-        options.maxModelTokens = 8192
-        options.maxResponseTokens = 2048
-      }
-    }
+		if (lowercaseModel.includes('gpt-4')) {
+			options.maxModelTokens = 8192
+			options.maxResponseTokens = 2048
+		}
+
+		if (lowercaseModel.includes('32k')) {
+			// if use 32k model
+			options.maxModelTokens = 32768
+			options.maxResponseTokens = 8192
+		} else if (lowercaseModel.includes('16k')) {
+			// if use 16k model
+			options.maxModelTokens = 16384
+			options.maxResponseTokens = 4196
+		}
 
     if (isNotEmptyString(OPENAI_API_BASE_URL))
       options.apiBaseUrl = `${OPENAI_API_BASE_URL}/v1`
