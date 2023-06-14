@@ -49,18 +49,31 @@ export async function initApi(key: KeyConfig, chatModel: CHATMODEL) {
       messageStore: undefined,
       getMessageById,
     }
-    // increase max token limit if use gpt-4
-    if (model.toLowerCase().includes('gpt-4')) {
-      // if use 32k model
-      if (model.toLowerCase().includes('32k')) {
-        options.maxModelTokens = 32768
-        options.maxResponseTokens = 8192
-      }
-      else {
-        options.maxModelTokens = 8192
-        options.maxResponseTokens = 2048
-      }
-    }
+		
+		// Set the token limits based on the model's type. This is because different models have different token limits. 
+		// The token limit includes the token count from both the message array sent and the model response.
+		// 'gpt-35-turbo' has a limit of 4096 tokens, 'gpt-4' and 'gpt-4-32k' have limits of 8192 and 32768 tokens respectively.
+
+		// Check if the model type includes '16k'
+		if (model.toLowerCase().includes('16k')) {
+				// If it's a '16k' model, set the maxModelTokens to 16384 and maxResponseTokens to 4096
+				options.maxModelTokens = 16384;
+				options.maxResponseTokens = 4096;
+		} else if (model.toLowerCase().includes('32k')) {
+				// If it's a '32k' model, set the maxModelTokens to 32768 and maxResponseTokens to 8192
+				options.maxModelTokens = 32768;
+				options.maxResponseTokens = 8192;
+		} else  if (model.toLowerCase().includes('gpt-4')) {
+				// If it's a 'gpt-4' model, set the maxModelTokens and maxResponseTokens to 8192 and 2048 respectively
+				options.maxModelTokens = 8192;
+				options.maxResponseTokens = 2048;
+		} else {
+				// If none of the above, use the default values, set the maxModelTokens and maxResponseTokens to 8192 and 2048 respectively
+				options.maxModelTokens = 4096;
+				options.maxResponseTokens = 1024;
+		}
+
+
 
     if (isNotEmptyString(OPENAI_API_BASE_URL))
       options.apiBaseUrl = `${OPENAI_API_BASE_URL}/v1`
