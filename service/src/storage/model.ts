@@ -54,14 +54,14 @@ export class UserConfig {
 
 // https://platform.openai.com/docs/models/overview
 // 除此之外，gpt-4-0314、gpt-4-32k-0314、gpt-3.5-turbo-0301 模型将在 9 月 13 日被弃用。
-export type CHATMODEL = 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0301' | 'gpt-3.5-turbo-0613' | 'gpt-3.5-turbo-16k' | 'gpt-4' | 'gpt-4-0314' | 'gpt-4-32k' | 'gpt-4-32k-0314' | 'gpt-4-0613' | 'gpt-4-32k-0613' | 'ext-davinci-002-render-sha-mobile' | 'text-embedding-ada-002' | 'gpt-4-mobile' | 'gpt-4-browsing'
+export type CHATMODEL = 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0301' | 'gpt-3.5-turbo-0613' | 'gpt-3.5-turbo-16k' | 'gpt-4' | 'gpt-4-0314' | 'gpt-4-32k' | 'gpt-4-32k-0314' | 'gpt-4-0613' | 'gpt-4-32k-0613' | 'text-davinci-002-render-sha-mobile' | 'text-embedding-ada-002' | 'gpt-4-mobile' | 'gpt-4-browsing'
 
 export const CHATMODELS: CHATMODEL[] = [
-  'gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-16k', 'gpt-4', 'gpt-4-0314', 'gpt-4-32k', 'gpt-4-32k-0314', 'gpt-4-0613', 'gpt-4-32k-0613', 'ext-davinci-002-render-sha-mobile', 'text-embedding-ada-002', 'gpt-4-mobile', 'gpt-4-browsing',
+  'gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-16k', 'gpt-4', 'gpt-4-0314', 'gpt-4-32k', 'gpt-4-32k-0314', 'gpt-4-0613', 'gpt-4-32k-0613', 'text-davinci-002-render-sha-mobile', 'text-embedding-ada-002', 'gpt-4-mobile', 'gpt-4-browsing',
 ]
 
 export const chatModelOptions = [
-  'gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-16k', 'gpt-4', 'gpt-4-0314', 'gpt-4-32k', 'gpt-4-32k-0314', 'gpt-4-0613', 'gpt-4-32k-0613', 'ext-davinci-002-render-sha-mobile', 'text-embedding-ada-002', 'gpt-4-mobile', 'gpt-4-browsing',
+  'gpt-3.5-turbo', 'gpt-3.5-turbo-0301', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-16k', 'gpt-4', 'gpt-4-0314', 'gpt-4-32k', 'gpt-4-32k-0314', 'gpt-4-0613', 'gpt-4-32k-0613', 'text-davinci-002-render-sha-mobile', 'text-embedding-ada-002', 'gpt-4-mobile', 'gpt-4-browsing',
 ].map((model: string) => {
   let label = model
   if (model === 'text-davinci-002-render-sha-mobile')
