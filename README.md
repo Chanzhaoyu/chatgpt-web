@@ -32,6 +32,8 @@
 		- [手动打包](#手动打包)
 			- [后端服务](#后端服务-1)
 			- [前端网页](#前端网页-1)
+	- [扩展功能](#扩展功能)
+		- [知识库扩展](#知识库扩展)
 	- [常见问题](#常见问题)
 	- [参与贡献](#参与贡献)
 	- [赞助](#赞助)
@@ -308,6 +310,12 @@ PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 ```shell
 pnpm build
 ```
+
+## 扩展功能
+### 知识库扩展
+可利用另一个开源项目提供的 API，仅需修改 BASE_URL 和 API_KEY 两个环境变量即可接入: [FastGpt OpenAPI 快速接入三方应用](https://github.com/c121914yu/FastGPT/blob/main/docs/zh/examples/openAPI/index.md)
+![chatgptweb-fastgpt](./docs/chatgptweb-fastgpt.jpg)
+
 
 ## 常见问题
 Q: 为什么 `Git` 提交总是报错？
