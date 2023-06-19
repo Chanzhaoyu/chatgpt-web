@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
 import { ObjectId } from 'mongodb'
 import type { RequestProps } from './types'
-import type { ChatContext, ChatMessage } from './chatgpt'
+import type { ChatMessage } from './chatgpt'
 import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, initAuditService } from './chatgpt'
 import { auth, getUserId } from './middleware/auth'
 import { clearApiKeyCache, clearConfigCache, getApiKeys, getCacheApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
@@ -332,46 +332,6 @@ router.post('/chat-clear', auth, async (req, res) => {
   catch (error) {
     console.error(error)
     res.send({ status: 'Fail', message: 'Delete error', data: null })
-  }
-})
-
-router.post('/chat', auth, async (req, res) => {
-  try {
-    const { roomId, uuid, regenerate, prompt, options = {} } = req.body as
-      { roomId: number; uuid: number; regenerate: boolean; prompt: string; options?: ChatContext }
-    const message = regenerate
-      ? await getChat(roomId, uuid)
-      : await insertChat(uuid, prompt, roomId, options as ChatOptions)
-    const response = await chatReply(prompt, options)
-    if (response.status === 'Success') {
-      if (regenerate && message.options.messageId) {
-        const previousResponse = message.previousResponse || []
-        previousResponse.push({ response: message.response, options: message.options })
-        await updateChat(message._id as unknown as string,
-          response.data.text,
-          response.data.id,
-          response.data.detail?.usage as UsageResponse,
-          previousResponse as [])
-      }
-      else {
-        await updateChat(message._id as unknown as string,
-          response.data.text,
-          response.data.id,
-          response.data.detail?.usage as UsageResponse)
-      }
-
-      if (response.data.usage) {
-        await insertChatUsage(new ObjectId(req.headers.userId as string),
-          roomId,
-          message._id,
-          response.data.id,
-          response.data.detail?.usage as UsageResponse)
-      }
-    }
-    res.send(response)
-  }
-  catch (error) {
-    res.send(error)
   }
 })
 
