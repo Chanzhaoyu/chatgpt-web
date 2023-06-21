@@ -4,7 +4,7 @@
 
 More features：[chatgpt-web-plus](https://github.com/Chanzhaoyu/chatgpt-web-plus)
 
-![cover](./docs/c1.png)
+![cover](./docs/c1en.PNG)
 ![cover2](./docs/c2.png)
 
 - [ChatGPT Web](#chatgpt-web)
