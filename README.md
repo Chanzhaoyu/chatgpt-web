@@ -40,9 +40,9 @@ More features：[chatgpt-web-plus](https://github.com/Chanzhaoyu/chatgpt-web-plu
 
 Supports dual models, providing two unofficial `ChatGPT API` methods
 
-Method	Free?	Robust?	Quality?
-ChatGPTAPI	❌ No	✅ Yes	✅️ Real ChatGPT models + GPT-4
-ChatGPTUnofficialProxyAPI	✅ Yes	❌ No️	✅ ChatGPT webapp
+|Method	| Free?	| Robust?	| Quality? |
+|ChatGPTAPI	|❌ No |	✅ Yes |	✅️ Real ChatGPT models + GPT-4 |
+|ChatGPTUnofficialProxyAPI |	✅ Yes| ❌ No️ | ✅ ChatGPT webapp |
 
 Compared:
 1. `ChatGPTAPI` uses `gpt-3.5-turbo` to call `ChatGPT` through `OpenAI` official `API`
