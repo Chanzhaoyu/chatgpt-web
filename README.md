@@ -40,7 +40,8 @@ More features：[chatgpt-web-plus](https://github.com/Chanzhaoyu/chatgpt-web-plu
 
 Supports dual models, providing two unofficial `ChatGPT API` methods
 
-|Method	| Free?	| Robust?	| Quality? |
+|Method	|Free?	| Robust?	| Quality? |
+| ------|------| ------- |---------- |
 |ChatGPTAPI	|❌ No |	✅ Yes |	✅️ Real ChatGPT models + GPT-4 |
 |ChatGPTUnofficialProxyAPI |	✅ Yes| ❌ No️ | ✅ ChatGPT webapp |
 
