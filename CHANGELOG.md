@@ -2,167 +2,165 @@
 
 `2023-04-26`
 
-> [chatgpt-web-plus](https://github.com/Chanzhaoyu/chatgpt-web-plus) 新界面、完整用户管理
+> [chatgpt-web-plus](https://github.com/Chanzhaoyu/chatgpt-web-plus) new interface, complete user management
 
 ## Enhancement
-- 更新默认 `accessToken` 反代地址为 [[pengzhile](https://github.com/pengzhile)] 的 `https://ai.fakeopen.com/api/conversation` [[24min](https://github.com/Chanzhaoyu/chatgpt-web/pull/1567/files)]
-- 添加自定义 `temperature` 和 `top_p` [[quzard](https://github.com/Chanzhaoyu/chatgpt-web/pull/1260)]
-- 优化代码 [[shunyue1320](https://github.com/Chanzhaoyu/chatgpt-web/pull/1328)]
-- 优化复制代码反馈效果
+- Update the default `accessToken` reverse address to `https://ai.fakeopen.com/api/conversation` [[24min](https:/ /github.com/Chanzhaoyu/chatgpt-web/pull/1567/files)]
+- Add custom `temperature` and `top_p` [[quzard](https://github.com/Chanzhaoyu/chatgpt-web/pull/1260)]
+- Optimize code [[shunyue1320](https://github.com/Chanzhaoyu/chatgpt-web/pull/1328)]
+- Optimize the feedback effect of copy code
 
-## BugFix
-- 修复余额查询和文案 [[luckywangxi](https://github.com/Chanzhaoyu/chatgpt-web/pull/1174)][[zuoning777](https://github.com/Chanzhaoyu/chatgpt-web/pull/1296)]
-- 修复默认语言错误 [[idawnwon](https://github.com/Chanzhaoyu/chatgpt-web/pull/1352)]
-- 修复 `onRegenerate` 下问题 [[leafsummer](https://github.com/Chanzhaoyu/chatgpt-web/pull/1188)]
+## BugFixes
+- Fix balance query and copywriting [[luckywangxi](https://github.com/Chanzhaoyu/chatgpt-web/pull/1174)][[zuoning777](https://github.com/Chanzhaoyu/chatgpt-web/pull /1296)]
+- Fix default language error [[idawnwon](https://github.com/Chanzhaoyu/chatgpt-web/pull/1352)]
+- Fix the problem under `onRegenerate` [[leafsummer](https://github.com/Chanzhaoyu/chatgpt-web/pull/1188)]
 
 ## Other
-- 引导用户触发提示词 [[RyanXinOne](https://github.com/Chanzhaoyu/chatgpt-web/pull/1183)]
-- 添加韩语翻译 [[Kamilake](https://github.com/Chanzhaoyu/chatgpt-web/pull/1372)]
-- 添加俄语翻译 [[aquaratixc](https://github.com/Chanzhaoyu/chatgpt-web/pull/1571)]
-- 优化翻译和文本检查 [[PeterDaveHello](https://github.com/Chanzhaoyu/chatgpt-web/pull/1460)]
-- 移除无用文件
+- Guide users to trigger prompt words [[RyanXinOne](https://github.com/Chanzhaoyu/chatgpt-web/pull/1183)]
+- Add Korean translation [[Kamilake](https://github.com/Chanzhaoyu/chatgpt-web/pull/1372)]
+- Add Russian translation [[aquaratixc](https://github.com/Chanzhaoyu/chatgpt-web/pull/1571)]
+- Optimize translation and text checking [[PeterDaveHello](https://github.com/Chanzhaoyu/chatgpt-web/pull/1460)]
+- Remove useless files
 
 ## v2.10.9
 
 `2023-04-03`
 
-> 更新默认 `accessToken` 反代地址为 [[pengzhile](https://github.com/pengzhile)] 的 `https://ai.fakeopen.com/api/conversation`
+> Update the default `accessToken` reverse address to `https://ai.fakeopen.com/api/conversation` of [[pengzhile](https://github.com/pengzhile)]
 
 ## Enhancement
-- 添加 `socks5` 代理认证 [[yimiaoxiehou](https://github.com/Chanzhaoyu/chatgpt-web/pull/999)]
-- 添加 `socks` 代理用户名密码的配置 [[hank-cp](https://github.com/Chanzhaoyu/chatgpt-web/pull/890)]
-- 添加可选日志打印 [[zcong1993](https://github.com/Chanzhaoyu/chatgpt-web/pull/1041)]
-- 更新侧边栏按钮本地化[[simonwu53](https://github.com/Chanzhaoyu/chatgpt-web/pull/911)]
-- 优化代码块滚动条高度 [[Fog3211](https://github.com/Chanzhaoyu/chatgpt-web/pull/1153)]
-## BugFix
-- 修复 `PWA` 问题 [[bingo235](https://github.com/Chanzhaoyu/chatgpt-web/pull/807)]
-- 修复 `ESM` 错误 [[kidonng](https://github.com/Chanzhaoyu/chatgpt-web/pull/826)]
-- 修复反向代理开启时限流失效的问题 [[gitgitgogogo](https://github.com/Chanzhaoyu/chatgpt-web/pull/863)]
-- 修复 `docker` 构建时 `.env` 可能被忽略的问题 [[zaiMoe](https://github.com/Chanzhaoyu/chatgpt-web/pull/877)]
-- 修复导出异常错误 [[KingTwinkle](https://github.com/Chanzhaoyu/chatgpt-web/pull/938)]
-- 修复空值异常 [[vchenpeng](https://github.com/Chanzhaoyu/chatgpt-web/pull/1103)]
-- 移动端上的体验问题
+- Add `socks5` proxy authentication [[yimiaoxiehou](https://github.com/Chanzhaoyu/chatgpt-web/pull/999)]
+- Add configuration of `socks` proxy username and password [[hank-cp](https://github.com/Chanzhaoyu/chatgpt-web/pull/890)]
+- Add optional log printing [[zcong1993](https://github.com/Chanzhaoyu/chatgpt-web/pull/1041)]
+- Update sidebar button localization [[simonwu53](https://github.com/Chanzhaoyu/chatgpt-web/pull/911)]
+- Optimize code block scroll bar height [[Fog3211](https://github.com/Chanzhaoyu/chatgpt-web/pull/1153)]
+## BugFixes
+- Fix `PWA` issue [[bingo235](https://github.com/Chanzhaoyu/chatgpt-web/pull/807)]
+- Fix `ESM` error [[kidonng](https://github.com/Chanzhaoyu/chatgpt-web/pull/826)]
+- Fix the problem that the flow limit fails when the reverse proxy is turned on [[gitgitgogogo](https://github.com/Chanzhaoyu/chatgpt-web/pull/863)]
+- Fix `.env` may be ignored when building `docker` [[zaiMoe](https://github.com/Chanzhaoyu/chatgpt-web/pull/877)]
+- Fix export exception error [[KingTwinkle](https://github.com/Chanzhaoyu/chatgpt-web/pull/938)]
+- Fix null exception [[vchenpeng](https://github.com/Chanzhaoyu/chatgpt-web/pull/1103)]
+- Experience issues on the mobile terminal
 
 ## Other
-- `Docker` 容器名字名义 [[LOVECHEN](https://github.com/Chanzhaoyu/chatgpt-web/pull/1035)]
-- `kubernetes` 部署配置 [[CaoYunzhou](https://github.com/Chanzhaoyu/chatgpt-web/pull/1001)]
-- 感谢 [[assassinliujie](https://github.com/Chanzhaoyu/chatgpt-web/pull/962)] 和 [[puppywang](https://github.com/Chanzhaoyu/chatgpt-web/pull/1017)] 的某些贡献
-- 更新 `kubernetes/deploy.yaml` [[idawnwon](https://github.com/Chanzhaoyu/chatgpt-web/pull/1085)]
-- 文档更新 [[#yi-ge](https://github.com/Chanzhaoyu/chatgpt-web/pull/883)]
-- 文档更新 [[weifeng12x](https://github.com/Chanzhaoyu/chatgpt-web/pull/880)]
-- 依赖更新
+- `Docker` container name [[LOVECHEN](https://github.com/Chanzhaoyu/chatgpt-web/pull/1035)]
+- `kubernetes` deployment configuration [[CaoYunzhou](https://github.com/Chanzhaoyu/chatgpt-web/pull/1001)]
+- Thanks to [[assassinliujie](https://github.com/Chanzhaoyu/chatgpt-web/pull/962)] and [[puppywang](https://github.com/Chanzhaoyu/chatgpt-web/pull/1017) ] Some contributions of
+- Update `kubernetes/deploy.yaml` [[idawnwon](https://github.com/Chanzhaoyu/chatgpt-web/pull/1085)]
+- Document update [[#yi-ge](https://github.com/Chanzhaoyu/chatgpt-web/pull/883)]
+- Document update [[weifeng12x](https://github.com/Chanzhaoyu/chatgpt-web/pull/880)]
+- Dependency update
 
 ## v2.10.8
 
 `2023-03-23`
 
-如遇问题，请删除 `node_modules` 重新安装依赖。
+If you encounter problems, please delete `node_modules` and reinstall dependencies.
 
 ## Feature
-- 显示回复消息原文的选项 [[yilozt](https://github.com/Chanzhaoyu/chatgpt-web/pull/672)]
-- 添加单 `IP` 每小时请求限制。环境变量： `MAX_REQUEST_PER_HOUR` [[zhuxindong ](https://github.com/Chanzhaoyu/chatgpt-web/pull/718)]
-- 前端添加角色设定，仅 `API` 方式可见 [[quzard](https://github.com/Chanzhaoyu/chatgpt-web/pull/768)]
-- `OPENAI_API_MODEL` 变量现在对 `ChatGPTUnofficialProxyAPI` 也生效，注意：`Token` 和 `API` 的模型命名不一致，不能直接填入 `gpt-3.5` 或者 `gpt-4` [[hncboy](https://github.com/Chanzhaoyu/chatgpt-web/pull/632)]
-- 添加繁体中文 `Prompts` [[PeterDaveHello](https://github.com/Chanzhaoyu/chatgpt-web/pull/796)]
+- Option to show the original reply message [[yilozt](https://github.com/Chanzhaoyu/chatgpt-web/pull/672)]
+- Added per `IP` hourly request limit. Environment variable: `MAX_REQUEST_PER_HOUR` [[zhuxindong ](https://github.com/Chanzhaoyu/chatgpt-web/pull/718)]
+- Add role setting in the front end, only visible in `API` method [[quzard](https://github.com/Chanzhaoyu/chatgpt-web/pull/768)]
+- The `OPENAI_API_MODEL` variable is now also valid for `ChatGPTUnofficialProxyAPI`, note: the model names of `Token` and `API` are inconsistent, and cannot be directly filled in `gpt-3.5` or `gpt-4` [[hncboy](https:/ /github.com/Chanzhaoyu/chatgpt-web/pull/632)]
+- Add Traditional Chinese `Prompts` [[PeterDaveHello](https://github.com/Chanzhaoyu/chatgpt-web/pull/796)]
 
 ## Enhancement
-- 重置回答时滚动定位至该回答 [[shunyue1320](https://github.com/Chanzhaoyu/chatgpt-web/pull/781)]
-- 当 `API` 是 `gpt-4` 时增加可用的 `Max Tokens` [[simonwu53](https://github.com/Chanzhaoyu/chatgpt-web/pull/729)]
-- 判断和忽略回复字符 [[liut](https://github.com/Chanzhaoyu/chatgpt-web/pull/474)]
-- 切换会话时，自动聚焦输入框 [[JS-an](https://github.com/Chanzhaoyu/chatgpt-web/pull/735)]
-- 渲染的链接新窗口打开
-- 查询余额可选 `API_BASE_URL` 代理地址
-- `config` 接口添加验证防止被无限制调用
-- `PWA` 默认不开启，现在需手动修改 `.env` 文件 `VITE_GLOB_APP_PWA` 变量
-- 当网络连接时，刷新页面，`500` 错误页自动跳转到主页
+- Scroll to the answer when resetting the answer [[shunyue1320](https://github.com/Chanzhaoyu/chatgpt-web/pull/781)]
+- Increase available `Max Tokens` when `API` is `gpt-4` [[simonwu53](https://github.com/Chanzhaoyu/chatgpt-web/pull/729)]
+- Judge and ignore reply characters [[liut](https://github.com/Chanzhaoyu/chatgpt-web/pull/474)]
+- When switching sessions, automatically focus on the input box [[JS-an](https://github.com/Chanzhaoyu/chatgpt-web/pull/735)]
+- Rendered link opens in new window
+- Query balance optional `API_BASE_URL` proxy address
+- `config` interface added validation to prevent unlimited calls
+- `PWA` is not enabled by default, now you need to manually modify the `.env` file `VITE_GLOB_APP_PWA` variable
+- When the network is connected, refresh the page, the `500` error page automatically jumps to the home page
 
 ## BugFix
-- `scrollToBottom` 调回 `scrollToBottomIfAtBottom` [[shunyue1320](https://github.com/Chanzhaoyu/chatgpt-web/pull/771)]
-- 重置异常的 `loading` 会话
-
+- scrollToBottom is now changed to scrollToBottomIfAtBottom [shunyue1320]
+- Reset abnormal loading sessions
 ## Common
-- 创建 `start.cmd` 在 `windows` 下也可以运行 [vulgatecnn](https://github.com/Chanzhaoyu/chatgpt-web/pull/656)]
-- 添加 `visual-studio-code` 中调试配置 [[ChandlerVer5](https://github.com/Chanzhaoyu/chatgpt-web/pull/296)]
-- 修复文档中 `docker` 端口为本地 [[kilvn](https://github.com/Chanzhaoyu/chatgpt-web/pull/802)]
+- Created start.cmd so it can run on Windows operating system too vulgatecnn]
+- Added debugging configuration in visual-studio-code [ChandlerVer5]
+- Fixed documentation where docker port was shown as local port instead of container port [kilvn]
 ## Other
-- 依赖更新
+- Dependency updates
 
 
 ## v2.10.7
 
 `2023-03-17`
 
-## BugFix
-- 回退 `chatgpt` 版本，原因：导致 `OPENAI_API_BASE_URL` 代理失效
-- 修复缺省状态的 `usingContext` 默认值
+## BugFixes
+- Roll back the `chatgpt` version, reason: the `OPENAI_API_BASE_URL` proxy is invalid
+- Fix `usingContext` defaults in default state
 
 ## v2.10.6
 
 `2023-03-17`
 
 ## Feature
-- 显示 `API` 余额 [[pzcn](https://github.com/Chanzhaoyu/chatgpt-web/pull/582)]
+- Show `API` balance [[pzcn](https://github.com/Chanzhaoyu/chatgpt-web/pull/582)]
 
 ## Enhancement
-- 美化滚动条样式和 `UI` 保持一致 [[haydenull](https://github.com/Chanzhaoyu/chatgpt-web/pull/617)]
-- 优化移动端 `Prompt` 样式 [[CornerSkyless](https://github.com/Chanzhaoyu/chatgpt-web/pull/608)]
-- 上下文开关改为全局开关，现在记录在本地缓存中
-- 配置信息按接口类型显示
+- Beautify the scrollbar style to be consistent with `UI` [[haydenull](https://github.com/Chanzhaoyu/chatgpt-web/pull/617)]
+- Optimize the style of `Prompt` on mobile [[CornerSkyless](https://github.com/Chanzhaoyu/chatgpt-web/pull/608)]
+- Context switches changed to global switches, now recorded in local cache
+- Configuration information is displayed by interface type
 
 ## Perf
-- 优化函数方法 [[kirklin](https://github.com/Chanzhaoyu/chatgpt-web/pull/583)]
-- 字符错误 [[pdsuwwz](https://github.com/Chanzhaoyu/chatgpt-web/pull/585)]
-- 文档描述错误 [[lizhongyuan3](https://github.com/Chanzhaoyu/chatgpt-web/pull/636)]
+- Optimize function method [[kirklin](https://github.com/Chanzhaoyu/chatgpt-web/pull/583)]
+- character error [[pdsuwwz](https://github.com/Chanzhaoyu/chatgpt-web/pull/585)]
+- Wrong document description [[lizhongyuan3](https://github.com/Chanzhaoyu/chatgpt-web/pull/636)]
 
-## BugFix
-- 修复 `Prompt` 导入、导出兼容性错误
-- 修复 `highlight.js` 控制台兼容性警告
+## BugFixes
+- Fix `Prompt` import and export compatibility errors
+- Fix `highlight.js` console compatibility warning
 
 ## Other
-- 依赖更新
+- Dependency update
 
 ## v2.10.5
 
 `2023-03-13`
 
-更新依赖，`access_token` 默认代理为 [pengzhile](https://github.com/pengzhile) 的 `https://bypass.duti.tech/api/conversation`
+Update dependencies, the default proxy for `access_token` is `https://bypass.duti.tech/api/conversation` of [pengzhile](https://github.com/pengzhile
 
 ## Feature
-- `Prompt` 商店在线导入可以导入两种 `recommend.json`里提到的模板 [simonwu53](https://github.com/Chanzhaoyu/chatgpt-web/pull/521)
-- 支持 `HTTPS_PROXY` [whatwewant](https://github.com/Chanzhaoyu/chatgpt-web/pull/308)
-- `Prompt` 添加查询筛选
+- Online import of `Prompt` store can import two templates mentioned in `recommend.json` [simonwu53](https://github.com/Chanzhaoyu/chatgpt-web/pull/521)
+- Support `HTTPS_PROXY` [whatwewant](https://github.com/Chanzhaoyu/chatgpt-web/pull/308)
+- `Prompt` add query filter
 
 ## Enhancement
-- 调整输入框最大行数 [yi-ge](https://github.com/Chanzhaoyu/chatgpt-web/pull/502)
-- 优化 `docker` 打包 [whatwewant](https://github.com/Chanzhaoyu/chatgpt-web/pull/520)
-- `Prompt` 添加翻译和优化布局
-- 「繁体中文」补全和审阅 [PeterDaveHello](https://github.com/Chanzhaoyu/chatgpt-web/pull/542)
-- 语言选择调整为下路框形式
-- 权限输入框类型调整为密码形式
+- Adjust the maximum number of lines in the input box [yi-ge](https://github.com/Chanzhaoyu/chatgpt-web/pull/502)
+- Optimize `docker` packaging [whatwewant](https://github.com/Chanzhaoyu/chatgpt-web/pull/520)
+- `Prompt` add translation and optimize layout
+- "Traditional Chinese" completion and review [PeterDaveHello](https://github.com/Chanzhaoyu/chatgpt-web/pull/542)
+- The language selection is adjusted to the form of the next box
+- The permission input box type is adjusted to password form
 
-## BugFix
-- `JSON` 导入检查 [Nothing1024](https://github.com/Chanzhaoyu/chatgpt-web/pull/523)
-- 修复 `AUTH_SECRET_KEY` 模式下跨域异常并添加对 `node.js 19` 版本的支持 [yi-ge](https://github.com/Chanzhaoyu/chatgpt-web/pull/499)
-- 确定清空上下文时不应该重置会话标题
+## BugFixes
+- `JSON` import check [Nothing1024](https://github.com/Chanzhaoyu/chatgpt-web/pull/523)
+- Fix cross domain exception in `AUTH_SECRET_KEY` mode and add support for `node.js 19` version [yi-ge](https://github.com/Chanzhaoyu/chatgpt-web/pull/499)
+- Make sure the session title should not be reset when clearing the context
 
 ## Other
-- 调整文档
-- 更新依赖
+- Adjustment documents
+- update dependencies
 
 ## v2.10.4
 
 `2023-03-11`
 
 ## Feature
-- 感谢 [Nothing1024](https://github.com/Chanzhaoyu/chatgpt-web/pull/268) 添加 `Prompt` 模板和 `Prompt` 商店支持
+- Thanks to [Nothing1024](https://github.com/Chanzhaoyu/chatgpt-web/pull/268) for adding `Prompt` template and `Prompt` store support
 
 ## Enhancement
-- 设置添加关闭按钮[#495]
+- Set add close button [#495]
 
 ## Demo
 
-![Prompt](https://camo.githubusercontent.com/6a51af751eb29238cb7ef4f8fbd89f63db837562f97f33273095424e62dc9194/68747470733a2f2f73312e6c6f63696d672e636f6d2f323032332f30332f30342f333036326665633163613562632e676966)
-
+![Prompt](https://camo.githubusercontent.com/6a51af751eb29238cb7ef4f8fbd89f63db837562f97f33273095424e62dc9194/68747470733a2f2f73312e6c6f63696d672e63 6f6d2f323032332f30332f30342f333036326665633163613562632e676966)
 ## v2.10.3
 
 `2023-03-10`
