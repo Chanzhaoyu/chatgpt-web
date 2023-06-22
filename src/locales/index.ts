@@ -1,6 +1,7 @@
 import type { App } from 'vue'
 import { createI18n } from 'vue-i18n'
 import enUS from './en-US'
+import espES from './esp-ES'
 import koKR from './ko-KR'
 import zhCN from './zh-CN'
 import zhTW from './zh-TW'
@@ -10,14 +11,15 @@ import type { Language } from '@/store/modules/app/helper'
 
 const appStore = useAppStoreWithOut()
 
-const defaultLocale = appStore.language || 'zh-CN'
+const defaultLocale = appStore.language || 'en-US'
 
 const i18n = createI18n({
   locale: defaultLocale,
-  fallbackLocale: 'en-US',
+  fallbackLocale: 'esp-ES',
   allowComposition: true,
   messages: {
     'en-US': enUS,
+		'esp-ES': espES,
     'ko-KR': koKR,
     'zh-CN': zhCN,
     'zh-TW': zhTW,
