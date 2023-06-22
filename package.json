@@ -1,11 +1,11 @@
 {
-  "name": "chatgpt-web",
-  "version": "2.11.0",
+  "name": "chatbot-web",
+  "version": "2.15.0",
   "private": false,
-  "description": "ChatGPT Web",
+  "description": "Jarvis ChatBot",
   "author": "ChenZhaoYu <chenzhaoyu1994@gmail.com>",
   "keywords": [
-    "chatgpt-web",
+    "chatbot-web",
     "chatgpt",
     "chatbot",
     "vue"
