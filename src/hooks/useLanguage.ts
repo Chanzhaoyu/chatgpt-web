@@ -11,8 +11,8 @@ export function useLanguage() {
       case 'en-US':
         setLocale('en-US')
         return enUS
-      case 'es-ES':
-        setLocale('es-ES')
+      case 'es':
+        setLocale('es')
         return esAR
 			case 'ru-RU':
         setLocale('ru-RU')
