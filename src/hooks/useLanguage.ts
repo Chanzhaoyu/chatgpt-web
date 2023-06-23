@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { enUS, esAR, koKR, zhCN, zhTW } from 'naive-ui'
+import { enUS, esAR, ruRU, koKR, zhCN, zhTW } from 'naive-ui'
 import { useAppStore } from '@/store'
 import { setLocale } from '@/locales'
 
