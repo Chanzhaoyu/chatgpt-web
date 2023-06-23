@@ -15,11 +15,11 @@ const defaultLocale = appStore.language || 'en-US'
 
 const i18n = createI18n({
   locale: defaultLocale,
-  fallbackLocale: 'es-ES',
+  fallbackLocale: 'es',
   allowComposition: true,
   messages: {
     'en-US': enUS,
-		'es-ES': esAR,
+		'es': esAR,
     'ko-KR': koKR,
     'zh-CN': zhCN,
     'zh-TW': zhTW,
