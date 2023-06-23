@@ -10,11 +10,11 @@ import type { Language } from '@/store/modules/app/helper'
 
 const appStore = useAppStoreWithOut()
 
-const defaultLocale = appStore.language || 'en-US'
+const defaultLocale = appStore.language || 'zh-CN'
 
 const i18n = createI18n({
   locale: defaultLocale,
-  fallbackLocale: 'zh-CN',
+  fallbackLocale: 'en-US',
   allowComposition: true,
   messages: {
     'en-US': enUS,
