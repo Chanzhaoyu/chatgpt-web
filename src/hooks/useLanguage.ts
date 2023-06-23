@@ -16,7 +16,7 @@ export function useLanguage() {
         return esAR
 			case 'ru-RU':
         setLocale('ru-RU')
-        return enUS
+        return ruRU
       case 'ko-KR':
         setLocale('ko-KR')
         return koKR
