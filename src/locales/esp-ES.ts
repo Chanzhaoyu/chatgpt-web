@@ -5,7 +5,7 @@ export default {
     edit: 'Editar',
     editSuccess: 'Editar éxito',
     delete: 'Borrar',
-    deleteSuccess: 'Borrar éxito'',
+    deleteSuccess: 'Borrar éxito',
     save: 'Ahorrar',
     saveSuccess: 'Ahorrar éxito',
     reset: 'Reiniciar',
