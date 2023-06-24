@@ -738,10 +738,17 @@ router.post('/verify', authLimiter, async (req, res) => {
       throw new Error('Secret key is empty')
     const username = await checkUserVerify(token)
     const user = await getUser(username)
-    if (user != null && user.status === Status.Normal) {
-      res.send({ status: 'Fail', message: '账号已存在 | The email exists', data: null })
-      return
-    }
+    if (user == null)
+      throw new Error('账号不存在 | The email not exists')
+    if (user.status === Status.Deleted)
+      throw new Error('账号已禁用 | The email has been blocked')
+    if (user.status === Status.Normal)
+      throw new Error('账号已存在 | The email exists')
+    if (user.status === Status.AdminVerify)
+      throw new Error('请等待管理员开通 | Please wait for the admin to activate')
+    if (user.status !== Status.PreVerify)
+      throw new Error('账号异常 | Account abnormality')
+
     const config = await getCacheConfig()
     let message = '验证成功 | Verify successfully'
     if (config.siteConfig.registerReview) {
@@ -766,10 +773,11 @@ router.post('/verifyadmin', authLimiter, async (req, res) => {
       throw new Error('Secret key is empty')
     const username = await checkUserVerifyAdmin(token)
     const user = await getUser(username)
-    if (user != null && user.status === Status.Normal) {
-      res.send({ status: 'Fail', message: '账户已开通 | The email has been opened.', data: null })
-      return
-    }
+    if (user == null)
+      throw new Error('账号不存在 | The email not exists')
+    if (user.status !== Status.AdminVerify)
+      throw new Error(`账号异常 ${user.status} | Account abnormality ${user.status}`)
+
     await verifyUser(username, Status.Normal)
     await sendNoticeMail(username)
     res.send({ status: 'Success', message: '账户已激活 | Account has been activated.', data: null })
