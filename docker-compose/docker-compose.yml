@@ -15,43 +15,17 @@ services:
       AUTH_SECRET_KEY:
       # 每小时最大请求次数，可选，默认无限
       MAX_REQUEST_PER_HOUR: 0
-      # 超时，单位毫秒，可选
-      TIMEOUT_MS: 600000
-      # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
-      SOCKS_PROXY_HOST: 
-      # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
-      SOCKS_PROXY_PORT: 
-      # Socks代理用户名，可选，和 SOCKS_PROXY_HOST & SOCKS_PROXY_PORT 一起时生效
-      SOCKS_PROXY_USERNAME:
-      # Socks代理密码，可选，和 SOCKS_PROXY_HOST & SOCKS_PROXY_PORT 一起时生效
-      SOCKS_PROXY_PASSWORD:
       # 网站名称
       SITE_TITLE: ChatGpt Web
       # mongodb 的连接字符串
       MONGODB_URL: 'mongodb://chatgpt:xxxx@database:27017'
-      # 网站是否开启注册
-      REGISTER_ENABLED: false
-      # 开启注册之后 网站注册允许的邮箱后缀 如果空 则允许任意后缀
-      REGISTER_MAILS: '@qq.com,@sina.com,@163.com'
       # 开启注册之后 密码加密的盐
       PASSWORD_MD5_SALT: anysalt
       # 开启注册之后 超级管理邮箱
       ROOT_USER: xxx@qq.com
-      # 开启注册之后 网站域名 不含 / 注册的时候发送验证邮箱使用
-      SITE_DOMAIN: http://127.0.0.1:1002
-      # 开启注册之后 发送验证邮箱配置
-      SMTP_HOST: smtp.exmail.qq.com
-      SMTP_PORT: 465
-      SMTP_TSL: true
-      SMTP_USERNAME: ${SMTP_USERNAME}
-      SMTP_PASSWORD: ${SMTP_PASSWORD}
-      # 是否开启敏感词审核, 因为响应结果是流式 所以暂时没审核
-      AUDIT_ENABLED: false
-      # https://ai.baidu.com/ai-doc/ANTIPORN/Vk3h6xaga
-      AUDIT_PROVIDER: baidu
-      AUDIT_API_KEY: 
-      AUDIT_API_SECRET:
-      AUDIT_TEXT_LABEL:
+      # 网站是否开启注册 必须开启, 否则管理员都没法注册, 可后续关闭
+      REGISTER_ENABLED: true
+      # 更多配置, 在运行后, 注册管理员, 在管理员页面中设置
     links:
       - database
 

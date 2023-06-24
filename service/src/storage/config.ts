@@ -27,12 +27,12 @@ export async function getOriginConfig() {
   let config = await getConfig()
   if (config == null) {
     config = new Config(new ObjectId(),
-      !isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 30 * 1000,
+      !isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 600 * 1000,
       process.env.OPENAI_API_KEY,
       process.env.OPENAI_API_DISABLE_DEBUG === 'true',
       process.env.OPENAI_ACCESS_TOKEN,
       process.env.OPENAI_API_BASE_URL,
-      process.env.OPENAI_API_MODEL || 'ChatGPTAPI',
+      process.env.OPENAI_API_MODEL === 'ChatGPTUnofficialProxyAPI' ? 'ChatGPTUnofficialProxyAPI' : 'ChatGPTAPI',
       process.env.API_REVERSE_PROXY,
       (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
         ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`)

@@ -114,6 +114,7 @@ export default {
     registerEnabled: '新用户',
     registerReview: '新用户审核',
     registerMails: '邮箱后缀',
+    registerReviewTip: '仅允许这些邮箱的后缀注册本网站',
     apiBaseUrl: '接口地址',
     apiModel: '接口类型',
     accessToken: 'Access Token',

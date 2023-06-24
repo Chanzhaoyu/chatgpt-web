@@ -102,7 +102,7 @@ const columns = [
             type: 'info',
             onClick: () => handleEditKey(row),
           },
-          { default: () => t('chat.editKeyButton') },
+          { default: () => t('common.edit') },
         ))
         actions.push(h(
           NButton,
@@ -114,7 +114,7 @@ const columns = [
             type: 'error',
             onClick: () => handleUpdateApiKeyStatus(row._id as string, Status.Disabled),
           },
-          { default: () => t('chat.deleteKey') },
+          { default: () => t('common.delete') },
         ))
       }
       return actions

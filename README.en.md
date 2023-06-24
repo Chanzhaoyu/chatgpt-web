@@ -240,57 +240,19 @@ services:
       - database
     environment:
       TZ: Asia/Shanghai
-      # one of two
-      OPENAI_API_KEY: xxxxxx
-      # one of two
-      OPENAI_ACCESS_TOKEN: xxxxxx
-      # api interface url, optional, available when OPENAI_API_KEY is set
-      OPENAI_API_BASE_URL: xxxx
-      # ChatGPTAPI 或者 ChatGPTUnofficialProxyAPI
-      OPENAI_API_MODEL: xxxx
-      # reverse proxy, optional
-      API_REVERSE_PROXY: xxx
-      # timeout, in milliseconds, optional
-      TIMEOUT_MS: 600000
-      # socks proxy, optional, effective with SOCKS_PROXY_PORT
-      SOCKS_PROXY_HOST: xxxx
-      # socks proxy port, optional, effective with SOCKS_PROXY_HOST
-      SOCKS_PROXY_PORT: xxxx
-      # socks proxy, optional, effective with SOCKS_PROXY_HOST and SOCKS_PROXY_PORT
-      SOCKS_PROXY_USERNAME: xxxx
-      # socks proxy port, optional, effective with SOCKS_PROXY_HOST and SOCKS_PROXY_PORT
-      SOCKS_PROXY_PASSWORD: xxxx
-      # HTTPS Proxy，optional, support http, https, socks5
-      HTTPS_PROXY: http://xxx:7890
       # Title for site
       SITE_TITLE: ChatGpt Web
       # access salt，optional Allow login if not empty.
       AUTH_SECRET_KEY: xxx
       # mongodb's connection string
       MONGODB_URL: 'mongodb://chatgpt:xxxx@database:27017'
-      # Register enabled
-      REGISTER_ENABLED: true
-      # After register enabled, Allowed mailbox suffixes for website registration. If empty, any suffix is allowed
-      REGISTER_MAILS: '@qq.com,@sina.com,@163.com'
       # After register enabled, Salt for password encryption
       PASSWORD_MD5_SALT: xxx
       # After register enabled, super administrator
       ROOT_USER: me@example.com
-      # After register enabled, The website's domain ending without /
-      SITE_DOMAIN: http://127.0.0.1:3002
-      # After register enabled, The smtp settings
-      SMTP_HOST: smtp.exmail.qq.com
-      SMTP_PORT: 465
-      SMTP_TSL: true
-      SMTP_USERNAME: noreply@examile.com
-      SMTP_PASSWORD: xxx
-      # Enable sensitive word review, because the response result is streaming, so there is currently no review.
-      AUDIT_ENABLED: false
-      # https://ai.baidu.com/ai-doc/ANTIPORN/Vk3h6xaga
-      AUDIT_PROVIDER: baidu
-      AUDIT_API_KEY: xxx
-      AUDIT_API_SECRET: xxx
-      AUDIT_TEXT_LABEL: xxx
+      # Allow anyone register, Must be turned on, otherwise administrators cannot register, can be turned off later.
+      REGISTER_ENABLED: true
+      # More configurations, register an administrator after running and set it in the administrator page.
     links:
       - database
 
@@ -318,23 +280,7 @@ The `OPENAI_API_BASE_URL` is optional and only used when setting the `OPENAI_API
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/yytmgc)
 
-#### Railway Environment Variables
-
-| Environment Variable   | Required                                                          | Description                                                                                                      |
-|------------------------|-------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
-| `PORT`                 | Required                                                          | Default: `3002`                                                                                                  |
-| `AUTH_SECRET_KEY`      | Optional                                                          | access password                                                                                                  |
-| `TIMEOUT_MS`           | Optional                                                          | Timeout in milliseconds                                                                                          |
-| `OPENAI_API_KEY`       | Optional                                                          | Required for `OpenAI API`. `apiKey` can be obtained from [here](https://platform.openai.com/overview).           |
-| `OPENAI_ACCESS_TOKEN`  | Optional                                                          | Required for `Web API`. `accessToken` can be obtained from [here](https://chat.openai.com/api/auth/session).     |
-| `OPENAI_API_BASE_URL`  | Optional, only for `OpenAI API`                                   | API endpoint.                                                                                                    |
-| `OPENAI_API_MODEL`     | `ChatGPTAPI` OR `ChatGPTUnofficialProxyAPI`                                  | API model.                                                                                                       |
-| `API_REVERSE_PROXY`    | Optional, only for `Web API`                                      | Reverse proxy address for `Web API`. [Details](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy) |
-| `SOCKS_PROXY_HOST`     | Optional, effective with `SOCKS_PROXY_PORT`                       | Socks proxy.                                                                                                     |
-| `SOCKS_PROXY_PORT`     | Optional, effective with `SOCKS_PROXY_HOST`                       | Socks proxy port.                                                                                                |
-| `SOCKS_PROXY_USERNAME` | Optional, effective with `SOCKS_PROXY_HOST` & `SOCKS_PROXY_PORT`  | Socks proxy username.                                                                                            |
-| `SOCKS_PROXY_PASSWORD` | Optional, effective with `SOCKS_PROXY_HOST` & `SOCKS_PROXY_PORT`  | Socks proxy password.                                                                                            |
-| `HTTPS_PROXY`          | Optional                                                          | HTTPS Proxy.                                                                                                     |
+> Refer to this issue  https://github.com/Kerwin1202/chatgpt-web/issues/266
 
 > Note: Changing environment variables in Railway will cause re-deployment.
 

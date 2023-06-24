@@ -112,6 +112,7 @@ export default {
     registerEnabled: '등록 활성화',
     registerReview: '등록 리뷰',
     registerMails: '메일 등록',
+    registerReviewTip: 'Only email addresses with these suffixes are allowed to register on this website.',
     apiBaseUrl: 'API 베이스 URL',
     apiModel: '인터페이스 유형',
     accessToken: '액세스 토큰',

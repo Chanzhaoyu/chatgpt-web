@@ -112,7 +112,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.registerMails') }}</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.registerMails" placeholder=""
+              :value="config && config.registerMails" :placeholder="$t('setting.registerReviewTip')"
               @input="(val) => { if (config) config.registerMails = val }"
             />
           </div>
