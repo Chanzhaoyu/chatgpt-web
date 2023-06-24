@@ -44,6 +44,12 @@ onMounted(async () => {
       <h2 v-if="userInfo.name" class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
         {{ userInfo.name }}
       </h2>
+      <p v-if="userInfo.name" class="overflow-hidden text-xs text-gray-500 text-ellipsis whitespace-nowrap">
+        <span
+          v-if="isString(userInfo.description) && userInfo.description !== ''"
+          v-html="userInfo.description"
+        />
+      </p>
       <NButton
         v-else tag="a" text
         @click="showPermission = true"
