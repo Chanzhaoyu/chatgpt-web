@@ -133,18 +133,20 @@ async function handlePreviousResponse(next: number) {
           <NButtonGroup v-if="!inversion && responseCount && responseCount > 1">
             <NButton
               style="cursor: pointer;"
+              size="tiny" quaternary
               :disabled="indexRef === 1"
               @click="handlePreviousResponse(-1)"
             >
-              <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="5 -5 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6" /></svg>
+              <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="-3 3 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6" /></svg>
             </NButton>
             <span class="text-xs text-[#b4bbc4]"> {{ indexRef }} / {{ responseCount }}</span>
             <NButton
               style="cursor: pointer;"
+              size="tiny" quaternary
               :disabled="indexRef === responseCount"
               @click="handlePreviousResponse(1)"
             >
-              <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="-5 -5 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6" /></svg>
+              <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="3 3 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6" /></svg>
             </NButton>
           </NButtonGroup>
           <template v-if="usage">
