@@ -33,10 +33,10 @@ import {
   updateConfig,
   updateRoomPrompt,
   updateRoomUsingContext,
+  updateUser,
   updateUserChatModel,
   updateUserInfo,
   updateUserPassword,
-  updateUserRole,
   updateUserStatus,
   upsertKey,
   verifyUser,
@@ -502,7 +502,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
     }
     const newPassword = md5(password)
     const isRoot = username.toLowerCase() === process.env.ROOT_USER
-    await createUser(username, newPassword, isRoot)
+    await createUser(username, newPassword, isRoot ? [UserRole.Admin] : [UserRole.User])
 
     if (isRoot) {
       res.send({ status: 'Success', message: '注册成功 | Register success', data: null })
@@ -720,10 +720,17 @@ router.post('/user-status', rootAuth, async (req, res) => {
   }
 })
 
-router.post('/user-role', rootAuth, async (req, res) => {
+router.post('/user-edit', rootAuth, async (req, res) => {
   try {
-    const { userId, roles } = req.body as { userId: string; roles: UserRole[] }
-    await updateUserRole(userId, roles)
+    const { userId, email, password, roles } = req.body as { userId?: string; email: string; password: string; roles: UserRole[] }
+    if (userId) {
+      await updateUser(userId, roles, password)
+    }
+    else {
+      const newPassword = md5(password)
+      const user = await createUser(email, newPassword, roles)
+      await updateUserStatus(user._id.toString(), Status.Normal)
+    }
     res.send({ status: 'Success', message: '更新成功 | Update successfully' })
   }
   catch (error) {

@@ -1,6 +1,7 @@
 import { MongoClient, ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'
 import dayjs from 'dayjs'
+import { md5 } from '../utils/security'
 import { ChatInfo, ChatRoom, ChatUsage, Status, UserConfig, UserInfo, UserRole } from './model'
 import type { CHATMODEL, ChatOptions, Config, KeyConfig, UsageResponse } from './model'
 
@@ -189,14 +190,12 @@ export async function deleteChat(roomId: number, uuid: number, inversion: boolea
   await chatCol.updateOne(query, update)
 }
 
-export async function createUser(email: string, password: string, isRoot: boolean): Promise<UserInfo> {
+export async function createUser(email: string, password: string, roles?: UserRole[]): Promise<UserInfo> {
   email = email.toLowerCase()
   const userInfo = new UserInfo(email, password)
-  if (isRoot) {
+  if (roles && roles.includes(UserRole.Admin))
     userInfo.status = Status.Normal
-    userInfo.roles = [UserRole.Admin]
-  }
-
+  userInfo.roles = roles
   await userCol.insertOne(userInfo)
   return userInfo
 }
@@ -267,8 +266,16 @@ export async function updateUserStatus(userId: string, status: Status) {
   return await userCol.updateOne({ _id: new ObjectId(userId) }, { $set: { status, verifyTime: new Date().toLocaleString() } })
 }
 
-export async function updateUserRole(userId: string, roles: UserRole[]) {
-  return await userCol.updateOne({ _id: new ObjectId(userId) }, { $set: { roles, verifyTime: new Date().toLocaleString() } })
+export async function updateUser(userId: string, roles: UserRole[], password: string) {
+  const user = await getUserById(userId)
+  const query = { _id: new ObjectId(userId) }
+  if (user.password !== password && user.password) {
+    const newPassword = md5(password)
+    return await userCol.updateOne(query, { $set: { roles, verifyTime: new Date().toLocaleString(), password: newPassword } })
+  }
+  else {
+    return await userCol.updateOne(query, { $set: { roles, verifyTime: new Date().toLocaleString() } })
+  }
 }
 
 export async function getConfig(): Promise<Config> {

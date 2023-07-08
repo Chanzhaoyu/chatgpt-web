@@ -64,7 +64,7 @@ export default {
     usageResponse: '回復',
     usageTotal: '總消耗 token',
     deleteUser: '刪除用戶',
-    setUserRole: '設置權限',
+    editUser: '編輯用戶',
     deleteUserConfirm: '你確定要刪除這個用戶嗎? 刪除後這個郵箱永遠無法註冊登錄',
     verifiedUser: '通过验证',
     deleteKey: '刪除 Key',
@@ -139,6 +139,8 @@ export default {
     status: '狀態',
     chatModels: '對話模型',
     remark: '備註',
+    email: '電子郵箱',
+    password: '密碼',
   },
   store: {
     siderButton: '提示詞商店',

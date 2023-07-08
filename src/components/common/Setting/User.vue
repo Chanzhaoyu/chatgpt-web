@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
-import { NButton, NDataTable, NModal, NSelect, NTag, useDialog, useMessage } from 'naive-ui'
+import { NButton, NDataTable, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
 import { Status, UserInfo, UserRole, userRoleOptions } from './model'
-import { fetchGetUsers, fetchUpdateUserRole, fetchUpdateUserStatus } from '@/api'
+import { fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
 import { t } from '@/locales'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 
@@ -94,7 +94,7 @@ const columns = [
             },
             onClick: () => handleEditUser(row),
           },
-          { default: () => t('chat.setUserRole') },
+          { default: () => t('chat.editUser') },
         ))
       }
       if (row.status === Status.PreVerify || row.status === Status.AdminVerify) {
@@ -170,19 +170,20 @@ async function handleUpdateUserStatus(userId: string, status: Status) {
   }
 }
 
+function handleNewUser() {
+  userRef.value = new UserInfo([UserRole.User])
+  show.value = true
+}
+
 function handleEditUser(user: UserInfo) {
   userRef.value = user
   show.value = true
 }
 
-async function handleUpdateUserRoles() {
-  if (!userRef.value._id) {
-    ms.error('User Error')
-    return
-  }
+async function handleUpdateUser() {
   handleSaving.value = true
   try {
-    await fetchUpdateUserRole(userRef.value._id, userRef.value.roles)
+    await fetchUpdateUser(userRef.value)
     await handleGetUsers(pagination.page)
     show.value = false
   }
@@ -200,25 +201,52 @@ onMounted(async () => {
 <template>
   <div class="p-4 space-y-5 min-h-[200px]">
     <div class="space-y-6">
-      <NDataTable
-        ref="table"
-        remote
-        :loading="loading"
-        :row-key="(rowData) => rowData._id"
-        :columns="columns"
-        :data="users"
-        :pagination="pagination"
-        :max-height="444"
-        striped
-        :scroll-x="1260"
-        @update:page="handleGetUsers"
-      />
+      <NSpace vertical :size="12">
+        <NSpace>
+          <NButton @click="handleNewUser()">
+            New User
+          </NButton>
+        </NSpace>
+        <NDataTable
+          ref="table"
+          remote
+          :loading="loading"
+          :row-key="(rowData) => rowData._id"
+          :columns="columns"
+          :data="users"
+          :pagination="pagination"
+          :max-height="444"
+          striped
+          :scroll-x="1260"
+          @update:page="handleGetUsers"
+        />
+      </NSpace>
     </div>
   </div>
 
-  <NModal v-model:show="show" :auto-focus="false" preset="card" :style="{ width: !isMobile ? '50%' : '100%' }">
+  <NModal v-model:show="show" :auto-focus="false" preset="card" :style="{ width: !isMobile ? '33%' : '100%' }">
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.email') }}</span>
+          <div class="flex-1">
+            <NInput
+              v-model:value="userRef.email"
+              :disabled="userRef._id !== undefined" placeholder="email"
+            />
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.password') }}</span>
+          <div class="flex-1">
+            <NInput
+              v-model:value="userRef.password"
+              type="password"
+              placeholder="password"
+            />
+          </div>
+        </div>
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.userRoles') }}</span>
           <div class="flex-1">
@@ -233,7 +261,7 @@ onMounted(async () => {
         </div>
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]" />
-          <NButton type="primary" :loading="handleSaving" @click="handleUpdateUserRoles()">
+          <NButton type="primary" :loading="handleSaving" @click="handleUpdateUser()">
             {{ $t('common.save') }}
           </NButton>
         </div>

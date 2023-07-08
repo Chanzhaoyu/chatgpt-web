@@ -64,7 +64,7 @@ export default {
     usageResponse: '回复',
     usageTotal: '总消耗 token',
     deleteUser: '删除用户',
-    setUserRole: '设置权限',
+    editUser: '编辑用户',
     deleteUserConfirm: '你确定要删除这个用户吗? 删除后这个邮箱永远无法注册登录',
     verifiedUser: '通过验证',
     deleteKey: '删除 Key',
@@ -139,6 +139,8 @@ export default {
     status: '状态',
     chatModels: '对话模型',
     remark: '备注',
+    email: '电子邮箱',
+    password: '密码',
   },
   store: {
     siderButton: '提示词商店',
