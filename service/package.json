@@ -2,13 +2,10 @@
   "name": "chatgpt-web-service",
   "version": "1.0.0",
   "private": false,
-  "description": "ChatGPT Web Service",
-  "author": "ChenZhaoYu <chenzhaoyu1994@gmail.com>",
+  "description": "aiihands.com",
+  "author": "Chen",
   "keywords": [
-    "chatgpt-web",
-    "chatgpt",
-    "chatbot",
-    "express"
+    "aiihands"
   ],
   "engines": {
     "node": "^16 || ^18 || ^19"

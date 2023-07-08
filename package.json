@@ -1,14 +1,11 @@
 {
-  "name": "chatgpt-web",
+  "name": "aiihands.com",
   "version": "2.11.0",
   "private": false,
-  "description": "ChatGPT Web",
-  "author": "ChenZhaoYu <chenzhaoyu1994@gmail.com>",
+  "description": "aiihands.com",
+  "author": "Chen",
   "keywords": [
-    "chatgpt-web",
-    "chatgpt",
-    "chatbot",
-    "vue"
+    "aiihands"
   ],
   "scripts": {
     "dev": "vite",
