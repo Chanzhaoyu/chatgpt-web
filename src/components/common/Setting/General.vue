@@ -135,7 +135,7 @@ function handleImportButtonClick(): void {
         </NButton>
       </div>
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
+        <span class="flex-shrink-0 w-[100px]">GPT-领航出海</span>
         <div class="w-[200px]">
           <NInput v-model:value="name" placeholder="" />
         </div>
