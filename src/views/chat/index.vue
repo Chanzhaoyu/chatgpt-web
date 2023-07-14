@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { NAutoComplete, NButton, NInput, useDialog, useMessage } from 'naive-ui'
@@ -45,6 +45,25 @@ const promptStore = usePromptStore()
 
 // 使用storeToRefs，保证store修改后，联想部分能够重新渲染
 const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
+
+/** @description 分页相关参数 */
+const scrollTop = ref<number>(100)
+const size = ref<number>((dataSources.value.length - 10) > 0 ? (dataSources.value.length - 10) : 0)
+
+const onScroll = (ev: any) => {
+  scrollTop.value = ev.target.scrollTop as number
+}
+
+watch(() => uuid, () => {
+  scrollTop.value = 100
+  size.value = (dataSources.value.length - 10) >= 0 ? (dataSources.value.length - 10) : 10
+})
+watch(scrollTop, (val) => {
+  if (val === 0) {
+    const v = Math.min(size.value - 10, dataSources.value.length)
+    size.value = v >= 0 ? v : 0
+  }
+})
 
 // 未知原因刷新页面，loading 状态不会重置，手动重置
 dataSources.value.forEach((item, index) => {
@@ -472,7 +491,7 @@ onUnmounted(() => {
       @handle-clear="handleClear"
     />
     <main class="flex-1 overflow-hidden">
-      <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto">
+      <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="onScroll">
         <div
           id="image-wrapper"
           class="w-full max-w-screen-xl m-auto dark:bg-[#101014]"
@@ -489,6 +508,7 @@ onUnmounted(() => {
               <Message
                 v-for="(item, index) of dataSources"
                 :key="index"
+                :is-render="index >= size"
                 :date-time="item.dateTime"
                 :text="item.text"
                 :inversion="item.inversion"
@@ -502,7 +522,7 @@ onUnmounted(() => {
                   <template #icon>
                     <SvgIcon icon="ri:stop-circle-line" />
                   </template>
-									{{ t('common.stopResponding') }}
+                  {{ t('common.stopResponding') }}
                 </NButton>
               </div>
             </div>

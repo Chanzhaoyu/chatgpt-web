@@ -15,6 +15,7 @@ interface Props {
   inversion?: boolean
   error?: boolean
   loading?: boolean
+  isRender?: boolean
 }
 
 interface Emit {
@@ -93,7 +94,9 @@ async function handleCopy() {
 </script>
 
 <template>
+  <template v-if="!isRender" />
   <div
+    v-else
     ref="messageRef"
     class="flex w-full mb-6 overflow-hidden"
     :class="[{ 'flex-row-reverse': inversion }]"
