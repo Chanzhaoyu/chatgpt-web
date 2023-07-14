@@ -134,24 +134,7 @@ function handleImportButtonClick(): void {
           {{ $t('common.save') }}
         </NButton>
       </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">GPT-领航出海</span>
-        <div class="w-[200px]">
-          <NInput v-model:value="name" placeholder="" />
-        </div>
-        <NButton size="tiny" text type="primary" @click="updateUserInfo({ name })">
-          {{ $t('common.save') }}
-        </NButton>
-      </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.description') }}</span>
-        <div class="flex-1">
-          <NInput v-model:value="description" placeholder="" />
-        </div>
-        <NButton size="tiny" text type="primary" @click="updateUserInfo({ description })">
-          {{ $t('common.save') }}
-        </NButton>
-      </div>
+    
       <div
         class="flex items-center space-x-4"
         :class="isMobile && 'items-start'"
