@@ -27,13 +27,10 @@ const userInfo = computed(() => userStore.userInfo)
     </div>
     <div class="flex-1 min-w-0 ml-2">
       <h2 class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
-        {{ userInfo.name ?? 'ChenZhaoYu' }}
+        {{ userInfo.name ?? 'GPT-领航出海' }}
       </h2>
       <p class="overflow-hidden text-xs text-gray-500 text-ellipsis whitespace-nowrap">
-        <span
-          v-if="isString(userInfo.description) && userInfo.description !== ''"
-          v-html="userInfo.description"
-        />
+        <span>Powered by Juson</span>
       </p>
     </div>
   </div>
