@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { NAvatar, NButton, NTag } from 'naive-ui'
 import { useRoute } from 'vue-router'
+import { UserRole } from '../Setting/model'
 import { useAuthStore, useUserStore } from '@/store'
 import defaultAvatar from '@/assets/avatar.jpg'
 import { isString } from '@/utils/is'
@@ -43,8 +44,8 @@ onMounted(async () => {
     <div class="flex-1 min-w-0 ml-2">
       <h2 v-if="userInfo.name" class="">
         {{ userInfo.name }}
-        <NTag size="small" :bordered="false" type="success">
-          Admin
+        <NTag v-if="userInfo.roles.length > 0" size="small" :bordered="false" type="success">
+          {{ UserRole[userInfo.roles[0]] }}
         </NTag>
       </h2>
       <p v-if="userInfo.name" class="overflow-hidden text-xs text-gray-500 text-ellipsis whitespace-nowrap">

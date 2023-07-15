@@ -1,3 +1,4 @@
+import type { UserRole } from '@/components/common/Setting/model'
 import { UserConfig } from '@/components/common/Setting/model'
 import { ss } from '@/utils/storage'
 
@@ -9,6 +10,7 @@ export interface UserInfo {
   description: string
   root: boolean
   config: UserConfig
+  roles: UserRole[]
 }
 
 export interface UserState {
@@ -23,6 +25,7 @@ export function defaultSetting(): UserState {
       description: '',
       root: false,
       config: { chatModel: 'gpt-3.5-turbo' },
+      roles: [],
     },
   }
 }
