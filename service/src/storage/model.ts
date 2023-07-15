@@ -83,6 +83,7 @@ export class ChatRoom {
   status: Status = Status.Normal
   // only access token used
   accountId?: string
+  chatModel: CHATMODEL
   constructor(userId: string, title: string, roomId: number) {
     this.userId = userId
     this.title = title
@@ -90,6 +91,7 @@ export class ChatRoom {
     this.roomId = roomId
     this.usingContext = true
     this.accountId = null
+    this.chatModel = null
   }
 }
 

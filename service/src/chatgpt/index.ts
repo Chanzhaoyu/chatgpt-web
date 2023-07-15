@@ -14,7 +14,7 @@ import { getCacheApiKeys, getCacheConfig, getOriginConfig } from '../storage/con
 import { sendResponse } from '../utils'
 import { hasAnyRole, isNotEmptyString } from '../utils/is'
 import type { ChatContext, ChatGPTUnofficialProxyAPIOptions, JWT, ModelConfig } from '../types'
-import { getChatByMessageId, updateRoomAccountId } from '../storage/mongo'
+import { getChatByMessageId, updateRoomAccountId, updateRoomChatModel } from '../storage/mongo'
 import type { RequestOptions } from './types'
 
 const { HttpsProxyAgent } = httpsProxyAgent
@@ -113,6 +113,8 @@ async function chatReplyProcess(options: RequestOptions) {
       || (!options.lastContext.conversationId && options.lastContext.parentMessageId)))
       throw new Error('无法在一个房间同时使用 AccessToken 以及 Api，请联系管理员，或新开聊天室进行对话 | Unable to use AccessToken and Api at the same time in the same room, please contact the administrator or open a new chat room for conversation')
   }
+
+  updateRoomChatModel(userId, options.room.roomId, model)
 
   const { message, lastContext, process, systemMessage, temperature, top_p } = options
 
