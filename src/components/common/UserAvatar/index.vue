@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { computed, onMounted, ref } from 'vue'
-import { NAvatar, NButton } from 'naive-ui'
+import { NAvatar, NButton, NTag } from 'naive-ui'
 import { useRoute } from 'vue-router'
 import { useAuthStore, useUserStore } from '@/store'
 import defaultAvatar from '@/assets/avatar.jpg'
@@ -41,8 +41,11 @@ onMounted(async () => {
       </template>
     </div>
     <div class="flex-1 min-w-0 ml-2">
-      <h2 v-if="userInfo.name" class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
+      <h2 v-if="userInfo.name" class="">
         {{ userInfo.name }}
+        <NTag size="small" :bordered="false" type="success">
+          Admin
+        </NTag>
       </h2>
       <p v-if="userInfo.name" class="overflow-hidden text-xs text-gray-500 text-ellipsis whitespace-nowrap">
         <span
