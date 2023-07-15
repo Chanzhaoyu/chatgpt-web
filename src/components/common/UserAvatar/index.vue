@@ -66,6 +66,6 @@ onMounted(async () => {
         </span>
       </NButton>
     </div>
-    <Permission :visible="needPermission" />
+    <Permission :visible="needPermission" @update:visible="(newValue) => showPermission = newValue" />
   </div>
 </template>
