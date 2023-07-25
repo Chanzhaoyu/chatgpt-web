@@ -278,6 +278,12 @@ services:
 
 > 注意: `Railway` 修改环境变量会重新 `Deploy`
 
+### 使用 Sealos 部署
+
+[![](https://raw.githubusercontent.com/labring-actions/templates/main/Deploy-on-Sealos.svg)](https://cloud.sealos.io/?openapp=system-fastdeploy%3FtemplateName%3Dchatgpt-web)
+
+> 环境变量与 Docker 环境变量一致
+
 ### 手动打包
 #### 后端服务
 > 如果你不需要本项目的 `node` 接口，可以省略如下操作
