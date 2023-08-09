@@ -26,9 +26,11 @@
 			- [Docker 参数示例](#docker-参数示例)
 			- [Docker build \& Run](#docker-build--run)
 			- [Docker compose](#docker-compose)
+			- [docker 快捷部署方案：](#docker-快捷部署方案)
 			- [防止爬虫抓取](#防止爬虫抓取)
 		- [使用 Railway 部署](#使用-railway-部署)
 			- [Railway 环境变量](#railway-环境变量)
+		- [使用 Sealos 部署](#使用-sealos-部署)
 		- [手动打包](#手动打包)
 			- [后端服务](#后端服务-1)
 			- [前端网页](#前端网页-1)
@@ -200,6 +202,7 @@ http://localhost:3002/
 
 #### Docker compose
 
+
 [Hub 地址](https://hub.docker.com/repository/docker/chenzhaoyu94/chatgpt-web/general)
 
 ```yml
@@ -237,6 +240,16 @@ services:
 ```
 - `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 - `OPENAI_API_MODEL`  可选，设置 `OPENAI_API_KEY` 时可用
+
+#### docker 快捷部署方案：
+1. 拉取镜像
+```shell
+	docker pull chenzhaoyu94/chatgpt-web
+```
+2. 启动服务
+```shell
+  docker run -d  --name chatgpt-web-1  -e OPENAI_ACCESS_TOKEN="{OPENAI_ACCESS_TOKEN}" -e  -p 3002:3002 chenzhaoyu94/chatgpt-web
+```
 
 #### 防止爬虫抓取
 
