@@ -53,4 +53,5 @@ COPY --from=backend /app/build /app/build
 
 EXPOSE 3002
 
+RUN echo "alias ll='ls -alF'" >> /root/.shrc
 CMD ["pnpm", "run", "prod"]
