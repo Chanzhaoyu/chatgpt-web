@@ -118,33 +118,44 @@ async function onConversation() {
           let chunk = responseText
           if (lastIndex !== -1)
             chunk = responseText.substring(lastIndex)
+					const updateCurrentChat = (chunk: string) => {
+						const data = JSON.parse(chunk)
+						updateChat(
+							+uuid,
+							dataSources.value.length - 1,
+							{
+								dateTime: new Date().toLocaleString(),
+								text: lastText + (data.text ?? ''),
+								inversion: false,
+								error: false,
+								loading: true,
+								conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+								requestOptions: { prompt: message, options: { ...options } },
+							},
+						)
+
+						if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
+							options.parentMessageId = data.id
+							lastText = data.text
+							message = ''
+							return fetchChatAPIOnce()
+						}
+						scrollToBottomIfAtBottom()
+					}
           try {
-            const data = JSON.parse(chunk)
-            updateChat(
-              +uuid,
-              dataSources.value.length - 1,
-              {
-                dateTime: new Date().toLocaleString(),
-                text: lastText + (data.text ?? ''),
-                inversion: false,
-                error: false,
-                loading: true,
-                conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-                requestOptions: { prompt: message, options: { ...options } },
-              },
-            )
-
-            if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
-              options.parentMessageId = data.id
-              lastText = data.text
-              message = ''
-              return fetchChatAPIOnce()
-            }
-
-            scrollToBottomIfAtBottom()
-          }
+						updateCurrentChat(chunk)
+					}
           catch (error) {
-            //
+						// when the network is slow, the final line is not completed
+						const _lastIndex = responseText.lastIndexOf('\n', lastIndex - 1)
+						let _chunk = responseText
+						if (_lastIndex !== -1)
+							_chunk = responseText.substring(_lastIndex, lastIndex)
+						try {
+							updateCurrentChat(_chunk)
+						}catch (e) {
+							//
+						}
           }
         },
       })
@@ -249,31 +260,43 @@ async function onRegenerate(index: number) {
           let chunk = responseText
           if (lastIndex !== -1)
             chunk = responseText.substring(lastIndex)
-          try {
-            const data = JSON.parse(chunk)
-            updateChat(
-              +uuid,
-              index,
-              {
-                dateTime: new Date().toLocaleString(),
-                text: lastText + (data.text ?? ''),
-                inversion: false,
-                error: false,
-                loading: true,
-                conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-                requestOptions: { prompt: message, options: { ...options } },
-              },
-            )
+					const updateCurrentChat = (chunk: string) => {
+						const data = JSON.parse(chunk)
+						updateChat(
+							+uuid,
+							index,
+							{
+								dateTime: new Date().toLocaleString(),
+								text: lastText + (data.text ?? ''),
+								inversion: false,
+								error: false,
+								loading: true,
+								conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+								requestOptions: { prompt: message, options: { ...options } },
+							},
+						)
 
-            if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
-              options.parentMessageId = data.id
-              lastText = data.text
-              message = ''
-              return fetchChatAPIOnce()
-            }
-          }
+						if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
+							options.parentMessageId = data.id
+							lastText = data.text
+							message = ''
+							return fetchChatAPIOnce()
+						}
+					}
+          try {
+						updateCurrentChat(chunk)
+					}
           catch (error) {
-            //
+						// when the network is slow, the final line is not completed
+						const _lastIndex = responseText.lastIndexOf('\n', lastIndex - 1)
+						let _chunk = responseText
+						if (_lastIndex !== -1)
+							_chunk = responseText.substring(_lastIndex, lastIndex)
+						try {
+							updateCurrentChat(_chunk)
+						}catch (e) {
+
+						}
           }
         },
       })
