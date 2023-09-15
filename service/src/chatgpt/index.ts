@@ -5,11 +5,10 @@ import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import httpsProxyAgent from 'https-proxy-agent'
 import fetch from 'node-fetch'
-import axios from 'axios'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
-import type { RequestOptions } from './types'
+import type { RequestOptions, SetProxyOptions, UsageResponse } from './types'
 
 const { HttpsProxyAgent } = httpsProxyAgent
 
@@ -24,10 +23,11 @@ const ErrorCodeMessage: Record<string, string> = {
   500: '[OpenAI] 服务器繁忙，请稍后再试 | Internal Server Error',
 }
 
-const timeoutMs: number = !isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 30 * 1000
+const timeoutMs: number = !isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 100 * 1000
 const disableDebug: boolean = process.env.OPENAI_API_DISABLE_DEBUG === 'true'
 
 let apiModel: ApiModel
+const model = isNotEmptyString(process.env.OPENAI_API_MODEL) ? process.env.OPENAI_API_MODEL : 'gpt-3.5-turbo'
 
 if (!isNotEmptyString(process.env.OPENAI_API_KEY) && !isNotEmptyString(process.env.OPENAI_ACCESS_TOKEN))
   throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
@@ -39,8 +39,6 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 
   if (isNotEmptyString(process.env.OPENAI_API_KEY)) {
     const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
-    const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
-    const model = isNotEmptyString(OPENAI_API_MODEL) ? OPENAI_API_MODEL : 'gpt-3.5-turbo'
 
     const options: ChatGPTAPIOptions = {
       apiKey: process.env.OPENAI_API_KEY,
@@ -60,6 +58,12 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
         options.maxResponseTokens = 2048
       }
     }
+    else if (model.toLowerCase().includes('gpt-3.5')) {
+      if (model.toLowerCase().includes('16k')) {
+        options.maxModelTokens = 16384
+        options.maxResponseTokens = 4096
+      }
+    }
 
     if (isNotEmptyString(OPENAI_API_BASE_URL))
       options.apiBaseUrl = `${OPENAI_API_BASE_URL}/v1`
@@ -70,16 +74,12 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     apiModel = 'ChatGPTAPI'
   }
   else {
-    const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
     const options: ChatGPTUnofficialProxyAPIOptions = {
       accessToken: process.env.OPENAI_ACCESS_TOKEN,
+      apiReverseProxyUrl: isNotEmptyString(process.env.API_REVERSE_PROXY) ? process.env.API_REVERSE_PROXY : 'https://ai.fakeopen.com/api/conversation',
+      model,
       debug: !disableDebug,
     }
-    if (isNotEmptyString(OPENAI_API_MODEL))
-      options.model = OPENAI_API_MODEL
-
-    if (isNotEmptyString(process.env.API_REVERSE_PROXY))
-      options.apiReverseProxyUrl = process.env.API_REVERSE_PROXY
 
     setupProxy(options)
 
@@ -89,13 +89,14 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 })()
 
 async function chatReplyProcess(options: RequestOptions) {
-  const { message, lastContext, process, systemMessage } = options
+  const { message, lastContext, process, systemMessage, temperature, top_p } = options
   try {
     let options: SendMessageOptions = { timeoutMs }
 
     if (apiModel === 'ChatGPTAPI') {
       if (isNotEmptyString(systemMessage))
         options.systemMessage = systemMessage
+      options.completionParams = { model, temperature, top_p }
     }
 
     if (lastContext != null) {
@@ -123,7 +124,7 @@ async function chatReplyProcess(options: RequestOptions) {
   }
 }
 
-async function fetchBalance() {
+async function fetchUsage() {
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY
   const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
 
@@ -134,19 +135,47 @@ async function fetchBalance() {
     ? OPENAI_API_BASE_URL
     : 'https://api.openai.com'
 
-  try {
-    const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENAI_API_KEY}` }
-    const response = await axios.get(`${API_BASE_URL}/dashboard/billing/credit_grants`, { headers })
-    const balance = response.data.total_available ?? 0
-    return Promise.resolve(balance.toFixed(3))
+  const [startDate, endDate] = formatDate()
+
+  // 每月使用量
+  const urlUsage = `${API_BASE_URL}/v1/dashboard/billing/usage?start_date=${startDate}&end_date=${endDate}`
+
+  const headers = {
+    'Authorization': `Bearer ${OPENAI_API_KEY}`,
+    'Content-Type': 'application/json',
   }
-  catch {
+
+  const options = {} as SetProxyOptions
+
+  setupProxy(options)
+
+  try {
+    // 获取已使用量
+    const useResponse = await options.fetch(urlUsage, { headers })
+    if (!useResponse.ok)
+      throw new Error('获取使用量失败')
+    const usageData = await useResponse.json() as UsageResponse
+    const usage = Math.round(usageData.total_usage) / 100
+    return Promise.resolve(usage ? `$${usage}` : '-')
+  }
+  catch (error) {
+    global.console.log(error)
     return Promise.resolve('-')
   }
 }
 
+function formatDate(): string[] {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = today.getMonth() + 1
+  const lastDay = new Date(year, month, 0)
+  const formattedFirstDay = `${year}-${month.toString().padStart(2, '0')}-01`
+  const formattedLastDay = `${year}-${month.toString().padStart(2, '0')}-${lastDay.getDate().toString().padStart(2, '0')}`
+  return [formattedFirstDay, formattedLastDay]
+}
+
 async function chatConfig() {
-  const balance = await fetchBalance()
+  const usage = await fetchUsage()
   const reverseProxy = process.env.API_REVERSE_PROXY ?? '-'
   const httpsProxy = (process.env.HTTPS_PROXY || process.env.ALL_PROXY) ?? '-'
   const socksProxy = (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
@@ -154,11 +183,11 @@ async function chatConfig() {
     : '-'
   return sendResponse<ModelConfig>({
     type: 'Success',
-    data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, balance },
+    data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, usage },
   })
 }
 
-function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPIOptions) {
+function setupProxy(options: SetProxyOptions) {
   if (isNotEmptyString(process.env.SOCKS_PROXY_HOST) && isNotEmptyString(process.env.SOCKS_PROXY_PORT)) {
     const agent = new SocksProxyAgent({
       hostname: process.env.SOCKS_PROXY_HOST,
@@ -170,15 +199,18 @@ function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPIOption
       return fetch(url, { agent, ...options })
     }
   }
-  else {
-    if (isNotEmptyString(process.env.HTTPS_PROXY) || isNotEmptyString(process.env.ALL_PROXY)) {
-      const httpsProxy = process.env.HTTPS_PROXY || process.env.ALL_PROXY
-      if (httpsProxy) {
-        const agent = new HttpsProxyAgent(httpsProxy)
-        options.fetch = (url, options) => {
-          return fetch(url, { agent, ...options })
-        }
+  else if (isNotEmptyString(process.env.HTTPS_PROXY) || isNotEmptyString(process.env.ALL_PROXY)) {
+    const httpsProxy = process.env.HTTPS_PROXY || process.env.ALL_PROXY
+    if (httpsProxy) {
+      const agent = new HttpsProxyAgent(httpsProxy)
+      options.fetch = (url, options) => {
+        return fetch(url, { agent, ...options })
       }
+    }
+  }
+  else {
+    options.fetch = (url, options) => {
+      return fetch(url, { ...options })
     }
   }
 }

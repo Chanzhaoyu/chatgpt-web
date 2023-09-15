@@ -1,3 +1,57 @@
+## v2.11.0
+
+`2023-04-26`
+
+> [chatgpt-web-plus](https://github.com/Chanzhaoyu/chatgpt-web-plus) 新界面、完整用户管理
+
+## Enhancement
+- 更新默认 `accessToken` 反代地址为 [[pengzhile](https://github.com/pengzhile)] 的 `https://ai.fakeopen.com/api/conversation` [[24min](https://github.com/Chanzhaoyu/chatgpt-web/pull/1567/files)]
+- 添加自定义 `temperature` 和 `top_p` [[quzard](https://github.com/Chanzhaoyu/chatgpt-web/pull/1260)]
+- 优化代码 [[shunyue1320](https://github.com/Chanzhaoyu/chatgpt-web/pull/1328)]
+- 优化复制代码反馈效果
+
+## BugFix
+- 修复余额查询和文案 [[luckywangxi](https://github.com/Chanzhaoyu/chatgpt-web/pull/1174)][[zuoning777](https://github.com/Chanzhaoyu/chatgpt-web/pull/1296)]
+- 修复默认语言错误 [[idawnwon](https://github.com/Chanzhaoyu/chatgpt-web/pull/1352)]
+- 修复 `onRegenerate` 下问题 [[leafsummer](https://github.com/Chanzhaoyu/chatgpt-web/pull/1188)]
+
+## Other
+- 引导用户触发提示词 [[RyanXinOne](https://github.com/Chanzhaoyu/chatgpt-web/pull/1183)]
+- 添加韩语翻译 [[Kamilake](https://github.com/Chanzhaoyu/chatgpt-web/pull/1372)]
+- 添加俄语翻译 [[aquaratixc](https://github.com/Chanzhaoyu/chatgpt-web/pull/1571)]
+- 优化翻译和文本检查 [[PeterDaveHello](https://github.com/Chanzhaoyu/chatgpt-web/pull/1460)]
+- 移除无用文件
+
+## v2.10.9
+
+`2023-04-03`
+
+> 更新默认 `accessToken` 反代地址为 [[pengzhile](https://github.com/pengzhile)] 的 `https://ai.fakeopen.com/api/conversation`
+
+## Enhancement
+- 添加 `socks5` 代理认证 [[yimiaoxiehou](https://github.com/Chanzhaoyu/chatgpt-web/pull/999)]
+- 添加 `socks` 代理用户名密码的配置 [[hank-cp](https://github.com/Chanzhaoyu/chatgpt-web/pull/890)]
+- 添加可选日志打印 [[zcong1993](https://github.com/Chanzhaoyu/chatgpt-web/pull/1041)]
+- 更新侧边栏按钮本地化[[simonwu53](https://github.com/Chanzhaoyu/chatgpt-web/pull/911)]
+- 优化代码块滚动条高度 [[Fog3211](https://github.com/Chanzhaoyu/chatgpt-web/pull/1153)]
+## BugFix
+- 修复 `PWA` 问题 [[bingo235](https://github.com/Chanzhaoyu/chatgpt-web/pull/807)]
+- 修复 `ESM` 错误 [[kidonng](https://github.com/Chanzhaoyu/chatgpt-web/pull/826)]
+- 修复反向代理开启时限流失效的问题 [[gitgitgogogo](https://github.com/Chanzhaoyu/chatgpt-web/pull/863)]
+- 修复 `docker` 构建时 `.env` 可能被忽略的问题 [[zaiMoe](https://github.com/Chanzhaoyu/chatgpt-web/pull/877)]
+- 修复导出异常错误 [[KingTwinkle](https://github.com/Chanzhaoyu/chatgpt-web/pull/938)]
+- 修复空值异常 [[vchenpeng](https://github.com/Chanzhaoyu/chatgpt-web/pull/1103)]
+- 移动端上的体验问题
+
+## Other
+- `Docker` 容器名字名义 [[LOVECHEN](https://github.com/Chanzhaoyu/chatgpt-web/pull/1035)]
+- `kubernetes` 部署配置 [[CaoYunzhou](https://github.com/Chanzhaoyu/chatgpt-web/pull/1001)]
+- 感谢 [[assassinliujie](https://github.com/Chanzhaoyu/chatgpt-web/pull/962)] 和 [[puppywang](https://github.com/Chanzhaoyu/chatgpt-web/pull/1017)] 的某些贡献
+- 更新 `kubernetes/deploy.yaml` [[idawnwon](https://github.com/Chanzhaoyu/chatgpt-web/pull/1085)]
+- 文档更新 [[#yi-ge](https://github.com/Chanzhaoyu/chatgpt-web/pull/883)]
+- 文档更新 [[weifeng12x](https://github.com/Chanzhaoyu/chatgpt-web/pull/880)]
+- 依赖更新
+
 ## v2.10.8
 
 `2023-03-23`
@@ -71,7 +125,7 @@
 
 `2023-03-13`
 
-更新依赖，`access_token` 默认代理为 [acheong08](https://github.com/acheong08) 的 `https://bypass.duti.tech/api/conversation`
+更新依赖，`access_token` 默认代理为 [pengzhile](https://github.com/pengzhile) 的 `https://bypass.duti.tech/api/conversation`
 
 ## Feature
 - `Prompt` 商店在线导入可以导入两种 `recommend.json`里提到的模板 [simonwu53](https://github.com/Chanzhaoyu/chatgpt-web/pull/521)
