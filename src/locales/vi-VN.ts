@@ -26,6 +26,8 @@ export default {
     failed: 'Thất bại',
     verify: 'Xác minh',
     unauthorizedTips: 'Không được ủy quyền, vui lòng xác minh trước.',
+    apiUsage: 'API liều lượng', 
+    chatgpt: 'ChatGPT', 
   },
   chat: {
     newChatButton: 'Tạo hội thoại',
@@ -72,6 +74,7 @@ export default {
     httpsProxy: 'HTTPS Proxy',
     balance: 'API Balance',
     monthlyUsage: 'Sử dụng hàng tháng',
+    related: 'Có liên quan', 
   },
   store: {
     siderButton: 'Prompt Store',

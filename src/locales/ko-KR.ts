@@ -27,6 +27,8 @@ export default {
     verify: '검증',
     unauthorizedTips: '인증되지 않았습니다. 먼저 확인하십시오.',
 		stopResponding: '응답 중지',
+    apiUsage: 'API 복용량', 
+    chatgpt: 'ChatGPT', 
   },
   chat: {
     newChatButton: '새로운 채팅',
@@ -73,6 +75,7 @@ export default {
     httpsProxy: 'HTTPS 프록시',
     balance: 'API 잔액',
     monthlyUsage: '월 사용량',
+    related: '관련된', 
   },
   store: {
     siderButton: '프롬프트 저장소',

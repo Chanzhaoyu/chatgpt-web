@@ -27,6 +27,8 @@ export default {
     verify: '验证',
     unauthorizedTips: '未经授权，请先进行验证。',
 		stopResponding: '停止响应',
+    apiUsage: 'API 用量', 
+    chatgpt: 'ChatGPT', 
   },
   chat: {
     newChatButton: '新建聊天',
@@ -73,6 +75,7 @@ export default {
     httpsProxy: 'HTTPS Proxy',
     balance: 'API余额',
     monthlyUsage: '本月使用量',
+    related: '相关', 
   },
   store: {
     siderButton: '提示词商店',

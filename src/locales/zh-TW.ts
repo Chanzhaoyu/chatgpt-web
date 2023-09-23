@@ -27,6 +27,8 @@ export default {
     verify: '驗證',
     unauthorizedTips: '未經授權，請先進行驗證。',
     stopResponding: '停止回應',
+    apiUsage: 'API 用量', 
+    chatgpt: 'ChatGPT', 
   },
   chat: {
     newChatButton: '新增對話',
@@ -73,6 +75,7 @@ export default {
     httpsProxy: 'HTTPS Proxy',
     balance: 'API Credit 餘額',
     monthlyUsage: '本月使用量',
+    related: '相關', 
   },
   store: {
     siderButton: '提示詞商店',

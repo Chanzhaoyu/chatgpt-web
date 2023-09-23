@@ -120,6 +120,24 @@ function handleImportButtonClick(): void {
   if (fileInput)
     fileInput.click()
 }
+
+function openUrl(url: string): void {
+  const link: HTMLAnchorElement = document.createElement('a')
+  link.href = url
+  link.target = '_blank'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
+
+function apiUsage(): void {
+  openUrl('https://platform.openai.com/account/usage')
+}
+
+function chatgpt(): void {
+  openUrl('https://chat.openai.com/')
+}
+
 </script>
 
 <template>
@@ -219,6 +237,25 @@ function handleImportButtonClick(): void {
         <NButton size="small" @click="handleReset">
           {{ $t('common.reset') }}
         </NButton>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.related') }}</span>
+
+        <div class="flex flex-wrap items-center gap-4">
+          <NButton size="small" @click="apiUsage">
+            <template #icon>
+              <SvgIcon icon="ri:bar-chart-box-line" />
+            </template>
+            {{ $t('common.apiUsage') }}
+          </NButton>
+
+          <NButton size="small" @click="chatgpt">
+            <template #icon>
+              <SvgIcon icon="ri:wechat-fill" />
+            </template>
+            {{ $t('common.chatgpt') }}
+          </NButton>
+        </div>
       </div>
     </div>
   </div>

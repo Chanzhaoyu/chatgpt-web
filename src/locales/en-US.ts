@@ -27,6 +27,8 @@ export default {
     verify: 'Verify',
     unauthorizedTips: 'Unauthorized, please verify first.',
 		stopResponding: 'Stop Responding',
+    apiUsage: 'API Usage', 
+    chatgpt: 'ChatGPT', 
   },
   chat: {
     newChatButton: 'New Chat',
@@ -73,6 +75,7 @@ export default {
     httpsProxy: 'HTTPS Proxy',
     balance: 'API Balance',
     monthlyUsage: 'Monthly Usage',
+    related: 'Related', 
   },
   store: {
     siderButton: 'Prompt Store',

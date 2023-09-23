@@ -27,6 +27,8 @@ export default {
     verify: 'Проверить',
     unauthorizedTips: 'Не авторизован, сначала подтвердите свою личность.',
 		stopResponding: 'Прекращение отклика',
+    apiUsage: 'API Дозировка', 
+    chatgpt: 'ChatGPT', 
   },
   chat: {
     newChatButton: 'Новый чат',
@@ -73,6 +75,7 @@ export default {
     httpsProxy: 'HTTPS-прокси',
     balance: 'Баланс API',
     monthlyUsage: 'Ежемесячное использование',
+    related: 'Связанный', 
   },
   store: {
     siderButton: 'Хранилище подсказок',
