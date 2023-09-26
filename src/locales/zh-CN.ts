@@ -47,7 +47,7 @@ export default {
     deleteMessage: '删除消息',
     deleteMessageConfirm: '是否删除此消息?',
     deleteHistoryConfirm: '确定删除此记录?',
-    clearHistoryConfirm: '确定清空聊天记录?',
+    clearHistoryConfirm: '确定清空记录?',
     preview: '预览',
     showRawText: '显示原文',
   },
