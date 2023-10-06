@@ -57,9 +57,59 @@
 		}
 	}
 
+
+	&.markdown-body-generate>dd:last-child:after,
+	&.markdown-body-generate>dl:last-child:after,
+	&.markdown-body-generate>dt:last-child:after,
+	&.markdown-body-generate>h1:last-child:after,
+	&.markdown-body-generate>h2:last-child:after,
+	&.markdown-body-generate>h3:last-child:after,
+	&.markdown-body-generate>h4:last-child:after,
+	&.markdown-body-generate>h5:last-child:after,
+	&.markdown-body-generate>h6:last-child:after,
+	&.markdown-body-generate>li:last-child:after,
+	&.markdown-body-generate>ol:last-child li:last-child:after,
+	&.markdown-body-generate>p:last-child:after,
+	&.markdown-body-generate>pre:last-child code:after,
+	&.markdown-body-generate>td:last-child:after,
+	&.markdown-body-generate>ul:last-child li:last-child:after {
+		animation: blink 1s steps(5, start) infinite;
+		color: #000;
+		content: '_';
+		font-weight: 700;
+		margin-left: 3px;
+		vertical-align: baseline;
+	}
+
+	@keyframes blink {
+		to {
+			visibility: hidden;
+		}
+	}
 }
 
 html.dark {
+
+	.markdown-body {
+
+		&.markdown-body-generate>dd:last-child:after,
+		&.markdown-body-generate>dl:last-child:after,
+		&.markdown-body-generate>dt:last-child:after,
+		&.markdown-body-generate>h1:last-child:after,
+		&.markdown-body-generate>h2:last-child:after,
+		&.markdown-body-generate>h3:last-child:after,
+		&.markdown-body-generate>h4:last-child:after,
+		&.markdown-body-generate>h5:last-child:after,
+		&.markdown-body-generate>h6:last-child:after,
+		&.markdown-body-generate>li:last-child:after,
+		&.markdown-body-generate>ol:last-child li:last-child:after,
+		&.markdown-body-generate>p:last-child:after,
+		&.markdown-body-generate>pre:last-child code:after,
+		&.markdown-body-generate>td:last-child:after,
+		&.markdown-body-generate>ul:last-child li:last-child:after {
+			color: #65a665;
+		}
+	}
 
 	.message-reply {
 		.whitespace-pre-wrap {
@@ -71,5 +121,15 @@ html.dark {
 	.highlight pre,
 	pre {
 		background-color: #282c34;
+	}
+}
+
+@media screen and (max-width: 533px) {
+	.markdown-body .code-block-wrapper {
+		padding: unset;
+
+		code {
+			padding: 24px 16px 16px 16px;
+		}
 	}
 }

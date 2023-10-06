@@ -1,15 +1,18 @@
 <script setup lang='ts'>
 import type { CSSProperties } from 'vue'
 import { computed, ref, watch } from 'vue'
-import { NButton, NLayoutSider } from 'naive-ui'
+import { NButton, NLayoutSider, useDialog } from 'naive-ui'
 import List from './List.vue'
 import Footer from './Footer.vue'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { PromptStore } from '@/components/common'
+import { PromptStore, SvgIcon } from '@/components/common'
+import { t } from '@/locales'
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
+
+const dialog = useDialog()
 
 const { isMobile } = useBasicLayout()
 const show = ref(false)
@@ -24,6 +27,20 @@ function handleAdd() {
 
 function handleUpdateCollapsed() {
   appStore.setSiderCollapsed(!collapsed.value)
+}
+
+function handleClearAll() {
+  dialog.warning({
+    title: t('chat.deleteMessage'),
+    content: t('chat.clearHistoryConfirm'),
+    positiveText: t('common.yes'),
+    negativeText: t('common.no'),
+    onPositiveClick: () => {
+      chatStore.clearHistory()
+      if (isMobile.value)
+        appStore.setSiderCollapsed(true)
+    },
+  })
 }
 
 const getMobileClass = computed<CSSProperties>(() => {
@@ -79,9 +96,14 @@ watch(
         <div class="flex-1 min-h-0 pb-4 overflow-hidden">
           <List />
         </div>
-        <div class="p-4">
-          <NButton block @click="show = true">
-            {{ $t('store.siderButton') }}
+        <div class="flex items-center p-4 space-x-4">
+          <div class="flex-1">
+            <NButton block @click="show = true">
+              {{ $t('store.siderButton') }}
+            </NButton>
+          </div>
+          <NButton @click="handleClearAll">
+            <SvgIcon icon="ri:close-circle-line" />
           </NButton>
         </div>
       </main>

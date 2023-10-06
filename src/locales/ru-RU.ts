@@ -26,7 +26,7 @@ export default {
     failed: 'Не удалось',
     verify: 'Проверить',
     unauthorizedTips: 'Не авторизован, сначала подтвердите свою личность.',
-		stopResponding: 'Прекращение отклика',
+    stopResponding: 'Прекращение отклика',
   },
   chat: {
     newChatButton: 'Новый чат',

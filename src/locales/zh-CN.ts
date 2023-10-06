@@ -26,7 +26,7 @@ export default {
     failed: '操作失败',
     verify: '验证',
     unauthorizedTips: '未经授权，请先进行验证。',
-		stopResponding: '停止响应',
+    stopResponding: '停止响应',
   },
   chat: {
     newChatButton: '新建聊天',
@@ -47,7 +47,7 @@ export default {
     deleteMessage: '删除消息',
     deleteMessageConfirm: '是否删除此消息?',
     deleteHistoryConfirm: '确定删除此记录?',
-    clearHistoryConfirm: '确定清空聊天记录?',
+    clearHistoryConfirm: '确定清空记录?',
     preview: '预览',
     showRawText: '显示原文',
   },
