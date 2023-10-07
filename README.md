@@ -2,8 +2,6 @@
 
 > 声明：此项目只发布于 GitHub，基于 MIT 协议，免费且作为开源学习使用。并且不会有任何形式的卖号、付费服务、讨论群、讨论组等行为。谨防受骗。
 
-更多功能：[chatgpt-web-plus](https://github.com/Chanzhaoyu/chatgpt-web-plus)
-
 ![cover](./docs/c1.png)
 ![cover2](./docs/c2.png)
 
@@ -29,6 +27,7 @@
 			- [防止爬虫抓取](#防止爬虫抓取)
 		- [使用 Railway 部署](#使用-railway-部署)
 			- [Railway 环境变量](#railway-环境变量)
+		- [使用 Sealos 部署](#使用-sealos-部署)
 		- [手动打包](#手动打包)
 			- [后端服务](#后端服务-1)
 			- [前端网页](#前端网页-1)
