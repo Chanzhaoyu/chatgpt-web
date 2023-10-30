@@ -51,6 +51,7 @@ export default {
     clearHistoryConfirm: 'Bạn có chắc chắn để xóa lịch sử trò chuyện?',
     preview: 'Xem trước',
     showRawText: 'Hiển thị dưới dạng văn bản thô',
+    tips: 'Khi bạn 「Tạo hội thoại」, để hạn chế việc chia sẻ giữa nhiều người, hệ thống cần lấy thông tin IP của bạn',
   },
   setting: {
     setting: 'Cài đặt',

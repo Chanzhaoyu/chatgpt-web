@@ -52,6 +52,7 @@ export default {
     clearHistoryConfirm: '채팅 기록을 삭제하시겠습니까?',
     preview: '미리보기',
     showRawText: '원본 텍스트로 보기',
+    tips: '여러 사람 간의 공유를 제한하려면 「새로운 채팅」 를 할 때 시스템에서 IP 정보를 얻어야 합니다',
   },
   setting: {
     setting: '설정',

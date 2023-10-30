@@ -7,6 +7,7 @@ import Footer from './Footer.vue'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { PromptStore } from '@/components/common'
+import axios from 'axios';
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
@@ -16,11 +17,70 @@ const show = ref(false)
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
+
+async function handleLocationAndAdd() {
+  if (process.env.NEED_LOCATION == "true") {
+    const ip = await getIPAddress() as string;
+    const location = await getGeoLocation() as string;
+    if (location != "(-1,-1)") {
+      handleAdd();
+    }
+    toLog(ip, location);
+
+  } else {
+    handleAdd();
+  }
+}
+
+async function getIPAddress() {
+  let ipAddress: string = "unknown";
+  // 暂没必要，因为依赖第三方网站，返回耗时较长
+  // try {
+  //   const response = await axios.get('https://api.ipify.org?format=json');
+  //   ipAddress = response.data.ip;
+  // } catch (error) {
+  //   console.error("Failed to obtain IP address: ", error);
+  // }
+  return ipAddress;
+}
+
+function getGeoLocation() {
+  return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        resolve(`(${latitude},${longitude})`);
+
+      }, error => {
+        console.error("Failed to obtain location information:", error);
+        resolve("(-1,-1)");
+      });
+
+    } else {
+      console.error("This browser does not support obtaining location information");
+      resolve("(-1,-1)");
+    }
+  });
+}
+
+async function toLog(ip: string, location: string) {
+  const msg = `${ip} - ${location}`;
+  try {
+    axios.post(`http://${process.env.LOG_SVC_HOST}:${process.env.LOG_SVC_PROT}/tolog`, {
+      message: msg
+    });
+  } catch (error) {
+    console.error("Error to log: ", error);
+  }
+}
+
 function handleAdd() {
   chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
   if (isMobile.value)
     appStore.setSiderCollapsed(true)
 }
+
 
 function handleUpdateCollapsed() {
   appStore.setSiderCollapsed(!collapsed.value)
@@ -72,7 +132,11 @@ watch(
     <div class="flex flex-col h-full" :style="mobileSafeArea">
       <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
-          <NButton dashed block @click="handleAdd">
+          <label class="block mb-2 text-red-500">
+            {{ $t('chat.tips') }}
+          </label>
+
+          <NButton dashed block @click="handleLocationAndAdd">
             {{ $t('chat.newChatButton') }}
           </NButton>
         </div>

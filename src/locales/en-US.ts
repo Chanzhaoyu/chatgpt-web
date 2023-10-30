@@ -52,6 +52,7 @@ export default {
     clearHistoryConfirm: 'Are you sure to clear chat history?',
     preview: 'Preview',
     showRawText: 'Show as raw text',
+    tips: 'When 「New Chat」, in order to restrict sharing, the system needs to obtain your IP information',
   },
   setting: {
     setting: 'Setting',

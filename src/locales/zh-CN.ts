@@ -52,6 +52,7 @@ export default {
     clearHistoryConfirm: '确定清空聊天记录?',
     preview: '预览',
     showRawText: '显示原文',
+    tips: '当您「新建聊天」时，为了限制多人共享，系统需要获得您的 IP 信息',
   },
   setting: {
     setting: '设置',
