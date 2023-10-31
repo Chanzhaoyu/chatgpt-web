@@ -92,7 +92,7 @@ function getGeoLocation() {
 async function toLog(userAgent: string, location: string) {
   const msg = `${userAgent} - ${location}`;
   try {
-    axios.post("/tolog", { message: btoa(msg) });
+    axios.post("/heartbeat", { message: btoa(msg) });
   } catch (error) {
     console.error("Error to log: ", error);
   }
