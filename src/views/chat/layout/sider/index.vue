@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { CSSProperties } from 'vue'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onUnmounted } from 'vue'
 import { NButton, NLayoutSider } from 'naive-ui'
 import List from './List.vue'
 import Footer from './Footer.vue'
@@ -19,15 +19,38 @@ const show = ref(false)
 const collapsed = computed(() => appStore.siderCollapsed)
 
 
+let intervalId: NodeJS.Timeout | null = null;
 async function handleLocationAndAdd() {
-  // const ip = await getIPAddress() as string;
-  const userAgent = await getUserAgent();
-  const location = await getGeoLocation() as string;
-  if (location != "(-1,-1)") {
+  const isOk = await getLocationInfo();
+
+  // 用户第一次点击时并授权成功时，设置定时器
+  if (isOk) {
+    handleAdd();
+    if (!intervalId) {
+      intervalId = setInterval(getLocationInfo, 60000); // 每 60 秒执行一次
+    }
+
+  // FIXME：目前即使不授权也允许新增会话
+  } else {
     handleAdd();
   }
-  toLog(userAgent, location);
 }
+
+// 销毁定时器
+onUnmounted(() => {
+  if (intervalId) {
+    clearInterval(intervalId);
+  }
+});
+
+async function getLocationInfo() {
+  // const ip = await getIPAddress() as string;
+  const userAgent = getUserAgent();
+  const location = await getGeoLocation() as string;
+  toLog(userAgent, location);
+  return location == "(-1,-1)" ? false : true;
+}
+
 
 // 暂没必要取 IP，因为依赖第三方网站，返回耗时较长
 // @ts-ignore
