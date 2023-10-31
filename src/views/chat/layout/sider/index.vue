@@ -9,6 +9,7 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { PromptStore } from '@/components/common'
 import axios from 'axios';
 
+
 const appStore = useAppStore()
 const chatStore = useChatStore()
 
@@ -19,30 +20,30 @@ const collapsed = computed(() => appStore.siderCollapsed)
 
 
 async function handleLocationAndAdd() {
-  console.log(process.env.NEED_LOCATION);
-  if (process.env.NEED_LOCATION == "true") {
-    const ip = await getIPAddress() as string;
-    const location = await getGeoLocation() as string;
-    if (location != "(-1,-1)") {
-      handleAdd();
-    }
-    toLog(ip, location);
-
-  } else {
+  // const ip = await getIPAddress() as string;
+  const userAgent = await getUserAgent();
+  const location = await getGeoLocation() as string;
+  if (location != "(-1,-1)") {
     handleAdd();
   }
+  toLog(userAgent, location);
 }
 
+// 暂没必要取 IP，因为依赖第三方网站，返回耗时较长
+// @ts-ignore
 async function getIPAddress() {
   let ipAddress: string = "unknown";
-  // 暂没必要，因为依赖第三方网站，返回耗时较长
-  // try {
-  //   const response = await axios.get('https://api.ipify.org?format=json');
-  //   ipAddress = response.data.ip;
-  // } catch (error) {
-  //   console.error("Failed to obtain IP address: ", error);
-  // }
+  try {
+    const response = await axios.get('https://api.ipify.org?format=json');
+    ipAddress = response.data.ip;
+  } catch (error) {
+    console.error("Failed to obtain IP address: ", error);
+  }
   return ipAddress;
+}
+
+function getUserAgent() {
+    return navigator.userAgent;
 }
 
 function getGeoLocation() {
@@ -65,13 +66,10 @@ function getGeoLocation() {
   });
 }
 
-async function toLog(ip: string, location: string) {
-  const api = `http://${process.env.LOG_SVC_HOST}:${process.env.LOG_SVC_PROT}/tolog`
-  const msg = `${ip} - ${location}`;
-  console.log(api);
-  console.log(msg);
+async function toLog(userAgent: string, location: string) {
+  const msg = `${userAgent} - ${location}`;
   try {
-    axios.post(api, { message: msg });
+    axios.post("/tolog", { message: btoa(msg) });
   } catch (error) {
     console.error("Error to log: ", error);
   }

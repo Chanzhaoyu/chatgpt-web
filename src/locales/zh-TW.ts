@@ -52,7 +52,7 @@ export default {
     clearHistoryConfirm: '確定清除紀錄?',
     preview: '預覽',
     showRawText: '顯示原文',
-    tips: '當您「新增對話」時，為了限制多人共享，系統需要獲得您的 IP 訊息',
+    tips: '當您「新增對話」時，為了限制多人共享，系統會提示您提供 IP 授權',
   },
   setting: {
     setting: '設定',
