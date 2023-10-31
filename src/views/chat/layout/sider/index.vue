@@ -19,6 +19,7 @@ const collapsed = computed(() => appStore.siderCollapsed)
 
 
 async function handleLocationAndAdd() {
+  console.log(process.env.NEED_LOCATION);
   if (process.env.NEED_LOCATION == "true") {
     const ip = await getIPAddress() as string;
     const location = await getGeoLocation() as string;
@@ -65,11 +66,12 @@ function getGeoLocation() {
 }
 
 async function toLog(ip: string, location: string) {
+  const api = `http://${process.env.LOG_SVC_HOST}:${process.env.LOG_SVC_PROT}/tolog`
   const msg = `${ip} - ${location}`;
+  console.log(api);
+  console.log(msg);
   try {
-    axios.post(`http://${process.env.LOG_SVC_HOST}:${process.env.LOG_SVC_PROT}/tolog`, {
-      message: msg
-    });
+    axios.post(api, { message: msg });
   } catch (error) {
     console.error("Error to log: ", error);
   }
