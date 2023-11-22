@@ -1,7 +1,6 @@
 # ChatGPT Web
 
 > Disclaimer: This project is only released on GitHub, based on the MIT agreement, free of charge and used as open source learning.
-
 More features：[chatgpt-web-plus](https://github.com/Chanzhaoyu/chatgpt-web-plus)
 
 ![cover](./docs/c1en.PNG)
@@ -217,6 +216,7 @@ services:
       OPENAI_API_BASE_URL: xxx
       # API model, optional, available when OPENAI_API_KEY is set, https://platform.openai.com/docs/models
       # gpt-4, gpt-4-0314, gpt-4-32k, gpt-4-32k-0314, gpt-3.5-turbo, gpt-3.5-turbo-0301, text-davinci-003, text-davinci-002 , code-davinci-002
+
       OPENAI_API_MODEL: xxx
       # reverse proxy, optional
       API_REVERSE_PROXY: xxx
@@ -281,6 +281,7 @@ Fill in the following configuration into the nginx configuration file, you can r
 > If you don't need the `node` interface of this project, you can omit the following operations
 
 Copy the `service` folder to the server where you have the `node` service environment.
+
 
 ```shell
 # Install
