@@ -46,7 +46,7 @@ onMounted(() => {
       </h2>
       <div class="p-2 space-y-2 rounded-md bg-neutral-100 dark:bg-neutral-700">
         <p>
-          此项目开源于
+          {{ $t("setting.openSource") }}
           <a
             class="text-blue-600 dark:text-blue-500"
             href="https://github.com/Chanzhaoyu/chatgpt-web"
@@ -54,10 +54,10 @@ onMounted(() => {
           >
             GitHub
           </a>
-          ，免费且基于 MIT 协议，没有任何形式的付费行为！
+          {{ $t("setting.freeMIT") }}
         </p>
         <p>
-          如果你觉得此项目对你有帮助，请在 GitHub 帮我点个 Star 或者给予一点赞助，谢谢！
+          {{ $t("setting.stars") }}
         </p>
       </div>
       <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>

@@ -93,7 +93,7 @@ async function onConversation() {
     +uuid,
     {
       dateTime: new Date().toLocaleString(),
-      text: '思考中',
+      text: t('chat.thinking'),
       loading: true,
       inversion: false,
       error: false,
@@ -481,7 +481,7 @@ onUnmounted(() => {
           <template v-if="!dataSources.length">
             <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
               <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
-              <span>Aha~</span>
+              <span>{{ t('chat.newChatTitle') }}</span>
             </div>
           </template>
           <template v-else>
