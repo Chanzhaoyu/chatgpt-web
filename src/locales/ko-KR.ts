@@ -30,11 +30,13 @@ export default {
   },
   chat: {
     newChatButton: '새로운 채팅',
+    newChatTitle: '새로운 채팅',
     placeholder: '무엇이든 물어보세요...(Shift + Enter = 줄바꿈, "/"를 눌러서 힌트를 보세요)',
     placeholderMobile: '무엇이든 물어보세요...',
     copy: '복사',
     copied: '복사됨',
     copyCode: '코드 복사',
+    copyFailed: '복사 실패',
     clearChat: '채팅 비우기',
     clearChatConfirm: '이 채팅을 비우시겠습니까?',
     exportImage: '이미지 내보내기',
@@ -50,6 +52,7 @@ export default {
     clearHistoryConfirm: '채팅 기록을 삭제하시겠습니까?',
     preview: '미리보기',
     showRawText: '원본 텍스트로 보기',
+    thinking: '생각 중...',
   },
   setting: {
     setting: '설정',
@@ -73,6 +76,9 @@ export default {
     httpsProxy: 'HTTPS 프록시',
     balance: 'API 잔액',
     monthlyUsage: '월 사용량',
+    openSource: '이 프로젝트는 다음에서 오픈 소스로 제공됩니다:',
+    freeMIT: '무료이며 MIT 라이선스에 기반하며, 어떠한 형태의 유료 행동도 없습니다!',
+    stars: '이 프로젝트가 도움이 되었다면, GitHub에서 별을 주거나 조금의 후원을 해주시면 감사하겠습니다!',
   },
   store: {
     siderButton: '프롬프트 저장소',

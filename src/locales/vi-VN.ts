@@ -29,11 +29,13 @@ export default {
   },
   chat: {
     newChatButton: 'Tạo hội thoại',
+    newChatTitle: 'Tạo hội thoại',
     placeholder: 'Hỏi tôi bất cứ điều gì...(Shift + Enter = ngắt dòng, "/" to trigger prompts)',
     placeholderMobile: 'Hỏi tôi bất cứ điều gì...',
     copy: 'Sao chép',
     copied: 'Đã sao chép',
     copyCode: 'Sao chép Code',
+    copyFailed: 'Sao chép thất bại',
     clearChat: 'Clear Chat',
     clearChatConfirm: 'Bạn có chắc chắn xóa cuộc trò chuyện này?',
     exportImage: 'Xuất hình ảnh',
@@ -49,6 +51,7 @@ export default {
     clearHistoryConfirm: 'Bạn có chắc chắn để xóa lịch sử trò chuyện?',
     preview: 'Xem trước',
     showRawText: 'Hiển thị dưới dạng văn bản thô',
+    thinking: 'Đang suy nghĩ...',
   },
   setting: {
     setting: 'Cài đặt',
@@ -72,6 +75,9 @@ export default {
     httpsProxy: 'HTTPS Proxy',
     balance: 'API Balance',
     monthlyUsage: 'Sử dụng hàng tháng',
+    openSource: 'Dự án này được mở nguồn tại',
+    freeMIT: 'miễn phí và dựa trên giấy phép MIT, không có bất kỳ hình thức hành vi trả phí nào!',
+    stars: 'Nếu bạn thấy dự án này hữu ích, vui lòng cho tôi một Star trên GitHub hoặc tài trợ một chút, cảm ơn bạn!',
   },
   store: {
     siderButton: 'Prompt Store',
