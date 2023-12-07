@@ -56,7 +56,7 @@
     "markdown-it-link-attributes": "^4.0.1",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.21",
-    "rimraf": "^4.2.0",
+    "rimraf": "^4.3.0",
     "tailwindcss": "^3.2.7",
     "typescript": "~4.9.5",
     "vite": "^4.2.0",
