@@ -8,35 +8,36 @@
 ![cover2](./docs/c2.png)
 
 - [ChatGPT Web](#chatgpt-web)
-  - [Introduction](#introduction)
-  - [To-Do List](#to-do-list)
-  - [Prerequisites](#prerequisites)
-    - [Node](#node)
-    - [PNPM](#pnpm)
-    - [Fill in Keys](#fill-in-keys)
-  - [Install Dependencies](#install-dependencies)
-    - [Backend](#backend)
-    - [Frontend](#frontend)
-  - [Run in Test Environment](#run-in-test-environment)
-    - [Backend Service](#backend-service)
-    - [Frontend Webpage](#frontend-webpage)
-  - [Environment Variables](#environment-variables)
-  - [Packaging](#packaging)
-    - [Use Docker](#use-docker)
-      - [Docker Parameter Examples](#docker-parameter-examples)
-      - [Docker Build & Run](#docker-build--run)
-      - [Docker Compose](#docker-compose)
-      - [Prevent Crawlers](#prevent-crawlers)
-    - [Deploy with Railway](#deploy-with-railway)
-      - [Railway Environment Variables](#railway-environment-variables)
-    - [Deploy with Sealos](#deploy-with-sealos)
-    - [Package Manually](#package-manually)
-      - [Backend Service](#backend-service-1)
-      - [Frontend Webpage](#frontend-webpage-1)
-  - [FAQ](#faq)
-  - [Contributing](#contributing)
-  - [Sponsors](#sponsors)
-  - [License](#license)
+	- [Introduction](#introduction)
+	- [Roadmap](#roadmap)
+	- [Prerequisites](#prerequisites)
+		- [Node](#node)
+		- [PNPM](#pnpm)
+		- [Filling in the Key](#filling-in-the-key)
+	- [Install Dependencies](#install-dependencies)
+		- [Backend](#backend)
+		- [Frontend](#frontend)
+	- [Run in Test Environment](#run-in-test-environment)
+		- [Backend Service](#backend-service)
+		- [Frontend Webpage](#frontend-webpage)
+	- [Environment Variables](#environment-variables)
+	- [Packaging](#packaging)
+		- [Use Docker](#use-docker)
+			- [Docker Parameter Examples](#docker-parameter-examples)
+			- [Docker build \& Run](#docker-build--run)
+			- [Docker compose](#docker-compose)
+			- [Prevent Crawlers](#prevent-crawlers)
+		- [Deploy with Railway](#deploy-with-railway)
+			- [Railway Environment Variables](#railway-environment-variables)
+		- [Deploy with Sealos](#deploy-with-sealos)
+		- [Package Manually](#package-manually)
+			- [Backend Service](#backend-service-1)
+			- [Frontend Webpage](#frontend-webpage-1)
+	- [FAQ](#faq)
+	- [Contributing](#contributing)
+	- [Acknowledgements](#acknowledgements)
+	- [Sponsors](#sponsors)
+	- [License](#license)
 ## Introduction
 
 Supports dual models and provides two unofficial `ChatGPT API` methods
@@ -339,6 +340,10 @@ Thanks to everyone who has contributed!
 <a href="https://github.com/Chanzhaoyu/chatgpt-web/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Chanzhaoyu/chatgpt-web" />
 </a>
+
+## Acknowledgements
+
+Thanks to [JetBrains](https://www.jetbrains.com/) SoftWare for providing free Open Source license for this project.
 
 ## Sponsors
 

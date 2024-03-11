@@ -35,6 +35,7 @@
 			- [前端网页](#前端网页-1)
 	- [常见问题](#常见问题)
 	- [参与贡献](#参与贡献)
+	- [致谢](#致谢)
 	- [赞助](#赞助)
 	- [License](#license)
 ## 介绍
@@ -342,6 +343,10 @@ A: 一种可能原因是经过 Nginx 反向代理，开启了 buffer，则 Nginx
 <a href="https://github.com/Chanzhaoyu/chatgpt-web/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Chanzhaoyu/chatgpt-web" />
 </a>
+
+## 致谢
+
+感谢 [JetBrains](https://www.jetbrains.com/) 为这个项目提供免费开源许可的软件。
 
 ## 赞助
 
