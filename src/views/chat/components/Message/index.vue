@@ -19,7 +19,7 @@ interface Props {
 
 interface Emit {
   (ev: 'regenerate'): void
-  (ev: 'delete'): void
+  (ev: 'delete', force: boolean): void
 }
 
 const props = defineProps<Props>()
@@ -72,7 +72,7 @@ function handleSelect(key: 'copyText' | 'delete' | 'toggleRenderType') {
       asRawText.value = !asRawText.value
       return
     case 'delete':
-      emit('delete')
+      emit('delete', false)
   }
 }
 
@@ -90,6 +90,10 @@ async function handleCopy() {
     message.error(t('chat.copyFailed'))
   }
 }
+
+function fastDel() {
+  emit('delete', true)
+}
 </script>
 
 <template>
@@ -101,6 +105,7 @@ async function handleCopy() {
     <div
       class="flex items-center justify-center flex-shrink-0 h-8 overflow-hidden rounded-full basis-8"
       :class="[inversion ? 'ml-2' : 'mr-2']"
+      @click="fastDel"
     >
       <AvatarComponent :image="inversion" />
     </div>

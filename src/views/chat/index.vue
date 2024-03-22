@@ -356,19 +356,24 @@ function handleExport() {
   })
 }
 
-function handleDelete(index: number) {
+function handleDelete(index: number, force: boolean) {
   if (loading.value)
     return
 
-  dialog.warning({
-    title: t('chat.deleteMessage'),
-    content: t('chat.deleteMessageConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
-    onPositiveClick: () => {
-      chatStore.deleteChatByUuid(+uuid, index)
-    },
-  })
+  if (force === true) {
+    chatStore.deleteChatByUuid(+uuid, index)
+  }
+  else {
+    dialog.warning({
+      title: t('chat.deleteMessage'),
+      content: t('chat.deleteMessageConfirm'),
+      positiveText: t('common.yes'),
+      negativeText: t('common.no'),
+      onPositiveClick: () => {
+        chatStore.deleteChatByUuid(+uuid, index)
+      },
+    })
+  }
 }
 
 function handleClear() {
@@ -495,7 +500,7 @@ onUnmounted(() => {
                 :error="item.error"
                 :loading="item.loading"
                 @regenerate="onRegenerate(index)"
-                @delete="handleDelete(index)"
+                @delete="(force) => handleDelete(index, force)"
               />
               <div class="sticky bottom-0 left-0 flex justify-center">
                 <NButton v-if="loading" type="warning" @click="handleStop">
