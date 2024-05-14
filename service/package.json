@@ -16,7 +16,7 @@
   "scripts": {
     "start": "esno ./src/index.ts",
     "dev": "esno watch ./src/index.ts",
-    "prod": "esno ./build/index.js",
+    "prod": "node ./build/index.mjs",
     "build": "pnpm clean && tsup",
     "clean": "rimraf build",
     "lint": "eslint .",
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "axios": "^1.3.4",
-    "chatgpt": "^5.0.10",
+    "chatgpt": "^5.1.2",
     "dotenv": "^16.0.3",
     "esno": "^0.16.3",
     "express": "^4.18.2",

@@ -3,10 +3,6 @@ import { computed } from 'vue'
 import { NModal } from 'naive-ui'
 import General from './General.vue'
 
-const props = defineProps<Props>()
-
-const emit = defineEmits<Emit>()
-
 interface Props {
   visible: boolean
 }

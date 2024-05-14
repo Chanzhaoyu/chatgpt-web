@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
-import { getLocalState, setLocalState } from './helper'
+import { defaultState, getLocalState, setLocalState } from './helper'
 import { router } from '@/router'
+import { t } from '@/locales'
 
 export const useChatStore = defineStore('chat-store', {
   state: (): Chat.ChatState => getLocalState(),
@@ -103,7 +104,7 @@ export const useChatStore = defineStore('chat-store', {
         }
         else {
           this.chat[0].data.push(chat)
-          if (this.history[0].title === 'New Chat')
+          if (this.history[0].title === t('chat.newChatTitle'))
             this.history[0].title = chat.text
           this.recordState()
         }
@@ -112,7 +113,7 @@ export const useChatStore = defineStore('chat-store', {
       const index = this.chat.findIndex(item => item.uuid === uuid)
       if (index !== -1) {
         this.chat[index].data.push(chat)
-        if (this.history[index].title === 'New Chat')
+        if (this.history[index].title === t('chat.newChatTitle'))
           this.history[index].title = chat.text
         this.recordState()
       }
@@ -180,6 +181,11 @@ export const useChatStore = defineStore('chat-store', {
         this.chat[index].data = []
         this.recordState()
       }
+    },
+
+    clearHistory() {
+      this.$state = { ...defaultState() }
+      this.recordState()
     },
 
     async reloadRoute(uuid?: number) {

@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import type { DataTableColumns } from 'naive-ui'
 import { computed, h, ref, watch } from 'vue'
-import { NButton, NCard, NDataTable, NDivider, NInput, NLayoutContent, NList, NListItem, NModal, NPopconfirm, NSpace, NTabPane, NTabs, NThing, useMessage } from 'naive-ui'
+import { NButton, NCard, NDataTable, NDivider, NInput, NList, NListItem, NModal, NPopconfirm, NSpace, NTabPane, NTabs, NThing, useMessage } from 'naive-ui'
 import PromptRecommend from '../../../assets/recommend.json'
 import { SvgIcon } from '..'
 import { usePromptStore } from '@/store'
@@ -147,7 +147,7 @@ const clearPromptTemplate = () => {
   message.success(t('common.clearSuccess'))
 }
 
-const importPromptTemplate = () => {
+const importPromptTemplate = (from = 'online') => {
   try {
     const jsonData = JSON.parse(tempPromptValue.value)
     let key = ''
@@ -168,7 +168,7 @@ const importPromptTemplate = () => {
     }
 
     for (const i of jsonData) {
-      if (!('key' in i) || !('value' in i))
+      if (!(key in i) || !(value in i))
         throw new Error(t('store.importError'))
       let safe = true
       for (const j of promptList.value) {
@@ -191,6 +191,8 @@ const importPromptTemplate = () => {
   catch {
     message.error('JSON 格式错误，请检查 JSON 格式')
   }
+  if (from === 'local')
+    showModal.value = !showModal.value
 }
 
 // 模板导出
@@ -408,17 +410,12 @@ const dataSource = computed(() => {
             </NButton>
           </div>
           <NDivider />
-          <NLayoutContent
-            style="height: 360px"
-            content-style="background: none;"
-            :native-scrollbar="false"
-          >
+          <div class="max-h-[360px] overflow-y-auto space-y-4">
             <NCard
               v-for="info in promptRecommendList"
               :key="info.key" :title="info.key"
-              style="margin: 5px;"
-              embedded
               :bordered="true"
+              embedded
             >
               <p
                 class="overflow-hidden text-ellipsis whitespace-nowrap"
@@ -442,7 +439,7 @@ const dataSource = computed(() => {
                 </div>
               </template>
             </NCard>
-          </NLayoutContent>
+          </div>
         </NTabPane>
       </NTabs>
     </div>
@@ -474,7 +471,7 @@ const dataSource = computed(() => {
         block
         type="primary"
         :disabled="inputStatus"
-        @click="() => { importPromptTemplate() }"
+        @click="() => { importPromptTemplate('local') }"
       >
         {{ t('common.import') }}
       </NButton>
