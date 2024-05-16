@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@traptitech/markdown-it-katex':
-        specifier: ^3.6.0
-        version: 3.6.0
+      '@vscode/markdown-it-katex':
+        specifier: ^1.0.3
+        version: 1.0.3
       '@vueuse/core':
         specifier: ^9.13.0
         version: 9.13.0(vue@3.2.47)
@@ -1115,9 +1115,6 @@ packages:
   '@surma/rollup-plugin-off-main-thread@2.2.3':
     resolution: {integrity: sha512-lR8q/9W7hZpMWweNiAKU7NQerBnzQQLvi8qnTDU/fxItPhtZVMbPV3lbCwjhIlNBe9Bbr5V+KHshvWmVSG9cxQ==}
 
-  '@traptitech/markdown-it-katex@3.6.0':
-    resolution: {integrity: sha512-CnJzTWxsgLGXFdSrWRaGz7GZ1kUUi8g3E9HzJmeveX1YwVJavrKYqysktfHZQsujdnRqV5O7g8FPKEA/aeTkOQ==}
-
   '@tsconfig/node10@1.0.9':
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}
 
@@ -1278,6 +1275,9 @@ packages:
 
   '@volar/vue-typescript@1.2.0':
     resolution: {integrity: sha512-zjmRi9y3J1EkG+pfuHp8IbHmibihrKK485cfzsHjiuvJMGrpkWvlO5WVEk8oslMxxeGC5XwBFE9AOlvh378EPA==}
+
+  '@vscode/markdown-it-katex@1.0.3':
+    resolution: {integrity: sha512-a8ppdac0CG2lAQC6E6lT8dxmXkUk9gRtYNtILx31FyrPEwj875AAHc6tpRGeJBpWMpiMtcvz7ymWYBwYgxuFmw==}
 
   '@vue/compiler-core@3.2.47':
     resolution: {integrity: sha512-p4D7FDnQb7+YJmO2iPEv0SQNeNzcbHdGByJDsT4lynf63AFkOTFN07HsiRSvjGo0QrxR/o3d0hUyNCUnBU2Tig==}
@@ -5095,10 +5095,6 @@ snapshots:
       magic-string: 0.25.9
       string.prototype.matchall: 4.0.10
 
-  '@traptitech/markdown-it-katex@3.6.0':
-    dependencies:
-      katex: 0.16.4
-
   '@tsconfig/node10@1.0.9': {}
 
   '@tsconfig/node12@1.0.11': {}
@@ -5283,6 +5279,10 @@ snapshots:
     dependencies:
       '@volar/typescript': 1.3.0-alpha.0
       '@volar/vue-language-core': 1.2.0
+
+  '@vscode/markdown-it-katex@1.0.3':
+    dependencies:
+      katex: 0.16.4
 
   '@vue/compiler-core@3.2.47':
     dependencies:

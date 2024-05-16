@@ -23,7 +23,7 @@
     "common:prepare": "husky install"
   },
   "dependencies": {
-    "@traptitech/markdown-it-katex": "^3.6.0",
+    "@vscode/markdown-it-katex": "^1.0.3",
     "@vueuse/core": "^9.13.0",
     "highlight.js": "^11.7.0",
     "html-to-image": "^1.11.11",
