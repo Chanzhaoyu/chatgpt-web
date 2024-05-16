@@ -53,8 +53,8 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
         options.maxModelTokens = 32768
         options.maxResponseTokens = 8192
       }
-      // if use GPT-4 Turbo
-      else if (/-preview|-turbo/.test(model.toLowerCase())) {
+      // if use GPT-4 Turbo or GPT-4o
+      else if (/-preview|-turbo|-o/.test(model.toLowerCase())) {
         options.maxModelTokens = 128000
         options.maxResponseTokens = 4096
       }
