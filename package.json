@@ -29,6 +29,7 @@
     "html-to-image": "^1.11.11",
     "katex": "^0.16.4",
     "markdown-it": "^13.0.1",
+    "mermaid-it-markdown": "^1.0.8",
     "naive-ui": "^2.34.3",
     "pinia": "^2.0.33",
     "vue": "^3.2.47",

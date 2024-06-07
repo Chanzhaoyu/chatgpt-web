@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue'
 import MarkdownIt from 'markdown-it'
-import mdKatex from '@vscode/markdown-it-katex'
-import mila from 'markdown-it-link-attributes'
+import MdKatex from '@vscode/markdown-it-katex'
+import MdLinkAttributes from 'markdown-it-link-attributes'
+import MdMermaid from 'mermaid-it-markdown'
 import hljs from 'highlight.js'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
@@ -35,8 +36,7 @@ const mdi = new MarkdownIt({
   },
 })
 
-mdi.use(mila, { attrs: { target: '_blank', rel: 'noopener' } })
-mdi.use(mdKatex)
+mdi.use(MdLinkAttributes, { attrs: { target: '_blank', rel: 'noopener' } }).use(MdKatex).use(MdMermaid)
 
 const wrapClass = computed(() => {
   return [
@@ -85,7 +85,7 @@ function removeCopyEvents() {
   if (textRef.value) {
     const copyBtn = textRef.value.querySelectorAll('.code-block-header__copy')
     copyBtn.forEach((btn) => {
-      btn.removeEventListener('click', () => {})
+      btn.removeEventListener('click', () => { })
     })
   }
 }
