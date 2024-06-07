@@ -53,8 +53,11 @@ const wrapClass = computed(() => {
 
 const text = computed(() => {
   const value = props.text ?? ''
-  if (!props.asRawText)
-    return mdi.render(value)
+  if (!props.asRawText) {
+    // 对数学公式进行处理，自动添加 $$ 符号
+    const escapedText = escapeBrackets(escapeDollarNumber(value))
+    return mdi.render(escapedText)
+  }
   return value
 })
 
@@ -88,6 +91,35 @@ function removeCopyEvents() {
       btn.removeEventListener('click', () => { })
     })
   }
+}
+
+function escapeDollarNumber(text: string) {
+  let escapedText = ''
+
+  for (let i = 0; i < text.length; i += 1) {
+    let char = text[i]
+    const nextChar = text[i + 1] || ' '
+
+    if (char === '$' && nextChar >= '0' && nextChar <= '9')
+      char = '\\$'
+
+    escapedText += char
+  }
+
+  return escapedText
+}
+
+function escapeBrackets(text: string) {
+  const pattern = /(```[\s\S]*?```|`.*?`)|\\\[([\s\S]*?[^\\])\\\]|\\\((.*?)\\\)/g
+  return text.replace(pattern, (match, codeBlock, squareBracket, roundBracket) => {
+    if (codeBlock)
+      return codeBlock
+    else if (squareBracket)
+      return `$$${squareBracket}$$`
+    else if (roundBracket)
+      return `$${roundBracket}$`
+    return match
+  })
 }
 
 onMounted(() => {
