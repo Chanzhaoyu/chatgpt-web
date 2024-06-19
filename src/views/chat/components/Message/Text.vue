@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue'
 import MarkdownIt from 'markdown-it'
-import mdKatex from '@traptitech/markdown-it-katex'
-import mila from 'markdown-it-link-attributes'
+import MdKatex from '@vscode/markdown-it-katex'
+import MdLinkAttributes from 'markdown-it-link-attributes'
+import MdMermaid from 'mermaid-it-markdown'
 import hljs from 'highlight.js'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
@@ -35,8 +36,7 @@ const mdi = new MarkdownIt({
   },
 })
 
-mdi.use(mila, { attrs: { target: '_blank', rel: 'noopener' } })
-mdi.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
+mdi.use(MdLinkAttributes, { attrs: { target: '_blank', rel: 'noopener' } }).use(MdKatex).use(MdMermaid)
 
 const wrapClass = computed(() => {
   return [
@@ -53,8 +53,11 @@ const wrapClass = computed(() => {
 
 const text = computed(() => {
   const value = props.text ?? ''
-  if (!props.asRawText)
-    return mdi.render(value)
+  if (!props.asRawText) {
+    // 对数学公式进行处理，自动添加 $$ 符号
+    const escapedText = escapeBrackets(escapeDollarNumber(value))
+    return mdi.render(escapedText)
+  }
   return value
 })
 
@@ -85,9 +88,38 @@ function removeCopyEvents() {
   if (textRef.value) {
     const copyBtn = textRef.value.querySelectorAll('.code-block-header__copy')
     copyBtn.forEach((btn) => {
-      btn.removeEventListener('click', () => {})
+      btn.removeEventListener('click', () => { })
     })
   }
+}
+
+function escapeDollarNumber(text: string) {
+  let escapedText = ''
+
+  for (let i = 0; i < text.length; i += 1) {
+    let char = text[i]
+    const nextChar = text[i + 1] || ' '
+
+    if (char === '$' && nextChar >= '0' && nextChar <= '9')
+      char = '\\$'
+
+    escapedText += char
+  }
+
+  return escapedText
+}
+
+function escapeBrackets(text: string) {
+  const pattern = /(```[\s\S]*?```|`.*?`)|\\\[([\s\S]*?[^\\])\\\]|\\\((.*?)\\\)/g
+  return text.replace(pattern, (match, codeBlock, squareBracket, roundBracket) => {
+    if (codeBlock)
+      return codeBlock
+    else if (squareBracket)
+      return `$$${squareBracket}$$`
+    else if (roundBracket)
+      return `$${roundBracket}$`
+    return match
+  })
 }
 
 onMounted(() => {
