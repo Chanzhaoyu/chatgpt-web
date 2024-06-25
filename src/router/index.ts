@@ -1,15 +1,23 @@
 import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
-import { createRouter, createWebHashHistory } from 'vue-router'
-import { setupPageGuard } from './permission'
+import { createRouter, createWebHistory } from 'vue-router'
 import { ChatLayout } from '@/views/chat/layout'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
+    redirect: '/login',
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/login/index.vue'),
+  },
+  {
+    path: '/chat',
     name: 'Root',
     component: ChatLayout,
-    redirect: '/chat',
+    // redirect: '/chat',
     children: [
       {
         path: '/chat/:uuid?',
@@ -39,12 +47,12 @@ const routes: RouteRecordRaw[] = [
 ]
 
 export const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
   scrollBehavior: () => ({ left: 0, top: 0 }),
 })
 
-setupPageGuard(router)
+// setupPageGuard(router)
 
 export async function setupRouter(app: App) {
   app.use(router)
