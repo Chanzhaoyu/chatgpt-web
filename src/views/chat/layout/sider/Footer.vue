@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { defineAsyncComponent, ref } from 'vue'
-import { HoverButton, SvgIcon, UserAvatar } from '@/components/common'
+import { HoverButton, SvgIcon } from '@/components/common'
 
 const Setting = defineAsyncComponent(() => import('@/components/common/Setting/index.vue'))
 

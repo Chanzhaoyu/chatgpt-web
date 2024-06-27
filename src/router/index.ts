@@ -14,13 +14,18 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/login/index.vue'),
   },
   {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/register/index.vue'),
+  },
+  {
     path: '/chat',
     name: 'Root',
     component: ChatLayout,
     // redirect: '/chat',
     children: [
       {
-        path: '/chat/:uuid?',
+        path: '/chat',
         name: 'Chat',
         component: () => import('@/views/chat/index.vue'),
       },

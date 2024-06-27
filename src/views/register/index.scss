@@ -124,23 +124,8 @@
             font-size: 12px;
           }
         }
-        .login-button-container{
-          width: 100%;height: 6.16vh;
-          justify-content: center;
-          align-items: center;
-          display: flex;
-          flex-direction: column;
-          .login-button{
-            width: 100%;
-            height: 100%;
-            border-radius: 10px !important
-          }
-          .login-visitor{
-            cursor: pointer;
-            margin-top: 3%;
-            text-align: center;
-            color: #4318FF;
-          }
+        .login-button{
+          width: 100%;height: 6.16vh;border-radius: 10px !important
         }
         // padding: 50px 40px 45px;
         // border-radius: 10px;

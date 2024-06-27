@@ -29,10 +29,10 @@ export default {
     stopResponding: '停止响应',
   },
   chat: {
-    newChatButton: '新建聊天',
+    newChatButton: '创建智能体',
     newChatTitle: '新建聊天',
-    placeholder: '来说点什么吧...（Shift + Enter = 换行，"/" 触发提示词）',
-    placeholderMobile: '来说点什么...',
+    placeholder: '输入问题',
+    placeholderMobile: '输入问题',
     copy: '复制',
     copied: '复制成功',
     copyCode: '复制代码',

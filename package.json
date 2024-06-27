@@ -23,7 +23,10 @@
     "common:prepare": "husky install"
   },
   "dependencies": {
+    "@vicons/carbon": "^0.12.0",
+    "@vicons/material": "^0.12.0",
     "@vscode/markdown-it-katex": "^1.0.3",
+    "@vue-office/pdf": "^2.0.2",
     "@vueuse/core": "^9.13.0",
     "highlight.js": "^11.7.0",
     "html-to-image": "^1.11.11",
@@ -33,7 +36,9 @@
     "mermaid-it-markdown": "^1.0.8",
     "naive-ui": "^2.38.2",
     "pinia": "^2.0.33",
+    "vite-svg-loader": "^5.1.0",
     "vue": "^3.2.47",
+    "vue-demi": "^0.14.8",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.1.6"
   },

@@ -1,16 +1,18 @@
+<!-- eslint-disable no-console -->
 <script setup lang='ts'>
 import type { Ref } from 'vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { NAutoComplete, NButton, NInput, useDialog, useMessage } from 'naive-ui'
+import { NButton, NIcon, NInput, useDialog, useMessage } from 'naive-ui'
+import { ArrowRightAltFilled } from '@vicons/material'
 import { toPng } from 'html-to-image'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import { useUsingContext } from './hooks/useUsingContext'
 import HeaderComponent from './components/Header/index.vue'
-import { HoverButton, SvgIcon } from '@/components/common'
+import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
@@ -457,6 +459,8 @@ onUnmounted(() => {
   if (loading.value)
     controller.abort()
 })
+
+const tipsArr = ref(['大概告诉我香港中文大学（深圳）六月都发生了什么事情？', '近期学校有什么体育比赛呢？', '下周有什么有趣的社团活动？', '近期有什么关于创新创业相关的活动？'])
 </script>
 
 <template>
@@ -470,14 +474,30 @@ onUnmounted(() => {
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto">
         <div
-          class="w-full max-w-screen-xl m-auto dark:bg-[#101014]"
+          class="h-full w-full max-w-screen-xl m-auto dark:bg-[#101014]"
           :class="[isMobile ? 'p-2' : 'p-4']"
         >
-          <div id="image-wrapper" class="relative">
+          <div id="image-wrapper" class="relative h-full">
             <template v-if="!dataSources.length">
-              <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
-                <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
-                <span>{{ t('chat.newChatTitle') }}</span>
+              <div class="flex h-full items-center justify-center mt-4 text-center text-neutral-300 flex-col">
+                <div class="flex justify-center w-full items-center">
+                  <img src="@/assets/Ellipse 275.png" alt="logo" />
+                  <div class="flex justify-center items-center flex-col" style="margin-left: 5%;">
+                    <span style="color: #1B2559;font-size: 28px;font-weight: bolder">👋 你好，我是AI薯塔，</span>
+                    <span style="color: #1B2559;font-size: 28px;font-weight: bolder">我可以告诉你最新的龙大资讯🙋</span>
+                  </div>
+                </div>
+                <div class="flex h-full w-full flex-col items-start tips">
+                  <span class="tips-title">你可以尝试下面的例子...</span>
+                  <div class="flex w-full h-full flex-col items-start">
+                    <div v-for="(item, index) of tipsArr" :key="index" class="tips-button w-full flex flex-row items-center" @click="console.log(213)">
+                      <span class="tips-text">{{ item }}</span>
+                      <n-icon size="35" color="black">
+                        <ArrowRightAltFilled />
+                      </n-icon>
+                    </div>
+                  </div>
+                </div>
               </div>
             </template>
             <template v-else>
@@ -510,36 +530,19 @@ onUnmounted(() => {
     <footer :class="footerClass">
       <div class="w-full max-w-screen-xl m-auto">
         <div class="flex items-center justify-between space-x-2">
-          <HoverButton v-if="!isMobile" @click="handleClear">
-            <span class="text-xl text-[#4f555e] dark:text-white">
-              <SvgIcon icon="ri:delete-bin-line" />
-            </span>
-          </HoverButton>
-          <HoverButton v-if="!isMobile" @click="handleExport">
-            <span class="text-xl text-[#4f555e] dark:text-white">
-              <SvgIcon icon="ri:download-2-line" />
-            </span>
-          </HoverButton>
-          <HoverButton @click="toggleUsingContext">
-            <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
-              <SvgIcon icon="ri:chat-history-line" />
-            </span>
-          </HoverButton>
-          <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
-            <template #default="{ handleInput, handleBlur, handleFocus }">
-              <NInput
-                ref="inputRef"
-                v-model:value="prompt"
-                type="textarea"
-                :placeholder="placeholder"
-                :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
-                @input="handleInput"
-                @focus="handleFocus"
-                @blur="handleBlur"
-                @keypress="handleEnter"
-              />
-            </template>
-          </NAutoComplete>
+          <NInput
+            ref="inputRef"
+            v-model:value="prompt"
+            class="prompt-input"
+            type="textarea"
+            size="large"
+            :placeholder="placeholder"
+            :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
+            @input="handleInput"
+            @focus="handleFocus"
+            @blur="handleBlur"
+            @keypress="handleEnter"
+          />
           <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
             <template #icon>
               <span class="dark:text-black">
@@ -552,3 +555,38 @@ onUnmounted(() => {
     </footer>
   </div>
 </template>
+
+<style scoped lang="scss">
+:deep(.n-input){
+  border-radius: 40px
+}
+.tips{
+  width: 47.5%;
+  height: 100%;
+  margin-top: 3%;
+  .tips-title{
+    font-size: 16px
+  }
+  .tips-text{
+    font-size: 16px;
+    color: black;
+    margin-left: 3%
+  }
+  .tips-button{
+    background-color: #CDC7EB;
+    border-radius: 10px;
+    height: 10%;
+    margin-bottom: 3%;
+    cursor: pointer;
+  }
+}
+</style>
+
+<style>
+.tips-button{
+  .n-icon{
+    margin-left: auto;
+    margin-right: 3%
+  }
+}
+</style>

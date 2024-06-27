@@ -1,7 +1,7 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
 import { post } from '@/utils/request'
 import { useAuthStore, useSettingStore } from '@/store'
-
+const baseUrl = 'http://106.55.7.164:8069'
 export function fetchChatAPI<T = any>(
   prompt: string,
   options?: { conversationId?: string; parentMessageId?: string },
@@ -62,5 +62,25 @@ export function fetchVerify<T>(token: string) {
   return post<T>({
     url: '/verify',
     data: { token },
+  })
+}
+
+export function getCode<T>(params: any) {
+  return post<T>({
+    url: `${baseUrl}/auth/code?email=${params}`,
+  })
+}
+
+export function registerAccount<T>(params: any) {
+  return post<T>({
+    url: `${baseUrl}/auth/register`,
+    data: params,
+  })
+}
+
+export function loginAccount<T>(params: any) {
+  return post<T>({
+    url: `${baseUrl}/auth/login`,
+    data: params,
   })
 }

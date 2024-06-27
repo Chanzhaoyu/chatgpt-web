@@ -25,6 +25,15 @@ export function useTheme() {
         common: {},
       }
     }
+    else {
+      return {
+        common: {
+          primaryColor: '#8554ED',
+          primaryColorHover: '#9A70F5',
+          primaryColorPressed: '#7240D3',
+        },
+      }
+    }
     return {}
   })
 

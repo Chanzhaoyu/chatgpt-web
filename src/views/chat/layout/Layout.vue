@@ -23,7 +23,7 @@ const needPermission = computed(() => !!authStore.session?.auth && !authStore.to
 const getMobileClass = computed(() => {
   if (isMobile.value)
     return ['rounded-none', 'shadow-none']
-  return ['border', 'rounded-md', 'shadow-md', 'dark:border-neutral-800']
+  return ['rounded-md', 'shadow-md', 'dark:border-neutral-800']
 })
 
 const getContainerClass = computed(() => {
@@ -35,7 +35,7 @@ const getContainerClass = computed(() => {
 </script>
 
 <template>
-  <div class="h-full dark:bg-[#24272e] transition-all" :class="[isMobile ? 'p-0' : 'p-4']">
+  <div class="h-full dark:bg-[#24272e] transition-all" :class="[isMobile ? 'p-0' : 'p-0']">
     <div class="h-full overflow-hidden" :class="getMobileClass">
       <NLayout class="z-40 transition" :class="getContainerClass" has-sider>
         <Sider />
