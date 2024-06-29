@@ -19,6 +19,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/register/index.vue'),
   },
   {
+    path: '/pdf',
+    name: 'Pdf',
+    component: () => import('@/views/pdf/index.vue'),
+  },
+  {
     path: '/chat',
     name: 'Root',
     component: ChatLayout,

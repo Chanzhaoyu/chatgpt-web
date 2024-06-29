@@ -40,7 +40,10 @@
     "vue": "^3.2.47",
     "vue-demi": "^0.14.8",
     "vue-i18n": "^9.2.2",
-    "vue-router": "^4.1.6"
+    "vue-pdf-embed": "^2.0.4",
+    "vue-router": "^4.1.6",
+    "vue3-pdfjs": "^0.1.6",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.35.3",
