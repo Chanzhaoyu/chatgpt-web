@@ -1,6 +1,6 @@
 <!-- eslint-disable no-console -->
 <script setup lang='ts'>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { NScrollbar } from 'naive-ui'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -10,9 +10,10 @@ const { isMobile } = useBasicLayout()
 const appStore = useAppStore()
 const chatStore = useChatStore()
 
-const dataSources = computed(() => [{ title: '薯塔', uuid: '1111', isEdit: false }, { title: '学姐Dora', uuid: '2222', isEdit: false }])
+const dataSources = computed(() => chatStore.history)
 
 async function handleSelect({ uuid }: Chat.History) {
+  console.log(uuid, 'uuid')
   if (isActive(uuid))
     return
 
@@ -47,6 +48,11 @@ function handleEnter({ uuid }: Chat.History, isEdit: boolean, event: KeyboardEve
 function isActive(uuid: number) {
   return chatStore.active === uuid
 }
+
+onMounted(() => {
+  const flag = chatStore.getChatByUuid(2222)
+  console.log(flag)
+})
 </script>
 
 <template>
@@ -60,13 +66,14 @@ function isActive(uuid: number) {
       </template> -->
       <div v-for="(item, index) of dataSources" :key="index">
         <a
+          v-if="item.isAgent === true"
           class="relative flex items-center gap-3 px-3 py-3 break-all rounded-md cursor-pointer hover:bg-neutral-100 group dark:border-neutral-800 dark:hover:bg-[#8554ED]"
           :class="isActive(item.uuid) && ['bg-neutral-100', 'text-[#8554ED]']"
           @click="handleSelect(item)"
         >
           <span>
-            <img v-if="item.uuid === '1111'" src="@/assets/Ellipse 276.svg" alt="logo" />
-            <img v-if="item.uuid === '2222'" src="@/assets/Ellipse 277.svg" alt="logo" />
+            <img v-if="item.uuid === 1111" src="@/assets/Ellipse 276.svg" alt="logo" />
+            <img v-if="item.uuid === 2222" src="@/assets/Ellipse 277.svg" alt="logo" />
           </span>
           <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap">
             <span>{{ item.title }}</span>

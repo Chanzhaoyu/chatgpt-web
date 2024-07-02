@@ -5,7 +5,9 @@ import { ref } from 'vue'
 // import { ElForm } from 'element-plus'
 import { NButton, NCheckbox, NCheckboxGroup, NForm, NFormItem, NIcon, NInput, NPopover, NSpace, useMessage } from 'naive-ui'
 import { EmailOutlined, Grid3X3Filled, LockOutlined } from '@vicons/material'
+import { useRouter } from 'vue-router'
 import { getCode, registerAccount } from '@/api'
+const router = useRouter()
 const message = useMessage()
 const registerFormRef = ref<any>()
 const registerRules = ref<any>({
@@ -61,7 +63,7 @@ const getEmailCode = (e: MouseEvent) => {
   <n-form ref="registerFormRef" :rules="registerRules" :model="regsiterForm">
     <n-form-item>
       <div class="login-form-header">
-        <span class="login-title">注册</span>
+        <span class="login-title">更改密码</span>
         <div class="login-title-bar"></div>
       </div>
     </n-form-item>
@@ -75,6 +77,26 @@ const getEmailCode = (e: MouseEvent) => {
         <template #prefix>
           <n-icon>
             <EmailOutlined />
+          </n-icon>
+        </template>
+      </n-input>
+    </n-form-item>
+    <n-form-item path="code">
+      <n-input
+        v-model:value="regsiterForm.code"
+        size="large"
+        class="login-input"
+        placeholder="请输入验证码"
+        @keydown.enter.prevent
+      >
+        <template #suffix>
+          <div class="login-input-suffix-code" style="cursor: pointer;">
+            <span class="login-input-suffix-text" @click="getEmailCode">获取验证码</span>
+          </div>
+        </template>
+        <template #prefix>
+          <n-icon>
+            <Grid3X3Filled />
           </n-icon>
         </template>
       </n-input>
@@ -93,26 +115,7 @@ const getEmailCode = (e: MouseEvent) => {
         </template>
       </n-input>
     </n-form-item>
-    <n-form-item path="code">
-      <n-input
-        v-model:value="regsiterForm.code"
-        size="large"
-        class="login-input"
-        placeholder="请输入验证码"
-        @keydown.enter.prevent
-      >
-        <template #suffix>
-          <div class="login-input-suffix" style="cursor: pointer;">
-            <span class="login-input-suffix-text" @click="getEmailCode">获取验证码</span>
-          </div>
-        </template>
-        <template #prefix>
-          <n-icon>
-            <Grid3X3Filled />
-          </n-icon>
-        </template>
-      </n-input>
-    </n-form-item>
+
     <n-form-item path="check">
       <n-checkbox-group v-model:value="regsiterForm.check">
         <n-space item-style="display: flex;">
@@ -136,9 +139,12 @@ const getEmailCode = (e: MouseEvent) => {
       </n-checkbox-group>
     </n-form-item>
     <n-form-item>
-      <n-button type="primary" class="login-button" @click="register">
-        注册并登录
-      </n-button>
+      <div class="login-button-container">
+        <n-button type="primary" class="login-button" @click="register">
+          登录
+        </n-button>
+        <span class="login-back" @click="router.push('/login')">返回登录 ></span>
+      </div>
     </n-form-item>
   </n-form>
 </template>

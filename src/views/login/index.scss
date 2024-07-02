@@ -13,6 +13,7 @@
     width: 100%;
     height: 100%;
     .login-left {
+      
       width: 50%;
       height: 100%;
       
@@ -72,12 +73,14 @@
       justify-content: center;
       align-items: center;
       .login-form {
-        width: 100%;
-        padding-right: 25%;
+        width: 70%;
+        height: 80%;
         .login-form-header{
+          margin-top: 3%;
+          margin-bottom: 3%;
           .login-title{
             color: #1B2559;
-            font-size: 64px;
+            font-size: 4rem;
           }
           .login-title-bar{
             height: 7.53px;
@@ -101,12 +104,12 @@
           border-radius: 0 10px 10px 0;
           .login-input-suffix-text{
             color: white;
-            font-size: 12px;
+            font-size: 1rem;
           }
           .login-input-suffix-button{
             color: white;
             width: 100%;
-            font-size: 12px;
+            font-size: 1rem;
           }
         }
         .login-input-suffix2{
@@ -121,7 +124,7 @@
           border-radius: 0 10px 10px 0;
           .login-input-suffix-text2{
             color: white;
-            font-size: 12px;
+            font-size: 1rem;
           }
         }
         .login-button-container{
@@ -137,9 +140,23 @@
           }
           .login-visitor{
             cursor: pointer;
-            margin-top: 3%;
+            margin-top: 2%;
+            margin-left: auto;
             text-align: center;
-            color: #4318FF;
+            color: #8554ED;
+          }
+        }
+        .login-password-container{
+          justify-content: center;
+          align-items: center;
+          display: flex;
+          width: 100%;
+          .login-password-text{
+            color: #7BB8FF;
+            cursor: pointer;
+          }
+          .login-password-gap{
+            margin: 0 2% 0 2%;
           }
         }
         // padding: 50px 40px 45px;
@@ -161,6 +178,7 @@
   }
   .login-form{
     padding-right: 0 !important;
+    height: auto !important;
   }
 }
 :deep(.login-input){

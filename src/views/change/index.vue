@@ -1,6 +1,6 @@
 <script setup lang="ts" name="login">
 import { NFlex } from 'naive-ui'
-import RegisterForm from './components/RegisterForm.vue'
+import ResetForm from './components/ResetForm.vue'
 </script>
 
 <template>
@@ -25,7 +25,7 @@ import RegisterForm from './components/RegisterForm.vue'
       </div>
       <div class="login-form-container">
         <div class="login-form">
-          <RegisterForm />
+          <ResetForm />
         </div>
       </div>
     </div>

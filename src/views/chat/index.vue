@@ -59,6 +59,7 @@ function handleSubmit() {
 }
 
 async function onConversation() {
+  console.log(uuid, 'uuid')
   let message = prompt.value
 
   if (loading.value)

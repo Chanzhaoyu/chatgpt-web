@@ -4,16 +4,16 @@
 import { ref } from 'vue'
 // import { ElForm } from 'element-plus'
 import { NButton, NCheckbox, NCheckboxGroup, NForm, NFormItem, NIcon, NInput, NPopover, NSpace, useMessage } from 'naive-ui'
-import { EmailOutlined, LockOutlined } from '@vicons/material'
+import { EmailOutlined, Grid3X3Filled, LockOutlined } from '@vicons/material'
 import { useRouter } from 'vue-router'
-import { loginAccount } from '@/api'
+import { getCode, registerAccount } from '@/api'
 const router = useRouter()
 const message = useMessage()
 const registerFormRef = ref<any>()
 const registerRules = ref<any>({
   email: [{ key: 'a', required: true, message: '请输入校园邮箱', trigger: 'change' }],
   password: [{ key: 'b', required: true, message: '请输入密码', trigger: 'change' }],
-  // code: [{ key: 'c', required: true, message: '请输入验证码', trigger: 'change' }],
+  code: [{ key: 'c', required: true, message: '请输入验证码', trigger: 'change' }],
   check: [{ key: 'd', required: true, message: '请勾选服务协议', trigger: 'change', type: 'array' }],
 })
 
@@ -21,6 +21,7 @@ const loading = ref(false)
 const regsiterForm = ref({
   email: '',
   password: '',
+  code: '',
   check: null,
 })
 
@@ -33,9 +34,26 @@ const register = (e: MouseEvent) => {
         console.error(errors)
       }
       else {
-        const data = await loginAccount({ email: `${regsiterForm.value.email}@link.cuhk.edu.cn`, password: regsiterForm.value.password })
+        const data = await registerAccount({ email: `${regsiterForm.value.email}@link.cuhk.edu.cn`, password: regsiterForm.value.password, secondPassword: regsiterForm.value.password, code: regsiterForm.value.code })
         console.log(data)
       }
+    },
+  )
+}
+const getEmailCode = (e: MouseEvent) => {
+  e.preventDefault()
+  registerFormRef.value.validate(
+    async (errors: any) => {
+      if (errors) {
+        console.error(errors)
+      }
+      else {
+        const data = await getCode(`${regsiterForm.value.email}@link.cuhk.edu.cn`)
+        console.log(data)
+      }
+    },
+    (rule: any) => {
+      return rule?.key === 'a'
     },
   )
 }
@@ -45,7 +63,7 @@ const register = (e: MouseEvent) => {
   <n-form ref="registerFormRef" :rules="registerRules" :model="regsiterForm">
     <n-form-item>
       <div class="login-form-header">
-        <span class="login-title">登录</span>
+        <span class="login-title">注册</span>
         <div class="login-title-bar"></div>
       </div>
     </n-form-item>
@@ -59,6 +77,26 @@ const register = (e: MouseEvent) => {
         <template #prefix>
           <n-icon>
             <EmailOutlined />
+          </n-icon>
+        </template>
+      </n-input>
+    </n-form-item>
+    <n-form-item path="code">
+      <n-input
+        v-model:value="regsiterForm.code"
+        size="large"
+        class="login-input"
+        placeholder="请输入验证码"
+        @keydown.enter.prevent
+      >
+        <template #suffix>
+          <div class="login-input-suffix-code" style="cursor: pointer;">
+            <span class="login-input-suffix-text" @click="getEmailCode">获取验证码</span>
+          </div>
+        </template>
+        <template #prefix>
+          <n-icon>
+            <Grid3X3Filled />
           </n-icon>
         </template>
       </n-input>
@@ -77,6 +115,7 @@ const register = (e: MouseEvent) => {
         </template>
       </n-input>
     </n-form-item>
+
     <n-form-item path="check">
       <n-checkbox-group v-model:value="regsiterForm.check">
         <n-space item-style="display: flex;">
@@ -104,16 +143,7 @@ const register = (e: MouseEvent) => {
         <n-button type="primary" class="login-button" @click="register">
           登录
         </n-button>
-        <span class="login-visitor">访客登录 ></span>
-      </div>
-    </n-form-item>
-    <n-form-item>
-      <div class="login-password-container">
-        <span class="login-password-text" @click="router.push('/register')">立刻注册</span>
-        <span class="login-password-gap">|</span>
-        <span class="login-password-text" @click="router.push('/reset')">忘记密码</span>
-        <span class="login-password-gap">|</span>
-        <span class="login-password-text" @click="router.push('/change')">更改密码</span>
+        <span class="login-back" @click="router.push('/login')">返回登录 ></span>
       </div>
     </n-form-item>
   </n-form>

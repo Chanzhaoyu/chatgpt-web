@@ -13,7 +13,8 @@ declare namespace Chat {
 	interface History {
 		title: string
 		isEdit: boolean
-		uuid: number
+		uuid: number,
+		isAgent: boolean
 	}
 
 	interface ChatState {

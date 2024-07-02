@@ -19,6 +19,16 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/register/index.vue'),
   },
   {
+    path: '/reset',
+    name: 'Reset',
+    component: () => import('@/views/reset/index.vue'),
+  },
+  {
+    path: '/change',
+    name: 'Change',
+    component: () => import('@/views/change/index.vue'),
+  },
+  {
     path: '/pdf',
     name: 'Pdf',
     component: () => import('@/views/pdf/index.vue'),
