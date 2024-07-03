@@ -51,7 +51,21 @@ export function fetchChatAPIProcess<T = any>(
     onDownloadProgress: params.onDownloadProgress,
   })
 }
-
+export function fetchNewChatAPIProcess<T = any>(
+  params: {
+    question: string
+    chatId: any
+    options?: { conversationId?: string; parentMessageId?: string }
+    signal?: GenericAbortSignal
+    onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
+) {
+  return post<T>({
+    url: `${baseUrl}/chat/completion/chat-id`,
+    data: { chatId: params.chatId, agentType: 'bus_agent', question: params.question, historyCount: 10 },
+    signal: params.signal,
+    onDownloadProgress: params.onDownloadProgress,
+  })
+}
 export function fetchSession<T>() {
   return post<T>({
     url: '/session',

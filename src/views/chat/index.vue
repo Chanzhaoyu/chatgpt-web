@@ -16,7 +16,7 @@ import HeaderComponent from './components/Header/index.vue'
 import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAppStore, useChatStore, usePromptStore } from '@/store'
-import { fetchChatAPIProcess, newChat } from '@/api'
+import { fetchChatAPIProcess, fetchNewChatAPIProcess, newChat } from '@/api'
 import { t } from '@/locales'
 
 let controller = new AbortController()
@@ -26,17 +26,13 @@ const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
 const route = useRoute()
 const dialog = useDialog()
 const ms = useMessage()
-
 const chatStore = useChatStore()
-
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
 const { usingContext, toggleUsingContext } = useUsingContext()
 
-const { uuid } = route.params as { uuid: string }
-
-const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
+const dataSources = computed(() => chatStore.getChatByUuid(chatStore.active))
 const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
 const appStore = useAppStore()
 const prompt = ref<string>('')
@@ -52,18 +48,18 @@ const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
 // 未知原因刷新页面，loading 状态不会重置，手动重置
 dataSources.value.forEach((item, index) => {
   if (item.loading)
-    updateChatSome(+uuid, index, { loading: false })
+    updateChatSome(chatStore.active, index, { loading: false })
 })
 
 async function handleSubmit() {
   const activateAgent = chatStore.history.find(item => item.uuid === chatStore.active)
   if (activateAgent?.isAgent) {
-    const { data } = await newChat({ agent: 'bus_agent' })
+    const response: { data: number } = await newChat({ agent: 'bus_agent' })
+    const { data } = response
     chatStore.addHistory({ title: prompt.value, uuid: data, isEdit: false, isAgent: false })
     if (isMobile.value)
       appStore.setSiderCollapsed(true)
   }
-  console.log(chatStore.active, 'activate')
   onConversation()
 }
 
@@ -76,9 +72,8 @@ async function onConversation() {
     return
 
   controller = new AbortController()
-
   addChat(
-    +uuid,
+    chatStore.active,
     {
       dateTime: new Date().toLocaleString(),
       text: message,
@@ -100,7 +95,7 @@ async function onConversation() {
     options = { ...lastContext }
 
   addChat(
-    +uuid,
+    chatStore.active,
     {
       dateTime: new Date().toLocaleString(),
       text: t('chat.thinking'),
@@ -116,22 +111,26 @@ async function onConversation() {
   try {
     let lastText = ''
     const fetchChatAPIOnce = async () => {
-      await fetchChatAPIProcess<Chat.ConversationResponse>({
-        prompt: message,
+      await fetchNewChatAPIProcess<Chat.ConversationResponse>({
+        chatId: chatStore.active?.toString(),
+        question: message,
         options,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {
+          console.log(event, 'event')
           const xhr = event.target
           const { responseText } = xhr
           // Always process the final line
           const lastIndex = responseText.lastIndexOf('\n', responseText.length - 2)
           let chunk = responseText
+          // console.log(chunk, 'chunk')
           if (lastIndex !== -1)
             chunk = responseText.substring(lastIndex)
+          // console.log(responseText, 'chunk')
           try {
             const data = JSON.parse(chunk)
             updateChat(
-              +uuid,
+              chatStore.active,
               dataSources.value.length - 1,
               {
                 dateTime: new Date().toLocaleString(),
@@ -154,11 +153,11 @@ async function onConversation() {
             scrollToBottomIfAtBottom()
           }
           catch (error) {
-            //
+            // console.log(error, 'error')
           }
         },
       })
-      updateChatSome(+uuid, dataSources.value.length - 1, { loading: false })
+      updateChatSome(chatStore.active, dataSources.value.length - 1, { loading: false })
     }
 
     await fetchChatAPIOnce()
@@ -168,7 +167,7 @@ async function onConversation() {
 
     if (error.message === 'canceled') {
       updateChatSome(
-        +uuid,
+        chatStore.active,
         dataSources.value.length - 1,
         {
           loading: false,
@@ -178,11 +177,11 @@ async function onConversation() {
       return
     }
 
-    const currentChat = getChatByUuidAndIndex(+uuid, dataSources.value.length - 1)
+    const currentChat = getChatByUuidAndIndex(chatStore.active, dataSources.value.length - 1)
 
     if (currentChat?.text && currentChat.text !== '') {
       updateChatSome(
-        +uuid,
+        chatStore.active,
         dataSources.value.length - 1,
         {
           text: `${currentChat.text}\n[${errorMessage}]`,
@@ -194,7 +193,7 @@ async function onConversation() {
     }
 
     updateChat(
-      +uuid,
+      chatStore.active,
       dataSources.value.length - 1,
       {
         dateTime: new Date().toLocaleString(),
@@ -231,7 +230,7 @@ async function onRegenerate(index: number) {
   loading.value = true
 
   updateChat(
-    +uuid,
+    chatStore.active,
     index,
     {
       dateTime: new Date().toLocaleString(),
@@ -262,7 +261,7 @@ async function onRegenerate(index: number) {
           try {
             const data = JSON.parse(chunk)
             updateChat(
-              +uuid,
+              chatStore.active,
               index,
               {
                 dateTime: new Date().toLocaleString(),
@@ -287,14 +286,14 @@ async function onRegenerate(index: number) {
           }
         },
       })
-      updateChatSome(+uuid, index, { loading: false })
+      updateChatSome(chatStore.active, index, { loading: false })
     }
     await fetchChatAPIOnce()
   }
   catch (error: any) {
     if (error.message === 'canceled') {
       updateChatSome(
-        +uuid,
+        chatStore.active,
         index,
         {
           loading: false,
@@ -306,7 +305,7 @@ async function onRegenerate(index: number) {
     const errorMessage = error?.message ?? t('common.wrong')
 
     updateChat(
-      +uuid,
+      chatStore.active,
       index,
       {
         dateTime: new Date().toLocaleString(),
@@ -372,7 +371,7 @@ function handleDelete(index: number) {
     positiveText: t('common.yes'),
     negativeText: t('common.no'),
     onPositiveClick: () => {
-      chatStore.deleteChatByUuid(+uuid, index)
+      chatStore.deleteChatByUuid(chatStore.active, index)
     },
   })
 }
@@ -387,7 +386,7 @@ function handleClear() {
     positiveText: t('common.yes'),
     negativeText: t('common.no'),
     onPositiveClick: () => {
-      chatStore.clearChatByUuid(+uuid)
+      chatStore.clearChatByUuid(chatStore.active)
     },
   })
 }
