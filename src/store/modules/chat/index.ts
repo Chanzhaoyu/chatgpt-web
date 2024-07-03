@@ -21,6 +21,14 @@ export const useChatStore = defineStore('chat-store', {
         return state.chat.find(item => item.uuid === state.active)?.data ?? []
       }
     },
+    getChatIfExistByUuid(state: Chat.ChatState) {
+      return (uuid?: number) => {
+        if (uuid)
+          return state.chat.some(item => item.uuid === uuid)
+        else
+          return false
+      }
+    },
   },
 
   actions: {

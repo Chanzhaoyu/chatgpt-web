@@ -33,8 +33,15 @@ const register = (e: MouseEvent) => {
         console.error(errors)
       }
       else {
+        loading.value = true
         const data = await loginAccount({ email: `${regsiterForm.value.email}@link.cuhk.edu.cn`, password: regsiterForm.value.password })
-        console.log(data)
+        if (data.status === 200) {
+          loading.value = false
+          message.success(
+            '登录成功',
+          )
+          router.push('chat')
+        }
       }
     },
   )
@@ -101,7 +108,7 @@ const register = (e: MouseEvent) => {
     </n-form-item>
     <n-form-item>
       <div class="login-button-container">
-        <n-button type="primary" class="login-button" @click="register">
+        <n-button type="primary" class="login-button" :loading="loading" @click="register">
           登录
         </n-button>
         <span class="login-visitor">访客登录 ></span>

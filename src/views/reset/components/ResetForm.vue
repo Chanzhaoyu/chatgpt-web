@@ -35,7 +35,6 @@ const register = (e: MouseEvent) => {
       }
       else {
         const data = await registerAccount({ email: `${regsiterForm.value.email}@link.cuhk.edu.cn`, password: regsiterForm.value.password, secondPassword: regsiterForm.value.password, code: regsiterForm.value.code })
-        console.log(data)
       }
     },
   )
@@ -49,7 +48,6 @@ const getEmailCode = (e: MouseEvent) => {
       }
       else {
         const data = await getCode(`${regsiterForm.value.email}@link.cuhk.edu.cn`)
-        console.log(data)
       }
     },
     (rule: any) => {

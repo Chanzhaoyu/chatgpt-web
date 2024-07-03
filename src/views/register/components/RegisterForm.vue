@@ -24,8 +24,6 @@ const regsiterForm = ref({
   code: '',
   check: null,
 })
-
-// login
 const register = (e: MouseEvent) => {
   e.preventDefault()
   registerFormRef.value.validate(
@@ -34,8 +32,15 @@ const register = (e: MouseEvent) => {
         console.error(errors)
       }
       else {
+        loading.value = true
         const data = await registerAccount({ email: `${regsiterForm.value.email}@link.cuhk.edu.cn`, password: regsiterForm.value.password, secondPassword: regsiterForm.value.password, code: regsiterForm.value.code })
-        console.log(data)
+        if (data.status === 200) {
+          loading.value = false
+          message.success(
+            '注册成功',
+          )
+          router.push('chat')
+        }
       }
     },
   )
@@ -49,7 +54,6 @@ const getEmailCode = (e: MouseEvent) => {
       }
       else {
         const data = await getCode(`${regsiterForm.value.email}@link.cuhk.edu.cn`)
-        console.log(data)
       }
     },
     (rule: any) => {

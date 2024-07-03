@@ -1,3 +1,4 @@
+<!-- eslint-disable no-console -->
 <script setup lang='ts'>
 import { computed } from 'vue'
 import { NInput, NPopconfirm, NScrollbar } from 'naive-ui'
@@ -14,6 +15,7 @@ const chatStore = useChatStore()
 const dataSources = computed(() => chatStore.history)
 
 async function handleSelect({ uuid }: Chat.History) {
+  console.log(uuid)
   if (isActive(uuid))
     return
 

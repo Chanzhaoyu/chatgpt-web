@@ -1,3 +1,4 @@
+<!-- eslint-disable no-unused-expressions -->
 <!-- eslint-disable no-console -->
 <script setup lang='ts'>
 import type { Ref } from 'vue'
@@ -14,8 +15,8 @@ import { useUsingContext } from './hooks/useUsingContext'
 import HeaderComponent from './components/Header/index.vue'
 import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useChatStore, usePromptStore } from '@/store'
-import { fetchChatAPIProcess } from '@/api'
+import { useAppStore, useChatStore, usePromptStore } from '@/store'
+import { fetchChatAPIProcess, newChat } from '@/api'
 import { t } from '@/locales'
 
 let controller = new AbortController()
@@ -37,7 +38,7 @@ const { uuid } = route.params as { uuid: string }
 
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
-
+const appStore = useAppStore()
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
@@ -54,14 +55,20 @@ dataSources.value.forEach((item, index) => {
     updateChatSome(+uuid, index, { loading: false })
 })
 
-function handleSubmit() {
+async function handleSubmit() {
+  const activateAgent = chatStore.history.find(item => item.uuid === chatStore.active)
+  if (activateAgent?.isAgent) {
+    const { data } = await newChat({ agent: 'bus_agent' })
+    chatStore.addHistory({ title: prompt.value, uuid: data, isEdit: false, isAgent: false })
+    if (isMobile.value)
+      appStore.setSiderCollapsed(true)
+  }
+  console.log(chatStore.active, 'activate')
   onConversation()
 }
 
 async function onConversation() {
-  console.log(uuid, 'uuid')
   let message = prompt.value
-
   if (loading.value)
     return
 
@@ -491,7 +498,7 @@ const tipsArr = ref(['大概告诉我香港中文大学（深圳）六月都发�
                 <div class="flex h-full w-full flex-col items-start tips">
                   <span class="tips-title">你可以尝试下面的例子...</span>
                   <div class="flex w-full h-full flex-col items-start">
-                    <div v-for="(item, index) of tipsArr" :key="index" class="tips-button w-full flex flex-row items-center" @click="console.log(213)">
+                    <div v-for="(item, index) of tipsArr" :key="index" class="tips-button w-full flex flex-row items-center">
                       <span class="tips-text">{{ item }}</span>
                       <n-icon size="35" color="black">
                         <ArrowRightAltFilled />

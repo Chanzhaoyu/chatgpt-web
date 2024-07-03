@@ -84,3 +84,10 @@ export function loginAccount<T>(params: any) {
     data: params,
   })
 }
+
+export function newChat<T>(params: any) {
+  return post<T>({
+    url: `${baseUrl}/chat/add`,
+    data: params,
+  })
+}

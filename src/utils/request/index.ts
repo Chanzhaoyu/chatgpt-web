@@ -16,7 +16,7 @@ export interface HttpOption {
 export interface Response<T = any> {
   data: T
   message: string | null
-  status: string
+  status: any
 }
 
 function http<T = any>(
@@ -24,8 +24,7 @@ function http<T = any>(
 ) {
   const successHandler = (res: AxiosResponse<Response<T>>) => {
     const authStore = useAuthStore()
-
-    if (res.data.status === 'Success' || typeof res.data === 'string')
+    if (res.data.status === 'Success' || typeof res.data === 'string' || res.data.status === 200)
       return res.data
 
     if (res.data.status === 'Unauthorized') {

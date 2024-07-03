@@ -1,18 +1,20 @@
+<!-- eslint-disable no-console -->
 <script setup lang='ts'>
 import type { CSSProperties } from 'vue'
-import { computed, ref, watch } from 'vue'
-import { NButton, NIcon, NLayoutSider, NTabPane, NTabs, useDialog } from 'naive-ui'
+import { computed, onMounted, ref, watch } from 'vue'
+import { NButton, NIcon, NLayoutSider, useDialog } from 'naive-ui'
 import { AccountCircleFilled, AddCircleOutlineOutlined } from '@vicons/material'
+import { Tools, UserMultiple } from '@vicons/carbon'
 import List from './List.vue'
 import agent from './agent.vue'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { PromptStore } from '@/components/common'
-import { t } from '@/locales'
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
-
+const agentActivate = ref(true)
+const pptActivate = ref(false)
 const dialog = useDialog()
 
 const { isMobile } = useBasicLayout()
@@ -20,29 +22,29 @@ const show = ref(false)
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
-function handleAdd() {
-  chatStore.addHistory({ title: t('chat.newChatTitle'), uuid: Date.now(), isEdit: false, isAgent: false })
-  if (isMobile.value)
-    appStore.setSiderCollapsed(true)
-}
+// function handleAdd() {
+//   chatStore.addHistory({ title: t('chat.newChatTitle'), uuid: Date.now(), isEdit: false, isAgent: true })
+//   if (isMobile.value)
+//     appStore.setSiderCollapsed(true)
+// }
 
 function handleUpdateCollapsed() {
   appStore.setSiderCollapsed(!collapsed.value)
 }
 
-function handleClearAll() {
-  dialog.warning({
-    title: t('chat.deleteMessage'),
-    content: t('chat.clearHistoryConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
-    onPositiveClick: () => {
-      chatStore.clearHistory()
-      if (isMobile.value)
-        appStore.setSiderCollapsed(true)
-    },
-  })
-}
+// function handleClearAll() {
+//   dialog.warning({
+//     title: t('chat.deleteMessage'),
+//     content: t('chat.clearHistoryConfirm'),
+//     positiveText: t('common.yes'),
+//     negativeText: t('common.no'),
+//     onPositiveClick: () => {
+//       chatStore.clearHistory()
+//       if (isMobile.value)
+//         appStore.setSiderCollapsed(true)
+//     },
+//   })
+// }
 
 const getMobileClass = computed<CSSProperties>(() => {
   if (isMobile.value) {
@@ -73,6 +75,15 @@ watch(
     flush: 'post',
   },
 )
+
+onMounted(() => {
+  if (!chatStore.getChatIfExistByUuid(3333))
+    chatStore.addHistory({ title: '凤凰GPT', uuid: 3333, isEdit: false, isAgent: true })
+  if (!chatStore.getChatIfExistByUuid(2222))
+    chatStore.addHistory({ title: '学姐Dora', uuid: 2222, isEdit: false, isAgent: true })
+  if (!chatStore.getChatIfExistByUuid(1111))
+    chatStore.addHistory({ title: '薯塔', uuid: 1111, isEdit: false, isAgent: true })
+})
 </script>
 
 <template>
@@ -95,17 +106,20 @@ watch(
           <!-- </n-icon> -->
           <span class="logo-test">薯塔</span>
         </div>
-        <div class="flex flex-col justify-center items-center w-full h-full">
+        <div class="menu-tab flex flex-col items-center w-full">
           <!-- <n-button class="sidebar-purple-button" type=""></n-button> -->
-          <n-tabs
-            type="card"
-            placement="left"
-          >
-            <n-tab-pane name="oasis" tab="1">
-            </n-tab-pane>
-            <n-tab-pane name="the beatles" tab="2">
-            </n-tab-pane>
-          </n-tabs>
+          <div :class="{ 'menu-tab-agent-activate': agentActivate }" class="menu-tab-agent flex flex-col justify-center items-center" @click="{ agentActivate = true; pptActivate = false }">
+            <n-icon size="200%">
+              <UserMultiple color="white" />
+            </n-icon>
+            <span class="menu-tab-text">智能体</span>
+          </div>
+          <div :class="{ 'menu-tab-agent-activate': pptActivate }" class="menu-tab-agent flex flex-col justify-center items-center" @click="{ agentActivate = false; pptActivate = true }">
+            <n-icon size="200%">
+              <Tools color="white" />
+            </n-icon>
+            <span class="menu-tab-text">PPT工具</span>
+          </div>
         </div>
         <div class="flex flex-col w-full justify-center items-center">
           <n-icon size="300%">
@@ -117,7 +131,7 @@ watch(
       <div class="flex flex-col h-full w-full sidebar-menu" :style="mobileSafeArea">
         <main class="flex flex-col flex-1 min-h-0">
           <div class="p-4">
-            <NButton type="primary" @click="handleAdd">
+            <NButton type="primary">
               <template #icon>
                 <n-icon><AddCircleOutlineOutlined /></n-icon>
               </template>
@@ -162,6 +176,50 @@ watch(
     color: white;
     font-size: 13px
   }
+  .menu-tab{
+    margin-bottom: auto;
+    margin-top: 60%;
+    height: 100%;
+    .menu-tab-agent{
+    width: 70%;
+    height: 7%;
+    margin-top: 2rem;
+    opacity: 80%;
+    // background-color: #AB8FE7;
+    border-radius: 10px;
+    .menu-tab-text{
+      font-size: 13px;
+      color: white;
+      }
+    }
+    .menu-tab-agent:hover{
+    cursor: pointer;
+    width: 70%;
+    height: 7%;
+    margin-top: 2rem;
+    opacity: 100% !important;
+    background-color: #AB8FE7;
+    border-radius: 10px;
+    .menu-tab-text{
+      font-size: 13px;
+      color: white;
+      }
+    }
+    .menu-tab-agent-activate{
+      cursor: pointer;
+    width: 70%;
+    height: 7%;
+    margin-top: 2rem;
+    opacity: 100% !important;
+    background-color: #AB8FE7;
+    border-radius: 10px;
+    .menu-tab-text{
+      font-size: 13px;
+      color: white;
+      }
+    }
+  }
+
 }
 
 .sidebar-menu{

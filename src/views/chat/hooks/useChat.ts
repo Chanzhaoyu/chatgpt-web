@@ -1,13 +1,15 @@
+/* eslint-disable no-console */
 import { useChatStore } from '@/store'
 
 export function useChat() {
   const chatStore = useChatStore()
 
-  const getChatByUuidAndIndex = (uuid: number, index: number) => {
+  const getChatByUuidAndIndex = (uuid: any, index: number) => {
     return chatStore.getChatByUuidAndIndex(uuid, index)
   }
 
-  const addChat = (uuid: number, chat: Chat.Chat) => {
+  const addChat = (uuid: any, chat: Chat.Chat) => {
+    console.log(uuid, 'addChat uuid')
     chatStore.addChatByUuid(uuid, chat)
   }
 

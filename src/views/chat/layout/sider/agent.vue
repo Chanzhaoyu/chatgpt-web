@@ -1,6 +1,6 @@
 <!-- eslint-disable no-console -->
 <script setup lang='ts'>
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { NScrollbar } from 'naive-ui'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -13,7 +13,6 @@ const chatStore = useChatStore()
 const dataSources = computed(() => chatStore.history)
 
 async function handleSelect({ uuid }: Chat.History) {
-  console.log(uuid, 'uuid')
   if (isActive(uuid))
     return
 
@@ -48,16 +47,11 @@ function handleEnter({ uuid }: Chat.History, isEdit: boolean, event: KeyboardEve
 function isActive(uuid: number) {
   return chatStore.active === uuid
 }
-
-onMounted(() => {
-  const flag = chatStore.getChatByUuid(2222)
-  console.log(flag)
-})
 </script>
 
 <template>
   <NScrollbar class="px-4">
-    <div class="flex flex-col gap-2 text-sm">
+    <div class="flex flex-col text-sm">
       <!-- <template v-if="!dataSources.length">
         <div class="flex flex-col items-center mt-4 text-center text-neutral-300">
           <SvgIcon icon="ri:inbox-line" class="mb-2 text-3xl" />
@@ -74,6 +68,7 @@ onMounted(() => {
           <span>
             <img v-if="item.uuid === 1111" src="@/assets/Ellipse 276.svg" alt="logo" />
             <img v-if="item.uuid === 2222" src="@/assets/Ellipse 277.svg" alt="logo" />
+            <img v-if="item.uuid === 3333" src="@/assets/Ellipse 280.svg" alt="logo" />
           </span>
           <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap">
             <span>{{ item.title }}</span>
