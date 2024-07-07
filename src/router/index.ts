@@ -46,6 +46,18 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/course',
+    name: 'Course',
+    // component: ChatLayout,
+    children: [
+      {
+        path: '/course',
+        name: 'Course',
+        component: () => import('@/views/course/index.vue'),
+      },
+    ],
+  },
 
   {
     path: '/404',

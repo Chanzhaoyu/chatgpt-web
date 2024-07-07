@@ -54,6 +54,10 @@ export default {
     showRawText: '显示原文',
     thinking: '思考中...',
   },
+  course: {
+    placeholder: '搜索课程',
+    placeholderMobile: '搜索课程',
+  },
   setting: {
     setting: '设置',
     general: '总览',
