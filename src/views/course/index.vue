@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router';
 import { NIcon, NSelect, useDialog } from 'naive-ui'
 import { SearchOutlined } from '@vicons/material'
 import CourseCard from './components/CourseCard.vue'
-import { getCourseList, getStarCourses, courseStar } from '@/api'
+import { getCourseList, getStarCourses, courseStar, courseUnStar } from '@/api'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
+import { useCourseStore } from '@/store'
 
 interface ApiCourse {
   courseId: string;
@@ -29,6 +31,7 @@ interface StarCourse {
 }
 
 const { isMobile } = useBasicLayout()
+const courseStore = useCourseStore()
 const courses = ref<Course[]>([]);
 const selectedCourse = ref<Course[]>([]);
 
@@ -57,9 +60,15 @@ const fetchCourses = async () => {
     }));
     selectedCourse.value = [...courses.value];
   } catch (error) {
+    let message = '请稍后再试';
+    if (typeof error === "object" && error !== null && "message" in error && typeof (error as { message: string }).message === "string") {
+      message = (error as { message: string }).message;
+    } else if (error instanceof Error) {
+      message = error.toString();
+    }
     dialog.error({
       title: '错误',
-      content: error ? error.toString() : '请稍后再试',
+      content: message,
       positiveText: '我知道了',
     })
     console.error('Error fetching course list:', error);
@@ -80,19 +89,39 @@ const handleClear = () => {
   selectedCourse.value = [...courses.value];
 };
 
-const starChanged = async (courseId: string) => {
+const starChanged = async ({ courseId, star }: { courseId: string, star: number }) => {
   try {
-    await courseStar(courseId);
+    if (star) {
+      await courseUnStar(courseId);
+    } else {
+      await courseStar(courseId);
+    }
     fetchCourses();
   } catch (error) {
+    let message = '请稍后再试';
+    if (typeof error === "object" && error !== null && "message" in error && typeof (error as { message: string }).message === "string") {
+      message = (error as { message: string }).message;
+    } else if (error instanceof Error) {
+      message = error.toString();
+    }
     dialog.error({
       title: '错误',
-      content: error ? error.toString() : '请稍后再试',
+      content: message,
       positiveText: '我知道了',
     })
     console.error('Error fetching course list:', error);
   }
 };
+
+interface CourseInfo {
+  courseId: string;
+  courseCuhkCode: string;
+}
+const router = useRouter();
+function navigateToCourse({ courseId, courseCuhkCode }: CourseInfo) {
+  courseStore.setCourseName(courseCuhkCode);
+  router.push({ path: '/preview', query: { courseId } });
+}
 </script>
 
 <template>
@@ -108,7 +137,9 @@ const starChanged = async (courseId: string) => {
       </n-select>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-12">
-      <CourseCard v-for="course in selectedCourse" :key="course.value" :course="course" @starChanged="starChanged" />
+      <CourseCard v-for="course in selectedCourse" :key="course.value" :course="course"
+        @click="navigateToCourse({ courseId: course.value, courseCuhkCode: course.courseCuhkCode })" @starChanged="starChanged"
+        class="hover:cursor-pointer" />
     </div>
   </div>
 </template>
