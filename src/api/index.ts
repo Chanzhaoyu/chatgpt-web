@@ -124,3 +124,15 @@ export function courseStar<T>(courseId: string) {
     url: `${baseUrl}/course/star?courseId=${courseId}`
   })
 }
+export function courseUnStar<T>(courseId: string) {
+  return post<T>({
+    url: `${baseUrl}/course/unstar?courseId=${courseId}`
+  })
+}
+
+export function coursePdfs<T>(courseId: string) {
+  return get<T>({
+    url: `${baseUrl}/course/pdfs?courseId=${courseId}`
+  })
+}
+

@@ -8,14 +8,15 @@ const props = defineProps<{ course: Course }>()
 const emit = defineEmits(['starChanged'])
 
 const handleStar = () => {
-    emit('starChanged', props.course.value)
+    emit('starChanged', { courseId: props.course.value, star: props.course.star })
 }
 </script>
 
 <template>
     <div class="course-card rounded-lg p-6 flex flex-col items-center justify-center text-center bg-gray-50 relative mx-10"
         style="background-color: rgb(246, 245, 252);border-radius: 20px;">
-        <div class="hover:cursor-pointer absolute top-3 left-4 flex items-center" @click="handleStar" style="color: #949FC9;">
+        <div class="hover:cursor-pointer absolute top-3 left-4 flex items-center" @click.stop="handleStar"
+            style="color: #949FC9;">
             <n-icon size="large">
                 <template v-if="course.star">
                     <StarOutlined color="#E2953E" />

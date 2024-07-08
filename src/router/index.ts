@@ -58,6 +58,11 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/preview',
+    name: 'Preview',
+    component: () => import('@/views/preview/index.vue'),
+  },
 
   {
     path: '/404',

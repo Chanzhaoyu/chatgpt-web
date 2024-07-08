@@ -41,6 +41,11 @@ export default defineConfig((env) => {
           changeOrigin: true, // 允许跨域
           rewrite: path => path.replace('/api/', '/'),
         },
+        '/pdfs': {
+          // 这里是 PDF 文件服务器的地址
+          target: 'https://cuhk-ai.oss-cn-shenzhen.aliyuncs.com',
+          changeOrigin: true,
+        }
       },
     },
     build: {
