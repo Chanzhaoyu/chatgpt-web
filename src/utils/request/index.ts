@@ -24,9 +24,10 @@ function http<T = any>(
 ) {
   const successHandler = (res: AxiosResponse<Response<T>>) => {
     const authStore = useAuthStore()
-    if (res.data.status === 'Success' || typeof res.data === 'string' || res.data.status === 200)
+    if (res.data.status === 'Success' || typeof res.data === 'string' || res.data.status === 200) {
+      // console.log(res.body.getReader(), 'res')
       return res.data
-
+    }
     if (res.data.status === 'Unauthorized') {
       authStore.removeToken()
       window.location.reload()

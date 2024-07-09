@@ -1,213 +1,574 @@
-<!-- eslint-disable vue/no-lone-template -->
-<script setup lang="ts">
-import VuePdfEmbed from 'vue-pdf-embed'
-// 获取总页数
+<!-- eslint-disable no-unused-expressions -->
+<!-- eslint-disable no-console -->
+<script setup lang='ts'>
+import type { Ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useDialog, useMessage } from 'naive-ui'
+import { toPng } from 'html-to-image'
+import { useScroll } from './hooks/useScroll'
+import { useChat } from './hooks/useChat'
+import { useUsingContext } from './hooks/useUsingContext'
+import HeaderComponent from './components/Header/index.vue'
+import pdf from './pdf.vue'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
+import { useAppStore, useChatStore, usePromptStore } from '@/store'
+import { fetchChatAPIProcess, fetchNewChatAPIProcess, newChat } from '@/api'
+import { t } from '@/locales'
+let controller = new AbortController()
 
-import { computed, reactive } from 'vue'
+const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
 
-const title = '标题'
-const source = 'http://oss-cdn.hcolor.pro/assets/pdf/1.pdf'
+const route = useRoute()
+const dialog = useDialog()
+const ms = useMessage()
+const chatStore = useChatStore()
+const { isMobile } = useBasicLayout()
+const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
+const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
+const { usingContext, toggleUsingContext } = useUsingContext()
 
-const state = reactive({
-  source, // 预览pdf文件地址
-  pageNum: 1, // 当前页码
-  scale: 1, // 缩放比例
-  numPages: 10, // 总页数
+const dataSources = computed(() => chatStore.getChatByUuid(chatStore.active))
+const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
+const appStore = useAppStore()
+const prompt = ref<string>('')
+const loading = ref<boolean>(false)
+const inputRef = ref<Ref | null>(null)
+const isDone = ref(false)
+// 添加PromptStore
+const promptStore = usePromptStore()
+
+// 使用storeToRefs，保证store修改后，联想部分能够重新渲染
+const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
+
+// 未知原因刷新页面，loading 状态不会重置，手动重置
+dataSources.value.forEach((item, index) => {
+  if (item.loading)
+    updateChatSome(chatStore.active, index, { loading: false })
 })
 
-const scale = computed(() => `transform:scale(${state.scale})`)
-
-const setPage = (page: number) => {
-  if (page > 0 && state.pageNum < state.numPages) {
-    state.pageNum++
+async function handleSubmit() {
+  const activateAgent = chatStore.history.find(item => item.uuid === chatStore.active)
+  if (activateAgent?.isAgent) {
+    const response: { data: number } = await newChat({ agent: 'bus_agent' })
+    const { data } = response
+    chatStore.addHistory({ title: prompt.value, uuid: data, isEdit: false, isAgent: false })
+    if (isMobile.value)
+      appStore.setSiderCollapsed(true)
   }
-  else {
-    if (state.pageNum > 1)
-      state.pageNum--
+  onConversation()
+}
+
+async function onConversation() {
+  const message = prompt.value
+  if (loading.value)
+    return
+
+  if (!message || message.trim() === '')
+    return
+
+  controller = new AbortController()
+  addChat(
+    chatStore.active,
+    {
+      dateTime: new Date().toLocaleString(),
+      text: message,
+      inversion: true,
+      error: false,
+      conversationOptions: null,
+      requestOptions: { prompt: message, options: null },
+    },
+  )
+  scrollToBottom()
+
+  loading.value = true
+  prompt.value = ''
+
+  let options: Chat.ConversationRequest = {}
+  const lastContext = conversationList.value[conversationList.value.length - 1]?.conversationOptions
+
+  if (lastContext && usingContext.value)
+    options = { ...lastContext }
+
+  addChat(
+    chatStore.active,
+    {
+      dateTime: new Date().toLocaleString(),
+      text: t('chat.thinking'),
+      loading: true,
+      inversion: false,
+      error: false,
+      conversationOptions: null,
+      requestOptions: { prompt: message, options: { ...options } },
+    },
+  )
+  scrollToBottom()
+
+  try {
+    const lastText = ''
+    const fetchChatAPIOnce = async () => {
+      await fetchNewChatAPIProcess<Chat.ConversationResponse>({
+        chatId: chatStore.active?.toString(),
+        question: message,
+        options,
+        signal: controller.signal,
+        onDownloadProgress: ({ event }) => {
+          const xhr = event.target
+          const { responseText } = xhr
+          let accumulatedData = responseText
+          const contentText = ref('')
+          if (!isDone.value && responseText.includes('event:DONE')) {
+            isDone.value = true
+            // 移除DONE事件及其后的数据，确保只处理实际内容
+            accumulatedData = accumulatedData.split('event:DONE')[0].trim()
+
+            // 分割数据块并处理
+            const dataChunks = accumulatedData.split('\n\n')
+            dataChunks.forEach((chunk: any) => {
+              try {
+                const newChunk = chunk.split('data:')[1].trim()
+                const jsonData = JSON.parse(newChunk)
+                // 这里处理每个JSON对象，例如：
+                // console.log(jsonData.content) // 打印每一块的"content"
+                // 根据您的需求，可以在这里调用相应的函数来处理每一块数据
+                contentText.value += jsonData.content
+              }
+              catch (error) {
+                console.error('Error parsing JSON chunk:', error, 'Chunk:', chunk)
+              }
+            })
+
+            // // 清理状态，准备下一次处理
+            accumulatedData = ''
+            isDone.value = false
+          }
+          // console.log(xhr, 'event')
+          // Always process the final line
+          // const lastIndex = responseText.lastIndexOf('\n', responseText.length - 1)
+          // let chunk = responseText
+          // // console.log(chunk, 'chunk')
+          // if (lastIndex !== -1)
+          //   chunk = responseText.substring(lastIndex)
+          // // console.log(lastIndex, 'responseText')
+          console.log(contentText.value, 'contentText')
+          try {
+            const data = { text: contentText.value, conversationId: Date.now().toString(), id: Date.now() }
+            // const data = JSON.parse(chunk)
+            updateChat(
+              chatStore.active,
+              dataSources.value.length - 1,
+              {
+                dateTime: new Date().toLocaleString(),
+                text: lastText + (data.text ?? ''),
+                inversion: false,
+                error: false,
+                loading: true,
+                conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+                requestOptions: { prompt: message, options: { ...options } },
+              },
+            )
+
+            // if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
+            //   options.parentMessageId = data.id
+            //   lastText = data.text
+            //   message = ''
+            //   return fetchChatAPIOnce()
+            // }
+
+            scrollToBottomIfAtBottom()
+          }
+          catch (error) {
+            // console.log(error, 'error')
+          }
+        },
+      })
+      updateChatSome(chatStore.active, dataSources.value.length - 1, { loading: false })
+    }
+
+    await fetchChatAPIOnce()
+  }
+  catch (error: any) {
+    const errorMessage = error?.message ?? t('common.wrong')
+
+    if (error.message === 'canceled') {
+      updateChatSome(
+        chatStore.active,
+        dataSources.value.length - 1,
+        {
+          loading: false,
+        },
+      )
+      scrollToBottomIfAtBottom()
+      return
+    }
+
+    const currentChat = getChatByUuidAndIndex(chatStore.active, dataSources.value.length - 1)
+
+    if (currentChat?.text && currentChat.text !== '') {
+      updateChatSome(
+        chatStore.active,
+        dataSources.value.length - 1,
+        {
+          text: `${currentChat.text}\n[${errorMessage}]`,
+          error: false,
+          loading: false,
+        },
+      )
+      return
+    }
+
+    updateChat(
+      chatStore.active,
+      dataSources.value.length - 1,
+      {
+        dateTime: new Date().toLocaleString(),
+        text: errorMessage,
+        inversion: false,
+        error: true,
+        loading: false,
+        conversationOptions: null,
+        requestOptions: { prompt: message, options: { ...options } },
+      },
+    )
+    scrollToBottomIfAtBottom()
+  }
+  finally {
+    loading.value = false
   }
 }
 
-const setZoom = (val: number) => {
-  if (val > 0 && state.scale < 2) {
-    state.scale += 0.1
+async function onRegenerate(index: number) {
+  if (loading.value)
+    return
+
+  controller = new AbortController()
+
+  const { requestOptions } = dataSources.value[index]
+
+  let message = requestOptions?.prompt ?? ''
+
+  let options: Chat.ConversationRequest = {}
+
+  if (requestOptions.options)
+    options = { ...requestOptions.options }
+
+  loading.value = true
+
+  updateChat(
+    chatStore.active,
+    index,
+    {
+      dateTime: new Date().toLocaleString(),
+      text: '',
+      inversion: false,
+      error: false,
+      loading: true,
+      conversationOptions: null,
+      requestOptions: { prompt: message, options: { ...options } },
+    },
+  )
+
+  try {
+    let lastText = ''
+    const fetchChatAPIOnce = async () => {
+      await fetchChatAPIProcess<Chat.ConversationResponse>({
+        prompt: message,
+        options,
+        signal: controller.signal,
+        onDownloadProgress: ({ event }) => {
+          const xhr = event.target
+          const { responseText } = xhr
+          // Always process the final line
+          const lastIndex = responseText.lastIndexOf('\n', responseText.length - 2)
+          let chunk = responseText
+          if (lastIndex !== -1)
+            chunk = responseText.substring(lastIndex)
+          try {
+            const data = JSON.parse(chunk)
+            updateChat(
+              chatStore.active,
+              index,
+              {
+                dateTime: new Date().toLocaleString(),
+                text: lastText + (data.text ?? ''),
+                inversion: false,
+                error: false,
+                loading: true,
+                conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+                requestOptions: { prompt: message, options: { ...options } },
+              },
+            )
+
+            if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
+              options.parentMessageId = data.id
+              lastText = data.text
+              message = ''
+              return fetchChatAPIOnce()
+            }
+          }
+          catch (error) {
+            //
+          }
+        },
+      })
+      updateChatSome(chatStore.active, index, { loading: false })
+    }
+    await fetchChatAPIOnce()
   }
-  else {
-    if (state.scale > 0.6)
-      state.scale -= 0.1
+  catch (error: any) {
+    if (error.message === 'canceled') {
+      updateChatSome(
+        chatStore.active,
+        index,
+        {
+          loading: false,
+        },
+      )
+      return
+    }
+
+    const errorMessage = error?.message ?? t('common.wrong')
+
+    updateChat(
+      chatStore.active,
+      index,
+      {
+        dateTime: new Date().toLocaleString(),
+        text: errorMessage,
+        inversion: false,
+        error: true,
+        loading: false,
+        conversationOptions: null,
+        requestOptions: { prompt: message, options: { ...options } },
+      },
+    )
+  }
+  finally {
+    loading.value = false
   }
 }
 
-// onMounted(() => {
-//   const loadingTask = createLoadingTask(state.source)
-//   loadingTask.promise.then((pdf: { numPages: number }) => {
-//     state.numPages = pdf.numPages
-//   })
-// })
+function handleExport() {
+  if (loading.value)
+    return
+
+  const d = dialog.warning({
+    title: t('chat.exportImage'),
+    content: t('chat.exportImageConfirm'),
+    positiveText: t('common.yes'),
+    negativeText: t('common.no'),
+    onPositiveClick: async () => {
+      try {
+        d.loading = true
+        const ele = document.getElementById('image-wrapper')
+        const imgUrl = await toPng(ele as HTMLDivElement)
+        const tempLink = document.createElement('a')
+        tempLink.style.display = 'none'
+        tempLink.href = imgUrl
+        tempLink.setAttribute('download', 'chat-shot.png')
+        if (typeof tempLink.download === 'undefined')
+          tempLink.setAttribute('target', '_blank')
+        document.body.appendChild(tempLink)
+        tempLink.click()
+        document.body.removeChild(tempLink)
+        window.URL.revokeObjectURL(imgUrl)
+        d.loading = false
+        ms.success(t('chat.exportSuccess'))
+        Promise.resolve()
+      }
+      catch (error: any) {
+        ms.error(t('chat.exportFailed'))
+      }
+      finally {
+        d.loading = false
+      }
+    },
+  })
+}
+
+function handleDelete(index: number) {
+  if (loading.value)
+    return
+
+  dialog.warning({
+    title: t('chat.deleteMessage'),
+    content: t('chat.deleteMessageConfirm'),
+    positiveText: t('common.yes'),
+    negativeText: t('common.no'),
+    onPositiveClick: () => {
+      chatStore.deleteChatByUuid(chatStore.active, index)
+    },
+  })
+}
+
+function handleClear() {
+  if (loading.value)
+    return
+
+  dialog.warning({
+    title: t('chat.clearChat'),
+    content: t('chat.clearChatConfirm'),
+    positiveText: t('common.yes'),
+    negativeText: t('common.no'),
+    onPositiveClick: () => {
+      chatStore.clearChatByUuid(chatStore.active)
+    },
+  })
+}
+
+function handleEnter(event: KeyboardEvent) {
+  if (!isMobile.value) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault()
+      handleSubmit()
+    }
+  }
+  else {
+    if (event.key === 'Enter' && event.ctrlKey) {
+      event.preventDefault()
+      handleSubmit()
+    }
+  }
+}
+
+function handleStop() {
+  if (loading.value) {
+    controller.abort()
+    loading.value = false
+  }
+}
+
+// 可优化部分
+// 搜索选项计算，这里使用value作为索引项，所以当出现重复value时渲染异常(多项同时出现选中效果)
+// 理想状态下其实应该是key作为索引项,但官方的renderOption会出现问题，所以就需要value反renderLabel实现
+const searchOptions = computed(() => {
+  if (prompt.value.startsWith('/')) {
+    return promptTemplate.value.filter((item: { key: string }) => item.key.toLowerCase().includes(prompt.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
+      return {
+        label: obj.value,
+        value: obj.value,
+      }
+    })
+  }
+  else {
+    return []
+  }
+})
+
+// value反渲染key
+const renderOption = (option: { label: string }) => {
+  for (const i of promptTemplate.value) {
+    if (i.value === option.label)
+      return [i.key]
+  }
+  return []
+}
+
+const placeholder = computed(() => {
+  if (isMobile.value)
+    return t('chat.placeholderMobile')
+  return t('chat.placeholder')
+})
+
+const buttonDisabled = computed(() => {
+  return loading.value || !prompt.value || prompt.value.trim() === ''
+})
+
+const footerClass = computed(() => {
+  let classes = ['p-4']
+  if (isMobile.value)
+    classes = ['sticky', 'left-0', 'bottom-0', 'right-0', 'p-2', 'pr-3', 'overflow-hidden']
+  return classes
+})
+
+onMounted(() => {
+  scrollToBottom()
+  if (inputRef.value && !isMobile.value)
+    inputRef.value?.focus()
+})
+
+onUnmounted(() => {
+  if (loading.value)
+    controller.abort()
+})
+
+const tipsArr = ref(['大概告诉我香港中文大学（深圳）六月都发生了什么事情？', '近期学校有什么体育比赛呢？', '下周有什么有趣的社团活动？', '近期有什么关于创新创业相关的活动？'])
 </script>
 
 <template>
-  <div class="pdf-header">
-    <p class="title">
-      {{ title }}
-    </p>
-    <div class="page-tool">
-      <div class="page-tool-item" @click="setPage(-1)">
-        上一页
+  <div class="flex flex-col w-full h-full">
+    <HeaderComponent
+      v-if="isMobile"
+      :using-context="usingContext"
+      @export="handleExport"
+      @handle-clear="handleClear"
+    />
+    <main class="flex-1 overflow-hidden">
+      <div class="container">
+        <pdf url="/public/DAESTB.pdf"></pdf>
       </div>
-      <div class="page-tool-item">
-        {{ state.pageNum }}/{{ state.numPages }}
-      </div>
-      <div class="page-tool-item" @click="setPage(1)">
-        下一页
-      </div>
-      <div class="page-tool-item" @click="setZoom(0.1)">
-        放大
-      </div>
-      <div class="page-tool-item" @click="setZoom(-0.1)">
-        缩小
-      </div>
-    </div>
-  </div>
-  <div class="pdf-container">
-    <div class="container-left">
-      <div v-for="(i, index) in state.numPages" :key="index" class="catalogue-item">
-        <div :class="i === state.pageNum ? 'active' : ''">
-          <VuePdfEmbed class="item-pdf" :source="state.source" :page="i" @click="state.pageNum = i" />
+    </main>
+    <!-- <footer :class="footerClass">
+      <div class="w-full max-w-screen-xl m-auto">
+        <div class="flex items-center justify-between space-x-2">
+          <NInput
+            ref="inputRef"
+            v-model:value="prompt"
+            class="prompt-input"
+            type="textarea"
+            size="large"
+            :placeholder="placeholder"
+            :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
+            @input="handleInput"
+            @focus="handleFocus"
+            @blur="handleBlur"
+            @keypress="handleEnter"
+          />
+          <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
+            <template #icon>
+              <span class="dark:text-black">
+                <SvgIcon icon="ri:send-plane-fill" />
+              </span>
+            </template>
+          </NButton>
         </div>
-        <p>{{ i }}</p>
       </div>
-    </div>
-    <div class="container-right">
-      <div class="paper-pdf-container">
-        <VuePdfEmbed class="paper-pdf" :source="state.source" style="scale" :page="state.pageNum" />
-      </div>
-    </div>
+    </footer> -->
   </div>
-
-  <!-- <div id="vue-pdf-view">
-    <div
-      id="page-view" :style="{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: `translate(-50%,-50%) scale(${scaleData})`,
-        width: '100%',
-        height: `${pageHeight}`,
-      }"
-    >
-      <vue-pdf-embed v-show="onlyPage" ref="vuePdfRef" :source="pdfState.url" :page="pdfState.pageNum" text-layer />
-      <vue-pdf-embed v-for="page in pdfState.numPages" v-if="manyPage" :key="page" :source="pdfState.url" :page="page" text-layer />
-    </div>
-  </div>
-
-  <span>
-    <button v-show="manyPage" @click="changePageMode">多页</button>
-    <button v-show="onlyPage" @click="changePageMode">单页</button>
-  </span>
-
-  <br>
-  <button @click="pageUp">
-    上一页
-  </button>
-  <button @click="pageDown">
-    下一页
-  </button>
-  <br>
-  <button @click="zoomIn">
-    放大
-  </button>
-  <button @click="zoomOut">
-    缩小
-  </button> -->
 </template>
 
-<style scoped lang="less">
-body {
-  width: 100%;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
+<style scoped lang="scss">
+:deep(.n-input){
+  border-radius: 40px
 }
-.pdf-header {
-  width: 100%;
-  height: 60px;
-  position: fixed;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 999;
-  padding: 0 20px;
-  min-width: 1200px;
-  background-color: #323639;
-  -webkit-box-shadow: 0px 0px 3px 3px #c8c8c8;
-  -moz-box-shadow: 0px 0px 3px 3px #c8c8c8;
-  box-shadow: 0px 0px 3px 3px #c8c8c8;
-  .title {
-  font-size: 18px;
-  color: #fff;
+.tips{
+  width: 47.5%;
+  height: 100%;
+  margin-top: 3%;
+  .tips-title{
+    font-size: 16px
   }
-
-  .page-tool {
-    display: flex;
-    align-items: center;
+  .tips-text{
+    font-size: 16px;
+    color: black;
+    margin-left: 3%
+  }
+  .tips-button{
+    background-color: #CDC7EB;
+    border-radius: 10px;
+    height: 10%;
+    margin-bottom: 3%;
     cursor: pointer;
-    color: #fff;
-    user-select: none;
-    .page-tool-item {
-      padding: 8px 15px;
-      padding-left: 10px;
-      cursor: pointer;
-    }
   }
-
 }
-.pdf-container {
-  display: flex;
-  margin: 0 auto;
-  padding-top: 60px;
-  min-height: calc(100vh - 60px);
-  .container-left {
-    width: 300px;
-    box-sizing: border-box;
-    height: calc(100vh - 60px);
-    overflow-y: auto;
-    background-color: #323639;
-    .catalogue-item {
-      width: 200px;
-      margin: 10px auto;
-      text-align: center;
-      cursor: pointer;
-      p {
-        margin: 0;
-        padding: 10px 0;
-        color: #fff;
-      }
-      .item-pdf {
-        box-sizing: border-box;
-        width: 190px;
-      }
+</style>
 
-      .active {
-        border: 5px solid #7d9dfe;
-      }
-    }
-  }
-  .container-right {
-    flex: 1;
-    height: calc(100vh - 60px);
-    background-color: #505050;
-    overflow: hidden;
-    .paper-pdf-container {
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      .paper-pdf {
-        padding: 50px 0;
-        width: 800px;
-        margin: 0 auto;
-      }
-    }
+<style>
+.tips-button{
+  .n-icon{
+    margin-left: auto;
+    margin-right: 3%
   }
 }
 </style>

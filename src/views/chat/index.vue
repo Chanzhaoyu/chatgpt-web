@@ -38,7 +38,7 @@ const appStore = useAppStore()
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
-
+const isDone = ref(false)
 // 添加PromptStore
 const promptStore = usePromptStore()
 
@@ -64,7 +64,7 @@ async function handleSubmit() {
 }
 
 async function onConversation() {
-  let message = prompt.value
+  const message = prompt.value
   if (loading.value)
     return
 
@@ -109,7 +109,7 @@ async function onConversation() {
   scrollToBottom()
 
   try {
-    let lastText = ''
+    const lastText = ''
     const fetchChatAPIOnce = async () => {
       await fetchNewChatAPIProcess<Chat.ConversationResponse>({
         chatId: chatStore.active?.toString(),
@@ -117,18 +117,47 @@ async function onConversation() {
         options,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {
-          console.log(event, 'event')
           const xhr = event.target
           const { responseText } = xhr
+          let accumulatedData = responseText
+          const contentText = ref('')
+          if (!isDone.value && responseText.includes('event:DONE')) {
+            isDone.value = true
+            // 移除DONE事件及其后的数据，确保只处理实际内容
+            accumulatedData = accumulatedData.split('event:DONE')[0].trim()
+
+            // 分割数据块并处理
+            const dataChunks = accumulatedData.split('\n\n')
+            dataChunks.forEach((chunk: any) => {
+              try {
+                const newChunk = chunk.split('data:')[1].trim()
+                const jsonData = JSON.parse(newChunk)
+                // 这里处理每个JSON对象，例如：
+                // console.log(jsonData.content) // 打印每一块的"content"
+                // 根据您的需求，可以在这里调用相应的函数来处理每一块数据
+                contentText.value += jsonData.content
+              }
+              catch (error) {
+                console.error('Error parsing JSON chunk:', error, 'Chunk:', chunk)
+              }
+            })
+
+            // // 清理状态，准备下一次处理
+            accumulatedData = ''
+            isDone.value = false
+          }
+          // console.log(xhr, 'event')
           // Always process the final line
-          const lastIndex = responseText.lastIndexOf('\n', responseText.length - 2)
-          let chunk = responseText
-          // console.log(chunk, 'chunk')
-          if (lastIndex !== -1)
-            chunk = responseText.substring(lastIndex)
-          // console.log(responseText, 'chunk')
+          // const lastIndex = responseText.lastIndexOf('\n', responseText.length - 1)
+          // let chunk = responseText
+          // // console.log(chunk, 'chunk')
+          // if (lastIndex !== -1)
+          //   chunk = responseText.substring(lastIndex)
+          // // console.log(lastIndex, 'responseText')
+          console.log(contentText.value, 'contentText')
           try {
-            const data = JSON.parse(chunk)
+            const data = { text: contentText.value, conversationId: Date.now().toString(), id: Date.now() }
+            // const data = JSON.parse(chunk)
             updateChat(
               chatStore.active,
               dataSources.value.length - 1,
@@ -143,12 +172,12 @@ async function onConversation() {
               },
             )
 
-            if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
-              options.parentMessageId = data.id
-              lastText = data.text
-              message = ''
-              return fetchChatAPIOnce()
-            }
+            // if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
+            //   options.parentMessageId = data.id
+            //   lastText = data.text
+            //   message = ''
+            //   return fetchChatAPIOnce()
+            // }
 
             scrollToBottomIfAtBottom()
           }

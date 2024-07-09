@@ -61,7 +61,10 @@ export function fetchNewChatAPIProcess<T = any>(
 ) {
   return post<T>({
     url: `${baseUrl}/chat/completion/chat-id`,
-    data: { chatId: params.chatId, agentType: 'bus_agent', question: params.question, historyCount: 10 },
+    headers: {
+      Accept: 'text/event-stream',
+    },
+    data: { chatId: params.chatId, agent: 'bus_agent', question: params.question, historyCount: 10 },
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
   })

@@ -1,7 +1,7 @@
 import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
-import { ChatLayout } from '@/views/chat/layout'
+import { ChatLayout } from '@/views/layout'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -30,8 +30,15 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/pdf',
-    name: 'Pdf',
-    component: () => import('@/views/pdf/index.vue'),
+    name: 'PdfRoot',
+    component: ChatLayout,
+    children: [
+      {
+        path: '/pdf',
+        name: 'Pdf',
+        component: () => import('@/views/pdf/index.vue'),
+      },
+    ],
   },
   {
     path: '/chat',
