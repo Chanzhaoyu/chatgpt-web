@@ -17,6 +17,7 @@ export interface Response<T = any> {
   data: T
   message: string | null
   status: any
+  response: any
 }
 
 function http<T = any>(
@@ -38,7 +39,7 @@ function http<T = any>(
 
   const failHandler = (error: Response<Error>) => {
     afterRequest?.()
-    throw new Error(error?.message || 'Error')
+    throw new Error(error?.response?.data?.message || error?.message || 'Error')
   }
 
   beforeRequest?.()

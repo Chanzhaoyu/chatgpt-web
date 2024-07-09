@@ -53,6 +53,23 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/course',
+    name: 'Course',
+    // component: ChatLayout,
+    children: [
+      {
+        path: '/course',
+        name: 'Course',
+        component: () => import('@/views/course/index.vue'),
+      },
+    ],
+  },
+  {
+    path: '/preview',
+    name: 'Preview',
+    component: () => import('@/views/preview/index.vue'),
+  },
 
   {
     path: '/404',
