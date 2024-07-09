@@ -10,7 +10,7 @@ service.interceptors.request.use(
     const token = useAuthStore().token
     // config.headers.Authorization = 'd5a6eec5-6403-4b27-a2d7-f84cd4728e4f'
     if (token)
-      config.headers.Authorization = `Bearer ${token}`
+      config.headers.Authorization = `${token}`
     return config
   },
   (error) => {
