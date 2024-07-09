@@ -6,10 +6,9 @@ import { ref } from 'vue'
 import { NButton, NCheckbox, NCheckboxGroup, NForm, NFormItem, NIcon, NInput, NPopover, NSpace, useMessage } from 'naive-ui'
 import { EmailOutlined, LockOutlined } from '@vicons/material'
 import { useRouter } from 'vue-router'
-<<<<<<< Updated upstream
-=======
+
 import { setToken} from '@/store/modules/auth/helper';
->>>>>>> Stashed changes
+
 import { loginAccount } from '@/api'
 const router = useRouter()
 const message = useMessage()
@@ -40,12 +39,12 @@ const register = (e: MouseEvent) => {
         loading.value = true
         const data = await loginAccount({ email: `${regsiterForm.value.email}@link.cuhk.edu.cn`, password: regsiterForm.value.password })
         if (data.status === 200) {
-<<<<<<< Updated upstream
+
           loading.value = false
           message.success(
             '登录成功',
           )
-=======
+
           loading.value = false;
 					const token = data.data.tokenValue;
 					// console.log(token);
@@ -54,7 +53,7 @@ const register = (e: MouseEvent) => {
             '登录成功',
           )
 
->>>>>>> Stashed changes
+
           router.push('chat')
         }
       }
