@@ -53,7 +53,7 @@ onMounted(() => {
 
 
 function goBack() {
-    router.push('/course');
+    router.push('/m/course');
 }
 
 </script>

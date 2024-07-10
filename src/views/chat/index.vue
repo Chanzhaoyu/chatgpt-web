@@ -579,7 +579,7 @@ const tipsArr = ref(['大概告诉我香港中文大学（深圳）六月都发�
             @blur="handleBlur"
             @keypress="handleEnter"
           />
-          <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
+          <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit" class="send-button">
             <template #icon>
               <span class="dark:text-black">
                 <SvgIcon icon="ri:send-plane-fill" />
@@ -594,7 +594,11 @@ const tipsArr = ref(['大概告诉我香港中文大学（深圳）六月都发�
 
 <style scoped lang="scss">
 :deep(.n-input){
-  border-radius: 40px
+  border-radius: 40px;
+}
+.send-button {
+  width: var(--n-width);
+  height: var(--n-height);
 }
 .tips{
   width: 47.5%;
