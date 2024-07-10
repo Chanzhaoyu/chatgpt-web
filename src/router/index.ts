@@ -1,8 +1,7 @@
 import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
-import { ChatLayout } from '@/views/layout'
-
+import PrimaryMenu from '@/components/common/PrimaryMenu/index.vue';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -29,48 +28,44 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/change/index.vue'),
   },
   {
-    path: '/pdf',
-    name: 'PdfRoot',
-    component: ChatLayout,
+    path: '/m', // main， ChatGPT 的 url 就是用一个单词，看起来简洁吧
+    component: PrimaryMenu,
     children: [
       {
-        path: '/pdf',
-        name: 'Pdf',
-        component: () => import('@/views/pdf/index.vue'),
-      },
-    ],
-  },
-  {
-    path: '/chat',
-    name: 'Root',
-    component: ChatLayout,
-    // redirect: '/chat',
-    children: [
-      {
-        path: '/chat',
+        path: 'chat',
         name: 'Chat',
-        component: () => import('@/views/chat/index.vue'),
+        components: {
+          default: () => import('@/views/chat/index.vue'),
+          secondaryMenu: () => import('@/views/chat/components/ChatMenu/index.vue'),
+        }
       },
-    ],
-  },
-  {
-    path: '/course',
-    name: 'Course',
-    // component: ChatLayout,
-    children: [
       {
-        path: '/course',
+        path: 'course',
         name: 'Course',
-        component: () => import('@/views/course/index.vue'),
+        components: {
+          default: () => import('@/views/course/index.vue'),
+          secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
+        }
       },
-    ],
+      {
+        path: 'preview',
+        name: 'Preview',
+        components: {
+          default: () => import('@/views/preview/index.vue'),
+          secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
+        }
+      },
+      {
+        path: 'my',
+        name: 'My',
+        components: {
+          default: () => import('@/views/my/index.vue'),
+          secondaryMenu: () => import('@/views/my/components/MyMenu/index.vue'),
+        }
+      }
+      // 在此添加其他包含侧边栏的页面路由
+    ]
   },
-  {
-    path: '/preview',
-    name: 'Preview',
-    component: () => import('@/views/preview/index.vue'),
-  },
-
   {
     path: '/404',
     name: '404',
