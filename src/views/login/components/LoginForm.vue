@@ -41,9 +41,7 @@ const register = (e: MouseEvent) => {
         if (data.status === 200) {
 
           loading.value = false
-          message.success(
-            '登录成功',
-          )
+
 
           loading.value = false;
 					const token = data.data.tokenValue;
@@ -52,7 +50,6 @@ const register = (e: MouseEvent) => {
           message.success(
             '登录成功',
           )
-
 
           router.push('chat')
         }
