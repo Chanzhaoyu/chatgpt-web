@@ -7,7 +7,7 @@ import { NButton, NCheckbox, NCheckboxGroup, NForm, NFormItem, NIcon, NInput, NP
 import { EmailOutlined, LockOutlined } from '@vicons/material'
 import { useRouter } from 'vue-router'
 
-import { setToken} from '@/store/modules/auth/helper';
+import { setToken } from '@/store/modules/auth/helper'
 
 import { loginAccount } from '@/api'
 const router = useRouter()
@@ -39,14 +39,11 @@ const register = (e: MouseEvent) => {
         loading.value = true
         const data = await loginAccount({ email: `${regsiterForm.value.email}@link.cuhk.edu.cn`, password: regsiterForm.value.password })
         if (data.status === 200) {
-
           loading.value = false
 
-
-          loading.value = false;
-					const token = data.data.tokenValue;
-					// console.log(token);
-					setToken(token);
+          const token = data.data.tokenValue
+          // console.log(token);
+          setToken(token)
           message.success(
             '登录成功',
           )

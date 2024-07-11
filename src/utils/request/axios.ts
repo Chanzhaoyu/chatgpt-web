@@ -1,41 +1,41 @@
-import axios, {type AxiosResponse} from 'axios'
-import {useAuthStore} from '@/store'
-import {useMessage} from "naive-ui";
+import axios, { type AxiosResponse } from 'axios'
+import { useMessage } from 'naive-ui'
+import { useAuthStore } from '@/store'
 
 const message = useMessage()
 const service = axios.create({
-	baseURL: import.meta.env.VITE_GLOB_API_URL,
+  baseURL: import.meta.env.VITE_GLOB_API_URL,
 })
 
 service.interceptors.request.use(
-	(config) => {
-		const token = useAuthStore().token
-		// config.headers.Authorization = 'd5a6eec5-6403-4b27-a2d7-f84cd4728e4f'
-		if (token) {
-			config.headers.Authorization = `${token}`
-		}
-		return config
-	},
-	(error) => {
-		return Promise.reject(error.response)
-	},
+  (config) => {
+    const token = useAuthStore().token
+    // config.headers.Authorization = 'd5a6eec5-6403-4b27-a2d7-f84cd4728e4f'
+    if (token)
+      config.headers.Authorization = `${token}`
+
+    return config
+  },
+  (error) => {
+    return Promise.reject(error.response)
+  },
 )
 
 service.interceptors.response.use(
-	(response: AxiosResponse): AxiosResponse => {
-		if (response.status === 200) {
+  (response: AxiosResponse): AxiosResponse => {
+    if (response.status === 200) {
+      message.success(response.data.message)
+      return response
+    }
+    else {
+      message.error(response.data.message)
+    }
 
-			message.success(response.data.message);
-			return response
-		} else {
-			message.error(response.data.message);
-		}
-
-		throw new Error(response.status.toString())
-	},
-	(error) => {
-		return Promise.reject(error)
-	},
+    throw new Error(response.status.toString())
+  },
+  (error) => {
+    return Promise.reject(error)
+  },
 )
 
 export default service
