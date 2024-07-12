@@ -34,7 +34,7 @@ function http<T = any>(
       window.location.reload()
     }
 
-    return Promise.reject(res.data.data)
+    return Promise.reject(res.data)
   }
 
   const failHandler = (error: Response<Error>) => {

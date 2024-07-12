@@ -42,7 +42,7 @@ const getPdfInfo = async () => {
     } catch (error) {
         message.warning('课程无法访问或找不到课程')
         router.push('/course');
-        console.log('error')
+        console.log('error', error)
     }
 };
 const route = useRoute();
