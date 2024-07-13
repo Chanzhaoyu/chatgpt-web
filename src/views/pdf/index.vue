@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist/legacy/build/pdf'
 import { NTabPane, NTabs } from 'naive-ui'
+import Comment from './components/Comment.vue'
 GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
 
 const title = '标题'
@@ -52,6 +53,56 @@ const router = useRouter()
 function goBack() {
   router.back()
 }
+
+const comments = [
+  {
+    commentId: '1',
+    comment: 'It is important!',
+    userIconUrl: 'https://randomuser.me/api/portraits/women/1.jpg',
+    userName: 'Linda',
+    createTime: '06-28',
+    starCount: '99',
+    isStared: false,
+    commentVoList: [
+      {
+        commentId: '2',
+        comment: 'I agree',
+        userIconUrl: 'https://randomuser.me/api/portraits/men/2.jpg',
+        userName: 'Tom',
+        createTime: '06-28',
+        starCount: '12',
+        isStared: false,
+      },
+      {
+        commentId: '3',
+        comment: 'Good',
+        userIconUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
+        userName: 'Kelly',
+        createTime: '06-28',
+        starCount: '3',
+        isStared: false,
+      },
+    ],
+  },
+  {
+    commentId: '4',
+    comment: 'The Basic expression includes The Basic expression includes The Basic expression includes The Basic expression includes expression includes',
+    userIconUrl: 'https://randomuser.me/api/portraits/men/4.jpg',
+    userName: 'Peter',
+    createTime: '06-27',
+    starCount: '99',
+    isStared: true,
+  },
+  {
+    commentId: '5',
+    comment: 'The Basic expression includes The Basic expression includes The Basic expression includes The Basic expression includes expression includes on includes The Basic expression includes expression includes',
+    userIconUrl: 'https://randomuser.me/api/portraits/men/5.jpg',
+    userName: 'Jerrimy',
+    createTime: '06-27',
+    starCount: '120',
+    isStared: false,
+  },
+]
 </script>
 
 <template>
@@ -95,6 +146,7 @@ function goBack() {
               class="h-full"
             >
               {{ panel.value }}
+              <Comment v-for="comment in comments" :key="comment.commentId" :comment="comment" />
             </div>
           </n-tab-pane>
         </n-tabs>

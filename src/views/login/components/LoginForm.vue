@@ -48,7 +48,7 @@ const register = (e: MouseEvent) => {
             '登录成功',
           )
 
-          router.push('chat')
+          router.push('/m/chat')
         }
       }
     },

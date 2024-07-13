@@ -29,6 +29,7 @@ const activeStatus: Ref<ActiveStatus> = ref({
 
 const { isMobile } = useBasicLayout()
 const show = ref(false)
+const pptToolsPaths = ['/course', '/preview', '/pdf']
 
 watchEffect(() => {
   Object.keys(activeStatus.value).forEach((key) => {
@@ -37,7 +38,7 @@ watchEffect(() => {
 
   if (route.path.includes('/chat'))
     activeStatus.value.chat = true
-  else if (route.path.includes('/course') || route.path.includes('/preview'))
+  else if (pptToolsPaths.some(path => route.path.includes(path)))
     activeStatus.value.course = true
 })
 

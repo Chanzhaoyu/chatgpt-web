@@ -42,7 +42,7 @@ function goBack() {
     <div class="flex justify-center">
       <div class="container">
         <div v-for="i in numPages" :key="i" class="p-4 flex flex-col items-center">
-          <canvas :id="`canvas${i}`" class="w-56"></canvas>
+          <canvas :id="`canvas${i}`" class="w-48"></canvas>
           <p class="text-sm mt-2">
             第{{ i }}页
           </p>
