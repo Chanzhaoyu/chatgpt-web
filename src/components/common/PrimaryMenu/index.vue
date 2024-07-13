@@ -63,7 +63,7 @@ const getMobileClassSider = computed<CSSProperties>(() => {
 const getContainerClass = computed(() => {
   return [
     'h-full',
-    { 'pl-[260px]': !isMobile.value && !collapsed.value },
+    { 'pl-[400px]': !isMobile.value && !collapsed.value },
   ]
 })
 const mobileSafeArea = computed(() => {
@@ -142,7 +142,7 @@ function goMyPage() {
       <NLayout class="z-40 transition" :class="getContainerClass" has-sider>
         <div class="sider">
           <NLayoutSider
-            :collapsed="collapsed" :collapsed-width="0" :width="260" :show-trigger="false"
+            :collapsed="collapsed" :collapsed-width="0" :width="400" :show-trigger="false"
             collapse-mode="transform" position="absolute" bordered :style="getMobileClassSider"
             @update-collapsed="handleUpdateCollapsed"
           >

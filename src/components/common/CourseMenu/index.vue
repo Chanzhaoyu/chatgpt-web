@@ -37,12 +37,12 @@ function goPreview(courseId: string) {
           <p>
             {{ course.courseCuhkCode }}
           </p>
-          <p class="text-sm font-light">
+          <p class="text-sm font-light line-clamp-2">
             {{ course.courseName }}
           </p>
         </div>
         <div class="right font-normal flex items-center" @click="goPreview(course.courseId)">
-          <span>课件预览</span>
+          <span class="whitespace-nowrap ml-4">课件预览</span>
           <n-icon>
             <ArrowForwardIosOutlined />
           </n-icon>
@@ -55,5 +55,14 @@ function goPreview(courseId: string) {
 <style scoped lang="scss">
 .right {
   color: #8554ED;
+}
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
 }
 </style>
