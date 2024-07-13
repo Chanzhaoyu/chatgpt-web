@@ -67,7 +67,7 @@ const routes: RouteRecordRaw[] = [
         path: 'pdf',
         name: 'Pdf',
         components: {
-          default: () => import('@/views/pdf/index3.vue'),
+          default: () => import('@/views/pdf/index.vue'),
           secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
         },
       },
