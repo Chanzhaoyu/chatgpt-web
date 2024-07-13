@@ -219,7 +219,7 @@ aside {
 .sidebar-purple {
   background-color: #8554ED;
   border-radius: 0 30px 0 0;
-  width: 40%;
+  width: 30%;
 
   .sidebar-purple-button {
     width: 60%;

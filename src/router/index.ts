@@ -68,7 +68,7 @@ const routes: RouteRecordRaw[] = [
         name: 'Pdf',
         components: {
           default: () => import('@/views/pdf/index.vue'),
-          secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
+          secondaryMenu: () => import('@/views/pdf/components/pdfMenu.vue'),
         },
       },
       // 在此添加其他包含侧边栏的页面路由

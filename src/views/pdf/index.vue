@@ -1,36 +1,50 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist/legacy/build/pdf'
-import { NButton, NIcon } from 'naive-ui'
-import { KeyboardArrowRightOutlined } from '@vicons/material'
-
+import { NTabPane, NTabs } from 'naive-ui'
 GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
 
 const title = '标题'
 const source = '/pdfs/CSC%206042/Part-3%20Data%20Warehouse%20and%20Data%20Mining.pdf?Expires=1720848469&OSSAccessKeyId=LTAI5tL6sjXDXhrBpwSrahUH&Signature=HQh1HinG1mklSwC3mI8Oqy0MPtY%3D'
 const numPages = ref(0)
+const canvasRef = ref(null)
+const name = ref('chat')
+const panels = ref([{ tab: 'AI chat', value: 'chat' }, { tab: '评论区', value: ' comment' }, { tab: 'my start', value: 'star' }])
 
-onMounted(() => {
-  nextTick(async () => {
-    const loadingTask = getDocument(source)
-    const pdf = await loadingTask.promise
-    numPages.value = pdf._pdfInfo.numPages
-    for (let page = 1; page <= pdf._pdfInfo.numPages; page++) {
-      const pdfPage = await pdf.getPage(page)
-      const viewport = pdfPage.getViewport({ scale: 1 })
-      const canvas = document.getElementById(`canvas${page}`) as HTMLCanvasElement
+function getPdfPages() {
+  const loadingTask = getDocument(source)
+  loadingTask.promise.then((pdf) => {
+    // 获取特定页面
+    pdf.getPage(3).then((page) => {
+      console.log('Page loaded')
+
+      const viewport = page.getViewport({ scale: 1.4 })
+
+      // 准备 canvas 使用 PDF 页面的尺寸
+      const canvas = canvasRef.value
       const context = canvas.getContext('2d')
+      if (!context)
+        return
       canvas.height = viewport.height
       canvas.width = viewport.width
 
+      // 渲染 PDF 页面到 canvas 上
       const renderContext = {
         canvasContext: context,
         viewport,
       }
-      await pdfPage.render(renderContext).promise
-    }
+      const renderTask = page.render(renderContext)
+      renderTask.promise.then(() => {
+        console.log('Page rendered')
+      })
+    })
+  }, (reason) => {
+    console.error(reason)
   })
+}
+onMounted(() => {
+  getPdfPages()
 })
 
 const router = useRouter()
@@ -41,29 +55,44 @@ function goBack() {
 </script>
 
 <template>
-  <div class="mx-8">
-    <div class="mt-16 mb-14">
-      <p class="text-2xl font-bold text-center">
-        {{ title }}
-      </p>
-    </div>
-    <div class="flex justify-center">
-      <div class="container">
-        <div v-for="i in numPages" :key="i" class="bg-white p-4 flex flex-col items-center">
-          <canvas :id="`canvas${i}`" class="w-56"></canvas>
-          <p class="text-sm">
-            lec{{ i }}
+  <div class="m-6">
+    <div class="flex">
+      <div class="left">
+        <canvas ref="canvasRef" class="shadow-md mt-10 border border-gray-300"></canvas>
+        <div class="border border-purple-300 rounded-md p-4 mt-6" style="width: 1007px;">
+          <p class="mb-4">
+            Summary
+          </p>
+          <p>
+            常数函数的导数：
+            ddxc=0\frac{d}{dx}c = 0dxd​c=0
+            幂函数的导数： ddxxn=nxn−1\frac{d}{dx}x^n = nx^{n-1}dxd​xn=nxn−1
+            指数函数的导数：
+            ddxex=ex\frac{d}{dx}e^x = e^xdxd​ex=exddxax=axln⁡(a)\frac{d}{dx}a^x = a^x \ln(a)dxd​ax=axln(a)
+            对数函数的导数： ddxln⁡(x)=1x\frac{d}{dx}\ln(x) = \frac{1}{x}dxd​ln(x)=x1​ddxlog⁡a(x)=1xln⁡(a)\frac{d}{dx}\log_a(x) = \frac{1}{x \ln(a)}dxd​loga​(x)=xln(a)1
           </p>
         </div>
       </div>
-    </div>
-    <div class="float-right p-12">
-      <n-button text class="flex items-center" style="color: #8554ED;" @click="goBack">
-        返回课程搜索
-        <n-icon size="large" style="color: #8554ED;">
-          <KeyboardArrowRightOutlined />
-        </n-icon>
-      </n-button>
+      <div class="right flex flex-col flex-1 ml-4">
+        <n-tabs
+          v-model:value="name"
+          type="card"
+          tab-style="min-width: 80px;"
+        >
+          <n-tab-pane
+            v-for="panel in panels"
+            :key="panel.value"
+            :tab="panel.tab"
+            :name="panel.value"
+          >
+            <div
+              style="background-color: #F6F5FC;"
+            >
+              {{ panel.value }}
+            </div>
+          </n-tab-pane>
+        </n-tabs>
+      </div>
     </div>
   </div>
 </template>
@@ -73,5 +102,21 @@ function goBack() {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
     grid-gap: 1rem;
+}
+
+:deep(.n-tabs-tab__label) {
+    color: #000!important;
+}
+:deep(.n-tabs-tab) {
+    padding: 5px 20px;
+    background-color: #fff!important;
+    border: none!important;
+}
+:deep(.n-tabs-tab--active) {
+    border-radius: 10px 10px 0 0!important;
+    background-color: #F6F5FC!important;
+}
+:deep(.n-tab-pane) {
+    background-color: #F6F5FC;
 }
 </style>
