@@ -1,7 +1,7 @@
 import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
-import PrimaryMenu from '@/components/common/PrimaryMenu/index.vue';
+import PrimaryMenu from '@/components/common/PrimaryMenu/index.vue'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -37,7 +37,7 @@ const routes: RouteRecordRaw[] = [
         components: {
           default: () => import('@/views/chat/index.vue'),
           secondaryMenu: () => import('@/views/chat/components/ChatMenu/index.vue'),
-        }
+        },
       },
       {
         path: 'course',
@@ -45,7 +45,7 @@ const routes: RouteRecordRaw[] = [
         components: {
           default: () => import('@/views/course/index.vue'),
           secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
-        }
+        },
       },
       {
         path: 'preview',
@@ -53,7 +53,7 @@ const routes: RouteRecordRaw[] = [
         components: {
           default: () => import('@/views/preview/index.vue'),
           secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
-        }
+        },
       },
       {
         path: 'my',
@@ -61,10 +61,18 @@ const routes: RouteRecordRaw[] = [
         components: {
           default: () => import('@/views/my/index.vue'),
           secondaryMenu: () => import('@/views/my/components/MyMenu/index.vue'),
-        }
-      }
+        },
+      },
+      {
+        path: 'pdf',
+        name: 'Pdf',
+        components: {
+          default: () => import('@/views/pdf/index.vue'),
+          secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
+        },
+      },
       // 在此添加其他包含侧边栏的页面路由
-    ]
+    ],
   },
   {
     path: '/404',

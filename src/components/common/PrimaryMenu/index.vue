@@ -1,46 +1,45 @@
 <script setup lang='ts'>
-import type { CSSProperties } from 'vue'
-import { computed, onMounted, ref, watch, watchEffect, Ref } from 'vue'
-import { NLayout, NLayoutContent, NIcon, NLayoutSider } from 'naive-ui'
-import { useRouter, useRoute } from 'vue-router'
+import type { CSSProperties, Ref } from 'vue'
+import { computed, onMounted, ref, watch, watchEffect } from 'vue'
+import { NIcon, NLayout, NLayoutContent, NLayoutSider } from 'naive-ui'
+import { useRoute, useRouter } from 'vue-router'
+import { AccountCircleFilled } from '@vicons/material'
+import { Tools, UserMultiple } from '@vicons/carbon'
 import Permission from './Permission.vue'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAppStore, useAuthStore, useChatStore } from '@/store'
-import { AccountCircleFilled } from '@vicons/material'
-import { Tools, UserMultiple } from '@vicons/carbon'
 import { PromptStore } from '@/components/common'
 
 interface ActiveStatus {
-  chat: boolean;
-  course: boolean;
-  [key: string]: boolean;
+  chat: boolean
+  course: boolean
+  [key: string]: boolean
 }
 
 const router = useRouter()
-const route = useRoute();
+const route = useRoute()
 const appStore = useAppStore()
 const chatStore = useChatStore()
 const authStore = useAuthStore()
 
 const activeStatus: Ref<ActiveStatus> = ref({
   chat: false,
-  course: false
-});
+  course: false,
+})
 
 const { isMobile } = useBasicLayout()
 const show = ref(false)
 
 watchEffect(() => {
-  Object.keys(activeStatus.value).forEach(key => {
-    activeStatus.value[key as keyof ActiveStatus] = false;
-  });
+  Object.keys(activeStatus.value).forEach((key) => {
+    activeStatus.value[key as keyof ActiveStatus] = false
+  })
 
-  if (route.path.includes('/chat')) {
-    activeStatus.value.chat = true;
-  } else if (route.path.includes('/course') || route.path.includes('/preview')) {
-    activeStatus.value.course = true;
-  }
-});
+  if (route.path.includes('/chat'))
+    activeStatus.value.chat = true
+  else if (route.path.includes('/course') || route.path.includes('/preview'))
+    activeStatus.value.course = true
+})
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
@@ -102,14 +101,14 @@ function handleUpdateCollapsed() {
 
 function setActiveAndNavigate(activeKey: keyof ActiveStatus): void {
   // 重置所有状态
-  for (const key in activeStatus.value) {
-    activeStatus.value[key] = false;
-  }
+  for (const key in activeStatus.value)
+    activeStatus.value[key] = false
+
   // 设置当前活动状态
-  activeStatus.value[activeKey] = true;
+  activeStatus.value[activeKey] = true
   console.log(`/m/${activeKey}`)
 
-  router.push(`/m/${activeKey}`);
+  router.push(`/m/${activeKey}`)
 }
 
 watch(
@@ -142,9 +141,11 @@ function goMyPage() {
     <div class="h-full overflow-hidden" :class="getMobileClass">
       <NLayout class="z-40 transition" :class="getContainerClass" has-sider>
         <div class="sider">
-          <NLayoutSider :collapsed="collapsed" :collapsed-width="0" :width="260" :show-trigger="false"
+          <NLayoutSider
+            :collapsed="collapsed" :collapsed-width="0" :width="260" :show-trigger="false"
             collapse-mode="transform" position="absolute" bordered :style="getMobileClassSider"
-            @update-collapsed="handleUpdateCollapsed">
+            @update-collapsed="handleUpdateCollapsed"
+          >
             <div class="flex h-full">
               <div class="flex flex-col h-full sidebar-purple" :style="mobileSafeArea">
                 <div class="flex flex-col w-full justify-center items-center" style="margin-top: 25%;">
@@ -155,17 +156,21 @@ function goMyPage() {
                 </div>
                 <div class="menu-tab flex flex-col items-center w-full">
                   <!-- <n-button class="sidebar-purple-button" type=""></n-button> -->
-                  <div :class="{ 'menu-tab-agent-activate': activeStatus.chat }"
+                  <div
+                    :class="{ 'menu-tab-agent-activate': activeStatus.chat }"
                     class="menu-tab-agent flex flex-col justify-center items-center"
-                    @click="setActiveAndNavigate('chat')">
+                    @click="setActiveAndNavigate('chat')"
+                  >
                     <n-icon size="200%">
                       <UserMultiple color="white" />
                     </n-icon>
                     <span class="menu-tab-text">智能体</span>
                   </div>
-                  <div :class="{ 'menu-tab-agent-activate': activeStatus.course }"
+                  <div
+                    :class="{ 'menu-tab-agent-activate': activeStatus.course }"
                     class="menu-tab-agent flex flex-col justify-center items-center"
-                    @click="setActiveAndNavigate('course')">
+                    @click="setActiveAndNavigate('course')"
+                  >
                     <n-icon size="200%">
                       <Tools color="white" />
                     </n-icon>
@@ -188,8 +193,10 @@ function goMyPage() {
             </div>
           </NLayoutSider>
           <template v-if="isMobile">
-            <div v-show="!collapsed" class="fixed inset-0 z-40 w-full h-full bg-black/40"
-              @click="handleUpdateCollapsed" />
+            <div
+              v-show="!collapsed" class="fixed inset-0 z-40 w-full h-full bg-black/40"
+              @click="handleUpdateCollapsed"
+            />
           </template>
           <PromptStore v-model:visible="show" />
         </div>
