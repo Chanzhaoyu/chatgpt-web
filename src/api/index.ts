@@ -1,5 +1,5 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
-import { post, get } from '@/utils/request'
+import { get, post } from '@/utils/request'
 import { useAuthStore, useSettingStore } from '@/store'
 const baseUrl = 'http://106.55.7.164:8069'
 export function fetchChatAPI<T = any>(
@@ -119,23 +119,62 @@ export function getCourseList<T>() {
 
 export function getStarCourses<T>() {
   return get<T>({
-    url: `${baseUrl}/course/star-list`
+    url: `${baseUrl}/course/star-list`,
   })
 }
 export function courseStar<T>(courseId: string) {
   return post<T>({
-    url: `${baseUrl}/course/star?courseId=${courseId}`
+    url: `${baseUrl}/course/star?courseId=${courseId}`,
   })
 }
 export function courseUnStar<T>(courseId: string) {
   return post<T>({
-    url: `${baseUrl}/course/unstar?courseId=${courseId}`
+    url: `${baseUrl}/course/unstar?courseId=${courseId}`,
   })
 }
 
 export function coursePdfs<T>(courseId: string) {
   return get<T>({
-    url: `${baseUrl}/course/pdfs?courseId=${courseId}`
+    url: `${baseUrl}/course/pdfs?courseId=${courseId}`,
+  })
+}
+export function pdfInfo<T>(pdfId: string) {
+  return get<T>({
+    url: `${baseUrl}/pdf/info?pdfId=${pdfId}`,
+  })
+}
+export function commentRootList<T>(pdfPageId: string) {
+  return get<T>({
+    url: `${baseUrl}/comment/root-list?pdfPageId=${pdfPageId}`,
   })
 }
 
+export function commentStar<T>(commentId: string) {
+  return post<T>({
+    url: `${baseUrl}/comment/star?commentId=${commentId}`,
+  })
+}
+
+export function commentUnStar<T>(commentId: string) {
+  return post<T>({
+    url: `${baseUrl}/comment/star?commentId=${commentId}`,
+  })
+}
+
+export function commentAdd<T>(params: any) {
+  return post<T>({
+    url: `${baseUrl}/comment/root-add?`,
+    data: params,
+  })
+}
+export function commentAddChild<T>(params: any) {
+  return post<T>({
+    url: `${baseUrl}/comment/root-add`,
+    data: params,
+  })
+}
+export function commentDel<T>(commentId: string) {
+  return post<T>({
+    url: `${baseUrl}/comment/delete?commentId=${commentId}`,
+  })
+}

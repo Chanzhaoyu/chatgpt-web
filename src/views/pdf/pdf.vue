@@ -11,7 +11,7 @@ onMounted(() => {
   // encodeURIComponent() 函数可把字符串作为 URI 组件进行编码。
   // 核心就是将 iframe 的 src 属性设置为 pdfjs 的地址，然后将 pdf 文件的地址作为参数传递给 pdfjs
   // 例如：http://localhost:8080/pdfjs-4.0.189-dist/web/viewer.html?file=http%3A%2F%2Flocalhost%3A8080%2Fpdf%2Ftest.pdf
-  pdfUrl.value = fileUrl + encodeURIComponent(props.url)
+  pdfUrl.value = `${fileUrl + encodeURIComponent('/pdfs/CSC%206042/Part-2%20Advanced%20Normalization%281%29.pdf?Expires=1720928770&OSSAccessKeyId=LTAI5tL6sjXDXhrBpwSrahUH&Signature=DIPK%2FOZvdB2PvK%2F3XtKH1ETC7ws%3D')}#page=4`
 })
 </script>
 

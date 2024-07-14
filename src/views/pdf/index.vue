@@ -1,133 +1,146 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist/legacy/build/pdf'
-import { NTabPane, NTabs } from 'naive-ui'
+import type { Ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { GlobalWorkerOptions } from 'pdfjs-dist/legacy/build/pdf'
+import { NIcon, NInput, NTabPane, NTabs, useMessage } from 'naive-ui'
+import { NorthRound } from '@vicons/material'
+import type { CommentType } from './components/Comment.vue'
 import Comment from './components/Comment.vue'
+import { commentRootList, pdfInfo } from '@/api'
+import { usePdfStore } from '@/store/modules/pdf'
+
 GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
 
-const title = '标题'
-const source = '/pdfs/CSC%206042/Part-3%20Data%20Warehouse%20and%20Data%20Mining.pdf?Expires=1720848469&OSSAccessKeyId=LTAI5tL6sjXDXhrBpwSrahUH&Signature=HQh1HinG1mklSwC3mI8Oqy0MPtY%3D'
-const numPages = ref(0)
-const canvasRef = ref(null)
-const name = ref('chat')
-const panels = ref([{ tab: 'AI chat', value: 'chat' }, { tab: '评论区', value: ' comment' }, { tab: 'my star', value: 'star' }])
-
-function getPdfPages() {
-  const loadingTask = getDocument(source)
-  loadingTask.promise.then((pdf) => {
-    // 获取特定页面
-    pdf.getPage(3).then((page) => {
-      console.log('Page loaded')
-
-      const viewport = page.getViewport({ scale: 1.3 })
-
-      // 准备 canvas 使用 PDF 页面的尺寸
-      const canvas = canvasRef.value
-      const context = canvas.getContext('2d')
-      if (!context)
-        return
-      canvas.height = viewport.height
-      canvas.width = viewport.width
-
-      // 渲染 PDF 页面到 canvas 上
-      const renderContext = {
-        canvasContext: context,
-        viewport,
-      }
-      const renderTask = page.render(renderContext)
-      renderTask.promise.then(() => {
-        console.log('Page rendered')
-      })
-    })
-  }, (reason) => {
-    console.error(reason)
-  })
+interface PageSummary {
+  pageId: string
+  pagePosition: number
+  summary: string
 }
-onMounted(() => {
-  getPdfPages()
-})
 
+interface PdfSummary {
+  signedUrl: string
+  pageSummaryList: PageSummary[]
+}
+
+const route = useRoute()
 const router = useRouter()
+const pdfId = ref<string>('')
+const summaryResult = ref<PageSummary[]>()
+const sourceRef = ref<string>('')
+// const source = '/pdfs/CSC%206042/Part-3%20Data%20Warehouse%20and%20Data%20Mining.pdf?Expires=1720848469&OSSAccessKeyId=LTAI5tL6sjXDXhrBpwSrahUH&Signature=HQh1HinG1mklSwC3mI8Oqy0MPtY%3D'
+// const numPages = ref(0)
+const canvasRef = ref(null)
+const name = ref('comment')
+const message = useMessage()
+const pdfStore = usePdfStore()
+const panels = ref([{ tab: 'AI chat', value: 'chat' }, { tab: '评论区', value: 'comment' }, { tab: 'my star', value: 'star' }])
+
+const pdfUrl = ref('') // pdf文件地址
+const fileUrl = '/pdfjs-4.4.168-dist/web/viewer.html?file=' // pdfjs文件地址
+const renderPage = ref(1)
+const comments: Ref<CommentType | null> = ref(null)
+function getPdfPages(source) {
+}
+const getPdfInfo = async () => {
+  try {
+    if (pdfId.value) {
+      const res = await pdfInfo<CommentType>(pdfId.value)
+      if (res.data.pageSummaryList.length) {
+        summaryResult.value = res.data.pageSummaryList.map((summary) => {
+          return {
+            pageId: summary.pageId,
+            pagePosition: summary.pagePosition,
+            summary: summary.summary,
+          }
+        })
+
+        const originalUrl = res.data.signedUrl
+        const apiUrl = originalUrl.replace('https://cuhk-ai.oss-cn-shenzhen.aliyuncs.com', '')
+        sourceRef.value = apiUrl
+        pdfStore.setSourceurl(apiUrl)
+        console.log('pdfStore.sourceurl', pdfStore.sourceurl)
+      }
+      else {
+        throw new Error('无有效数据')
+      }
+    }
+    else {
+      throw new Error('PDF id为空')
+    }
+  }
+  catch (error) {
+    message.warning('PDF无法访问或找不到PDF')
+    router.go(-1)
+    console.error('error', error) // 使用 console.error 记录错误
+  }
+}
+const getComment = async (summaryResultVal: PageSummary[], page: number) => {
+  try {
+    const realPage = page - 1
+    if (summaryResultVal.length && page && summaryResultVal[realPage]) {
+      console.log('summaryResultVal', summaryResultVal[realPage])
+
+      const res = await commentRootList<CommentType>(summaryResultVal[realPage].pageId)
+      if (res.data) {
+        comments.value = res.data.map((ele) => {
+          return {
+            commentId: ele.comment.commentId,
+            comment: ele.comment.comment,
+            userIconUrl: ele.comment.userIconUrl,
+            userName: ele.comment.userName,
+            createTime: ele.comment.createTime,
+            starCount: ele.comment.starCount,
+            commentVoList: ele.commentVoList,
+          }
+        })
+        console.log('comments', comments.value)
+      }
+      else {
+        throw new Error('无有效数据')
+      }
+    }
+  }
+  catch (error) {
+    console.error('error', error) // 使用 console.error 记录错误
+  }
+}
+
+onMounted(async () => {
+  pdfId.value = route.query.pdfId as string
+  await getPdfInfo()
+  // encodeURIComponent() 函数可把字符串作为 URI 组件进行编码。
+  // 核心就是将 iframe 的 src 属性设置为 pdfjs 的地址，然后将 pdf 文件的地址作为参数传递给 pdfjs
+  // 例如：http://localhost:8080/pdfjs-4.0.189-dist/web/viewer.html?file=http%3A%2F%2Flocalhost%3A8080%2Fpdf%2Ftest.pdf
+  pdfUrl.value = `${fileUrl + encodeURIComponent(sourceRef.value)}#page=${renderPage.value}`
+  if (summaryResult.value)
+    getComment(summaryResult.value, renderPage.value)
+
+//   getPdfPages(sourceRef.value)
+})
+watch(() => pdfStore.currentPage, (newPage) => {
+  pdfUrl.value = `${fileUrl + encodeURIComponent(sourceRef.value)}#page=${newPage}`
+  renderPage.value = newPage
+  if (summaryResult.value)
+    getComment(summaryResult.value, newPage)
+})
 
 function goBack() {
   router.back()
 }
-
-const comments = [
-  {
-    commentId: '1',
-    comment: 'It is important!',
-    userIconUrl: 'https://randomuser.me/api/portraits/women/1.jpg',
-    userName: 'Linda',
-    createTime: '06-28',
-    starCount: '99',
-    isStared: false,
-    commentVoList: [
-      {
-        commentId: '2',
-        comment: 'I agree',
-        userIconUrl: 'https://randomuser.me/api/portraits/men/2.jpg',
-        userName: 'Tom',
-        createTime: '06-28',
-        starCount: '12',
-        isStared: false,
-      },
-      {
-        commentId: '3',
-        comment: 'Good',
-        userIconUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
-        userName: 'Kelly',
-        createTime: '06-28',
-        starCount: '3',
-        isStared: false,
-      },
-    ],
-  },
-  {
-    commentId: '4',
-    comment: 'The Basic expression includes The Basic expression includes The Basic expression includes The Basic expression includes expression includes',
-    userIconUrl: 'https://randomuser.me/api/portraits/men/4.jpg',
-    userName: 'Peter',
-    createTime: '06-27',
-    starCount: '99',
-    isStared: true,
-  },
-  {
-    commentId: '5',
-    comment: 'The Basic expression includes The Basic expression includes The Basic expression includes The Basic expression includes expression includes on includes The Basic expression includes expression includes',
-    userIconUrl: 'https://randomuser.me/api/portraits/men/5.jpg',
-    userName: 'Jerrimy',
-    createTime: '06-27',
-    starCount: '120',
-    isStared: false,
-  },
-]
 </script>
 
 <template>
   <div class="p-6 h-full">
     <div class="grid-container">
-      <canvas ref="canvasRef" class="shadow-md mt-10 border border-gray-300 grid-image"></canvas>
+      <iframe :src="pdfUrl" width="100%" height="100%" class="grid-image"></iframe>
+      <!-- <canvas ref="canvasRef" class="shadow-md mt-10 border border-gray-300 grid-image"></canvas> -->
       <div class="border border-purple-300 p-4 mt-2 grid-left-bottom">
         <p class="mb-4">
           Summary
         </p>
         <p>
-          常数函数的导数：
-          ddxc=0\frac{d}{dx}c = 0dxd​c=0
-          幂函数的导数： ddxxn=nxn−1\frac{d}{dx}x^n = nx^{n-1}dxd​xn=nxn−1
-          指数函数的导数：
-          ddxex=ex\frac{d}{dx}e^x = e^xdxd​ex=exddxax=axln⁡(a)\frac{d}{dx}a^x = a^x \ln(a)dxd​ax=axln(a)
-          对数函数的导数： ddxln⁡(x)=1x\frac{d}{dx}\ln(x) = \frac{1}{x}dxd​ln(x)=x1​ddxlog⁡a(x)=1xln⁡(a)\frac{d}{dx}\log_a(x) = \frac{1}{x \ln(a)}dxd​loga​(x)=xln(a)1
-          幂函数的导数： ddxxn=nxn−1\frac{d}{dx}x^n = nx^{n-1}dxd​xn=nxn−1
-          指数函数的导数：
-          ddxex=ex\frac{d}{dx}e^x = e^xdxd​ex=exddxax=axln⁡(a)\frac{d}{dx}a^x = a^x \ln(a)dxd​ax=axln(a)
-          对数函数的导数： ddxln⁡(x)=1x\frac{d}{dx}\ln(x) = \frac{1}{x}dxd​ln(x)=x1​ddxlog⁡a(x)=1xln⁡(a)\frac{d}{dx}\log_a(x) = \frac{1}{x \ln(a)}dxd​loga​(x)=xln(a)1
-          幂函数的导数： ddxxn=nxn−1\frac{d}{dx}x^n = nx^{n-1}dxd​xn=nxn−1
-          指数函数的导数：
-          ddxex=ex\frac{d}{dx}e^x = e^xdxd​ex=exddxax=axln⁡(a)\frac{d}{dx}a^x = a^x \ln(a)dxd​ax=axln(a)
-          对数函数的导数： ddxln⁡(x)=1x\frac{d}{dx}\ln(x) = \frac{1}{x}dxd​ln(x)=x1​ddxlog⁡a(x)=1xln⁡(a)\frac{d}{dx}\log_a(x) = \frac{1}{x \ln(a)}dxd​loga​(x)=xln(a)1
+          {{ summaryResult && summaryResult[renderPage - 1].summary }}
         </p>
       </div>
       <div class="flex flex-col flex-1 ml-4 grid-right">
@@ -143,10 +156,17 @@ const comments = [
             :name="panel.value"
           >
             <div
-              class="h-full"
+              class="h-full flex flex-col justify-between"
             >
-              {{ panel.value }}
-              <Comment v-for="comment in comments" :key="comment.commentId" :comment="comment" />
+              <template v-if="panel.value === 'comment'">
+              </template>
+              <Comment v-for="comment in comments" :key="comment.commentId" :comment="comment" class="pr-2" />
+              <n-input round autosize placeholder="评论..." class="mx-5 my-3 h-11">
+                <template #suffix>
+                  <n-icon :component="NorthRound" class="cursor-pointer">
+                  </n-icon>
+                </template>
+              </n-input>
             </div>
           </n-tab-pane>
         </n-tabs>
@@ -164,7 +184,7 @@ const comments = [
 .grid-container {
     display: grid;
     grid-template-columns: 65% 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: 65% 1fr;
     height: 100%;
     width: 100%;
     gap: 10px;

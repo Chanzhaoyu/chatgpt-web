@@ -45,7 +45,7 @@ export default defineConfig((env) => {
           // 这里是 PDF 文件服务器的地址
           target: 'https://cuhk-ai.oss-cn-shenzhen.aliyuncs.com',
           changeOrigin: true,
-        }
+        },
       },
     },
     build: {

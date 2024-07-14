@@ -175,7 +175,7 @@ function goMyPage() {
                     <n-icon size="200%">
                       <Tools color="white" />
                     </n-icon>
-                    <span class="menu-tab-text">PPT工具</span>
+                    <span class="menu-tab-text">课程助手</span>
                   </div>
                 </div>
                 <div class="flex flex-col w-full justify-center items-center cursor-pointer" @click="goMyPage">

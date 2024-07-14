@@ -20,7 +20,7 @@ const courseCuhkCode = computed(() => courseStore.courseCuhkCode)
 const message = useMessage()
 const router = useRouter()
 
-const getPdfInfo = async () => {
+const getCoursePdfs = async () => {
   try {
     if (courseId.value) {
       const res = await coursePdfs<Pdf[]>(courseId.value)
@@ -51,7 +51,7 @@ const getPdfInfo = async () => {
 const route = useRoute()
 onMounted(() => {
   courseId.value = route.query.courseId as string
-  getPdfInfo()
+  getCoursePdfs()
 })
 
 function goBack() {
