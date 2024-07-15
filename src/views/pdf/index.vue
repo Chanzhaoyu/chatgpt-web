@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import type { Ref } from 'vue'
 import { onMounted, ref, watch } from 'vue'
+import type { Ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { GlobalWorkerOptions } from 'pdfjs-dist/legacy/build/pdf'
 import { NIcon, NInput, NTabPane, NTabs, useMessage } from 'naive-ui'
 import { NorthRound } from '@vicons/material'
 import type { CommentType } from './components/Comment.vue'
 import Comment from './components/Comment.vue'
+import AIChat from './components/AIChat.vue'
 import { commentRootList, pdfInfo } from '@/api'
 import { usePdfStore } from '@/store/modules/pdf'
 
@@ -75,12 +76,19 @@ const getPdfInfo = async () => {
     console.error('error', error) // 使用 console.error 记录错误
   }
 }
+function formatDate(dateString) {
+  const date = new Date(dateString)
+  const month = date.getMonth() + 1 // getMonth() 返回的月份从0开始，所以加1
+  const day = date.getDate()
+
+  // 使用模板字符串和三元运算符确保月和日始终是两位数字
+  return `${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`
+}
 const getComment = async (summaryResultVal: PageSummary[], page: number) => {
   try {
     const realPage = page - 1
-    if (summaryResultVal.length && page && summaryResultVal[realPage]) {
-      console.log('summaryResultVal', summaryResultVal[realPage])
 
+    if (summaryResultVal.length && page && summaryResultVal[realPage]) {
       const res = await commentRootList<CommentType>(summaryResultVal[realPage].pageId)
       if (res.data) {
         comments.value = res.data.map((ele) => {
@@ -91,10 +99,10 @@ const getComment = async (summaryResultVal: PageSummary[], page: number) => {
             userName: ele.comment.userName,
             createTime: ele.comment.createTime,
             starCount: ele.comment.starCount,
+            isStared: ele.comment.isStared,
             commentVoList: ele.commentVoList,
           }
         })
-        console.log('comments', comments.value)
       }
       else {
         throw new Error('无有效数据')
@@ -107,6 +115,12 @@ const getComment = async (summaryResultVal: PageSummary[], page: number) => {
 }
 
 onMounted(async () => {
+  window.addEventListener('message', (event) => {
+    if (event.data.type === 'pagechange')
+      console.log('当前PDF页码为:', event.data.pageNumber)
+  })
+  const iFrame = document.getElementById('iframe_id')
+
   pdfId.value = route.query.pdfId as string
   await getPdfInfo()
   // encodeURIComponent() 函数可把字符串作为 URI 组件进行编码。
@@ -115,9 +129,53 @@ onMounted(async () => {
   pdfUrl.value = `${fileUrl + encodeURIComponent(sourceRef.value)}#page=${renderPage.value}`
   if (summaryResult.value)
     getComment(summaryResult.value, renderPage.value)
+  setTimeout(() => {
+    if (iFrame.contentWindow)
+      console.log(iFrame.contentWindow.PDFViewerApplication.pdfViewer.currentPageNumber)
+  }, 5000)
 
-//   getPdfPages(sourceRef.value)
+  //   getPdfPages(sourceRef.value)
 })
+
+function debounce(func, wait, immediate) {
+  let timeout
+  return function () {
+    const context = this; const args = arguments
+    const later = function () {
+      timeout = null
+      if (!immediate)
+        func.apply(context, args)
+    }
+    const callNow = immediate && !timeout
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+    if (callNow)
+      func.apply(context, args)
+  }
+}
+setTimeout(() => {
+  const iFrame = document.getElementById('iframe_id')
+
+  // 滚动事件处理函数
+  function handleScroll() {
+    if (iFrame.contentWindow && iFrame.contentWindow.PDFViewerApplication) {
+      const pageNumber = iFrame.contentWindow.PDFViewerApplication.pdfViewer.currentPageNumber
+      console.log(`当前页面: ${pageNumber}`)
+      pdfStore.setCurrentPage(pageNumber)
+    }
+  }
+
+  // 应用防抖处理
+  const debouncedHandleScroll = debounce(handleScroll, 100) // 250 毫秒防抖
+
+  // 添加事件监听器
+  if (iFrame.contentWindow) {
+    const viewerContainer = iFrame.contentWindow.document.getElementById('viewerContainer') // 确保这是正确的容器 ID
+    if (viewerContainer)
+      viewerContainer.addEventListener('scroll', debouncedHandleScroll)
+  }
+}, 5000)
+
 watch(() => pdfStore.currentPage, (newPage) => {
   pdfUrl.value = `${fileUrl + encodeURIComponent(sourceRef.value)}#page=${newPage}`
   renderPage.value = newPage
@@ -133,7 +191,7 @@ function goBack() {
 <template>
   <div class="p-6 h-full">
     <div class="grid-container">
-      <iframe :src="pdfUrl" width="100%" height="100%" class="grid-image"></iframe>
+      <iframe id="iframe_id" :src="pdfUrl" width="100%" height="100%" class="grid-image"></iframe>
       <!-- <canvas ref="canvasRef" class="shadow-md mt-10 border border-gray-300 grid-image"></canvas> -->
       <div class="border border-purple-300 p-4 mt-2 grid-left-bottom">
         <p class="mb-4">
@@ -144,29 +202,27 @@ function goBack() {
         </p>
       </div>
       <div class="flex flex-col flex-1 ml-4 grid-right">
-        <n-tabs
-          v-model:value="name"
-          type="card"
-          tab-style="min-width: 80px;"
-        >
-          <n-tab-pane
-            v-for="panel in panels"
-            :key="panel.value"
-            :tab="panel.tab"
-            :name="panel.value"
-          >
-            <div
-              class="h-full flex flex-col justify-between"
-            >
-              <template v-if="panel.value === 'comment'">
+        <n-tabs v-model:value="name" type="card" tab-style="min-width: 80px;">
+          <n-tab-pane v-for="panel in panels" :key="panel.value" :tab="panel.tab" :name="panel.value">
+            <div class="h-full flex flex-col justify-between">
+              <template v-if="panel.value === 'chat'">
+                <AIChat></AIChat>
               </template>
-              <Comment v-for="comment in comments" :key="comment.commentId" :comment="comment" class="pr-2" />
-              <n-input round autosize placeholder="评论..." class="mx-5 my-3 h-11">
-                <template #suffix>
-                  <n-icon :component="NorthRound" class="cursor-pointer">
-                  </n-icon>
-                </template>
-              </n-input>
+              <template v-if="panel.value === 'comment'">
+                <div>
+                  <Comment
+                    v-for="comment in comments" :key="comment.commentId" :comment="comment" class="pr-2"
+                    @update-comment="getComment(summaryResult, renderPage)"
+                  />
+                  {{ }}
+                </div>
+                <n-input round autosize placeholder="评论..." class="mx-5 my-3 h-11">
+                  <template #suffix>
+                    <n-icon :component="NorthRound" class="cursor-pointer">
+                    </n-icon>
+                  </template>
+                </n-input>
+              </template>
             </div>
           </n-tab-pane>
         </n-tabs>
@@ -177,59 +233,68 @@ function goBack() {
 
 <style scoped>
 .container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-    grid-gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  grid-gap: 1rem;
 }
+
 .grid-container {
-    display: grid;
-    grid-template-columns: 65% 1fr;
-    grid-template-rows: 65% 1fr;
-    height: 100%;
-    width: 100%;
-    gap: 10px;
+  display: grid;
+  grid-template-columns: 65% 1fr;
+  grid-template-rows: 65% 1fr;
+  height: 100%;
+  width: 100%;
+  gap: 10px;
 }
+
 .left {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
+
 .grid-image {
-    width: 100%;
-    grid-column: 1;
-    grid-row: 1;
+  width: 100%;
+  grid-column: 1;
+  grid-row: 1;
 }
 
 .grid-left-bottom {
-    grid-column: 1;
-    grid-row: 2;
-    flex-grow: 1;
-    overflow-y: auto;
-    border-radius: 25px;
+  grid-column: 1;
+  grid-row: 2;
+  flex-grow: 1;
+  overflow-y: auto;
+  border-radius: 25px;
 }
 
 .grid-right {
-    grid-column: 2;
-    grid-row: 1 / 3; /* 跨两行 */
+  grid-column: 2;
+  grid-row: 1 / 3;
+  /* 跨两行 */
 }
+
 :deep(.n-tabs-tab__label) {
-    color: #000!important;
-    font-size: 16px!important;
+  color: #000 !important;
+  font-size: 16px !important;
 }
+
 :deep(.n-tabs-tab) {
-    padding: 5px 20px;
-    background-color: #fff!important;
-    border: none!important;
+  padding: 5px 20px;
+  background-color: #fff !important;
+  border: none !important;
 }
+
 :deep(.n-tabs-tab--active) {
-    border-radius: 10px 10px 0 0!important;
-    background-color: #F6F5FC!important;
+  border-radius: 10px 10px 0 0 !important;
+  background-color: #F6F5FC !important;
 }
+
 :deep(.n-tab-pane) {
-    background-color: #F6F5FC;
-    height: 100%!important;
-    border-radius:  0 0 25px 25px!important;
+  background-color: #F6F5FC;
+  height: 100% !important;
+  border-radius: 0 0 25px 25px !important;
 }
+
 :deep(.n-tabs) {
-    height: 100%!important;
+  height: 100% !important;
 }
 </style>

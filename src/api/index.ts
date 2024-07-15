@@ -148,7 +148,7 @@ export function commentRootList<T>(pdfPageId: string) {
     url: `${baseUrl}/comment/root-list?pdfPageId=${pdfPageId}`,
   })
 }
-
+// 评论区操作
 export function commentStar<T>(commentId: string) {
   return post<T>({
     url: `${baseUrl}/comment/star?commentId=${commentId}`,
@@ -157,19 +157,25 @@ export function commentStar<T>(commentId: string) {
 
 export function commentUnStar<T>(commentId: string) {
   return post<T>({
-    url: `${baseUrl}/comment/star?commentId=${commentId}`,
+    url: `${baseUrl}/comment/unstar?commentId=${commentId}`,
   })
 }
 
-export function commentAdd<T>(params: any) {
+export function commentRootAdd<T>(params: any) {
   return post<T>({
     url: `${baseUrl}/comment/root-add?`,
     data: params,
   })
 }
-export function commentAddChild<T>(params: any) {
+export function commentChildAdd<T>(params: any) {
   return post<T>({
-    url: `${baseUrl}/comment/root-add`,
+    url: `${baseUrl}/comment/child-add`,
+    data: params,
+  })
+}
+export function commentReplyAdd<T>(params: any) {
+  return post<T>({
+    url: `${baseUrl}/comment/reply-add`,
     data: params,
   })
 }

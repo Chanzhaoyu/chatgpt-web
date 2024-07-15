@@ -9,6 +9,10 @@ const numPages = ref(0)
 const pdfStore = usePdfStore()
 const activePage = ref(1)
 watch(() => pdfStore.sourceUrl, getPdfPage)
+watch(() => pdfStore.currentPage, (newPage) => {
+  activePage.value = newPage
+})
+
 async function getPdfPage() {
   console.log('sourceRef.value', pdfStore.sourceUrl)
 
@@ -41,7 +45,7 @@ const changeActivePage = (page: number) => {
     <div class="flex justify-center">
       <div class="container">
         <div v-for="i in numPages" :key="i" class="p-4 flex flex-col items-center">
-          <canvas :id="`canvas${i}`" class="w-48 cursor-pointer page-item":class="[activePage === i ? 'active-page' : '']"@click="changeActivePage(i)"></canvas>
+          <canvas :id="`canvas${i}`" class="w-48 cursor-pointer page-item" :class="[activePage === i ? 'active-page' : '']" @click="changeActivePage(i)"></canvas>
           <p class="text-sm mt-2">
             第{{ i }}页
           </p>
