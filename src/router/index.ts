@@ -29,7 +29,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/change/index.vue'),
   },
   {
-    path: '/m', // main， ChatGPT 的 url 就是用一个单词，看起来简洁吧  |||  (确实)
+    path: '/m', // main， ChatGPT 的 url 就是用一个单词，看起来简洁吧
     component: PrimaryMenu,
     children: [
       {
@@ -54,7 +54,7 @@ const routes: RouteRecordRaw[] = [
         components: {
           default: () => import('@/views/course/index.vue'),
           secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
-        },
+        }
       },
       {
         path: 'preview',
@@ -62,7 +62,7 @@ const routes: RouteRecordRaw[] = [
         components: {
           default: () => import('@/views/preview/index.vue'),
           secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
-        },
+        }
       },
       {
         path: 'my',
@@ -74,14 +74,14 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'pdf',
-        name: 'PDF',
+        name: 'Pdf',
         components: {
           default: () => import('@/views/pdf/index.vue'),
-          secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
+          secondaryMenu: () => import('@/views/pdf/components/pdfMenu.vue'),
         },
       },
       // 在此添加其他包含侧边栏的页面路由
-    ],
+    ]
   },
   {
     path: '/404',

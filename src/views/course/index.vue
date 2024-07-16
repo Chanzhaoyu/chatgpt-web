@@ -28,6 +28,7 @@ export interface Course {
 export interface StarCourse {
   courseId: string
   courseName: string
+  courseCuhkCode: string
 }
 
 const { isMobile } = useBasicLayout()
@@ -149,7 +150,7 @@ function navigateToCourse({ courseId, courseCuhkCode }: CourseInfo) {
       <CourseCard
         v-for="course in selectedCourse" :key="course.value" :course="course"
         class="hover:cursor-pointer"
-        @click="navigateToCourse({ courseId: course.value, courseCuhkCode: course.courseCuhkCode })" @starChanged="starChanged"
+        @click="navigateToCourse({ courseId: course.value, courseCuhkCode: course.courseCuhkCode })" @star-changed="starChanged"
       />
     </div>
   </div>

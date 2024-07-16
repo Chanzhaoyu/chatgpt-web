@@ -56,7 +56,7 @@ export function fetchNewChatAPIProcess<T = any>(
   params: {
     question: string
     chatId: any
-    agent: string
+    options?: { conversationId?: string; parentMessageId?: string }
     signal?: GenericAbortSignal
     onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void
   },
@@ -66,7 +66,7 @@ export function fetchNewChatAPIProcess<T = any>(
     headers: {
       Accept: 'text/event-stream',
     },
-    data: { chatId: params.chatId, agent: params.agent, question: params.question, historyCount: 10 },
+    data: { chatId: params.chatId, agent: 'bus_agent', question: params.question, historyCount: 10 },
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
   })
@@ -136,5 +136,51 @@ export function courseUnStar<T>(courseId: string) {
 export function coursePdfs<T>(courseId: string) {
   return get<T>({
     url: `${baseUrl}/course/pdfs?courseId=${courseId}`,
+  })
+}
+export function pdfInfo<T>(pdfId: string) {
+  return get<T>({
+    url: `${baseUrl}/pdf/info?pdfId=${pdfId}`,
+  })
+}
+export function commentRootList<T>(pdfPageId: string) {
+  return get<T>({
+    url: `${baseUrl}/comment/root-list?pdfPageId=${pdfPageId}`,
+  })
+}
+// 评论区操作
+export function commentStar<T>(commentId: string) {
+  return post<T>({
+    url: `${baseUrl}/comment/star?commentId=${commentId}`,
+  })
+}
+
+export function commentUnStar<T>(commentId: string) {
+  return post<T>({
+    url: `${baseUrl}/comment/unstar?commentId=${commentId}`,
+  })
+}
+
+export function commentRootAdd<T>(params: any) {
+  return post<T>({
+    url: `${baseUrl}/comment/root-add?`,
+    data: params,
+  })
+}
+export function commentChildAdd<T>(params: any) {
+  return post<T>({
+    url: `${baseUrl}/comment/child-add`,
+    data: params,
+  })
+}
+export function commentReplyAdd<T>(params: any) {
+  return post<T>({
+    url: `${baseUrl}/comment/reply-add`,
+    data: params,
+  })
+}
+export function commentDel<T>(commentId: string) {
+  return post<T>({
+    url: `${baseUrl}/comment/delete?commentId=${commentId}`,
   })
 }

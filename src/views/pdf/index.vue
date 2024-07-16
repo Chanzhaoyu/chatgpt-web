@@ -1,574 +1,300 @@
-<!-- eslint-disable no-unused-expressions -->
-<!-- eslint-disable no-console -->
-<script setup lang='ts'>
+<script lang="ts" setup>
+import { onMounted, ref, watch } from 'vue'
 import type { Ref } from 'vue'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { storeToRefs } from 'pinia'
-import { useDialog, useMessage } from 'naive-ui'
-import { toPng } from 'html-to-image'
-import { useScroll } from './hooks/useScroll'
-import { useChat } from './hooks/useChat'
-import { useUsingContext } from './hooks/useUsingContext'
-import HeaderComponent from './components/Header/index.vue'
-import pdf from './pdf.vue'
-import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useAppStore, useChatStore, usePromptStore } from '@/store'
-import { fetchChatAPIProcess, fetchNewChatAPIProcess, newChat } from '@/api'
-import { t } from '@/locales'
-let controller = new AbortController()
+import { useRoute, useRouter } from 'vue-router'
+import { GlobalWorkerOptions } from 'pdfjs-dist/legacy/build/pdf'
+import { NIcon, NInput, NTabPane, NTabs, useMessage } from 'naive-ui'
+import { NorthRound } from '@vicons/material'
+import type { CommentType } from './components/Comment.vue'
+import Comment from './components/Comment.vue'
+import AIChat from './components/AIChat.vue'
+import { commentRootList, pdfInfo } from '@/api'
+import { usePdfStore } from '@/store/modules/pdf'
 
-const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
+GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
+
+interface PageSummary {
+  pageId: string
+  pagePosition: number
+  summary: string
+}
+
+interface PdfSummary {
+  signedUrl: string
+  pageSummaryList: PageSummary[]
+}
 
 const route = useRoute()
-const dialog = useDialog()
-const ms = useMessage()
-const chatStore = useChatStore()
-const { isMobile } = useBasicLayout()
-const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
-const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
-const { usingContext, toggleUsingContext } = useUsingContext()
+const router = useRouter()
+const pdfId = ref<string>('')
+const summaryResult = ref<PageSummary[]>()
+const sourceRef = ref<string>('')
+// const source = '/pdfs/CSC%206042/Part-3%20Data%20Warehouse%20and%20Data%20Mining.pdf?Expires=1720848469&OSSAccessKeyId=LTAI5tL6sjXDXhrBpwSrahUH&Signature=HQh1HinG1mklSwC3mI8Oqy0MPtY%3D'
+// const numPages = ref(0)
+const canvasRef = ref(null)
+const name = ref('comment')
+const message = useMessage()
+const pdfStore = usePdfStore()
+const panels = ref([{ tab: 'AI chat', value: 'chat' }, { tab: '评论区', value: 'comment' }, { tab: 'my star', value: 'star' }])
 
-const dataSources = computed(() => chatStore.getChatByUuid(chatStore.active))
-const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
-const appStore = useAppStore()
-const prompt = ref<string>('')
-const loading = ref<boolean>(false)
-const inputRef = ref<Ref | null>(null)
-const isDone = ref(false)
-// 添加PromptStore
-// const promptStore = usePromptStore()
-
-// 使用storeToRefs，保证store修改后，联想部分能够重新渲染
-// const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
-
-// 未知原因刷新页面，loading 状态不会重置，手动重置
-dataSources.value.forEach((item, index) => {
-  if (item.loading)
-    updateChatSome(chatStore.active, index, { loading: false })
-})
-
-async function handleSubmit() {
-  const activateAgent = chatStore.history.find(item => item.uuid === chatStore.active)
-  if (activateAgent?.isAgent) {
-    const response: { data: number } = await newChat({ agent: 'bus_agent' })
-    const { data } = response
-    chatStore.addHistory({ title: prompt.value, uuid: data, isEdit: false, isAgent: false })
-    if (isMobile.value)
-      appStore.setSiderCollapsed(true)
-  }
-  onConversation()
+const pdfUrl = ref('') // pdf文件地址
+const fileUrl = '/pdfjs-4.4.168-dist/web/viewer.html?file=' // pdfjs文件地址
+const renderPage = ref(1)
+const comments: Ref<CommentType | null> = ref(null)
+function getPdfPages(source) {
 }
-
-async function onConversation() {
-  const message = prompt.value
-  if (loading.value)
-    return
-
-  if (!message || message.trim() === '')
-    return
-
-  controller = new AbortController()
-  addChat(
-    chatStore.active,
-    {
-      dateTime: new Date().toLocaleString(),
-      text: message,
-      inversion: true,
-      error: false,
-      conversationOptions: null,
-      requestOptions: { prompt: message, options: null },
-    },
-  )
-  scrollToBottom()
-
-  loading.value = true
-  prompt.value = ''
-
-  let options: Chat.ConversationRequest = {}
-  const lastContext = conversationList.value[conversationList.value.length - 1]?.conversationOptions
-
-  if (lastContext && usingContext.value)
-    options = { ...lastContext }
-
-  addChat(
-    chatStore.active,
-    {
-      dateTime: new Date().toLocaleString(),
-      text: t('chat.thinking'),
-      loading: true,
-      inversion: false,
-      error: false,
-      conversationOptions: null,
-      requestOptions: { prompt: message, options: { ...options } },
-    },
-  )
-  scrollToBottom()
-
+const getPdfInfo = async () => {
   try {
-    const lastText = ''
-    const fetchChatAPIOnce = async () => {
-      await fetchNewChatAPIProcess<Chat.ConversationResponse>({
-        chatId: chatStore.active?.toString(),
-        question: message,
-        options,
-        signal: controller.signal,
-        onDownloadProgress: ({ event }) => {
-          const xhr = event.target
-          const { responseText } = xhr
-          let accumulatedData = responseText
-          const contentText = ref('')
-          if (!isDone.value && responseText.includes('event:DONE')) {
-            isDone.value = true
-            // 移除DONE事件及其后的数据，确保只处理实际内容
-            accumulatedData = accumulatedData.split('event:DONE')[0].trim()
-
-            // 分割数据块并处理
-            const dataChunks = accumulatedData.split('\n\n')
-            dataChunks.forEach((chunk: any) => {
-              try {
-                const newChunk = chunk.split('data:')[1].trim()
-                const jsonData = JSON.parse(newChunk)
-                // 这里处理每个JSON对象，例如：
-                // console.log(jsonData.content) // 打印每一块的"content"
-                // 根据您的需求，可以在这里调用相应的函数来处理每一块数据
-                contentText.value += jsonData.content
-              }
-              catch (error) {
-                console.error('Error parsing JSON chunk:', error, 'Chunk:', chunk)
-              }
-            })
-
-            // // 清理状态，准备下一次处理
-            accumulatedData = ''
-            isDone.value = false
+    if (pdfId.value) {
+      const res = await pdfInfo<CommentType>(pdfId.value)
+      if (res.data.pageSummaryList.length) {
+        summaryResult.value = res.data.pageSummaryList.map((summary) => {
+          return {
+            pageId: summary.pageId,
+            pagePosition: summary.pagePosition,
+            summary: summary.summary,
           }
-          // console.log(xhr, 'event')
-          // Always process the final line
-          // const lastIndex = responseText.lastIndexOf('\n', responseText.length - 1)
-          // let chunk = responseText
-          // // console.log(chunk, 'chunk')
-          // if (lastIndex !== -1)
-          //   chunk = responseText.substring(lastIndex)
-          // // console.log(lastIndex, 'responseText')
-          console.log(contentText.value, 'contentText')
-          try {
-            const data = { text: contentText.value, conversationId: Date.now().toString(), id: Date.now() }
-            // const data = JSON.parse(chunk)
-            updateChat(
-              chatStore.active,
-              dataSources.value.length - 1,
-              {
-                dateTime: new Date().toLocaleString(),
-                text: lastText + (data.text ?? ''),
-                inversion: false,
-                error: false,
-                loading: true,
-                conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-                requestOptions: { prompt: message, options: { ...options } },
-              },
-            )
+        })
 
-            // if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
-            //   options.parentMessageId = data.id
-            //   lastText = data.text
-            //   message = ''
-            //   return fetchChatAPIOnce()
-            // }
-
-            scrollToBottomIfAtBottom()
-          }
-          catch (error) {
-            // console.log(error, 'error')
-          }
-        },
-      })
-      updateChatSome(chatStore.active, dataSources.value.length - 1, { loading: false })
+        const originalUrl = res.data.signedUrl
+        const apiUrl = originalUrl.replace('https://cuhk-ai.oss-cn-shenzhen.aliyuncs.com', '')
+        sourceRef.value = apiUrl
+        pdfStore.setSourceurl(apiUrl)
+        console.log('pdfStore.sourceurl', pdfStore.sourceurl)
+      }
+      else {
+        throw new Error('无有效数据')
+      }
     }
-
-    await fetchChatAPIOnce()
+    else {
+      throw new Error('PDF id为空')
+    }
   }
-  catch (error: any) {
-    const errorMessage = error?.message ?? t('common.wrong')
-
-    if (error.message === 'canceled') {
-      updateChatSome(
-        chatStore.active,
-        dataSources.value.length - 1,
-        {
-          loading: false,
-        },
-      )
-      scrollToBottomIfAtBottom()
-      return
-    }
-
-    const currentChat = getChatByUuidAndIndex(chatStore.active, dataSources.value.length - 1)
-
-    if (currentChat?.text && currentChat.text !== '') {
-      updateChatSome(
-        chatStore.active,
-        dataSources.value.length - 1,
-        {
-          text: `${currentChat.text}\n[${errorMessage}]`,
-          error: false,
-          loading: false,
-        },
-      )
-      return
-    }
-
-    updateChat(
-      chatStore.active,
-      dataSources.value.length - 1,
-      {
-        dateTime: new Date().toLocaleString(),
-        text: errorMessage,
-        inversion: false,
-        error: true,
-        loading: false,
-        conversationOptions: null,
-        requestOptions: { prompt: message, options: { ...options } },
-      },
-    )
-    scrollToBottomIfAtBottom()
-  }
-  finally {
-    loading.value = false
+  catch (error) {
+    message.warning('PDF无法访问或找不到PDF')
+    router.go(-1)
+    console.error('error', error) // 使用 console.error 记录错误
   }
 }
+function formatDate(dateString) {
+  const date = new Date(dateString)
+  const month = date.getMonth() + 1 // getMonth() 返回的月份从0开始，所以加1
+  const day = date.getDate()
 
-async function onRegenerate(index: number) {
-  if (loading.value)
-    return
-
-  controller = new AbortController()
-
-  const { requestOptions } = dataSources.value[index]
-
-  let message = requestOptions?.prompt ?? ''
-
-  let options: Chat.ConversationRequest = {}
-
-  if (requestOptions.options)
-    options = { ...requestOptions.options }
-
-  loading.value = true
-
-  updateChat(
-    chatStore.active,
-    index,
-    {
-      dateTime: new Date().toLocaleString(),
-      text: '',
-      inversion: false,
-      error: false,
-      loading: true,
-      conversationOptions: null,
-      requestOptions: { prompt: message, options: { ...options } },
-    },
-  )
-
+  // 使用模板字符串和三元运算符确保月和日始终是两位数字
+  return `${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`
+}
+const getComment = async (summaryResultVal: PageSummary[], page: number) => {
   try {
-    let lastText = ''
-    const fetchChatAPIOnce = async () => {
-      await fetchChatAPIProcess<Chat.ConversationResponse>({
-        prompt: message,
-        options,
-        signal: controller.signal,
-        onDownloadProgress: ({ event }) => {
-          const xhr = event.target
-          const { responseText } = xhr
-          // Always process the final line
-          const lastIndex = responseText.lastIndexOf('\n', responseText.length - 2)
-          let chunk = responseText
-          if (lastIndex !== -1)
-            chunk = responseText.substring(lastIndex)
-          try {
-            const data = JSON.parse(chunk)
-            updateChat(
-              chatStore.active,
-              index,
-              {
-                dateTime: new Date().toLocaleString(),
-                text: lastText + (data.text ?? ''),
-                inversion: false,
-                error: false,
-                loading: true,
-                conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-                requestOptions: { prompt: message, options: { ...options } },
-              },
-            )
+    const realPage = page - 1
 
-            if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
-              options.parentMessageId = data.id
-              lastText = data.text
-              message = ''
-              return fetchChatAPIOnce()
-            }
+    if (summaryResultVal.length && page && summaryResultVal[realPage]) {
+      const res = await commentRootList<CommentType>(summaryResultVal[realPage].pageId)
+      if (res.data) {
+        comments.value = res.data.map((ele) => {
+          return {
+            commentId: ele.comment.commentId,
+            comment: ele.comment.comment,
+            userIconUrl: ele.comment.userIconUrl,
+            userName: ele.comment.userName,
+            createTime: ele.comment.createTime,
+            starCount: ele.comment.starCount,
+            isStared: ele.comment.isStared,
+            commentVoList: ele.commentVoList,
           }
-          catch (error) {
-            //
-          }
-        },
-      })
-      updateChatSome(chatStore.active, index, { loading: false })
+        })
+      }
+      else {
+        throw new Error('无有效数据')
+      }
     }
-    await fetchChatAPIOnce()
   }
-  catch (error: any) {
-    if (error.message === 'canceled') {
-      updateChatSome(
-        chatStore.active,
-        index,
-        {
-          loading: false,
-        },
-      )
-      return
-    }
-
-    const errorMessage = error?.message ?? t('common.wrong')
-
-    updateChat(
-      chatStore.active,
-      index,
-      {
-        dateTime: new Date().toLocaleString(),
-        text: errorMessage,
-        inversion: false,
-        error: true,
-        loading: false,
-        conversationOptions: null,
-        requestOptions: { prompt: message, options: { ...options } },
-      },
-    )
-  }
-  finally {
-    loading.value = false
+  catch (error) {
+    console.error('error', error) // 使用 console.error 记录错误
   }
 }
 
-function handleExport() {
-  if (loading.value)
-    return
-
-  const d = dialog.warning({
-    title: t('chat.exportImage'),
-    content: t('chat.exportImageConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
-    onPositiveClick: async () => {
-      try {
-        d.loading = true
-        const ele = document.getElementById('image-wrapper')
-        const imgUrl = await toPng(ele as HTMLDivElement)
-        const tempLink = document.createElement('a')
-        tempLink.style.display = 'none'
-        tempLink.href = imgUrl
-        tempLink.setAttribute('download', 'chat-shot.png')
-        if (typeof tempLink.download === 'undefined')
-          tempLink.setAttribute('target', '_blank')
-        document.body.appendChild(tempLink)
-        tempLink.click()
-        document.body.removeChild(tempLink)
-        window.URL.revokeObjectURL(imgUrl)
-        d.loading = false
-        ms.success(t('chat.exportSuccess'))
-        Promise.resolve()
-      }
-      catch (error: any) {
-        ms.error(t('chat.exportFailed'))
-      }
-      finally {
-        d.loading = false
-      }
-    },
+onMounted(async () => {
+  window.addEventListener('message', (event) => {
+    if (event.data.type === 'pagechange')
+      console.log('当前PDF页码为:', event.data.pageNumber)
   })
+  const iFrame = document.getElementById('iframe_id')
+
+  pdfId.value = route.query.pdfId as string
+  await getPdfInfo()
+  // encodeURIComponent() 函数可把字符串作为 URI 组件进行编码。
+  // 核心就是将 iframe 的 src 属性设置为 pdfjs 的地址，然后将 pdf 文件的地址作为参数传递给 pdfjs
+  // 例如：http://localhost:8080/pdfjs-4.0.189-dist/web/viewer.html?file=http%3A%2F%2Flocalhost%3A8080%2Fpdf%2Ftest.pdf
+  pdfUrl.value = `${fileUrl + encodeURIComponent(sourceRef.value)}#page=${renderPage.value}`
+  if (summaryResult.value)
+    getComment(summaryResult.value, renderPage.value)
+  setTimeout(() => {
+    if (iFrame.contentWindow)
+      console.log(iFrame.contentWindow.PDFViewerApplication.pdfViewer.currentPageNumber)
+  }, 5000)
+
+  //   getPdfPages(sourceRef.value)
+})
+
+function debounce(func, wait, immediate) {
+  let timeout
+  return function () {
+    const context = this; const args = arguments
+    const later = function () {
+      timeout = null
+      if (!immediate)
+        func.apply(context, args)
+    }
+    const callNow = immediate && !timeout
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+    if (callNow)
+      func.apply(context, args)
+  }
 }
+setTimeout(() => {
+  const iFrame = document.getElementById('iframe_id')
 
-function handleDelete(index: number) {
-  if (loading.value)
-    return
-
-  dialog.warning({
-    title: t('chat.deleteMessage'),
-    content: t('chat.deleteMessageConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
-    onPositiveClick: () => {
-      chatStore.deleteChatByUuid(chatStore.active, index)
-    },
-  })
-}
-
-function handleClear() {
-  if (loading.value)
-    return
-
-  dialog.warning({
-    title: t('chat.clearChat'),
-    content: t('chat.clearChatConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
-    onPositiveClick: () => {
-      chatStore.clearChatByUuid(chatStore.active)
-    },
-  })
-}
-
-function handleEnter(event: KeyboardEvent) {
-  if (!isMobile.value) {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault()
-      handleSubmit()
+  // 滚动事件处理函数
+  function handleScroll() {
+    if (iFrame.contentWindow && iFrame.contentWindow.PDFViewerApplication) {
+      const pageNumber = iFrame.contentWindow.PDFViewerApplication.pdfViewer.currentPageNumber
+      console.log(`当前页面: ${pageNumber}`)
+      pdfStore.setCurrentPage(pageNumber)
     }
   }
-  else {
-    if (event.key === 'Enter' && event.ctrlKey) {
-      event.preventDefault()
-      handleSubmit()
-    }
+
+  // 应用防抖处理
+  const debouncedHandleScroll = debounce(handleScroll, 100) // 250 毫秒防抖
+
+  // 添加事件监听器
+  if (iFrame.contentWindow) {
+    const viewerContainer = iFrame.contentWindow.document.getElementById('viewerContainer') // 确保这是正确的容器 ID
+    if (viewerContainer)
+      viewerContainer.addEventListener('scroll', debouncedHandleScroll)
   }
+}, 5000)
+
+watch(() => pdfStore.currentPage, (newPage) => {
+  pdfUrl.value = `${fileUrl + encodeURIComponent(sourceRef.value)}#page=${newPage}`
+  renderPage.value = newPage
+  if (summaryResult.value)
+    getComment(summaryResult.value, newPage)
+})
+
+function goBack() {
+  router.back()
 }
-
-function handleStop() {
-  if (loading.value) {
-    controller.abort()
-    loading.value = false
-  }
-}
-
-// 可优化部分
-// 搜索选项计算，这里使用value作为索引项，所以当出现重复value时渲染异常(多项同时出现选中效果)
-// 理想状态下其实应该是key作为索引项,但官方的renderOption会出现问题，所以就需要value反renderLabel实现
-const searchOptions = computed(() => {
-  if (prompt.value.startsWith('/')) {
-    return promptTemplate.value.filter((item: { key: string }) => item.key.toLowerCase().includes(prompt.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
-      return {
-        label: obj.value,
-        value: obj.value,
-      }
-    })
-  }
-  else {
-    return []
-  }
-})
-
-// value反渲染key
-const renderOption = (option: { label: string }) => {
-  for (const i of promptTemplate.value) {
-    if (i.value === option.label)
-      return [i.key]
-  }
-  return []
-}
-
-const placeholder = computed(() => {
-  if (isMobile.value)
-    return t('chat.placeholderMobile')
-  return t('chat.placeholder')
-})
-
-const buttonDisabled = computed(() => {
-  return loading.value || !prompt.value || prompt.value.trim() === ''
-})
-
-const footerClass = computed(() => {
-  let classes = ['p-4']
-  if (isMobile.value)
-    classes = ['sticky', 'left-0', 'bottom-0', 'right-0', 'p-2', 'pr-3', 'overflow-hidden']
-  return classes
-})
-
-onMounted(() => {
-  scrollToBottom()
-  if (inputRef.value && !isMobile.value)
-    inputRef.value?.focus()
-})
-
-onUnmounted(() => {
-  if (loading.value)
-    controller.abort()
-})
-
-const tipsArr = ref(['大概告诉我香港中文大学（深圳）六月都发生了什么事情？', '近期学校有什么体育比赛呢？', '下周有什么有趣的社团活动？', '近期有什么关于创新创业相关的活动？'])
 </script>
 
 <template>
-  <div class="flex flex-col w-full h-full">
-    <HeaderComponent
-      v-if="isMobile"
-      :using-context="usingContext"
-      @export="handleExport"
-      @handle-clear="handleClear"
-    />
-    <main class="flex-1 overflow-hidden">
-      <div class="container">
-        <pdf url="/public/DAESTB.pdf"></pdf>
+  <div class="p-6 h-full">
+    <div class="grid-container">
+      <iframe id="iframe_id" :src="pdfUrl" width="100%" height="100%" class="grid-image"></iframe>
+      <!-- <canvas ref="canvasRef" class="shadow-md mt-10 border border-gray-300 grid-image"></canvas> -->
+      <div class="border border-purple-300 p-4 mt-2 grid-left-bottom">
+        <p class="mb-4">
+          Summary
+        </p>
+        <p>
+          {{ summaryResult && summaryResult[renderPage - 1].summary }}
+        </p>
       </div>
-    </main>
-    <footer :class="footerClass">
-      <div class="w-full max-w-screen-xl m-auto">
-        <div class="flex items-center justify-between space-x-2">
-          <NInput
-            ref="inputRef"
-            v-model:value="prompt"
-            class="prompt-input"
-            type="textarea"
-            size="large"
-            :placeholder="placeholder"
-            :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
-            @input="handleInput"
-            @focus="handleFocus"
-            @blur="handleBlur"
-            @keypress="handleEnter"
-          />
-          <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
-            <template #icon>
-              <span class="dark:text-black">
-                <SvgIcon icon="ri:send-plane-fill" />
-              </span>
-            </template>
-          </NButton>
-        </div>
+      <div class="flex flex-col flex-1 ml-4 grid-right">
+        <n-tabs v-model:value="name" type="card" tab-style="min-width: 80px;">
+          <n-tab-pane v-for="panel in panels" :key="panel.value" :tab="panel.tab" :name="panel.value">
+            <div class="h-full flex flex-col justify-between">
+              <template v-if="panel.value === 'chat'">
+                <AIChat></AIChat>
+              </template>
+              <template v-if="panel.value === 'comment'">
+                <div>
+                  <Comment
+                    v-for="comment in comments" :key="comment.commentId" :comment="comment" class="pr-2"
+                    @update-comment="getComment(summaryResult, renderPage)"
+                  />
+                  {{ }}
+                </div>
+                <n-input round autosize placeholder="评论..." class="mx-5 my-3 h-11">
+                  <template #suffix>
+                    <n-icon :component="NorthRound" class="cursor-pointer">
+                    </n-icon>
+                  </template>
+                </n-input>
+              </template>
+            </div>
+          </n-tab-pane>
+        </n-tabs>
       </div>
-    </footer>
+    </div>
   </div>
 </template>
 
-<style scoped lang="scss">
-:deep(.n-input){
-  border-radius: 40px
+<style scoped>
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  grid-gap: 1rem;
 }
-.tips{
-  width: 47.5%;
-  height: 100%;
-  margin-top: 3%;
-  .tips-title{
-    font-size: 16px
-  }
-  .tips-text{
-    font-size: 16px;
-    color: black;
-    margin-left: 3%
-  }
-  .tips-button{
-    background-color: #CDC7EB;
-    border-radius: 10px;
-    height: 10%;
-    margin-bottom: 3%;
-    cursor: pointer;
-  }
-}
-</style>
 
-<style>
-.tips-button{
-  .n-icon{
-    margin-left: auto;
-    margin-right: 3%
-  }
+.grid-container {
+  display: grid;
+  grid-template-columns: 65% 1fr;
+  grid-template-rows: 65% 1fr;
+  height: 100%;
+  width: 100%;
+  gap: 10px;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-image {
+  width: 100%;
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.grid-left-bottom {
+  grid-column: 1;
+  grid-row: 2;
+  flex-grow: 1;
+  overflow-y: auto;
+  border-radius: 25px;
+}
+
+.grid-right {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  /* 跨两行 */
+}
+
+:deep(.n-tabs-tab__label) {
+  color: #000 !important;
+  font-size: 16px !important;
+}
+
+:deep(.n-tabs-tab) {
+  padding: 5px 20px;
+  background-color: #fff !important;
+  border: none !important;
+}
+
+:deep(.n-tabs-tab--active) {
+  border-radius: 10px 10px 0 0 !important;
+  background-color: #F6F5FC !important;
+}
+
+:deep(.n-tab-pane) {
+  background-color: #F6F5FC;
+  height: 100% !important;
+  border-radius: 0 0 25px 25px !important;
+}
+
+:deep(.n-tabs) {
+  height: 100% !important;
 }
 </style>
