@@ -1,5 +1,6 @@
 import { get, post } from '@/utils/request'
 import type { Agent } from '@/typings/agentChat/Agent'
+import type { Message } from '@/api/typing'
 
 export function agentHello<T>(params: any) {
   return get<T>({
@@ -35,17 +36,6 @@ export function getAllPreviewChat() {
   return get<ChatHistoryPreview[]>({
     url: '/chat/preview-list',
   })
-}
-
-export interface Message {
-  content?: null | string
-  role?: Role
-}
-
-export enum Role {
-  Assistant = 'assistant',
-  System = 'system',
-  User = 'user',
 }
 
 export function getMessages(chatId: string) {

@@ -7,13 +7,13 @@ import { NIcon, NInput, NTabPane, NTabs, useMessage } from 'naive-ui'
 import { NorthRound } from '@vicons/material'
 import type { CommentType } from './components/Comment.vue'
 import Comment from './components/Comment.vue'
-import AIChat from './components/AIChat.vue'
+import AIChat from './components/AIChat/AIChat.vue'
 import { commentRootList, pdfInfo } from '@/api'
 import { usePdfStore } from '@/store/modules/pdf'
 
 GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
 
-interface PageSummary {
+export interface PageSummary {
   pageId: string
   pagePosition: number
   summary: string
@@ -206,7 +206,7 @@ function goBack() {
           <n-tab-pane v-for="panel in panels" :key="panel.value" :tab="panel.tab" :name="panel.value">
             <div class="h-full flex flex-col justify-between">
               <template v-if="panel.value === 'chat'">
-                <AIChat></AIChat>
+                <AIChat :pdf-id="pdfId" :page-list="summaryResult"></AIChat>
               </template>
               <template v-if="panel.value === 'comment'">
                 <div>

@@ -36,6 +36,7 @@
     "md5": "^2.3.0",
     "mermaid-it-markdown": "^1.0.8",
     "naive-ui": "^2.38.2",
+    "pdfjs-dist": "^4.4.168",
     "pinia": "^2.0.33",
     "vite-svg-loader": "^5.1.0",
     "vue": "^3.2.47",

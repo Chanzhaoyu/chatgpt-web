@@ -6,6 +6,6 @@ module.exports = {
     'comma-dangle': ['error', 'only-multiline'],
     'no-unused-vars': ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: false }],
     'vue/html-self-closing': 'off',
-		'vue/no-unused-vars': "off"
+		'vue/no-unused-vars': "warn"
   },
 }

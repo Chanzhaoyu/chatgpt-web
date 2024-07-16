@@ -1,49 +1,49 @@
 <script setup lang="ts">
-import { NButton, NInput } from 'naive-ui'
 import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
-import { SvgIcon } from '@/components/common'
-import { useBasicLayout } from '@/hooks/useBasicLayout'
+import { NButton, NInput, NSelect } from 'naive-ui'
 import { t } from '@/locales'
-import { Message } from '@/views/chat/components'
-import { agentHello, getMessages } from '@/api/agentChat'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useScroll } from '@/views/chat/hooks/useScroll'
-import { Role } from '@/api/typing'
+import { Message } from '@/views/chat/components'
+import { getPdfChatList } from '@/api/pdfChat'
+import { SvgIcon } from '@/components/common'
 import type { Chat } from '@/api/typing'
-const route = useRoute()
-const agent: string = route.params.agent
-const chatId: string = route.params.chatId
-// const props = defineProps({
-//   agent: String,
-//   chatId: String,
-// })
-const loading = ref<boolean>(false)
+import { Role } from '@/api/typing'
+import type { PageSummary } from '@/views/pdf/index.vue'
+interface Props {
+  pdfId: string
+  pageList: PageSummary[]
+}
+
+const props = defineProps<Props>()
+const pdfId = props.pdfId
+console.log(`pdfId:${pdfId}`)
 const { isMobile } = useBasicLayout()
+const loading = ref<boolean>(false)
 const prompt = ref<string>('')
-const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
-const placeholder = computed(() => {
-  if (isMobile.value)
-    return t('chat.placeholderMobile')
-  return t('chat.placeholder')
-})
 const buttonDisabled = computed(() => {
   return loading.value || !prompt.value || prompt.value.trim() === ''
 })
-
-const agentHelloWords = ref<string>('')
-
-agentHello<string>({ agent }).then((res) => {
-  if (res.data)
-    agentHelloWords.value = res.data
-})
-
+const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
 const footerClass = computed(() => {
   let classes = ['p-4']
   if (isMobile.value)
     classes = ['sticky', 'left-0', 'bottom-0', 'right-0', 'p-2', 'pr-3', 'overflow-hidden']
   return classes
 })
+const placeholder = computed(() => {
+  if (isMobile.value)
+    return t('chat.placeholderMobile')
+  return t('chat.placeholder')
+})
+
+const pageOptions = ref(props.pageList.map(page => ({
+  label: page.pagePosition,
+  value: page.pageId,
+})))
+
+const selectPdfIdList = ref<string[]>([])
 
 function handleEnter(event: KeyboardEvent) {
   if (!isMobile.value) {
@@ -59,42 +59,26 @@ function handleEnter(event: KeyboardEvent) {
     }
   }
 }
+const pdfChatList = ref<Chat[][]>([])
+const lastPdfChatId = ref<string>('')
+getPdfChatList(pdfId).then((result) => {
+  // 假设result是一个PdfChat[]数组，我们需要将其转换为Chat[][]
+  // 这里需要根据实际的数据结构进行调整
+  pdfChatList.value = result.data.map(pdfChat => pdfChat.messages.map(message => ({
+    text: message.content,
+    inversion: message.role === Role.User, // 假设Role是一个枚举或类型，包含INVERSION值
+    error: false,
+    loading: false,
+  })))
 
-const dataSources = ref<Chat[]>([])
-
-// 调用getMessages函数并处理响应
-getMessages(chatId).then((res) => {
-  if (res.data) {
-    // 处理数据，特别是用户消息
-    const processedMessages: Chat[] = res.data.map((message) => {
-      const chat: Chat = {
-        text: message.content || '',
-        inversion: false, // 默认inversion为false
-        error: false,
-        loading: false,
-      }
-
-      // 如果消息角色是用户，则设置inversion为true
-      if (message.role === Role.User)
-        chat.inversion = true
-
-      return chat
-    })
-
-    // 更新dataSources
-    dataSources.value = processedMessages
-  }
-}).catch((error) => {
-  console.error('Failed to fetch messages:', error)
+  const lastPdfChat = result.data[result.data.length - 1]
+  lastPdfChatId.value = lastPdfChat.pdfChatId
+  console.log(pdfChatList.value)
 })
 
 function handleSubmit() {
   onConversation()
 }
-
-// const updateChat = (index, chat:Chat) => {
-//
-// }
 
 async function onConversation() {
   const message = prompt.value
@@ -107,8 +91,9 @@ async function onConversation() {
     inversion: true,
     error: false,
   }
+  const lastDataSources = pdfChatList.value[pdfChatList.value.length - 1]
   scrollToBottom()
-  dataSources.value.push(userChat)
+  lastDataSources.push(userChat)
 
   loading.value = true
   prompt.value = ''
@@ -119,19 +104,19 @@ async function onConversation() {
     inversion: false,
     error: false,
   }
-  dataSources.value.push(assistantChat)
+  lastDataSources.push(assistantChat)
   scrollToBottom()
 
   try {
     const params = {
-      chatId,
-      agent,
+      pdfChatId: lastPdfChatId.value,
       question: message,
-      historyCount: 10,
+      historyCount: 0,
+      pdfPageIdList: selectPdfIdList.value,
     }
     const lastText = ''
     const baseUrl = import.meta.env.VITE_APP_API_BASE_URL
-    const url = `${baseUrl}chat/completion/chat-id`
+    const url = `${baseUrl}pdf-chat/completion/chat`
     const fetchChatAPIOnce = async () => {
       fetchEventSource(url, {
         method: 'POST',
@@ -139,7 +124,7 @@ async function onConversation() {
         headers: {
           'Content-Type': 'application/json',
         },
-        // retry: false,
+        retry: false,
         openWhenHidden: true,
 
         // onopen: (response) => {
@@ -156,17 +141,14 @@ async function onConversation() {
             // console.log(audioData);
             if ('event' in data) {
               // 清空思考中这三个字
-              dataSources.value[dataSources.value.length - 1].text = ''
-              // console.log('text data')
-              // answer.value += audioData.content;
-              // response.value += audioData.content
+              lastDataSources[lastDataSources.length - 1].text = ''
             }
             else if ('content' in data) {
-              if (dataSources.value.length > 0) {
+              if (lastDataSources.length > 0) {
                 // 修改 dataSources 数组的最后一个元素的 text 属性
-                dataSources.value[dataSources.value.length - 1].text += data.content
+                lastDataSources[lastDataSources.length - 1].text += data.content
+                console.log(data.content)
               }
-              console.log(dataSources)
               // dataSources.value.at(dataSources.value.length - 1).text += data.content
             }
           }
@@ -178,7 +160,7 @@ async function onConversation() {
         onclose() {
           // 正常结束的回调
           console.log('connection closed')
-          dataSources.value[dataSources.value.length - 1].loading = false
+          lastDataSources[lastDataSources.length - 1].loading = false
           loading.value = false
         },
         onerror(err: any) {
@@ -195,7 +177,7 @@ async function onConversation() {
     console.log(error)
   }
 }
-
+scrollToBottom()
 async function handleStop() {
 
 }
@@ -215,20 +197,12 @@ async function handleDelete(index: number) {
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto">
         <div
           class="h-full w-full max-w-screen-xl m-auto dark:bg-[#101014]"
-          :class="[isMobile ? 'p-2' : 'p-4']"
         >
           <div id="image-wrapper" class="relative h-full">
-            <div class="flex h-full items-center justify-center mt-4 text-center text-neutral-300 flex-col">
-              <div class="flex justify-center w-full items-center">
-                <img src="@/assets/news.png" alt="logo" />
-                <div class="flex justify-center items-center flex-col" style="margin-left: 5%;">
-                  <span style="color: #1B2559;font-size: 28px;font-weight: bolder">{{ agentHelloWords }}</span>
-                </div>
-              </div>
-            </div>
-            <div>
+            <div v-for="(dataList, index) of pdfChatList">
+              <div>以下是新对话</div>
               <Message
-                v-for="(item, index) of dataSources"
+                v-for="(item, index) of dataList"
                 :key="index"
                 :text="item.text"
                 :inversion="item.inversion"
@@ -237,14 +211,14 @@ async function handleDelete(index: number) {
                 @regenerate="onRegenerate(index)"
                 @delete="handleDelete(index)"
               />
-              <div class="sticky bottom-0 left-0 flex justify-center">
-                <NButton v-if="loading" type="warning" @click="handleStop">
-                  <template #icon>
-                    <SvgIcon icon="ri:stop-circle-line" />
-                  </template>
-                  {{ t('common.stopResponding') }}
-                </NButton>
-              </div>
+            </div>
+            <div class="sticky bottom-0 left-0 flex justify-center">
+              <NButton v-if="loading" type="warning" @click="handleStop">
+                <template #icon>
+                  <SvgIcon icon="ri:stop-circle-line" />
+                </template>
+                {{ t('common.stopResponding') }}
+              </NButton>
             </div>
           </div>
         </div>
@@ -253,6 +227,7 @@ async function handleDelete(index: number) {
     <footer :class="footerClass">
       <div class="w-full max-w-screen-xl m-auto">
         <div class="flex items-center justify-between space-x-2">
+          <n-select v-model:value="selectPdfIdList" multiple :options="pageOptions" />
           <NInput
             ref="inputRef"
             v-model:value="prompt"

@@ -10,7 +10,6 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { copyToClip } from '@/utils/copy'
 
 interface Props {
-  dateTime?: string
   text?: string
   inversion?: boolean
   error?: boolean
@@ -105,9 +104,9 @@ async function handleCopy() {
       <AvatarComponent :image="inversion" />
     </div>
     <div class="overflow-hidden text-sm " :class="[inversion ? 'items-end' : 'items-start']">
-      <p class="text-xs text-[#b4bbc4]" :class="[inversion ? 'text-right' : 'text-left']">
-        {{ dateTime }}
-      </p>
+      <!--      <p class="text-xs text-[#b4bbc4]" :class="[inversion ? 'text-right' : 'text-left']"> -->
+      <!--        {{ dateTime }} -->
+      <!--      </p> -->
       <div
         class="flex items-end gap-1 mt-2"
         :class="[inversion ? 'flex-row-reverse' : 'flex-row']"

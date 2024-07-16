@@ -113,7 +113,7 @@ export function newChat<T>(params: any) {
 
 export function getCourseList<T>() {
   return get<T>({
-    url: `${baseUrl}/course/list`,
+    url: `${baseUrl}/course/info-list`,
   })
 }
 
