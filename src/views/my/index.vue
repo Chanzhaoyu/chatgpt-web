@@ -94,7 +94,7 @@ function handleClick(option: string) {
       </template>
       <template v-else-if="currentOption === 'join'">
         <div class="flex items-center mb-4">
-          <img src="@/assets/Ellipse 275.png" alt="">
+          <img src="../../assets/news.png" alt="">
           <p class="ml-4">👋 我们欢迎有意向共建PPT知识社区的朋友加入我们，成为共建者即可拥有自主上传PPT的权限，快来申请吧！</p>
         </div>
         <div class="flex items-center">

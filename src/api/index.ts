@@ -1,5 +1,5 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
-import { post, get } from '@/utils/request'
+import { get, post } from '@/utils/request'
 import { useAuthStore, useSettingStore } from '@/store'
 const baseUrl = 'http://106.55.7.164:8069'
 export function fetchChatAPI<T = any>(
@@ -56,7 +56,7 @@ export function fetchNewChatAPIProcess<T = any>(
   params: {
     question: string
     chatId: any
-    options?: { conversationId?: string; parentMessageId?: string }
+    agent: string
     signal?: GenericAbortSignal
     onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void
   },
@@ -66,7 +66,7 @@ export function fetchNewChatAPIProcess<T = any>(
     headers: {
       Accept: 'text/event-stream',
     },
-    data: { chatId: params.chatId, agent: 'bus_agent', question: params.question, historyCount: 10 },
+    data: { chatId: params.chatId, agent: params.agent, question: params.question, historyCount: 10 },
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
   })
@@ -119,23 +119,22 @@ export function getCourseList<T>() {
 
 export function getStarCourses<T>() {
   return get<T>({
-    url: `${baseUrl}/course/star-list`
+    url: `${baseUrl}/course/star-list`,
   })
 }
 export function courseStar<T>(courseId: string) {
   return post<T>({
-    url: `${baseUrl}/course/star?courseId=${courseId}`
+    url: `${baseUrl}/course/star?courseId=${courseId}`,
   })
 }
 export function courseUnStar<T>(courseId: string) {
   return post<T>({
-    url: `${baseUrl}/course/unstar?courseId=${courseId}`
+    url: `${baseUrl}/course/unstar?courseId=${courseId}`,
   })
 }
 
 export function coursePdfs<T>(courseId: string) {
   return get<T>({
-    url: `${baseUrl}/course/pdfs?courseId=${courseId}`
+    url: `${baseUrl}/course/pdfs?courseId=${courseId}`,
   })
 }
-

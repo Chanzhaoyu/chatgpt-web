@@ -39,7 +39,7 @@ const register = (e: MouseEvent) => {
           message.success(
             '注册成功',
           )
-          router.push('chat')
+          router.push('m/course')
         }
       }
     },

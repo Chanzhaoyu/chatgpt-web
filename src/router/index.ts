@@ -1,7 +1,8 @@
 import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
-import PrimaryMenu from '@/components/common/PrimaryMenu/index.vue';
+import PrimaryMenu from '@/components/common/PrimaryMenu/index.vue'
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -28,16 +29,24 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/change/index.vue'),
   },
   {
-    path: '/m', // main， ChatGPT 的 url 就是用一个单词，看起来简洁吧
+    path: '/m', // main， ChatGPT 的 url 就是用一个单词，看起来简洁吧  |||  (确实)
     component: PrimaryMenu,
     children: [
       {
-        path: 'chat',
-        name: 'Chat',
+        path: 'chat/:agent',
+        name: 'AgentHome',
         components: {
           default: () => import('@/views/chat/index.vue'),
           secondaryMenu: () => import('@/views/chat/components/ChatMenu/index.vue'),
-        }
+        },
+      },
+      {
+        path: 'chat/:agent/:chatId',
+        name: 'AgentChat',
+        components: {
+          default: () => import('@/views/chat/chat.vue'),
+          secondaryMenu: () => import('@/views/chat/components/ChatMenu/index.vue'),
+        },
       },
       {
         path: 'course',
@@ -45,7 +54,7 @@ const routes: RouteRecordRaw[] = [
         components: {
           default: () => import('@/views/course/index.vue'),
           secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
-        }
+        },
       },
       {
         path: 'preview',
@@ -53,7 +62,7 @@ const routes: RouteRecordRaw[] = [
         components: {
           default: () => import('@/views/preview/index.vue'),
           secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
-        }
+        },
       },
       {
         path: 'my',
@@ -61,10 +70,18 @@ const routes: RouteRecordRaw[] = [
         components: {
           default: () => import('@/views/my/index.vue'),
           secondaryMenu: () => import('@/views/my/components/MyMenu/index.vue'),
-        }
-      }
+        },
+      },
+      {
+        path: 'pdf',
+        name: 'PDF',
+        components: {
+          default: () => import('@/views/pdf/index.vue'),
+          secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
+        },
+      },
       // 在此添加其他包含侧边栏的页面路由
-    ]
+    ],
   },
   {
     path: '/404',

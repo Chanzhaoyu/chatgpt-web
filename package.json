@@ -23,6 +23,7 @@
     "common:prepare": "husky install"
   },
   "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
     "@vicons/carbon": "^0.12.0",
     "@vicons/material": "^0.12.0",
     "@vscode/markdown-it-katex": "^1.0.3",

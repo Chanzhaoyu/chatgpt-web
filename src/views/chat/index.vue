@@ -3,10 +3,8 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { storeToRefs } from 'pinia'
-import { NButton, NIcon, NInput, useDialog, useMessage } from 'naive-ui'
-import { ArrowRightAltFilled } from '@vicons/material'
+import { useRoute, useRouter } from 'vue-router'
+import { NButton, NInput, useDialog, useMessage } from 'naive-ui'
 import { toPng } from 'html-to-image'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
@@ -15,15 +13,21 @@ import { useUsingContext } from './hooks/useUsingContext'
 import HeaderComponent from './components/Header/index.vue'
 import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useAppStore, useChatStore, usePromptStore } from '@/store'
+import { useAppStore, useChatStore } from '@/store'
 import { fetchChatAPIProcess, fetchNewChatAPIProcess, newChat } from '@/api'
 import { t } from '@/locales'
+import { agentHello } from '@/api/agentChat'
+import AgentExampleQuestion from '@/views/chat/components/main/AgentExampleQuestion.vue'
 
 let controller = new AbortController()
 
 const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
 
 const route = useRoute()
+const router = useRouter()
+const agent = route.params.agent
+const chatId = route.params.chatId
+
 const dialog = useDialog()
 const ms = useMessage()
 const chatStore = useChatStore()
@@ -40,10 +44,10 @@ const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
 const isDone = ref(false)
 // 添加PromptStore
-const promptStore = usePromptStore()
+// const promptStore = usePromptStore()
 
 // 使用storeToRefs，保证store修改后，联想部分能够重新渲染
-const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
+// const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
 
 // 未知原因刷新页面，loading 状态不会重置，手动重置
 dataSources.value.forEach((item, index) => {
@@ -52,16 +56,24 @@ dataSources.value.forEach((item, index) => {
 })
 
 async function handleSubmit() {
-  const activateAgent = chatStore.history.find(item => item.uuid === chatStore.active)
-  if (activateAgent?.isAgent) {
-    const response: { data: number } = await newChat({ agent: 'bus_agent' })
-    const { data } = response
-    chatStore.addHistory({ title: prompt.value, uuid: data, isEdit: false, isAgent: false })
-    if (isMobile.value)
-      appStore.setSiderCollapsed(true)
+  // const activateAgent = chatStore.history.find(item => item.uuid === chatStore.active)
+  // if (activateAgent?.isAgent) {
+  //   const response: { data: number } = await newChat({ agent: 'bus_agent' })
+  //   const { data } = response
+  //   chatStore.addHistory({ title: prompt.value, uuid: data, isEdit: false, isAgent: false })
+  if (route.name === 'AgentHome') {
+    // console.log('chatId is undefined')
+    const response: { data: string } = await newChat({ agent })
+    router.push({ name: 'Chat', params: { agent, chatId: response.data.toString() } })
   }
+
   onConversation()
+
+  if (isMobile.value)
+    appStore.setSiderCollapsed(true)
 }
+
+// onConversation()
 
 async function onConversation() {
   const message = prompt.value
@@ -447,7 +459,9 @@ function handleStop() {
 // 理想状态下其实应该是key作为索引项,但官方的renderOption会出现问题，所以就需要value反renderLabel实现
 const searchOptions = computed(() => {
   if (prompt.value.startsWith('/')) {
-    return promptTemplate.value.filter((item: { key: string }) => item.key.toLowerCase().includes(prompt.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
+    return promptTemplate.value.filter((item: {
+      key: string
+    }) => item.key.toLowerCase().includes(prompt.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
       return {
         label: obj.value,
         value: obj.value,
@@ -496,7 +510,11 @@ onUnmounted(() => {
     controller.abort()
 })
 
-const tipsArr = ref(['大概告诉我香港中文大学（深圳）六月都发生了什么事情？', '近期学校有什么体育比赛呢？', '下周有什么有趣的社团活动？', '近期有什么关于创新创业相关的活动？'])
+const agenthello = ref('')
+agentHello({ agent }).then((res) => {
+  if (res.data)
+    agenthello.value = res.data
+})
 </script>
 
 <template>
@@ -517,23 +535,14 @@ const tipsArr = ref(['大概告诉我香港中文大学（深圳）六月都发�
             <template v-if="!dataSources.length">
               <div class="flex h-full items-center justify-center mt-4 text-center text-neutral-300 flex-col">
                 <div class="flex justify-center w-full items-center">
-                  <img src="@/assets/Ellipse 275.png" alt="logo" />
+                  <img src="@/assets/news.png" alt="logo" />
                   <div class="flex justify-center items-center flex-col" style="margin-left: 5%;">
-                    <span style="color: #1B2559;font-size: 28px;font-weight: bolder">👋 你好，我是AI薯塔，</span>
-                    <span style="color: #1B2559;font-size: 28px;font-weight: bolder">我可以告诉你最新的龙大资讯🙋</span>
+                    <!--                    <span style="color: #1B2559;font-size: 28px;font-weight: bolder">👋 你好，我是AI薯塔，</span> -->
+                    <!--                    <span style="color: #1B2559;font-size: 28px;font-weight: bolder">我可以告诉你最新的龙大资讯🙋</span> -->
+                    <span style="color: #1B2559;font-size: 28px;font-weight: bolder">{{ agenthello }}</span>
                   </div>
                 </div>
-                <div class="flex h-full w-full flex-col items-start tips">
-                  <span class="tips-title">你可以尝试下面的例子...</span>
-                  <div class="flex w-full h-full flex-col items-start">
-                    <div v-for="(item, index) of tipsArr" :key="index" class="tips-button w-full flex flex-row items-center">
-                      <span class="tips-text">{{ item }}</span>
-                      <n-icon size="35" color="black">
-                        <ArrowRightAltFilled />
-                      </n-icon>
-                    </div>
-                  </div>
-                </div>
+                <AgentExampleQuestion />
               </div>
             </template>
             <template v-else>
@@ -579,7 +588,7 @@ const tipsArr = ref(['大概告诉我香港中文大学（深圳）六月都发�
             @blur="handleBlur"
             @keypress="handleEnter"
           />
-          <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit" class="send-button">
+          <NButton type="primary" :disabled="buttonDisabled" class="send-button" @click="handleSubmit">
             <template #icon>
               <span class="dark:text-black">
                 <SvgIcon icon="ri:send-plane-fill" />
@@ -593,40 +602,36 @@ const tipsArr = ref(['大概告诉我香港中文大学（深圳）六月都发�
 </template>
 
 <style scoped lang="scss">
-:deep(.n-input){
-  border-radius: 40px;
+:deep(.n-input) {
+	border-radius: 40px;
 }
-.send-button {
-  width: var(--n-width);
-  height: var(--n-height);
-}
-.tips{
-  width: 47.5%;
-  height: 100%;
-  margin-top: 3%;
-  .tips-title{
-    font-size: 16px
-  }
-  .tips-text{
-    font-size: 16px;
-    color: black;
-    margin-left: 3%
-  }
-  .tips-button{
-    background-color: #CDC7EB;
-    border-radius: 10px;
-    height: 10%;
-    margin-bottom: 3%;
-    cursor: pointer;
-  }
-}
-</style>
 
-<style>
-.tips-button{
-  .n-icon{
-    margin-left: auto;
-    margin-right: 3%
-  }
+.send-button {
+	width: var(--n-width);
+	height: var(--n-height);
+}
+
+.tips {
+	width: 47.5%;
+	height: 100%;
+	margin-top: 3%;
+
+	.tips-title {
+		font-size: 16px
+	}
+
+	.tips-text {
+		font-size: 16px;
+		color: black;
+		margin-left: 3%
+	}
+
+	.tips-button {
+		background-color: #CDC7EB;
+		border-radius: 10px;
+		height: 10%;
+		margin-bottom: 3%;
+		cursor: pointer;
+	}
 }
 </style>

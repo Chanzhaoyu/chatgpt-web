@@ -1,27 +1,50 @@
 <!-- eslint-disable no-console -->
 <script setup lang='ts'>
-import { computed } from 'vue'
 import { NInput, NPopconfirm, NScrollbar } from 'naive-ui'
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { debounce } from '@/utils/functions/debounce'
+import { getAllPreviewChat } from '@/api/agentChat'
+import { router } from '@/router'
 
 const { isMobile } = useBasicLayout()
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
+const route = useRoute()
+const agent: string = route.params.agent
+const chatId = route.params.chatId
+interface History {
+  title: string
+  isEdit: boolean
+  chatId: string
+}
+const dataSources = ref<History[]>([])
+// const dataSources = computed(() => chatStore.history)
+getAllPreviewChat().then((res) => {
+  if (res && res.data) {
+    // 假设res.data是一个History[]数组
+    dataSources.value = res.data.map(item => ({
+      title: item.title,
+      isEdit: true, // 假设默认不是编辑状态
+      chatId: item.chatId,
+    }))
+  }
+}).catch((error) => {
+  console.error('Failed to fetch chat history:', error)
+})
 
-const dataSources = computed(() => chatStore.history)
-
-async function handleSelect({ uuid }: Chat.History) {
-  console.log(uuid)
-  if (isActive(uuid))
+async function handleSelect(chatId: string) {
+  if (isActive(chatId))
     return
 
-  if (chatStore.active)
-    chatStore.updateHistory(chatStore.active, { isEdit: false })
-  await chatStore.setActive(uuid)
+  router.push({ name: 'AgentChat', params: { agent, chatId } })
+  // if (chatStore.active)
+  //   chatStore.updateHistory(chatStore.active, { isEdit: false })
+  // await chatStore.setActive(uuid)
 
   if (isMobile.value)
     appStore.setSiderCollapsed(true)
@@ -47,8 +70,8 @@ function handleEnter({ uuid }: Chat.History, isEdit: boolean, event: KeyboardEve
     chatStore.updateHistory(uuid, { isEdit })
 }
 
-function isActive(uuid: number) {
-  return chatStore.active === uuid
+function isActive(uuid: string) {
+  return chatId === uuid
 }
 </script>
 
@@ -63,10 +86,9 @@ function isActive(uuid: number) {
       </template> -->
       <div v-for="(item, index) of dataSources" :key="index">
         <a
-          v-if="item.isAgent === false"
           class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-neutral-100 group dark:border-neutral-800 dark:hover:bg-[#24272e]"
-          :class="isActive(item.uuid) && ['border-[#4b9e5f]', 'bg-neutral-100', 'text-[#4b9e5f]', 'dark:bg-[#24272e]', 'dark:border-[#4b9e5f]', 'pr-14']"
-          @click="handleSelect(item)"
+          :class="isActive(item.chatId) && ['border-[#4b9e5f]', 'bg-neutral-100', 'text-[#4b9e5f]', 'dark:bg-[#24272e]', 'dark:border-[#4b9e5f]', 'pr-14']"
+          @click="handleSelect(item.chatId)"
         >
           <span>
             <SvgIcon icon="ri:message-3-line" />
@@ -79,7 +101,7 @@ function isActive(uuid: number) {
             />
             <span v-else>{{ item.title }}</span>
           </div>
-          <div v-if="isActive(item.uuid)" class="absolute z-10 flex visible right-1">
+          <div v-if="isActive(item.chatId)" class="absolute z-10 flex visible right-1">
             <template v-if="item.isEdit">
               <button class="p-1" @click="handleEdit(item, false, $event)">
                 <SvgIcon icon="ri:save-line" />

@@ -37,10 +37,10 @@ const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
 const isDone = ref(false)
 // 添加PromptStore
-const promptStore = usePromptStore()
+// const promptStore = usePromptStore()
 
 // 使用storeToRefs，保证store修改后，联想部分能够重新渲染
-const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
+// const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
 
 // 未知原因刷新页面，loading 状态不会重置，手动重置
 dataSources.value.forEach((item, index) => {
@@ -509,7 +509,7 @@ const tipsArr = ref(['大概告诉我香港中文大学（深圳）六月都发�
         <pdf url="/public/DAESTB.pdf"></pdf>
       </div>
     </main>
-    <!-- <footer :class="footerClass">
+    <footer :class="footerClass">
       <div class="w-full max-w-screen-xl m-auto">
         <div class="flex items-center justify-between space-x-2">
           <NInput
@@ -534,7 +534,7 @@ const tipsArr = ref(['大概告诉我香港中文大学（深圳）六月都发�
           </NButton>
         </div>
       </div>
-    </footer> -->
+    </footer>
   </div>
 </template>
 

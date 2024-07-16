@@ -157,7 +157,7 @@ function goMyPage() {
                   <!-- <n-button class="sidebar-purple-button" type=""></n-button> -->
                   <div :class="{ 'menu-tab-agent-activate': activeStatus.chat }"
                     class="menu-tab-agent flex flex-col justify-center items-center"
-                    @click="setActiveAndNavigate('chat')">
+                    @click="setActiveAndNavigate('chat/news_agent')">
                     <n-icon size="200%">
                       <UserMultiple color="white" />
                     </n-icon>

@@ -10,6 +10,11 @@ import { useRouter } from 'vue-router'
 import { setToken } from '@/store/modules/auth/helper'
 
 import { loginAccount } from '@/api'
+
+export interface LoginResponse {
+  tokenValue: string
+  tokenTimeout: string
+}
 const router = useRouter()
 const message = useMessage()
 const registerFormRef = ref<any>()
@@ -21,7 +26,7 @@ const registerRules = ref<any>({
 })
 
 const loading = ref(false)
-const regsiterForm = ref({
+const registerForm = ref({
   email: '',
   password: '',
   check: null,
@@ -37,18 +42,18 @@ const register = (e: MouseEvent) => {
       }
       else {
         loading.value = true
-        const data = await loginAccount({ email: `${regsiterForm.value.email}@link.cuhk.edu.cn`, password: regsiterForm.value.password })
-        if (data.status === 200) {
+        const res = await loginAccount<LoginResponse>({ email: `${registerForm.value.email}@link.cuhk.edu.cn`, password: registerForm.value.password })
+        if (res.status === 200) {
           loading.value = false
 
-          const token = data.data.tokenValue
+          const token = res.data.tokenValue
           // console.log(token);
           setToken(token)
           message.success(
             '登录成功',
           )
 
-          router.push('chat')
+          router.push('/m/course')
         }
       }
     },
@@ -57,7 +62,7 @@ const register = (e: MouseEvent) => {
 </script>
 
 <template>
-  <n-form ref="registerFormRef" :rules="registerRules" :model="regsiterForm">
+  <n-form ref="registerFormRef" :rules="registerRules" :model="registerForm">
     <n-form-item>
       <div class="login-form-header">
         <span class="login-title">登录</span>
@@ -65,7 +70,7 @@ const register = (e: MouseEvent) => {
       </div>
     </n-form-item>
     <n-form-item path="email">
-      <n-input v-model:value="regsiterForm.email" size="large" class="login-input" placeholder="请输入校园邮箱" @keydown.enter.prevent>
+      <n-input v-model:value="registerForm.email" size="large" class="login-input" placeholder="请输入校园邮箱" @keydown.enter.prevent>
         <template #suffix>
           <div class="login-input-suffix">
             <span class="login-input-suffix-text">@link.cuhk.edu.cn</span>
@@ -79,7 +84,7 @@ const register = (e: MouseEvent) => {
       </n-input>
     </n-form-item>
     <n-form-item path="password">
-      <n-input v-model:value="regsiterForm.password" size="large" class="login-input" placeholder="请输入密码" @keydown.enter.prevent>
+      <n-input v-model:value="registerForm.password" size="large" class="login-input" placeholder="请输入密码" @keydown.enter.prevent>
         <template #suffix>
           <div class="login-input-suffix2">
             <span class="login-input-suffix-text2">@link.cuhk.edu.cn</span>
@@ -93,7 +98,7 @@ const register = (e: MouseEvent) => {
       </n-input>
     </n-form-item>
     <n-form-item path="check">
-      <n-checkbox-group v-model:value="regsiterForm.check">
+      <n-checkbox-group v-model:value="registerForm.check">
         <n-space item-style="display: flex;">
           <n-checkbox value="checked">
             <span>by signing up you accept the</span>
