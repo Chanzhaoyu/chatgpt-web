@@ -14,8 +14,6 @@ watch(() => pdfStore.currentPage, (newPage) => {
 })
 
 async function getPdfPage() {
-  console.log('sourceRef.value', pdfStore.sourceUrl)
-
   const loadingTask = getDocument(pdfStore.sourceUrl)
   const pdf = await loadingTask.promise
   numPages.value = Number(pdf._pdfInfo.numPages)

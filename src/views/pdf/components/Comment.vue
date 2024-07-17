@@ -2,7 +2,7 @@
 import { ChatBubbleFilled, DeleteRound, NorthRound, PlayArrowFilled, StarBorderOutlined, StarOutlined } from '@vicons/material'
 import { NIcon, NInput, useDialog } from 'naive-ui'
 import { computed, defineEmits, defineProps, ref } from 'vue'
-import { commentChildAdd, commentDel, commentReplyAdd, commentRootAdd, commentStar, commentUnStar } from '@/api'
+import { commentChildAdd, commentDel, commentReplyAdd, commentStar, commentUnStar } from '@/api'
 import { usePdfStore } from '@/store'
 export interface CommentType {
   commentId: string
@@ -25,7 +25,6 @@ const emit = defineEmits(['updateComment'])
 const pdfStore = usePdfStore()
 const dialog = useDialog()
 const apiMethods = {
-  commentRootAdd,
   commentChildAdd,
   commentReplyAdd,
   commentStar,
@@ -33,39 +32,20 @@ const apiMethods = {
   commentDel,
 }
 
-const requestParamsMap = {
-  commentChildAdd: ['pdfPageId', 'rootCommentId'],
-  commentReplyAdd: ['pdfPageId', 'rootCommentId', 'replyCommentId'],
-  commentStar: [],
-  commentUnStar: [],
-  commentDel: [],
-}
 const handleComment = async (type: string, comment: CommentType, replyContent = '') => {
   try {
-    if (type === 'commentReply')
-      type = 'replyUserName' in comment ? 'commentReplyAdd' : 'commentChildAdd'
     let params = {}
-    const fields = requestParamsMap[type] || []
-    if (fields.length) {
-      fields.forEach((field) => {
-        params[field] = comment[field]
-        if (field === 'pdfPageId')
-          params[field] = computed(() => props.pageIds[pdfStore.currentPage - 1]).value
-        if (field === 'rootCommentId')
-          params[field] = comment.commentId
-      })
-      console.log('params', params)
+    if (type === 'commentReply') {
+      type = 'replyUserName' in comment ? 'commentReplyAdd' : 'commentChildAdd'
+      params.comment = replyContent
+      params.replyCommentId = comment.commentId
     }
     else {
       // commentStar、commentUnStar、commentDel的参数只需传入commentId字符串，不是对象
       params = comment.commentId
     }
-    if (type === 'commentReplyAdd' || type === 'commentChildAdd')
-      params.comment = replyContent
     if (apiMethods[type]) {
-      console.log(type, params, 'apiMethods，type, params,')
-
-      // await apiMethods[type](params)
+      await apiMethods[type](params)
       emit('updateComment')
       pdfStore.setActiveCommentId('')
     }

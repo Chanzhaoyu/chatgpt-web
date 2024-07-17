@@ -17,6 +17,7 @@ export interface PageSummary {
   pageId: string
   pagePosition: number
   summary: string
+  chineseSummary: string
 }
 
 interface PdfSummary {
@@ -43,8 +44,6 @@ const fileUrl = '/pdfjs-4.4.168-dist/web/viewer.html?file=' // pdfjs文件地址
 const renderPage = ref(1)
 const comments: Ref<CommentType | null> = ref(null)
 const commentContent = ref('')
-function getPdfPages(source) {
-}
 const getPdfInfo = async () => {
   try {
     if (pdfId.value) {
@@ -55,6 +54,7 @@ const getPdfInfo = async () => {
             pageId: summary.pageId,
             pagePosition: summary.pagePosition,
             summary: summary.summary,
+            chineseSummary: summary.chineseSummary,
           }
         })
         pageIds.value = res.data.pageSummaryList.map(item => item.pageId)
@@ -62,7 +62,6 @@ const getPdfInfo = async () => {
         const apiUrl = originalUrl.replace('https://cuhk-ai.oss-cn-shenzhen.aliyuncs.com', '')
         sourceRef.value = apiUrl
         pdfStore.setSourceurl(apiUrl)
-        console.log('pdfStore.sourceurl', pdfStore.sourceurl)
       }
       else {
         throw new Error('无有效数据')
@@ -132,12 +131,6 @@ onMounted(async () => {
   pdfUrl.value = `${fileUrl + encodeURIComponent(sourceRef.value)}#page=${renderPage.value}`
   if (summaryResult.value)
     getComment(summaryResult.value, renderPage.value)
-  setTimeout(() => {
-    if (iFrame.contentWindow)
-      console.log(iFrame.contentWindow.PDFViewerApplication.pdfViewer.currentPageNumber)
-  }, 5000)
-
-  //   getPdfPages(sourceRef.value)
 })
 
 function debounce(func, wait, immediate) {
@@ -208,6 +201,11 @@ const addRootComment = async (data: CommentData) => {
     message.warning(errorMessage)
   }
 }
+
+const isEnSummary = ref(false)
+const setisEnSummary = (value: boolean) => {
+  isEnSummary.value = value
+}
 </script>
 
 <template>
@@ -215,12 +213,19 @@ const addRootComment = async (data: CommentData) => {
     <div class="grid-container">
       <iframe id="iframe_id" :src="pdfUrl" width="100%" height="100%" class="grid-image"></iframe>
       <!-- <canvas ref="canvasRef" class="shadow-md mt-10 border border-gray-300 grid-image"></canvas> -->
-      <div class="border border-purple-300 p-4 mt-2 grid-left-bottom">
-        <p class="mb-4">
-          Summary
-        </p>
+      <div class="border border-purple-300 px-4 py-2 mt-2 grid-left-bottom">
+        <div class="flex justify-between items-center">
+          <p>
+            Summary
+          </p>
+          <button
+            class="p-2 hover-gray" :class="[isEnSummary ? '' : 'px-3']" @click="() => setisEnSummary(!isEnSummary)"
+          >
+            {{ isEnSummary ? "\u4E2D\u6587" : "EN" }}
+          </button>
+        </div>
         <p>
-          {{ summaryResult && summaryResult[renderPage - 1].summary }}
+          {{ summaryResult && (isEnSummary ? summaryResult[renderPage - 1].summary : summaryResult[renderPage - 1].chineseSummary) }}
         </p>
       </div>
       <div class="flex flex-col flex-1 ml-4 grid-right">
@@ -294,6 +299,10 @@ const addRootComment = async (data: CommentData) => {
   /* 跨两行 */
 }
 
+.hover-gray:hover {
+  background-color: #F6F5FC;
+  border-radius: 50%;
+}
 :deep(.n-tabs-tab__label) {
   color: #000 !important;
   font-size: 16px !important;
