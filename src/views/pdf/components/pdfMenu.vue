@@ -11,6 +11,10 @@ const activePage = ref(1)
 watch(() => pdfStore.sourceUrl, getPdfPage)
 watch(() => pdfStore.currentPage, (newPage) => {
   activePage.value = newPage
+  // 使用 scrollIntoView 方法滚动到当前页面
+  const canvasElement = document.getElementById(`canvas${newPage}`)
+  if (canvasElement)
+    canvasElement.scrollIntoView({ block: 'center' })
 })
 
 async function getPdfPage() {

@@ -10,6 +10,7 @@ import Comment from './components/Comment.vue'
 import AIChat from './components/AIChat/AIChat.vue'
 import { commentRootAdd, commentRootList, pdfInfo } from '@/api'
 import { usePdfStore } from '@/store/modules/pdf'
+import { useMarkdown } from '@/hooks/useMarkdown'
 
 GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
 
@@ -31,9 +32,6 @@ const pdfId = ref<string>('')
 const summaryResult = ref<PageSummary[]>()
 const pageIds = ref<string[]>([])
 const sourceRef = ref<string>('')
-// const source = '/pdfs/CSC%206042/Part-3%20Data%20Warehouse%20and%20Data%20Mining.pdf?Expires=1720848469&OSSAccessKeyId=LTAI5tL6sjXDXhrBpwSrahUH&Signature=HQh1HinG1mklSwC3mI8Oqy0MPtY%3D'
-// const numPages = ref(0)
-const canvasRef = ref(null)
 const name = ref('comment')
 const message = useMessage()
 const pdfStore = usePdfStore()
@@ -156,7 +154,6 @@ setTimeout(() => {
   function handleScroll() {
     if (iFrame.contentWindow && iFrame.contentWindow.PDFViewerApplication) {
       const pageNumber = iFrame.contentWindow.PDFViewerApplication.pdfViewer.currentPageNumber
-      console.log(`当前页面: ${pageNumber}`)
       pdfStore.setCurrentPage(pageNumber)
     }
   }
@@ -170,7 +167,7 @@ setTimeout(() => {
     if (viewerContainer)
       viewerContainer.addEventListener('scroll', debouncedHandleScroll)
   }
-}, 5000)
+}, 500)
 
 watch(() => pdfStore.currentPage, (newPage) => {
   pdfUrl.value = `${fileUrl + encodeURIComponent(sourceRef.value)}#page=${newPage}`
@@ -215,18 +212,16 @@ const setisEnSummary = (value: boolean) => {
       <!-- <canvas ref="canvasRef" class="shadow-md mt-10 border border-gray-300 grid-image"></canvas> -->
       <div class="border border-purple-300 px-4 py-2 mt-2 grid-left-bottom">
         <div class="flex justify-between items-center">
-          <p>
+          <p class="font-bold text-lg">
             Summary
           </p>
           <button
-            class="p-2 hover-gray" :class="[isEnSummary ? '' : 'px-3']" @click="() => setisEnSummary(!isEnSummary)"
+            class="p-2 hover-gray font-medium .text-sm" :class="[isEnSummary ? '' : 'px-3']" @click="() => setisEnSummary(!isEnSummary)"
           >
             {{ isEnSummary ? "\u4E2D\u6587" : "EN" }}
           </button>
         </div>
-        <p>
-          {{ summaryResult && (isEnSummary ? summaryResult[renderPage - 1].summary : summaryResult[renderPage - 1].chineseSummary) }}
-        </p>
+        <div v-html="useMarkdown(summaryResult && (isEnSummary ? summaryResult[renderPage - 1].summary : summaryResult[renderPage - 1].chineseSummary)).value"></div>
       </div>
       <div class="flex flex-col flex-1 ml-4 grid-right">
         <n-tabs v-model:value="name" type="card" tab-style="min-width: 80px;">
@@ -258,7 +253,7 @@ const setisEnSummary = (value: boolean) => {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
@@ -267,7 +262,7 @@ const setisEnSummary = (value: boolean) => {
 
 .grid-container {
   display: grid;
-  grid-template-columns: 65% 1fr;
+  grid-template-columns: 75% 1fr;
   grid-template-rows: 65% 1fr;
   height: 100%;
   width: 100%;
@@ -291,6 +286,9 @@ const setisEnSummary = (value: boolean) => {
   flex-grow: 1;
   overflow-y: auto;
   border-radius: 25px;
+  // &::-webkit-scrollbar {
+  //   overflow: hidden;
+  // }
 }
 
 .grid-right {
