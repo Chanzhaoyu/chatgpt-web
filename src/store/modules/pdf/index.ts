@@ -3,6 +3,7 @@ export const usePdfStore = defineStore('pdf-store', {
   state: () => ({
     currentPage: 1,
     sourceUrl: '',
+    activeCommentId: '',
   }),
   actions: {
     setCurrentPage(page: number) {
@@ -10,6 +11,9 @@ export const usePdfStore = defineStore('pdf-store', {
     },
     setSourceurl(url: string) {
       this.sourceUrl = url
+    },
+    setActiveCommentId(id: string) {
+      this.activeCommentId = this.activeCommentId === id ? '' : id
     },
   },
 })

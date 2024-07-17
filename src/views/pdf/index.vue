@@ -8,7 +8,7 @@ import { NorthRound } from '@vicons/material'
 import type { CommentType } from './components/Comment.vue'
 import Comment from './components/Comment.vue'
 import AIChat from './components/AIChat/AIChat.vue'
-import { commentRootList, pdfInfo } from '@/api'
+import { commentRootAdd, commentRootList, pdfInfo } from '@/api'
 import { usePdfStore } from '@/store/modules/pdf'
 
 GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
@@ -28,6 +28,7 @@ const route = useRoute()
 const router = useRouter()
 const pdfId = ref<string>('')
 const summaryResult = ref<PageSummary[]>()
+const pageIds = ref<string[]>([])
 const sourceRef = ref<string>('')
 // const source = '/pdfs/CSC%206042/Part-3%20Data%20Warehouse%20and%20Data%20Mining.pdf?Expires=1720848469&OSSAccessKeyId=LTAI5tL6sjXDXhrBpwSrahUH&Signature=HQh1HinG1mklSwC3mI8Oqy0MPtY%3D'
 // const numPages = ref(0)
@@ -41,6 +42,7 @@ const pdfUrl = ref('') // pdf文件地址
 const fileUrl = '/pdfjs-4.4.168-dist/web/viewer.html?file=' // pdfjs文件地址
 const renderPage = ref(1)
 const comments: Ref<CommentType | null> = ref(null)
+const commentContent = ref('')
 function getPdfPages(source) {
 }
 const getPdfInfo = async () => {
@@ -55,7 +57,7 @@ const getPdfInfo = async () => {
             summary: summary.summary,
           }
         })
-
+        pageIds.value = res.data.pageSummaryList.map(item => item.pageId)
         const originalUrl = res.data.signedUrl
         const apiUrl = originalUrl.replace('https://cuhk-ai.oss-cn-shenzhen.aliyuncs.com', '')
         sourceRef.value = apiUrl
@@ -110,6 +112,7 @@ const getComment = async (summaryResultVal: PageSummary[], page: number) => {
     }
   }
   catch (error) {
+    message.error(error.response?.data?.message || error.message || '发生未知错误')
     console.error('error', error) // 使用 console.error 记录错误
   }
 }
@@ -183,8 +186,27 @@ watch(() => pdfStore.currentPage, (newPage) => {
     getComment(summaryResult.value, newPage)
 })
 
-function goBack() {
-  router.back()
+interface CommentData {
+  comment: string
+  pdfPageId: string
+}
+
+const addRootComment = async (data: CommentData) => {
+  try {
+    if (!data.comment || !data.pdfPageId)
+      throw new Error('comment or pdfPageId is null')
+
+    await commentRootAdd(data)
+
+    if (summaryResult.value && renderPage.value)
+      await getComment(summaryResult.value, renderPage.value)
+    else
+      throw new Error('添加评论失败')
+  }
+  catch (error: any) {
+    const errorMessage = error.response?.data?.message || error.message || '发生未知错误'
+    message.warning(errorMessage)
+  }
 }
 </script>
 
@@ -211,14 +233,14 @@ function goBack() {
               <template v-if="panel.value === 'comment'">
                 <div>
                   <Comment
-                    v-for="comment in comments" :key="comment.commentId" :comment="comment" class="pr-2"
+                    v-for="comment in comments" :key="comment.commentId" :comment="comment" :page-ids="pageIds" class="pr-2"
                     @update-comment="getComment(summaryResult, renderPage)"
                   />
                   {{ }}
                 </div>
-                <n-input round autosize placeholder="评论..." class="mx-5 my-3 h-11">
+                <n-input v-model:value="commentContent" round autosize placeholder="评论..." class="mx-5 my-3 h-11">
                   <template #suffix>
-                    <n-icon :component="NorthRound" class="cursor-pointer">
+                    <n-icon :component="NorthRound" class="cursor-pointer" @click="addRootComment({ pdfPageId: pageIds[renderPage - 1], comment: commentContent })">
                     </n-icon>
                   </template>
                 </n-input>

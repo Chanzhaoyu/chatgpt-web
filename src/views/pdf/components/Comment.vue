@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ChatBubbleFilled, DeleteRound, NorthRound, PlayArrowFilled, StarBorderOutlined, StarOutlined } from '@vicons/material'
 import { NIcon, NInput, useDialog } from 'naive-ui'
-import { defineEmits } from 'vue'
+import { computed, defineEmits, defineProps, ref } from 'vue'
 import { commentChildAdd, commentDel, commentReplyAdd, commentRootAdd, commentStar, commentUnStar } from '@/api'
+import { usePdfStore } from '@/store'
 export interface CommentType {
   commentId: string
   comment: string
@@ -16,10 +17,12 @@ export interface CommentType {
 }
 interface Props {
   comment: CommentType
+  pageIds: Array<string>
 }
-defineProps<Props>()
+const props = defineProps<Props>()
 const emit = defineEmits(['updateComment'])
 
+const pdfStore = usePdfStore()
 const dialog = useDialog()
 const apiMethods = {
   commentRootAdd,
@@ -31,38 +34,40 @@ const apiMethods = {
 }
 
 const requestParamsMap = {
-  commentRootAdd: ['comment', 'pdfPageId'],
-  commentChildAdd: ['comment', 'pdfPageId', 'rootCommentId'],
-  commentReplyAdd: ['comment', 'pdfPageId', 'rootCommentId', 'replyCommentId'],
+  commentChildAdd: ['pdfPageId', 'rootCommentId'],
+  commentReplyAdd: ['pdfPageId', 'rootCommentId', 'replyCommentId'],
   commentStar: [],
   commentUnStar: [],
   commentDel: [],
 }
-const handleComment = async (type: string, comment) => {
+const handleComment = async (type: string, comment: CommentType, replyContent = '') => {
   try {
-    console.log('type:', type)
-    if (type === 'commentReply') {
-      if (Object.keys(comment).includes('replyUserName'))
-        type = 'commentReplyAdd'
-      else
-        type = 'commentChildAdd'
-    }
+    if (type === 'commentReply')
+      type = 'replyUserName' in comment ? 'commentReplyAdd' : 'commentChildAdd'
     let params = {}
-    const fields = requestParamsMap[type]
-    debugger
+    const fields = requestParamsMap[type] || []
     if (fields.length) {
       fields.forEach((field) => {
-        if (comment[field] !== undefined)
-          params[field] = comment[field]
+        params[field] = comment[field]
+        if (field === 'pdfPageId')
+          params[field] = computed(() => props.pageIds[pdfStore.currentPage - 1]).value
+        if (field === 'rootCommentId')
+          params[field] = comment.commentId
       })
+      console.log('params', params)
     }
     else {
+      // commentStar、commentUnStar、commentDel的参数只需传入commentId字符串，不是对象
       params = comment.commentId
     }
-
+    if (type === 'commentReplyAdd' || type === 'commentChildAdd')
+      params.comment = replyContent
     if (apiMethods[type]) {
-      await apiMethods[type](params)
+      console.log(type, params, 'apiMethods，type, params,')
+
+      // await apiMethods[type](params)
       emit('updateComment')
+      pdfStore.setActiveCommentId('')
     }
   }
   catch (error) {
@@ -71,7 +76,6 @@ const handleComment = async (type: string, comment) => {
       message = (error as { message: string }).message
     else if (error instanceof Error)
       message = error.toString()
-
     dialog.error({
       title: '错误',
       content: message,
@@ -80,12 +84,13 @@ const handleComment = async (type: string, comment) => {
     console.error('Error fetching course list:', error)
   }
 }
+const activeCommentId = computed(() => pdfStore.activeCommentId)
+const replyContent = ref('')
 </script>
 
 <template>
   <div class="flex items-start space-x-4 p-4 pr-0">
-    <!-- <img :src="comment.userIconUrl" alt="user" class="w-10 h-10 rounded-full"> -->
-    <img src="https://randomuser.me/api/portraits/women/8.jpg" alt="user" class="w-10 h-10 rounded-full">
+    <img :src="comment.userIconUrl" alt="user" class="w-10 h-10 rounded-full">
     <div class="flex-1">
       <div class="flex items-center justify-between">
         <div class="flex items-center">
@@ -103,8 +108,7 @@ const handleComment = async (type: string, comment) => {
         {{ comment.comment }}
       </p>
       <div class="flex justify-between items-center mt-2 text-gray-400">
-        <!-- <span class="text-sm text-gray-500">{{ comment.createTime }}</span> -->
-        <span class="text-sm text-gray-500">07-13</span>
+        <span class="text-sm text-gray-500">{{ comment.createTime }}</span>
         <div class="right flex items-center">
           <button class="flex items-center space-x-1">
             <n-icon size="large">
@@ -112,11 +116,11 @@ const handleComment = async (type: string, comment) => {
             </n-icon>
             <span class="text-sm text-nowrap">删除</span>
           </button>
-          <button class="flex items-center space-x-1 ml-2">
+          <button class="flex items-center space-x-1 ml-2" @click="() => pdfStore.setActiveCommentId(comment.commentId)">
             <n-icon size="large">
               <ChatBubbleFilled />
             </n-icon>
-            <span class="text-sm" @click="handleComment('commentReply', comment)">回复</span>
+            <span class="text-sm text-nowrap">回复</span>
           </button>
           <button class="space-x-1 ml-2">
             <div class="text-sm flex items-center">
@@ -135,15 +139,15 @@ const handleComment = async (type: string, comment) => {
           </button>
         </div>
       </div>
-      <n-input round placeholder="评论..." class="my-3">
+      <n-input v-if="activeCommentId === comment.commentId" v-model:value="replyContent" round :placeholder="`回复 ${comment.userName}`" class="my-3">
         <template #suffix>
-          <n-icon :component="NorthRound" class="cursor-pointer">
+          <n-icon :component="NorthRound" class="cursor-pointer" @click="handleComment('commentReply', comment, replyContent)">
           </n-icon>
         </template>
       </n-input>
 
       <div v-if="comment.commentVoList && comment.commentVoList.length" class="mt-4">
-        <Comment v-for="reply in comment.commentVoList" :key="reply.commentId" :comment="reply" @update-comment="emit('updateComment')" />
+        <Comment v-for="reply in comment.commentVoList" :key="reply.commentId" :comment="reply" :page-ids="pageIds" @update-comment="emit('updateComment')" />
       </div>
     </div>
   </div>

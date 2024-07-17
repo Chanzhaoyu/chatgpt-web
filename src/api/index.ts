@@ -163,7 +163,7 @@ export function commentUnStar<T>(commentId: string) {
 
 export function commentRootAdd<T>(params: any) {
   return post<T>({
-    url: `${baseUrl}/comment/root-add?`,
+    url: `${baseUrl}/comment/root-add`,
     data: params,
   })
 }
