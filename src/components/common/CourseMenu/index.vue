@@ -42,7 +42,7 @@ function goPreview(courseId: string) {
           </p>
         </div>
         <div class="right font-normal flex items-center" @click="goPreview(course.courseId)">
-          <span class="whitespace-nowrap ml-4">课件预览</span>
+          <span class="whitespace-nowrap ml-2">课件预览</span>
           <n-icon>
             <ArrowForwardIosOutlined />
           </n-icon>

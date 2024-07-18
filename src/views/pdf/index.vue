@@ -254,12 +254,6 @@ const setisEnSummary = (value: boolean) => {
 </template>
 
 <style scoped lang="scss">
-.container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-  grid-gap: 1rem;
-}
-
 .grid-container {
   display: grid;
   grid-template-columns: 75% 1fr;

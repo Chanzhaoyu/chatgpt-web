@@ -73,14 +73,12 @@ function goBack() {
           class="m-5"
         />
       </template>
-      <div v-else class="flex justify-center">
-        <div class="container ">
-          <div v-for="item in pdfs" :key="item.pdfId" class="bg-white p-4 flex flex-col items-center cursor-pointer" @click="router.push({ path: '/m/pdf', query: { pdfId: item.pdfId } })">
-            <img :src="item.firstPageImageUrl" :alt="item.title" class="w-56" />
-            <p class="text-sm">
-              {{ item.title }}
-            </p>
-          </div>
+      <div v-else class="container ">
+        <div v-for="item in pdfs" :key="item.pdfId" class="bg-white p-4 flex flex-col items-center cursor-pointer" @click="router.push({ path: '/m/pdf', query: { pdfId: item.pdfId } })">
+          <img :src="item.firstPageImageUrl" :alt="item.title" class="w-56" />
+          <p class="text-sm">
+            {{ item.title }}
+          </p>
         </div>
       </div>
     </main>
