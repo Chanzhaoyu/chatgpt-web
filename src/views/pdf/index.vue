@@ -11,6 +11,7 @@ import AIChat from './components/AIChat/AIChat.vue'
 import { commentRootAdd, commentRootList, pdfInfo } from '@/api'
 import { usePdfStore } from '@/store/modules/pdf'
 import { useMarkdown } from '@/hooks/useMarkdown'
+import '@/styles/markdown.css'
 
 GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
 
