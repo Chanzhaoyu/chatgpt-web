@@ -18,7 +18,7 @@ interface Props {
 
 const props = defineProps<Props>()
 const pdfId = props.pdfId
-console.log(`pdfId:${pdfId}`)
+
 const { isMobile } = useBasicLayout()
 const loading = ref<boolean>(false)
 const prompt = ref<string>('')

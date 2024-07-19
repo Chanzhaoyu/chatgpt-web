@@ -54,7 +54,7 @@ const routes: RouteRecordRaw[] = [
         components: {
           default: () => import('@/views/course/index.vue'),
           secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
-        }
+        },
       },
       {
         path: 'preview',
@@ -62,7 +62,7 @@ const routes: RouteRecordRaw[] = [
         components: {
           default: () => import('@/views/preview/index.vue'),
           secondaryMenu: () => import('@/components/common/CourseMenu/index.vue'),
-        }
+        },
       },
       {
         path: 'my',
@@ -81,7 +81,7 @@ const routes: RouteRecordRaw[] = [
         },
       },
       // 在此添加其他包含侧边栏的页面路由
-    ]
+    ],
   },
   {
     path: '/404',

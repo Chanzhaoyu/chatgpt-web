@@ -11,6 +11,8 @@ import { agentHello, getMessages } from '@/api/agentChat'
 import { useScroll } from '@/views/chat/hooks/useScroll'
 import { Role } from '@/api/typing'
 import type { Chat } from '@/api/typing'
+import type { AgentPreview } from '@/views/chat/components/agentList'
+import { agentList } from '@/views/chat/components/agentList'
 const route = useRoute()
 const agent: string = route.params.agent
 const chatId: string = route.params.chatId
@@ -32,6 +34,10 @@ const buttonDisabled = computed(() => {
 })
 
 const agentHelloWords = ref<string>('')
+const agentIcon = ref<string>('')
+agentIcon.value = agentList.find((item: AgentPreview) => item.agent === agent)?.iconSrc || ''
+
+console.log(agentIcon.value)
 
 agentHello<string>({ agent }).then((res) => {
   if (res.data)
@@ -220,7 +226,7 @@ async function handleDelete(index: number) {
           <div id="image-wrapper" class="relative h-full">
             <div class="flex h-full items-center justify-center mt-4 text-center text-neutral-300 flex-col">
               <div class="flex justify-center w-full items-center">
-                <img src="@/assets/news.png" alt="logo" />
+                <img :src="agentIcon" alt="logo" />
                 <div class="flex justify-center items-center flex-col" style="margin-left: 5%;">
                   <span style="color: #1B2559;font-size: 28px;font-weight: bolder">{{ agentHelloWords }}</span>
                 </div>

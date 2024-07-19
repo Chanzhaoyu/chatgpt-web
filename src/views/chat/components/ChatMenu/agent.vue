@@ -4,33 +4,18 @@ import { NScrollbar } from 'naive-ui'
 import { useRoute } from 'vue-router'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { debounce } from '@/utils/functions/debounce'
-import { Agent } from '@/typings/agentChat/Agent'
-import newsIcon from '@/assets/news.svg'
-import syllabusIcon from '@/assets/syllabus.svg'
-import pheonixIcon from '@/assets/pheonix.svg'
+import { router } from '@/router'
+import type { AgentPreview } from '@/views/chat/components/agentList'
+import { agentList } from '@/views/chat/components/agentList'
 
 const route = useRoute()
 
 const agent = route.params.agent
 
-interface agentPreview {
-  agent: Agent
-  iconSrc: string
-  title: string
-}
-
 const { isMobile } = useBasicLayout()
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
-
-const agentList: agentPreview[] = [
-  { agent: Agent.NEWS_AGENT, iconSrc: newsIcon, title: '薯塔' },
-  { agent: Agent.SYLLABUS_AGENT, iconSrc: syllabusIcon, title: '学姐Lora' },
-  { agent: Agent.PHEONIX, iconSrc: pheonixIcon, title: '凤凰GPT' },
-
-]
 
 // async function handleSelect({ uuid }: Chat.History) {
 //   if (isActive(uuid))
@@ -44,28 +29,32 @@ const agentList: agentPreview[] = [
 //     appStore.setSiderCollapsed(true)
 // }
 
-function handleEdit({ uuid }: Chat.History, isEdit: boolean, event?: MouseEvent) {
-  event?.stopPropagation()
-  chatStore.updateHistory(uuid, { isEdit })
-}
-
-function handleDelete(index: number, event?: MouseEvent | TouchEvent) {
-  event?.stopPropagation()
-  chatStore.deleteHistory(index)
-  if (isMobile.value)
-    appStore.setSiderCollapsed(true)
-}
-
-const handleDeleteDebounce = debounce(handleDelete, 600)
-
-function handleEnter({ uuid }: Chat.History, isEdit: boolean, event: KeyboardEvent) {
-  event?.stopPropagation()
-  if (event.key === 'Enter')
-    chatStore.updateHistory(uuid, { isEdit })
-}
+// function handleEdit({ uuid }: Chat.History, isEdit: boolean, event?: MouseEvent) {
+//   event?.stopPropagation()
+//   chatStore.updateHistory(uuid, { isEdit })
+// }
+//
+// function handleDelete(index: number, event?: MouseEvent | TouchEvent) {
+//   event?.stopPropagation()
+//   chatStore.deleteHistory(index)
+//   if (isMobile.value)
+//     appStore.setSiderCollapsed(true)
+// }
+//
+// const handleDeleteDebounce = debounce(handleDelete, 600)
+//
+// function handleEnter({ uuid }: Chat.History, isEdit: boolean, event: KeyboardEvent) {
+//   event?.stopPropagation()
+//   if (event.key === 'Enter')
+//     chatStore.updateHistory(uuid, { isEdit })
+// }
 
 function isActive(curAgent: string) {
   return curAgent === agent
+}
+
+function handleSelect(item: AgentPreview) {
+  router.push({ name: 'AgentHome', params: { agent: item.agent } })
 }
 </script>
 
@@ -79,7 +68,7 @@ function isActive(curAgent: string) {
         </div>
       </template> -->
 
-      <div v-for="(item, index) of agentList" :key="index">
+      <div v-for="(item, index) of agentList" :key="index" @click="handleSelect(item)">
         <a
           class="relative flex items-center gap-3 px-3 py-3 break-all rounded-md cursor-pointer hover:bg-neutral-100 group dark:border-neutral-800 dark:hover:bg-[#8554ED]"
           :class="isActive(item.agent) && ['bg-neutral-100', 'text-[#8554ED]']"
