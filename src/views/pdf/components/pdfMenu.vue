@@ -58,11 +58,6 @@ const changeActivePage = (page: number) => {
 </template>
 
 <style scoped>
-/* .container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-    grid-gap: 1rem;
-} */
  .page-item {
   box-sizing: border-box;
   border: 4px solid transparent

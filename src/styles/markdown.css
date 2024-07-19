@@ -1,0 +1,145 @@
+h1 {
+    font-size: 1.5rem;
+}
+h2 {
+    font-size: 1.25rem;
+}
+h3 {
+    font-size: 1.1rem;
+}
+
+
+/* 标题 */
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+/* 段落 */
+p {
+    margin: 0.5em 0;
+}
+
+/* 链接 */
+a {
+    color: #0366d6;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* 列表 */
+ul, ol {
+    padding-left: 2em;
+}
+
+/* 引用 */
+blockquote {
+    margin: 0.5em 0;
+    padding-left: 1em;
+    border-left: 4px solid #dfe2e5;
+    color: #6a737d;
+}
+
+/* 表格 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+}
+
+table th, table td {
+    border: 1px solid #dfe2e5;
+    padding: 0.5em;
+}
+
+table th {
+    background-color: #f6f8fa;
+    text-align: left;
+}
+
+table tr:nth-child(even) {
+    background-color: #f6f8fa;
+}
+/* 内联代码 */
+code {
+    padding: 0.2em 0.4em;
+    margin: 0;
+    font-size: 85%;
+    background-color: rgba(27,31,35,0.05);
+    border-radius: 3px;
+}
+
+/* 代码块 */
+pre {
+    /* padding: 1em; */
+    margin: 0.5em 0;
+    overflow: auto;
+    border-radius: 6px;
+    background-color: #f6f8fa;
+}
+
+pre code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+}
+/* 无序列表 */
+ul {
+    list-style-type: disc; /* 设置列表项标记的类型为实心圆点 */
+    padding-left: 2em; /* 设置左边距，为列表项标记留出空间 */
+}
+
+/* 有序列表 */
+ol {
+    list-style-type: decimal; /* 设置列表项标记的类型为数字 */
+    padding-left: 2em; /* 设置左边距，为列表项标记留出空间 */
+}
+
+/* 列表项 */
+li {
+    margin-bottom: 0.5em; /* 设置列表项之间的间距 */
+}
+
+/* 代码块容器 */
+.code-block-wrapper {
+    position: relative;
+    border: 1px solid #dfe2e5;
+    border-radius: 6px;
+    overflow: auto;
+}
+
+/* 代码块头部 */
+.code-block-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5em;
+    background-color: #f6f8fa;
+    border-bottom: 1px solid #dfe2e5;
+}
+
+/* 代码块语言 */
+.code-block-header__lang {
+    font-size: 0.85em;
+    color: #6a737d;
+}
+
+/* 代码块复制按钮 */
+.code-block-header__copy {
+    font-size: 0.85em;
+    color: #0366d6;
+    cursor: pointer;
+}
+
+/* 代码块主体 */
+.code-block-body {
+    padding: 1em;
+    font-size: 0.85em;
+    line-height: 1.5;
+}
