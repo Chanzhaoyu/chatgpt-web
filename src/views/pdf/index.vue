@@ -4,7 +4,7 @@ import type { Ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { GlobalWorkerOptions } from 'pdfjs-dist/legacy/build/pdf'
 import { NIcon, NInput, NTabPane, NTabs, useMessage } from 'naive-ui'
-import { MoreHorizRound, NorthRound } from '@vicons/material'
+import { MoreHorizRound, MoreVertRound, NorthRound } from '@vicons/material'
 import type { CommentType } from './components/Comment.vue'
 import Comment from './components/Comment.vue'
 import AIChat from './components/AIChat/AIChat.vue'
@@ -199,21 +199,35 @@ const setisEnSummary = (value: boolean) => {
   isEnSummary.value = value
 }
 
-const contentRef = ref(null)
+const iframeRef = ref(null)
 const horizBarRef = ref(null)
-const down = (e) => {
+const contentRef = ref(null)
+const rightBarRef = ref(null)
+const downHoriz = (e) => {
   changeIframeDivStyle('block')
   const startY = e.clientY
   const offsetY = horizBarRef.value.offsetTop
   document.onmousemove = (e) => {
     const endY = e.clientY
     const height = offsetY - (startY - endY)
-    contentRef.value.style.height = `${height}px`
+    iframeRef.value.style.height = `${height}px`
   }
   document.onmouseup = (e) => {
     document.onmousemove = null
     document.onmouseup = null
     changeIframeDivStyle('none')
+  }
+}
+const downRight = (e) => {
+  const startX = e.clientX
+  const offsetX = rightBarRef.value.offsetLeft
+  document.onmousemove = (e) => {
+    const endX = e.clientX
+    contentRef.value.style.width = `${offsetX - (startX - endX)}px`
+  }
+  document.onmouseup = (e) => {
+    document.onmousemove = null
+    document.onmouseup = null
   }
 }
 onMounted(() => {
@@ -223,7 +237,13 @@ onMounted(() => {
     horizBarRef.value.releaseCapture()
   }
 })
-function changeIframeDivStyle(display) {
+onMounted(() => {
+  rightBarRef.value.setCapture()
+  rightBarRef.value.onmouseup = () => {
+    rightBarRef.value.releaseCapture()
+  }
+})
+function changeIframeDivStyle(display: string) {
   const iframeDiv = document.getElementsByClassName('iframeDiv')
   iframeDiv[0].style.display = display
 }
@@ -232,12 +252,12 @@ function changeIframeDivStyle(display) {
 <template>
   <div class="p-6 h-full">
     <div class="grid-container">
-      <div class="left">
-        <div id="iframe_id" ref="contentRef" class="grid-image">
+      <div ref="contentRef" class="left">
+        <div id="iframe_id" ref="iframeRef" class="grid-image">
           <div class="iframeDiv"></div>
           <iframe :src="pdfUrl" width="100%" height="100%"></iframe>
         </div>
-        <div ref="horizBarRef" class="bar" @mousedown="down" @mouseup="changeIframeDivStyle('none')">
+        <div ref="horizBarRef" class="bar bar-horiz" @mousedown="downHoriz" @mouseup="changeIframeDivStyle('none')">
           <n-icon>
             <MoreHorizRound />
           </n-icon>
@@ -256,7 +276,12 @@ function changeIframeDivStyle(display) {
           <div v-html="useMarkdown(summaryResult && (isEnSummary ? summaryResult[renderPage - 1].summary : summaryResult[renderPage - 1].chineseSummary)).value"></div>
         </div>
       </div>
-      <div class="flex flex-col flex-1 ml-4 grid-right">
+      <div ref="rightBarRef" class="bar bar-vert" @mousedown="downRight">
+        <n-icon>
+          <MoreVertRound />
+        </n-icon>
+      </div>
+      <div class="flex flex-col flex-1  grid-right">
         <n-tabs v-model:value="name" type="card" tab-style="min-width: 80px;">
           <n-tab-pane v-for="panel in panels" :key="panel.value" :tab="panel.tab" :name="panel.value">
             <div class="h-full flex flex-col justify-between">
@@ -290,8 +315,11 @@ function changeIframeDivStyle(display) {
 .grid-container {
   display: flex;
   height: 100%;
+  position: relative;
 }
 .left {
+  width: 75%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -312,19 +340,27 @@ function changeIframeDivStyle(display) {
     user-select: none;
 }
 .bar{
-    cursor: row-resize;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+.bar-horiz {
+  cursor: row-resize;
+}
+.bar-vert {
+  cursor: col-resize;
+}
 .grid-left-bottom{
     flex-grow: 1;
-  overflow-y: auto;
+    overflow-y: auto;
     border-radius: 25px;
   // &::-webkit-scrollbar {
   //   overflow: hidden;
   // }
 
+}
+.grid-right {
+  flex-grow: 1;
 }
 // .grid-container {
 //   display: grid;
