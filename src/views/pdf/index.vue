@@ -255,9 +255,9 @@ function changeIframeDivStyle(display: string) {
   <div class="p-6 h-full">
     <div class="grid-container">
       <div ref="contentRef" class="left">
-        <div id="iframe_id" ref="iframeRef" class="grid-image">
+        <div ref="iframeRef" class="grid-image">
           <div class="iframeDiv"></div>
-          <iframe :src="pdfUrl" width="100%" height="100%"></iframe>
+          <iframe id="iframe_id" :src="pdfUrl" width="100%" height="100%"></iframe>
         </div>
         <div ref="horizBarRef" class="bar bar-horiz" @mousedown="downHoriz" @mouseup="changeIframeDivStyle('none')">
           <n-icon>
