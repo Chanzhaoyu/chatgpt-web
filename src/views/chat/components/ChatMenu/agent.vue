@@ -2,15 +2,20 @@
 <script setup lang='ts'>
 import { NScrollbar } from 'naive-ui'
 import { useRoute } from 'vue-router'
+import { ref } from 'vue'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { router } from '@/router'
 import type { AgentPreview } from '@/views/chat/components/agentList'
 import { agentList } from '@/views/chat/components/agentList'
 
+const props = defineProps({
+  agent: String,
+})
+
 const route = useRoute()
 
-const agent = route.params.agent
+const agent = ref('')
 
 const { isMobile } = useBasicLayout()
 
@@ -50,7 +55,8 @@ const chatStore = useChatStore()
 // }
 
 function isActive(curAgent: string) {
-  return curAgent === agent
+  console.log(props.agent)
+  return curAgent === props.agent
 }
 
 function handleSelect(item: AgentPreview) {

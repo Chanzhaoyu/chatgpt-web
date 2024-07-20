@@ -6,7 +6,6 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { NButton, NInput, useDialog, useMessage } from 'naive-ui'
 import { toPng } from 'html-to-image'
-import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import { useUsingContext } from './hooks/useUsingContext'
@@ -18,6 +17,7 @@ import { fetchChatAPIProcess, fetchNewChatAPIProcess, newChat } from '@/api'
 import { t } from '@/locales'
 import { agentHello } from '@/api/agentChat'
 import AgentExampleQuestion from '@/views/chat/components/main/AgentExampleQuestion.vue'
+import { type AgentPreview, agentList } from '@/views/chat/components/agentList'
 
 let controller = new AbortController()
 
@@ -26,7 +26,6 @@ const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
 const route = useRoute()
 const router = useRouter()
 const agent = route.params.agent
-const chatId = route.params.chatId
 
 const dialog = useDialog()
 const ms = useMessage()
@@ -36,8 +35,6 @@ const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
 const { usingContext, toggleUsingContext } = useUsingContext()
 
-const dataSources = computed(() => chatStore.getChatByUuid(chatStore.active))
-const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
 const appStore = useAppStore()
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
@@ -50,10 +47,12 @@ const isDone = ref(false)
 // const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
 
 // 未知原因刷新页面，loading 状态不会重置，手动重置
-dataSources.value.forEach((item, index) => {
-  if (item.loading)
-    updateChatSome(chatStore.active, index, { loading: false })
-})
+// dataSources.value.forEach((item, index) => {
+//   if (item.loading)
+//     updateChatSome(chatStore.active, index, { loading: false })
+// })
+const agentIcon = ref<string>('')
+agentIcon.value = agentList.find((item: AgentPreview) => item.agent === agent)?.iconSrc || ''
 
 async function handleSubmit() {
   // const activateAgent = chatStore.history.find(item => item.uuid === chatStore.active)
@@ -532,10 +531,10 @@ agentHello({ agent }).then((res) => {
           :class="[isMobile ? 'p-2' : 'p-4']"
         >
           <div id="image-wrapper" class="relative h-full">
-            <template v-if="!dataSources.length">
+            <template>
               <div class="flex h-full items-center justify-center mt-4 text-center text-neutral-300 flex-col">
                 <div class="flex justify-center w-full items-center">
-                  <img src="@/assets/news.png" alt="logo" />
+                  <img :src="agentIcon" alt="logo" />
                   <div class="flex justify-center items-center flex-col" style="margin-left: 5%;">
                     <!--                    <span style="color: #1B2559;font-size: 28px;font-weight: bolder">👋 你好，我是AI薯塔，</span> -->
                     <!--                    <span style="color: #1B2559;font-size: 28px;font-weight: bolder">我可以告诉你最新的龙大资讯🙋</span> -->
@@ -543,29 +542,6 @@ agentHello({ agent }).then((res) => {
                   </div>
                 </div>
                 <AgentExampleQuestion />
-              </div>
-            </template>
-            <template v-else>
-              <div>
-                <Message
-                  v-for="(item, index) of dataSources"
-                  :key="index"
-                  :date-time="item.dateTime"
-                  :text="item.text"
-                  :inversion="item.inversion"
-                  :error="item.error"
-                  :loading="item.loading"
-                  @regenerate="onRegenerate(index)"
-                  @delete="handleDelete(index)"
-                />
-                <div class="sticky bottom-0 left-0 flex justify-center">
-                  <NButton v-if="loading" type="warning" @click="handleStop">
-                    <template #icon>
-                      <SvgIcon icon="ri:stop-circle-line" />
-                    </template>
-                    {{ t('common.stopResponding') }}
-                  </NButton>
-                </div>
               </div>
             </template>
           </div>

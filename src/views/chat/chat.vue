@@ -36,8 +36,8 @@ const buttonDisabled = computed(() => {
 const agentHelloWords = ref<string>('')
 const agentIcon = ref<string>('')
 agentIcon.value = agentList.find((item: AgentPreview) => item.agent === agent)?.iconSrc || ''
-
-console.log(agentIcon.value)
+console.log(`agent${agent}`)
+console.log(`agentIcon${agentIcon.value}`)
 
 agentHello<string>({ agent }).then((res) => {
   if (res.data)

@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
-import { NButton, NInput, NSelect } from 'naive-ui'
+import { NButton, NIcon, NInput, NSelect } from 'naive-ui'
+import { AddCircleOutlineOutlined } from '@vicons/material'
 import { t } from '@/locales'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useScroll } from '@/views/chat/hooks/useScroll'
 import { Message } from '@/views/chat/components'
-import { getPdfChatList } from '@/api/pdfChat'
+import { createPdfChat, getPdfChatList } from '@/api/pdfChat'
 import { SvgIcon } from '@/components/common'
 import type { Chat } from '@/api/typing'
 import { Role } from '@/api/typing'
 import type { PageSummary } from '@/views/pdf/index.vue'
+
 interface Props {
   pdfId: string
   pageList: PageSummary[]
@@ -61,26 +63,38 @@ function handleEnter(event: KeyboardEvent) {
 }
 const pdfChatList = ref<Chat[][]>([])
 const lastPdfChatId = ref<string>('')
+
 getPdfChatList(pdfId).then((result) => {
   // 假设result是一个PdfChat[]数组，我们需要将其转换为Chat[][]
   // 这里需要根据实际的数据结构进行调整
   pdfChatList.value = result.data.map(pdfChat => pdfChat.messages.map(message => ({
     text: message.content,
-    inversion: message.role === Role.User, // 假设Role是一个枚举或类型，包含INVERSION值
+    inversion: message.role === Role.User,
     error: false,
     loading: false,
   })))
 
-  const lastPdfChat = result.data[result.data.length - 1]
-  lastPdfChatId.value = lastPdfChat.pdfChatId
-  console.log(pdfChatList.value)
+  if (result.data.length !== 0) {
+    const lastPdfChat = result.data[result.data.length - 1]
+    lastPdfChatId.value = lastPdfChat.pdfChatId
+  }
 })
 
 function handleSubmit() {
   onConversation()
 }
 
+async function newChat() {
+  await createPdfChat(pdfId).then((result) => {
+    lastPdfChatId.value = result.data
+    pdfChatList.value.push([])
+  })
+}
+
 async function onConversation() {
+  if (pdfChatList.value.length === 0)
+    await newChat()
+
   const message = prompt.value
   if (loading.value)
     return
@@ -225,6 +239,13 @@ async function handleDelete(index: number) {
       </div>
     </main>
     <footer :class="footerClass">
+      <NButton @click="newChat()">
+        <template #icon>
+          <n-icon>
+            <AddCircleOutlineOutlined />
+          </n-icon>
+        </template>
+      </NButton>
       <div class="w-full max-w-screen-xl m-auto">
         <div class="flex items-center justify-between space-x-2">
           <n-select v-model:value="selectPdfIdList" multiple :options="pageOptions" />
