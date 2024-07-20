@@ -559,9 +559,6 @@ agentHello({ agent }).then((res) => {
             size="large"
             :placeholder="placeholder"
             :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
-            @input="handleInput"
-            @focus="handleFocus"
-            @blur="handleBlur"
             @keypress="handleEnter"
           />
           <NButton type="primary" :disabled="buttonDisabled" class="send-button" @click="handleSubmit">

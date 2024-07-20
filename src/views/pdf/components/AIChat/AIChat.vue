@@ -7,7 +7,7 @@ import { t } from '@/locales'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useScroll } from '@/views/chat/hooks/useScroll'
 import { Message } from '@/views/chat/components'
-import { createPdfChat, getPdfChatList } from '@/api/pdfChat'
+import { createPdfChat, getPdfChatList, stopChat } from '@/api/pdfChat'
 import { SvgIcon } from '@/components/common'
 import type { Chat } from '@/api/typing'
 import { Role } from '@/api/typing'
@@ -20,7 +20,7 @@ interface Props {
 
 const props = defineProps<Props>()
 const pdfId = props.pdfId
-
+const segmentId = ref<string>('')
 const { isMobile } = useBasicLayout()
 const loading = ref<boolean>(false)
 const prompt = ref<string>('')
@@ -156,6 +156,7 @@ async function onConversation() {
             if ('event' in data) {
               // 清空思考中这三个字
               lastDataSources[lastDataSources.length - 1].text = ''
+              segmentId.value = data.segment_id
             }
             else if ('content' in data) {
               if (lastDataSources.length > 0) {
@@ -193,7 +194,7 @@ async function onConversation() {
 }
 scrollToBottom()
 async function handleStop() {
-
+  stopChat(segmentId.value)
 }
 
 async function onRegenerate(index: number) {

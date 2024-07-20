@@ -2,6 +2,7 @@ import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
 import PrimaryMenu from '@/components/common/PrimaryMenu/index.vue'
+import { getToken } from '@/store/modules/auth/helper'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -111,6 +112,15 @@ export const router = createRouter({
 })
 
 // setupPageGuard(router)
+router.beforeEach(async (to, from) => {
+  // const token11 = useAuthStore().token
+  const token = getToken()
+  if (!token && to.path !== '/login')
+    return { name: 'Login' }
+
+  if (to.path === '/login' && token)
+    return { name: 'Course' }
+})
 
 export async function setupRouter(app: App) {
   app.use(router)

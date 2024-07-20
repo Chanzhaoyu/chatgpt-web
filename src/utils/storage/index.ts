@@ -4,7 +4,7 @@ interface StorageData<T = any> {
 }
 
 export function createLocalStorage(options?: { expire?: number | null }) {
-  const DEFAULT_CACHE_TIME = 60 * 60 * 24 * 7
+  const DEFAULT_CACHE_TIME = 60 * 60 * 24 * 30 // 30 days
 
   const { expire } = Object.assign({ expire: DEFAULT_CACHE_TIME }, options)
 

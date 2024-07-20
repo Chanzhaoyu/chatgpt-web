@@ -19,3 +19,9 @@ export function createPdfChat(pdfId: string) {
     url: `/pdf-chat/add?pdfId=${pdfId}`,
   })
 }
+
+export function stopChat(segmentId: string) {
+  return post<string>({
+    url: `/pdf-chat/cancel?segmentId=${segmentId}`,
+  })
+}
