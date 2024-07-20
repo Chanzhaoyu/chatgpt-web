@@ -143,7 +143,7 @@ function goMyPage() {
       <NLayout class="z-40 transition" :class="getContainerClass" has-sider>
         <div class="sider">
           <NLayoutSider
-            :collapsed="collapsed" :collapsed-width="0" :width="380" :show-trigger="false"
+            :collapsed="collapsed" :collapsed-width="0" :width="380" show-trigger="arrow-circle"
             collapse-mode="transform" position="absolute" bordered :style="getMobileClassSider"
             @update-collapsed="handleUpdateCollapsed"
           >
