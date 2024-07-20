@@ -270,7 +270,7 @@ function changeIframeDivStyle(display: string) {
               Summary
             </p>
             <button
-              class="p-2 hover-gray font-medium .text-sm" :class="[isEnSummary ? '' : 'px-3']" @click="() => setisEnSummary(!isEnSummary)"
+              class="py-2 px-3 switch-lang font-medium text-sm" :class="[isEnSummary ? '' : 'px-4']" @click="() => setisEnSummary(!isEnSummary)"
             >
               {{ isEnSummary ? "\u4E2D\u6587" : "EN" }}
             </button>
@@ -353,7 +353,7 @@ function changeIframeDivStyle(display: string) {
   cursor: col-resize;
 }
 .grid-left-bottom{
-    flex-grow: 1;
+    flex: 1;
     overflow-y: auto;
     border-radius: 25px;
   // &::-webkit-scrollbar {
@@ -362,7 +362,7 @@ function changeIframeDivStyle(display: string) {
 
 }
 .grid-right {
-  flex-grow: 1;
+  flex: 1;
 }
 // .grid-container {
 //   display: grid;
@@ -396,9 +396,13 @@ function changeIframeDivStyle(display: string) {
 //   /* 跨两行 */
 // }
 
-.hover-gray:hover {
-  background-color: #F6F5FC;
-  border-radius: 50%;
+.switch-lang {
+  background-color: #8454ed8e;
+  color: #fff;
+  border-radius: 15%;
+  &:hover {
+    background-color: #8454ed;
+  }
 }
 :deep(.n-tabs-tab__label) {
   color: #000 !important;
