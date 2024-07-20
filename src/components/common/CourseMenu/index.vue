@@ -29,23 +29,34 @@ function goPreview(courseId: string) {
       我的课程
     </h2>
     <div class="h-full space-y-4">
-      <div
-        v-for="course in starCourses" :key="course.courseId"
-        class="flex flex-nowrap justify-between cursor-pointer mt-4"
-      >
-        <div>
-          <p>
-            {{ course.courseCuhkCode }}
-          </p>
-          <p class="text-sm font-light line-clamp-2">
-            {{ course.courseName }}
-          </p>
+      <template v-if="starCourses.length">
+        <div
+          v-for="course in starCourses"
+          :key="course.courseId"
+          class="flex flex-nowrap justify-between cursor-pointer mt-4"
+        >
+          <div>
+            <p>
+              {{ course.courseCuhkCode }}
+            </p>
+            <p class="text-sm font-light line-clamp-2">
+              {{ course.courseName }}
+            </p>
+          </div>
+          <div class="right font-normal flex items-center" @click="goPreview(course.courseId)">
+            <span class="whitespace-nowrap ml-2">课件预览</span>
+            <n-icon>
+              <ArrowForwardIosOutlined />
+            </n-icon>
+          </div>
         </div>
-        <div class="right font-normal flex items-center" @click="goPreview(course.courseId)">
-          <span class="whitespace-nowrap ml-2">课件预览</span>
-          <n-icon>
-            <ArrowForwardIosOutlined />
-          </n-icon>
+      </template>
+      <div v-else>
+        <div class="text-center font-normal">
+          <p>
+            您当前的收藏为空
+          </p>
+          <p>去发现并收藏感兴趣的课程吧！</p>
         </div>
       </div>
     </div>

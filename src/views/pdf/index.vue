@@ -11,6 +11,7 @@ import AIChat from './components/AIChat/AIChat.vue'
 import { commentRootAdd, commentRootList, pdfInfo } from '@/api'
 import { usePdfStore } from '@/store/modules/pdf'
 import { useMarkdown } from '@/hooks/useMarkdown'
+import { formatCommentTime } from '@/utils/functions'
 import '@/styles/markdown.css'
 
 GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
@@ -76,14 +77,6 @@ const getPdfInfo = async () => {
     console.error('error', error) // 使用 console.error 记录错误
   }
 }
-function formatDate(dateString) {
-  const date = new Date(dateString)
-  const month = date.getMonth() + 1 // getMonth() 返回的月份从0开始，所以加1
-  const day = date.getDate()
-
-  // 使用模板字符串和三元运算符确保月和日始终是两位数字
-  return `${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`
-}
 const getComment = async (summaryResultVal: PageSummary[], page: number) => {
   try {
     const realPage = page - 1
@@ -92,15 +85,22 @@ const getComment = async (summaryResultVal: PageSummary[], page: number) => {
       const res = await commentRootList<CommentType>(summaryResultVal[realPage].pageId)
       if (res.data) {
         comments.value = res.data.map((ele) => {
+          const formattedCommentVoList = ele.commentVoList.map((comment) => {
+            return {
+              ...comment,
+              createTime: formatCommentTime(comment.createTime),
+            }
+          })
           return {
             commentId: ele.comment.commentId,
             comment: ele.comment.comment,
-            userIconUrl: ele.comment.userIconUrl,
+            userAvatarUrl: ele.comment.userAvatarUrl,
             userName: ele.comment.userName,
-            createTime: ele.comment.createTime,
+            createTime: formatCommentTime(ele.comment.createTime),
             starCount: ele.comment.starCount,
             isStared: ele.comment.isStared,
-            commentVoList: ele.commentVoList,
+            isMyComment: ele.comment.isMyComment,
+            commentVoList: formattedCommentVoList,
           }
         })
       }
@@ -182,7 +182,7 @@ const addRootComment = async (data: CommentData) => {
       throw new Error('comment or pdfPageId is null')
 
     await commentRootAdd(data)
-
+    commentContent.value = ''
     if (summaryResult.value && renderPage.value)
       await getComment(summaryResult.value, renderPage.value)
     else
@@ -232,13 +232,15 @@ const downRight = (e) => {
 }
 onMounted(() => {
   changeIframeDivStyle('none')
-  horizBarRef.value.setCapture()
+  if (typeof horizBarRef.value.setCapture === 'function')
+    horizBarRef.value.setCapture()
   horizBarRef.value.onmouseup = () => {
     horizBarRef.value.releaseCapture()
   }
 })
 onMounted(() => {
-  rightBarRef.value.setCapture()
+  if (typeof rightBarRef.value.setCapture === 'function')
+    rightBarRef.value.setCapture()
   rightBarRef.value.onmouseup = () => {
     rightBarRef.value.releaseCapture()
   }
@@ -289,14 +291,14 @@ function changeIframeDivStyle(display: string) {
                 <AIChat :pdf-id="pdfId" :page-list="summaryResult"></AIChat>
               </template>
               <template v-if="panel.value === 'comment'">
-                <div>
+                <div class="w-full overflow-y-auto">
                   <Comment
                     v-for="comment in comments" :key="comment.commentId" :comment="comment" :page-ids="pageIds" class="pr-2"
                     @update-comment="getComment(summaryResult, renderPage)"
                   />
                   {{ }}
                 </div>
-                <n-input v-model:value="commentContent" round autosize placeholder="评论..." class="mx-5 my-3 h-11">
+                <n-input v-model:value="commentContent" round autosize placeholder="评论..." class="mx-5 mb-3 h-11">
                   <template #suffix>
                     <n-icon :component="NorthRound" class="cursor-pointer" @click="addRootComment({ pdfPageId: pageIds[renderPage - 1], comment: commentContent })">
                     </n-icon>
