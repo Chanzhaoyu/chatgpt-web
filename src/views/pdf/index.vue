@@ -4,7 +4,7 @@ import type { Ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { GlobalWorkerOptions } from 'pdfjs-dist/legacy/build/pdf'
 import { NIcon, NInput, NTabPane, NTabs, useMessage } from 'naive-ui'
-import { NorthRound } from '@vicons/material'
+import { MoreHorizRound, MoreVertRound, NorthRound } from '@vicons/material'
 import type { CommentType } from './components/Comment.vue'
 import Comment from './components/Comment.vue'
 import AIChat from './components/AIChat/AIChat.vue'
@@ -116,12 +116,6 @@ const getComment = async (summaryResultVal: PageSummary[], page: number) => {
 }
 
 onMounted(async () => {
-  window.addEventListener('message', (event) => {
-    if (event.data.type === 'pagechange')
-      console.log('当前PDF页码为:', event.data.pageNumber)
-  })
-  const iFrame = document.getElementById('iframe_id')
-
   pdfId.value = route.query.pdfId as string
   await getPdfInfo()
   // encodeURIComponent() 函数可把字符串作为 URI 组件进行编码。
@@ -204,27 +198,90 @@ const isEnSummary = ref(false)
 const setisEnSummary = (value: boolean) => {
   isEnSummary.value = value
 }
+
+const iframeRef = ref(null)
+const horizBarRef = ref(null)
+const contentRef = ref(null)
+const rightBarRef = ref(null)
+const downHoriz = (e) => {
+  changeIframeDivStyle('block')
+  const startY = e.clientY
+  const offsetY = horizBarRef.value.offsetTop
+  document.onmousemove = (e) => {
+    const endY = e.clientY
+    const height = offsetY - (startY - endY)
+    iframeRef.value.style.height = `${height}px`
+  }
+  document.onmouseup = (e) => {
+    document.onmousemove = null
+    document.onmouseup = null
+    changeIframeDivStyle('none')
+  }
+}
+const downRight = (e) => {
+  const startX = e.clientX
+  const offsetX = rightBarRef.value.offsetLeft
+  document.onmousemove = (e) => {
+    const endX = e.clientX
+    contentRef.value.style.width = `${offsetX - (startX - endX)}px`
+  }
+  document.onmouseup = (e) => {
+    document.onmousemove = null
+    document.onmouseup = null
+  }
+}
+onMounted(() => {
+  changeIframeDivStyle('none')
+  horizBarRef.value.setCapture()
+  horizBarRef.value.onmouseup = () => {
+    horizBarRef.value.releaseCapture()
+  }
+})
+onMounted(() => {
+  rightBarRef.value.setCapture()
+  rightBarRef.value.onmouseup = () => {
+    rightBarRef.value.releaseCapture()
+  }
+})
+function changeIframeDivStyle(display: string) {
+  const iframeDiv = document.getElementsByClassName('iframeDiv')
+  iframeDiv[0].style.display = display
+}
 </script>
 
 <template>
   <div class="p-6 h-full">
     <div class="grid-container">
-      <iframe id="iframe_id" :src="pdfUrl" width="100%" height="100%" class="grid-image"></iframe>
-      <!-- <canvas ref="canvasRef" class="shadow-md mt-10 border border-gray-300 grid-image"></canvas> -->
-      <div class="border border-purple-300 px-4 py-2 mt-2 grid-left-bottom">
-        <div class="flex justify-between items-center">
-          <p class="font-bold text-lg">
-            Summary
-          </p>
-          <button
-            class="p-2 hover-gray font-medium .text-sm" :class="[isEnSummary ? '' : 'px-3']" @click="() => setisEnSummary(!isEnSummary)"
-          >
-            {{ isEnSummary ? "\u4E2D\u6587" : "EN" }}
-          </button>
+      <div ref="contentRef" class="left">
+        <div id="iframe_id" ref="iframeRef" class="grid-image">
+          <div class="iframeDiv"></div>
+          <iframe :src="pdfUrl" width="100%" height="100%"></iframe>
         </div>
-        <div v-html="useMarkdown(summaryResult && (isEnSummary ? summaryResult[renderPage - 1].summary : summaryResult[renderPage - 1].chineseSummary)).value"></div>
+        <div ref="horizBarRef" class="bar bar-horiz" @mousedown="downHoriz" @mouseup="changeIframeDivStyle('none')">
+          <n-icon>
+            <MoreHorizRound />
+          </n-icon>
+        </div>
+        <div class="border border-purple-300 px-4 py-2 grid-left-bottom">
+          <div class="flex justify-between items-center">
+            <p class="font-bold text-lg">
+              Summary
+            </p>
+            <button
+              class="p-2 hover-gray font-medium .text-sm" :class="[isEnSummary ? '' : 'px-3']" @click="() => setisEnSummary(!isEnSummary)"
+            >
+              {{ isEnSummary ? "\u4E2D\u6587" : "EN" }}
+            </button>
+          </div>
+          <div v-html="useMarkdown(summaryResult && (isEnSummary ? summaryResult[renderPage - 1].summary : summaryResult[renderPage - 1].chineseSummary)).value"></div>
+        </div>
       </div>
-      <div class="flex flex-col flex-1 ml-4 grid-right">
+      <div ref="rightBarRef" class="bar bar-vert" @mousedown="downRight">
+        <n-icon>
+          <MoreVertRound />
+        </n-icon>
+      </div>
+      <div class="flex flex-col flex-1  grid-right">
         <n-tabs v-model:value="name" type="card" tab-style="min-width: 80px;">
           <n-tab-pane v-for="panel in panels" :key="panel.value" :tab="panel.tab" :name="panel.value">
             <div class="h-full flex flex-col justify-between">
@@ -256,41 +313,86 @@ const setisEnSummary = (value: boolean) => {
 
 <style scoped lang="scss">
 .grid-container {
-  display: grid;
-  grid-template-columns: 75% 1fr;
-  grid-template-rows: 65% 1fr;
+  display: flex;
   height: 100%;
-  width: 100%;
-  gap: 10px;
+  position: relative;
 }
-
 .left {
+  width: 75%;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
-
 .grid-image {
+  height: 50%;
   width: 100%;
-  grid-column: 1;
-  grid-row: 1;
+  position: relative;
 }
-
-.grid-left-bottom {
-  grid-column: 1;
-  grid-row: 2;
-  flex-grow: 1;
-  overflow-y: auto;
-  border-radius: 25px;
+.iframeDiv {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1111;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    background: transparent;
+    user-select: none;
+}
+.bar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.bar-horiz {
+  cursor: row-resize;
+}
+.bar-vert {
+  cursor: col-resize;
+}
+.grid-left-bottom{
+    flex-grow: 1;
+    overflow-y: auto;
+    border-radius: 25px;
   // &::-webkit-scrollbar {
   //   overflow: hidden;
   // }
-}
 
-.grid-right {
-  grid-column: 2;
-  grid-row: 1 / 3;
-  /* 跨两行 */
 }
+.grid-right {
+  flex-grow: 1;
+}
+// .grid-container {
+//   display: grid;
+//   grid-template-columns: 75% 1fr;
+//   grid-template-rows: 65% 1fr;
+//   height: 100%;
+//   width: 100%;
+//   gap: 10px;
+// }
+
+// .grid-image {
+//   width: 100%;
+//   grid-column: 1;
+//   grid-row: 1;
+// }
+
+// .grid-left-bottom {
+//   grid-column: 1;
+//   grid-row: 2;
+//   flex-grow: 1;
+//   overflow-y: auto;
+//   border-radius: 25px;
+//   // &::-webkit-scrollbar {
+//   //   overflow: hidden;
+//   // }
+// }
+
+// .grid-right {
+//   grid-column: 2;
+//   grid-row: 1 / 3;
+//   /* 跨两行 */
+// }
 
 .hover-gray:hover {
   background-color: #F6F5FC;
