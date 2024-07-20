@@ -1,9 +1,10 @@
 <!-- eslint-disable no-console -->
 <script setup lang='ts'>
 import { NScrollbar } from 'naive-ui'
+import { useRoute, useRouter } from 'vue-router'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { router } from '@/router'
+
 import type { AgentPreview } from '@/views/chat/components/agentList'
 import { agentList } from '@/views/chat/components/agentList'
 import { useAgentStore } from '@/store/modules/agent'
@@ -11,10 +12,11 @@ import { useAgentStore } from '@/store/modules/agent'
 const agentStore = useAgentStore()
 
 const { isMobile } = useBasicLayout()
-
+const route = useRoute()
+const router = useRouter()
 const appStore = useAppStore()
 const chatStore = useChatStore()
-const agent = route.params.agent
+
 // async function handleSelect({ uuid }: Chat.History) {
 //   if (isActive(uuid))
 //     return

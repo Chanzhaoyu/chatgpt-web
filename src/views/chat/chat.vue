@@ -13,13 +13,14 @@ import { Role } from '@/api/typing'
 import type { Chat } from '@/api/typing'
 import type { AgentPreview } from '@/views/chat/components/agentList'
 import { agentList } from '@/views/chat/components/agentList'
+import { useAgentStore } from '@/store'
+
 const route = useRoute()
-const agent: string = route.params.agent
-const chatId: string = route.params.chatId
-// const props = defineProps({
-//   agent: String,
-//   chatId: String,
-// })
+const agentStore = useAgentStore()
+const agent = route.params.agent
+
+agentStore.agent = agent
+
 const loading = ref<boolean>(false)
 const { isMobile } = useBasicLayout()
 const prompt = ref<string>('')

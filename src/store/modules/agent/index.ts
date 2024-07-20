@@ -18,7 +18,7 @@ export const agentList: AgentPreview[] = [
 
 export const useAgentStore = defineStore('agent-store', {
   state: () => ({
-    agent: Agent.NEWS_AGENT,
+    agent: Agent.NEWS_AGENT.toString(),
   }),
 
   actions: {
