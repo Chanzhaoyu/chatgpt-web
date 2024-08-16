@@ -79,6 +79,8 @@ export default {
     openSource: 'This project is open sourced at',
     freeMIT: 'free and based on the MIT license, without any form of paid behavior!',
     stars: 'If you find this project helpful, please give me a Star on GitHub or give a little sponsorship, thank you!',
+    presence_penalty: 'Presence Penalty',
+    frequency_penalty: 'Frequency Penalty',
   },
   store: {
     siderButton: 'Prompt Store',

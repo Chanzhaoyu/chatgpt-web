@@ -78,6 +78,8 @@ export default {
     openSource: 'Dự án này được mở nguồn tại',
     freeMIT: 'miễn phí và dựa trên giấy phép MIT, không có bất kỳ hình thức hành vi trả phí nào!',
     stars: 'Nếu bạn thấy dự án này hữu ích, vui lòng cho tôi một Star trên GitHub hoặc tài trợ một chút, cảm ơn bạn!',
+    presence_penalty: 'Hình phạt Hiện diện',
+    frequency_penalty: 'Hình phạt Tần suất',
   },
   store: {
     siderButton: 'Prompt Store',

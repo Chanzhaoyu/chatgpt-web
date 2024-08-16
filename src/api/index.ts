@@ -41,6 +41,8 @@ export function fetchChatAPIProcess<T = any>(
       systemMessage: settingStore.systemMessage,
       temperature: settingStore.temperature,
       top_p: settingStore.top_p,
+      presence_penalty: settingStore.presence_penalty,
+      frequency_penalty: settingStore.frequency_penalty,
     }
   }
 

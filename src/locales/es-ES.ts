@@ -78,6 +78,8 @@ export default {
     openSource: 'Este proyecto es de código abierto en',
     freeMIT: 'gratis y basado en la licencia MIT, ¡sin ningún tipo de comportamiento de pago!',
     stars: 'Si encuentras este proyecto útil, por favor dame una Estrella en GitHub o da un pequeño patrocinio, ¡gracias!',
+    presence_penalty: 'Penalización de Presencia',
+    frequency_penalty: 'Penalización de Frecuencia',
   },
   store: {
     siderButton: 'Tienda rápida',

@@ -79,6 +79,8 @@ export default {
     openSource: '此项目开源于',
     freeMIT: '免费且基于 MIT 协议，没有任何形式的付费行为',
     stars: '如果你觉得此项目对你有帮助，请在 GitHub 上给我一个星星或者给予一点赞助，谢谢！',
+    presence_penalty: '出现惩罚',
+    frequency_penalty: '频率惩罚',
   },
   store: {
     siderButton: '提示词商店',

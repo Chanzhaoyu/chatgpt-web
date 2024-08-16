@@ -6,6 +6,8 @@ export interface RequestProps {
   systemMessage: string
   temperature?: number
   top_p?: number
+  presence_penalty?: number
+  frequency_penalty?: number
 }
 
 export interface ChatContext {

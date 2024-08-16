@@ -15,6 +15,10 @@ const temperature = ref(settingStore.temperature ?? 0.5)
 
 const top_p = ref(settingStore.top_p ?? 1)
 
+const presence_penalty = ref(settingStore.presence_penalty ?? 0)
+
+const frequency_penalty = ref(settingStore.frequency_penalty ?? 0)
+
 function updateSettings(options: Partial<SettingsState>) {
   settingStore.updateSetting(options)
   ms.success(t('common.success'))
@@ -56,6 +60,26 @@ function handleReset() {
         </div>
         <span>{{ top_p }}</span>
         <NButton size="tiny" text type="primary" @click="updateSettings({ top_p })">
+          {{ $t('common.save') }}
+        </NButton>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[120px]">{{ $t('setting.presence_penalty') }} </span>
+        <div class="flex-1">
+          <NSlider v-model:value="presence_penalty" :max="2" :min="-2" :step="0.1" />
+        </div>
+        <span>{{ presence_penalty }}</span>
+        <NButton size="tiny" text type="primary" @click="updateSettings({ presence_penalty })">
+          {{ $t('common.save') }}
+        </NButton>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[120px]">{{ $t('setting.frequency_penalty') }} </span>
+        <div class="flex-1">
+          <NSlider v-model:value="frequency_penalty" :max="2" :min="-2" :step="0.1" />
+        </div>
+        <span>{{ frequency_penalty }}</span>
+        <NButton size="tiny" text type="primary" @click="updateSettings({ frequency_penalty })">
           {{ $t('common.save') }}
         </NButton>
       </div>

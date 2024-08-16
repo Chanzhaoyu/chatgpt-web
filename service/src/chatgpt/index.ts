@@ -103,14 +103,14 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 })()
 
 async function chatReplyProcess(options: RequestOptions) {
-  const { message, lastContext, process, systemMessage, temperature, top_p } = options
+  const { message, lastContext, process, systemMessage, temperature, top_p, presence_penalty, frequency_penalty } = options
   try {
     let options: SendMessageOptions = { timeoutMs }
 
     if (apiModel === 'ChatGPTAPI') {
       if (isNotEmptyString(systemMessage))
         options.systemMessage = systemMessage
-      options.completionParams = { model, temperature, top_p }
+      options.completionParams = { model, temperature, top_p, presence_penalty, frequency_penalty }
     }
 
     if (lastContext != null) {
