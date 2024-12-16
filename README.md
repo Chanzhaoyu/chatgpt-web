@@ -1,4 +1,4 @@
-# ChatGPT Web
+# ChatGPT Web 2.0
 
 > Disclaimer: This project is only published on GitHub, based on the MIT license, free and for open source learning usage. And there will be no any form of account selling, paid service, discussion group, discussion group and other behaviors. Beware of being deceived.
 
